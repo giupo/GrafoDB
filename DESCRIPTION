@@ -1,0 +1,26 @@
+Package: GrafoDB
+Title: What the package does (one line)
+Version: 0.0.1
+Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
+Description: What the package does (one paragraph)
+Depends:
+    R (>= 3.1.2),
+    grafo,
+    rcf,
+    igraph,
+    methods,
+    RPostgreSQL,
+    hash,
+    bimets,
+    RJSONIO,
+    stringr
+License: What license is it under?
+LazyData: true
+Suggests:
+    testthat
+Collate:
+    'generics.r'
+    'functions.r'
+    'core.r'
+    'old_grafo_impl.r'
+    'subsetting.r'
