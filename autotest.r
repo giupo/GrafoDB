@@ -1,8 +1,8 @@
 library(testthat)
-source('lib_mgt.r')
+library(devtools)
+options(env="test")
 options(GCLUSTER=F)
 load_all()
-
 
 .praise <- c(
   "You rock!",
@@ -49,9 +49,16 @@ GrowlReporter <- setRefClass(
     
     end_reporter = function() {      
       growl <- function(m, icon) {
+        if(is.windows()) {
+          cmd <- paste('growlnotify /silent:true /:R /t:testthat /i:',icon,' "',m,'"',  sep='')
+        }
+
+        if(is.darwin()) {
+          cmd <- paste('/usr/local/bin/terminal-notifier -title testthat -message \'',m,'\'--appIcon', icon)
+        }
+        
         invisible(suppressWarnings(
-          system(paste('growlnotify /silent:true /:R /t:testthat /i:',icon,' "',m,'"',  sep=''),
-                 intern=TRUE)))
+          system(cmd, intern=TRUE)))
       }
       icon <- success_icon
       report_text <- paste(passed_count, "tests passed")
@@ -93,5 +100,4 @@ GrowlReporter <- setRefClass(
 
 reporters <- MultiReporter()
 reporters$reporters <- list(SummaryReporter(), GrowlReporter())
-
 auto_test("R", "tests/testthat/", reporter=reporters)

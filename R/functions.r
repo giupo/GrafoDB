@@ -73,6 +73,7 @@ from.data.frame <- function(df) {
 #' @usage .declutter_function(f)
 #' @param f formula in formato testo
 #' @import stringr
+#' @rdname declutter-function-internal
 
 .declutter_function <- function(f) {
   f <- if(is.function(f)) {
@@ -122,6 +123,7 @@ from.data.frame <- function(df) {
 #' @return la serie storica calcolata.
 #' @export
 #' @import grafo
+#' @rdname evaluateSingle-internal
 
 .evaluateSingle <- function(name, graph) {
   tsformula <- expr(graph, name, echo=FALSE)
@@ -161,6 +163,7 @@ from.data.frame <- function(df) {
 #' @usage .evaluate(object, v_start)
 #' @return il grafo con i dati correttamente valutati
 #' @import grafo igraph rcf
+#' @rdname evaluate-internal
 
 .evaluate <- function(object, v_start=NULL, deep=T, ...) {
   data <- object@data

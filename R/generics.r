@@ -11,6 +11,7 @@
 #' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie che hanno TAVOLA_DI_OUTPUT=BRI
 #' }
 #' @rdname lookup_generic
+#' @export
 
 setGeneric(
   "lookup",
@@ -33,6 +34,7 @@ setGeneric(
 #' expr(g, "TETSZ0AC") # ritorna list(TETSZ0AC = "TETSZ0AC = ASTSZ0AC...")
 #' }
 #' @rdname expr_generic
+#' @export
 
 setGeneric(
   "expr",
@@ -56,6 +58,7 @@ setGeneric(
 #' hasConflicts(g, SERIE_CON_CONFLITTO) # TRUE
 #' hasConflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
 #' }
+#' @export
 
 setGeneric(
   "hasConflicts",

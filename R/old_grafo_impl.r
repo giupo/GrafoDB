@@ -262,7 +262,6 @@ setMethod(
   "setMeta",
   signature("GrafoDB", "character", "character", "character"),
   function(object, tsName, attrName, value) {
-    message("fucking called")
     metadati <- object@metadati
 
     if(!tsName %in% names(object)) {

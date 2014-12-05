@@ -46,7 +46,9 @@ setMethod(
     .Object@tag <- tag
     .Object@data <- hash()
     .Object@functions <- hash()
-    .Object@metadati <- data.frame(name=character(), key=character(), value=character())
+    .Object@metadati <- data.frame(name=character(),
+                                   key=character(),
+                                   value=character())
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     archi_table_name <- paste0("archi_", tag)
@@ -115,6 +117,7 @@ setMethod(
 #' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie che hanno TAVOLA_DI_OUTPUT=BRI
 #' }
 #' @include generics.r
+#' @export
 
 setMethod(
   "lookup",
