@@ -42,36 +42,6 @@ setGeneric(
     standardGeneric("expr")
   })
 
-#' Ritorna `TRUE` se il grafo ha conflitti
-#'
-#' @name hasConflicts
-#' @usage hasConflicts(x)
-#' @usage hasConflicts(x, name)
-#' @param x oggetto R
-#' @param name character array di nomi (puo' essere omesso)
-#' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE` altrimenti
-#' @examples \dontrun{
-#' g <- GrafoDB(...)
-#' hasConflicts(g) # dovrebbe essere FALSE
-#' ...             # eseguo operazioni come modificare la stessa serie
-#' hasConflicts(g) # TRUE
-#' hasConflicts(g, SERIE_CON_CONFLITTO) # TRUE
-#' hasConflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
-#' }
-#' @export
-
-setGeneric(
-  "hasConflicts",
-  function(x, name=NULL) {
-    standardGeneric("hasConflicts")
-  })
-
-setGeneric(
-  "getConflicts",
-  function(x, name=NULL) {
-    standardGeneric("getConflicts")
-  })
-
 setGeneric(
   "isRoot",
   function(x, name) {
@@ -107,7 +77,6 @@ setGeneric(
 #' @exportClass GrafoDB
 #' @export GrafoDB
 #' @import igraph hash methods rcf
-#' @include generics.r
 
 GrafoDB <- setClass(
   "GrafoDB",
@@ -126,7 +95,6 @@ GrafoDB <- setClass(
 #' @name initialize
 #' @rdname GraphDB_initialize
 #' @aliases GrafoDB-initialize
-#' @include generics.r
 #' @import igraph RPostgreSQL rcf
 
 setMethod(
@@ -209,7 +177,6 @@ setMethod(
 #' g = GrafoDB(...) # istanzia il grafo
 #' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie che hanno TAVOLA_DI_OUTPUT=BRI
 #' }
-#' @include generics.r
 #' @export
 
 setMethod(
@@ -294,7 +261,6 @@ setMethod(
 #' g <- GrafoDB(...)
 #' expr(g, "TETSZ0AC") # ritorna list(TETSZ0AC = "TETSZ0AC = ASTSZ0AC...")
 #' }
-#' @include generics.r
 
 setMethod(
   "expr",
@@ -464,4 +430,25 @@ setMethod(
   signature("GrafoDB", "character", "ANY"),
   function(x, name, livello=.Machine$integer.max) {
     describe(x, name, order=livello, mode="out")
+  })
+
+setMethod(
+  "getMetadata",
+  signature("GrafoDB", "character", "ANY"),
+  function(object, tsName, full=FALSE) {
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+
+    metadati <- object@metadati
+
+    df <- dbGetPreparedQuery(
+      con,
+      "select name, key, value from metadati where tag = ? and name = ?",
+      bind.data <- cbind(object@tag, tsName))
+    
+    ## overwrite metadata modifed in local session
+    if(nrow(df)) {
+      df[df$name == metadati$name & df$key == metadati$key & df$value == metadati$value, ] <- NULL
+    }
+    rbind(metadati[metadati$name == tsName,], df)
   })

@@ -131,7 +131,7 @@ setMethod(
 #'             dare al grafo. Non c'e' modo di ovviare questo problema. Vedere il
 #'             prototipo di funzione di `.saveGraph`, e' sicuramente piu' chiaro.
 #' @note R sometimes sucks.
-#' @include functions.r
+#' @include persistence.r
 
 setMethod(
   "saveGraph",

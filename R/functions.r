@@ -249,7 +249,8 @@ from.data.frame <- function(df) {
     params <- as.data.frame(cbind(x@tag, da.caricare.db))
     names(params) <- c("tag", "name")
     sub.df <- dbGetPreparedQuery(
-      con,"select name, anno, periodo, freq, dati from dati where tag = ? and name = ? ",
+      con,
+      "select name, anno, periodo, freq, dati from dati where tag = ? and name = ? ",
       bind.data = cbind(x@tag, da.caricare.db))
     if(length(i) == 1) {
       tempret <- list()
@@ -352,36 +353,6 @@ edit.GrafoDB <- function(g, name) {
   nrow(df) > 0
 }
 
-.saveGraph <- function(x, tag = x@tag) {
-  if(hasConflicts(x)) {
-    stop("Il grafo ha conflitti, risolverli prima di salvare")
-  }
-  if(tag == x@tag || .tagExists(tag)) {
-    x@tag <- tag
-    .updateGraph(x)
-  } else {
-    .createGraph(x, tag)
-  }
-}
-
-.updateGraph <- function(x) {
-  data <- x@data
-  functions <- x@functions
-  metadati <- x@metadati
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-  dbBegin(con)
-  tryCatch({
-
-  }, error = function(err) {
-    dbRollback(con)
-    stop(err)
-  })
-
-  dbCommit(con)
-}
-
 .removeConflicts <- function(x, name=NULL) {
   tag <- x@tag
   if(is.character(name)) {
@@ -430,9 +401,9 @@ elimina <- function(tag) {
   tryCatch({
     dbGetPreparedQuery(con, "delete from grafi where tag=?", bind.data = tag)
     dbGetPreparedQuery(con, "delete from conflitti where tag=?", bind.data = tag)
-    dbGetQuery(con, paste0("drop table archi_", tag))
-    dbGetQuery(con, paste0("drop table dati_", tag))
-    dbGetQuery(con, paste0("drop table metadati_", tag))
+    dbGetQuery(con, paste0("drop table if exists archi_", tag))
+    dbGetQuery(con, paste0("drop table if exists dati_", tag))
+    dbGetQuery(con, paste0("drop table if exists metadati_", tag))
   }, error = function(err) {
     dbRollback(con)
     stop(err)

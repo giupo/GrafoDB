@@ -19,7 +19,9 @@ LazyData: true
 Suggests:
     testthat
 Collate:
+    'conflicts.r'
     'functions.r'
     'core.r'
+    'persistence.r'
     'old_grafo_impl.r'
     'subsetting.r'

@@ -1,7 +1,7 @@
 # Questo file contiene tutte le funzioni per effettuare operazioni di subsetting
 # sul 'GrafoDB
 
-#' @include generics.r functions.r
+#' @include functions.r
 NULL
 
 setMethod(
@@ -35,7 +35,7 @@ setMethod(
 #' @param value valore settato
 #' @note funzione interna
 #' @rdname subsetting_internal
-#' @include functions.r generics.r core.r
+#' @include functions.r core.r
 
 .subsetting <- function(x, i, value) {
   network <- x@network

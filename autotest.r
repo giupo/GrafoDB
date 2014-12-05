@@ -49,12 +49,13 @@ GrowlReporter <- setRefClass(
     
     end_reporter = function() {      
       growl <- function(m, icon) {
+        m <- gsub("\'","''", m)
         if(is.windows()) {
           cmd <- paste('growlnotify /silent:true /:R /t:testthat /i:',icon,' "',m,'"',  sep='')
         }
 
         if(is.darwin()) {
-          cmd <- paste('/usr/local/bin/terminal-notifier -title testthat -message \'',m,'\'--appIcon', icon)
+          cmd <- paste('/usr/local/bin/terminal-notifier -title testthat -message \'',m,'\' --appIcon', icon)
         }
         
         invisible(suppressWarnings(

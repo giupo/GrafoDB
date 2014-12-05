@@ -59,3 +59,33 @@ test_that("Posso cercare le serie con metadati", {
   expect_equal(length(res), 2)
   expect_true(all(c("A", "B") %in% res))  
 })
+
+test_that("Posso salvare il grafo sul database", {
+  g <- GrafoDB("test")
+  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B    
+  }
+
+  g <- setMeta(g, "A", "key", "value")
+  g <- setMeta(g, "B", "key", "value")
+  g <- setMeta(g, "C", "key", "value1")
+
+  saveGraph(g, "test1")
+
+  g1 <- GrafoDB("test1")
+
+  expect_true(all(c("A", "B", "C") %in% names(g1)))  
+  elimina("test1")
+})
+
+test_that("Salvere la medesima serie da due sessoioni diverse crea un conflitto", {
+
+})
+
+
+test_that("I names on an empty Graph return an empy array", {
+  g <- GrafoDB("test")
+  expect_equal(length(names(g)), 0)
+})
