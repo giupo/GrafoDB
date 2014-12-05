@@ -19,7 +19,6 @@ LazyData: true
 Suggests:
     testthat
 Collate:
-    'generics.r'
     'functions.r'
     'core.r'
     'old_grafo_impl.r'

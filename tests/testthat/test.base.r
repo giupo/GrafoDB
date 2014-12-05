@@ -54,9 +54,7 @@ test_that("Posso cercare le serie con metadati", {
   g <- setMeta(g, "A", "key", "value")
   g <- setMeta(g, "B", "key", "value")
   g <- setMeta(g, "C", "key", "value1")
-  print(findMethods("expr"))
-  print(findMethods("lookup"))
-  showMethods("lookup")
+  
   res <- lookup(g, "key", "value")
   expect_equal(length(res), 2)
   expect_true(all(c("A", "B") %in% res))  
