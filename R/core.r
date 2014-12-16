@@ -85,7 +85,6 @@ GrafoDB <- setClass(
     network = "igraph",
     data = "hash",
     functions = "hash",
-    metadati = "data.frame",
     timestamp = "POSIXct"
   ),
   contains = "DBDataset")
@@ -101,44 +100,7 @@ setMethod(
   "initialize",
   signature("GrafoDB"),
   function(.Object, tag="cf10") {
-    if(is.null(tag)) {
-      tag <- "cf10"
-    }
-    .Object@tag <- tag
-    .Object@data <- hash()
-    .Object@functions <- hash()
-    .Object@metadati <- data.frame(name=character(),
-                                   key=character(),
-                                   value=character())
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    archi_table_name <- paste0("archi_", tag)
-
-    network <- if(dbExistsTable(con, archi_table_name)) {
-      edges <- dbReadTable(con, paste0("archi_", tag))
-      edges$id <- NULL ## cancello gli id
-      edges$tag <- NULL ## cancello il tag
-      graph.data.frame(edges,directed=TRUE)
-    } else {
-      graph.empty(directed=TRUE)
-    }
-
-    df <- dbGetPreparedQuery(
-      con,
-      "select * from grafi where tag = ?",
-      bind.data = tag)
-
-    if(nrow(df)) {
-      .Object@timestamp <- df$last_updated
-      if(interactive()) {
-        message(df$comment)
-      }
-    } else {
-      .Object@timestamp <- Sys.time()
-    }
-
-    .Object@network <- network
-    .Object
+    .init(.Object, tag)
   })
 
 
@@ -148,12 +110,12 @@ setMethod(
   function(object) {
     data <- object@data
     functions <- object@functions
-
+    tag <- object@tag
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     num <- as.numeric(dbGetPreparedQuery(
       con, "select count(id) from dati where tag = ?", bind.data = object@tag))
-    msg <- paste0("GrafoDB with ", num, " series")
+    msg <- paste0("GrafoDB [",tag,"] with ", num, " series, ", as.character(object@timestamp))
     if(length(data)) {
       msg <- paste0(msg, ", ", length(data), " data changes")
     }
@@ -183,25 +145,14 @@ setMethod(
   "lookup",
   c("GrafoDB", "character", "character"),
   function(x, key, value) {
-    metadati <- x@metadati
     tag <- x@tag
-    cond <- cbind(tag, key, value)
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     ## non ci sono prepared statement funzionanti. maledetti.
     df <- dbGetPreparedQuery(
-      con, "select name from metadati where tag = ? and key = ? and value = ?",
-      bind.data = cond)
-
-    ## merge con i dati appena cambiati
-
-    in.memory <- as.character(metadati[metadati$key == key & metadati$value == value,]$name)
-    ret <- unique(c(df$name, in.memory))
-    if(length(ret)) {
-      ret
-    } else {
-      stop("Non esistono serie con i criteri ", key, " == ", value)
-    }
+      con, "select distinct name from metadati where tag = ? and key = ? and value = ?",
+      bind.data = cbind(tag, key, value))
+    as.character(df$name)    
   })
 
 setMethod(
@@ -276,37 +227,33 @@ setMethod(
       names(params) <- c("tag", "name")
       dbGetPreparedQuery(
         con,
-        "select name, value from metadati where tag = ? and key='FORMULA' and name = ?",
+        "select name, formula from formule where tag = ? and name = ?",
         bind.data = params)
     } else {
-      data.frame(name=character(), value=character())
+      data.frame(name=character(), formula=character())
     }
 
 
     in.functions <- foreach(row=iter(in.functions, by='row'), .combine=rbind) %do% {
-      data.frame(name=row, value=functions[[row]])
+      data.frame(name=row, formula=functions[[row]])
     }
 
     formule <- rbind(in.functions, from.db)
-
+   
     if(nrow(formule) == 0) {
       NULL
     } else if(nrow(formule) == 1) {
-      task <- as.character(formule$value)
+      task <- as.character(formule$formula)
       if(interactive() && echo) {
         message(task)
       }
       invisible(task)
     } else {
-      formule
       nomi <- formule$name
-      formule$name
-      ## rownames(formule) <- nomi
-
       ret <- vector(length(nomi), mode="list")
       for(i in seq_along(nomi)) {
         name <- nomi[[i]]
-        ret[i] <- formule[formule$name == name,]$value
+        ret[i] <- as.character(formule[formule$name == name,]$formula)
       }
       names(ret) <- nomi
       ret
@@ -337,38 +284,6 @@ setMethod(
   "evaluate",
   signature("GrafoDB", "ANY", "ANY"),
   .evaluate)
-
-.setfunction <- function(object, name, f) {
-  tag <- object@tag
-
-  ## epurazione di f
-  task <- .declutter_function(f)
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  df <- dbGetPreparedQuery(
-    con,
-    "select id from metadata where tag=? and name=? and key='FORMULA'",
-    bind.data = name)
-
-  if(nrow(df)) {
-    sql <- "update metadati set value=? where tag = ? and id = ?"
-    dbGetPreparedQuery(con, sql, bind.data = data.frame(value=task, tag=tag, id=df$id))
-  } else {
-    sql <- "insert into metadati(name, key, value, tag) values (?, 'FORMULA', ?, ?)"
-    dbGetPreparedQuery(con, sql, bind.data = data.frame(name=name, value=task, tag=tag))
-  }
-}
-
-setGeneric(
-  "setFunction",
-  function(object, name, f) {
-    standardGeneric("setFunction")
-  })
-
-setMethod(
-  "setFunction",
-  signature("GrafoDB", "character", "function"),
-  .setfunction)
 
 setMethod(
   "isRoot",
@@ -438,17 +353,22 @@ setMethod(
   function(object, tsName, full=FALSE) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-
-    metadati <- object@metadati
-
-    df <- dbGetPreparedQuery(
+    dbGetPreparedQuery(
       con,
       "select name, key, value from metadati where tag = ? and name = ?",
       bind.data <- cbind(object@tag, tsName))
-    
-    ## overwrite metadata modifed in local session
-    if(nrow(df)) {
-      df[df$name == metadati$name & df$key == metadati$key & df$value == metadati$value, ] <- NULL
-    }
-    rbind(metadati[metadati$name == tsName,], df)
   })
+
+
+.simpleGraph <- function(tag) {
+  g <- GrafoDB(tag)
+  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B    
+  }
+  
+  g <- setMeta(g, "A", "key", "value")
+  g <- setMeta(g, "B", "key", "value")
+  setMeta(g, "C", "key", "value1")
+}

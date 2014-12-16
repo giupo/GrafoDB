@@ -1,3 +1,58 @@
+.init <- function(.Object, tag="cf10") {
+  if(is.null(tag)) {
+    tag <- "cf10"
+  }
+  .Object@tag <- tag
+  .Object@data <- hash()
+  .Object@functions <- hash()
+  
+  con <- pgConnect()
+  on.exit(dbDisconnect(con))
+  archi_table_name <- paste0("archi_", tag)
+  
+  network <- if(dbExistsTable(con, archi_table_name)) {
+    edges <- dbReadTable(con, paste0("archi_", tag))
+    edges$id <- NULL ## cancello gli id
+    edges$tag <- NULL ## cancello il tag
+    edges$last_updated <- NULL
+    edges$autore <- NULL
+    graph.data.frame(edges,directed=TRUE)
+  } else {
+    graph.empty(directed=TRUE)
+  }
+  
+  df <- dbGetPreparedQuery(
+    con,
+    "select name from dati where tag=?",
+    bind.data = tag)
+  
+  if(nrow(df)) {
+    nomi <- as.character(df$name)
+    pending.names <- setdiff(nomi, V(network)$name)
+    for(name in pending.names) {
+      network <- network + vertex(name)
+    }
+  }
+  
+  df <- dbGetPreparedQuery(
+    con,
+    "select * from grafi where tag = ?",
+    bind.data = tag)
+  
+  if(nrow(df)) {
+    .Object@timestamp <- df$last_updated
+    if(interactive()) {
+      message(df$comment)
+    }
+  } else {
+    .Object@timestamp <- Sys.time()
+  }
+  
+  .Object@network <- network
+  .Object
+}
+
+
 #' Controlla se `x` e' un `GrafoDB`
 #'
 #' Predicato; Ritorna `TRUE` se `x` e' un istanza di `GrafoDB`, altrimenti ritorna
@@ -40,10 +95,10 @@ to.data.frame <- function(x, name=NULL) {
 
   if(is.null(name)) {
     as.data.frame(
-      list(anno=anno,periodo=prd, freq=freq, dati=raw_numbers))
+      list(anno=anno, periodo=prd, freq=freq, dati=raw_numbers), stringsAsFactors = F)
   } else {
     as.data.frame(
-      list(name=name, anno=anno,periodo=prd, freq=freq, dati=raw_numbers))
+      list(name=name, anno=anno, periodo=prd, freq=freq, dati=raw_numbers), stringAsFactors = F)
   }
 }
 
@@ -57,14 +112,14 @@ to.data.frame <- function(x, name=NULL) {
 #' @rdname fromdataframe
 
 from.data.frame <- function(df) {
-  dati <- TSERIES(fromJSON(df$dati, nullValue = NA),
-                  START=c(df$anno, df$periodo),
-                  FREQ=df$freq)
-  ret <- list()
-  ret[[df$name]] <- dati
+  dati <- TSERIES(
+    fromJSON(as.character(df$dati), nullValue = NA),
+    START=c(df$anno, df$periodo),
+    FREQ=df$freq)
+  ret <- list(dati)
+  names(ret) <- df$name
   ret
 }
-
 
 
 #' funzione per eliminare le definizione 'function' dalle formule per il GrafoDB
@@ -252,6 +307,7 @@ from.data.frame <- function(df) {
       con,
       "select name, anno, periodo, freq, dati from dati where tag = ? and name = ? ",
       bind.data = cbind(x@tag, da.caricare.db))
+    CLUSTER_LIMIT <- getOption("CLUSTER_LIMIT", 100)
     if(length(i) == 1) {
       tempret <- list()
       tempret[[i]] <- tryCatch({
@@ -404,6 +460,7 @@ elimina <- function(tag) {
     dbGetQuery(con, paste0("drop table if exists archi_", tag))
     dbGetQuery(con, paste0("drop table if exists dati_", tag))
     dbGetQuery(con, paste0("drop table if exists metadati_", tag))
+    dbGetQuery(con, paste0("drop table if exists formule_", tag))
   }, error = function(err) {
     dbRollback(con)
     stop(err)

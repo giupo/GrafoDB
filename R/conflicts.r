@@ -16,6 +16,7 @@
 #' hasConflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
 #' }
 #' @export
+#' @include core.r
 
 setGeneric(
   "hasConflicts",
@@ -41,6 +42,7 @@ setGeneric(
 #' }
 #' @export
 #' @import rcf
+#' @include core.r
 
 setMethod(
   "hasConflicts",

@@ -138,6 +138,7 @@ setMethod(
   signature("GrafoDB", "ANY"),
   function(object, path=object@tag) {
     .saveGraph(object, path)
+    GrafoDB(path)
   })
 
 #' implementazione di showInternalChanges di `package::grafo`
@@ -152,9 +153,7 @@ setMethod(
   signature("GrafoDB"),
   function(object) {
     data <- graph@data
-    metadati <- graph@metadati
     functions <- graph@functions
-
   })
 
 #' implementazione di listNodes di `package::grafo`
@@ -168,10 +167,19 @@ setMethod(
   "deleteMeta",
   signature("GrafoDB", "character", "character", "ANY"),
   function(object, tsName, attrName, attrValue) {
-    metadati <- object@metadati
-    object@metadati <- metadati[-which(metadati$name == tsName &
-                                         metadati$key == attrName &
-                                         metadati$value == attrValue),]
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    dbBegin(con)
+    tryCatch({
+      sql <- "delete from metadati where tag = ? and name = ? and key = ? nad value =?"
+      params <- cbind(object@tag, tsName, attrName, attrValue)
+      dbGetPreparedQuery(con, sql, bind.data=params)
+      dbCommit(con)
+    }, error = function(err) {
+      dbRollback(con)
+      stop(err)
+    })
+    
     invisible(object)
   })
 
@@ -239,7 +247,12 @@ setMethod(
   "searchNode",
   signature("GrafoDB", "character", "character"),
   function(graph, attrName, attrValue) {
-    lookup(graph, attrName, attrValue)
+    ret <- lookup(graph, attrName, attrValue)
+    if(length(ret) == 0) {
+      stop("Non esistono serie con i criteri ", attrName, " == ", attrValue)
+    } else {
+      ret
+    }
   })
 
 #' Imposta un metadato per una particolare serie
@@ -258,29 +271,23 @@ setMethod(
 #' }
 #'
 
+
 setMethod(
   "setMeta",
   signature("GrafoDB", "character", "character", "character"),
   function(object, tsName, attrName, value) {
-    metadati <- object@metadati
-
     if(!tsName %in% names(object)) {
       stop(tsName, " non e' una serie del grafo")
     }
 
-    result <- tryCatch(
-      searchNode(object, attrName, value),
-      error = function(err) {
-        character()
-      })
-
-    if(tsName %in% result) {
-      warning(tsName, "ha gia' un metadato", attrName, " = ", value)
+    if(tsName %in% lookup(object, attrName, value)) {
+      warning(tsName, " ha gia' un metadato ", attrName, " = ", value)
     } else {
-      metadati <- rbind(
-        metadati,
-        data.frame(name=tsName, key=attrName, value=value))
+      con <- pgConnect()
+      on.exit(dbDisconnect(con))
+      sql <- "insert into metadati(tag, name, key, value, autore) values (?, ?, ?, ?, ?)"
+      params <- cbind(object@tag, tsName, attrName, value, whoami())
+      dbGetPreparedQuery(con, sql, bind.data=params)
     }
-    object@metadati <- metadati
     object
   })

@@ -68,14 +68,14 @@ setMethod(
     }
     x@functions[[name]] <- .declutter_function(value)
     x@network <- network
-    x <- evaluate(x, name)
+    x <- .evaluate(x, name)
   } else {
+    x@network <- network
     x@data[[name]] <- value
-  }
-  x@network <- network
-  subgraph <- describe(x, name, mode="out")
-  if(length(subgraph)) {    
-    x <- evaluate(x, name)
+    subgraph <- describe(x, name, mode="out")
+    if(length(subgraph)) {    
+      x <- evaluate(x, name)
+    }
   }
   nameObject <- deparse(substitute(x))
   assign(nameObject, x, envir=parent.frame())
