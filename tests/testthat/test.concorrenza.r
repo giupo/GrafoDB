@@ -1,5 +1,8 @@
 context("concorrenza")
 
+elimina("test")
+elimina("test1")
+
 test_that("Salvare la medesima serie da due sessioni diverse crea un conflitto", {
   g <- GrafoDB("test")
   g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
@@ -123,10 +126,7 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   expect_warning(saveGraph(g2), "Ci sono conflitti sulle formule")
 
   g <- GrafoDB("test1")
-  expect_true(hasConflicts(g))
-  conf <- getConflicts(g)
-  print(conf)
-  
+  expect_true(hasConflicts(g))  
 })
 
 elimina("test")

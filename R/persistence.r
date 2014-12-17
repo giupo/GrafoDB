@@ -9,7 +9,7 @@
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   ret <- dbGetQuery(con, "select tag from grafi")
-  as.character(ret$tags)
+  as.character(ret$tag)
 }
 
 #' funzione per salvare un grafo
@@ -159,7 +159,7 @@
       autore <- whoami()
       cbind(task, autore, name, tag)
     }
-    print(dati)
+    
     sql1 <- paste0("UPDATE conflitti  SET formula=?, autore=?, ",
                    "date = LOCALTIMESTAMP::timestamp(0) ",
                    " WHERE name=? and tag=?");      
@@ -171,7 +171,7 @@
       " select ?,?,LOCALTIMESTAMP::timestamp(0),?,?",
       " WHERE NOT EXISTS (SELECT 1 FROM formule WHERE name=? and tag=?)")
     dati <- cbind(dati, names.with.conflicts, tag)
-    print(dati)
+    
     names(dati) <- c("formula", "autore", "name", "tag", "name", "tag")
     dbGetPreparedQuery(con, sql2, bind.data = dati)
     warning("Ci sono conflitti sulle formule per le serie: ",
@@ -202,7 +202,6 @@
       cbind(task, whoami(), name, tag, name, tag)
     }
     colnames(formule) <- c("formula", "autore", "name", "tag", "name", "tag")
-    print(formule)
     dbGetPreparedQuery(con, sql2, bind.data=formule)
   }
 }
