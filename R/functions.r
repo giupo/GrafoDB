@@ -12,14 +12,20 @@
   
   network <- if(dbExistsTable(con, archi_table_name)) {
     edges <- dbReadTable(con, paste0("archi_", tag))
-    edges$id <- NULL ## cancello gli id
-    edges$tag <- NULL ## cancello il tag
-    edges$last_updated <- NULL
-    edges$autore <- NULL
-    graph.data.frame(edges,directed=TRUE)
+    if(nrow(edges)) {
+      edges$id <- NULL ## cancello gli id
+      edges$tag <- NULL ## cancello il tag
+      edges$last_updated <- NULL
+      edges$autore <- NULL
+      graph.data.frame(edges,directed=TRUE)
+    } else {
+      graph.empty(directed=TRUE)
+    }
   } else {
     graph.empty(directed=TRUE)
   }
+
+  .Object@network <- network
   
   df <- dbGetPreparedQuery(
     con,
@@ -38,6 +44,7 @@
     con,
     "select * from grafi where tag = ?",
     bind.data = tag)
+
   
   if(nrow(df)) {
     .Object@timestamp <- df$last_updated
@@ -47,8 +54,6 @@
   } else {
     .Object@timestamp <- Sys.time()
   }
-  
-  .Object@network <- network
   .Object
 }
 
@@ -112,12 +117,17 @@ to.data.frame <- function(x, name=NULL) {
 #' @rdname fromdataframe
 
 from.data.frame <- function(df) {
-  dati <- TSERIES(
-    fromJSON(as.character(df$dati), nullValue = NA),
-    START=c(df$anno, df$periodo),
-    FREQ=df$freq)
-  ret <- list(dati)
-  names(ret) <- df$name
+  stopifnot(is.data.frame(df))
+  ret <- list()
+
+  for(i in seq(nrow(df))) {
+    row <- df[i,]
+    dati <- TSERIES(
+      fromJSON(as.character(row$dati), nullValue = NA),
+      START=c(row$anno, row$periodo),
+      FREQ=row$freq)
+    ret[[row$name]] <- dati
+  }
   ret
 }
 

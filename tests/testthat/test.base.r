@@ -78,33 +78,7 @@ test_that("Posso salvare il grafo sul database", {
   elimina("test1")
 })
 
-test_that("Salvere la medesima serie da due sessioni diverse crea un conflitto", {
-  g <- GrafoDB("test")
-  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["C"] <- function(A,B) {
-    C = A + B    
-  }
-
-  g <- setMeta(g, "A", "key", "value")
-  g <- setMeta(g, "B", "key", "value")
-  g <- setMeta(g, "C", "key", "value1")
-  saveGraph(g, "test1")
-
-  g1 <- GrafoDB("test1")
-  g2 <- GrafoDB("test1")
-  g1["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g2["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-
-  saveGraph(g1, "test1")
-  expect_warning(saveGraph(g2, "test1"), "Ci sono conflitti")
-})
-
-
 test_that("I names on an empty Graph return an empy array", {
   g <- GrafoDB("test")
   expect_equal(length(names(g)), 0)
 })
-
-elimina("test1")
-elimina("test")

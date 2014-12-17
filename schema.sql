@@ -566,7 +566,7 @@ ALTER TABLE ONLY metadati_test1 ALTER COLUMN last_updated SET DEFAULT ('now'::te
 --
 
 ALTER TABLE ONLY conflitti
-    ADD CONSTRAINT "Conflitti_name_key" UNIQUE (name);
+    ADD CONSTRAINT "Conflitti_name_tag_key" UNIQUE (name, tag);
 
 
 --
@@ -575,15 +575,6 @@ ALTER TABLE ONLY conflitti
 
 ALTER TABLE ONLY conflitti
     ADD CONSTRAINT "Conflitti_pkey" PRIMARY KEY (id);
-
-
---
--- Name: Conflitti_tag_key; Type: CONSTRAINT; Schema: public; Owner: m024000; Tablespace: 
---
-
-ALTER TABLE ONLY conflitti
-    ADD CONSTRAINT "Conflitti_tag_key" UNIQUE (tag);
-
 
 --
 -- Name: archi_test1_pkey; Type: CONSTRAINT; Schema: public; Owner: m024000; Tablespace: 

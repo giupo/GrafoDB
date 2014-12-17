@@ -72,3 +72,20 @@ setGeneric(
     standardGeneric("getConflicts")
   })
 
+setMethod(
+  "getConflicts",
+  signature("GrafoDB", "ANY"),
+  function(x, name=NULL) {
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    tag <- x@tag
+    params <- as.data.frame(list(tag=tag), stringAsFactors=F)
+    sql <- if(is.null(name)) {
+      "select name, tag, anno, prd as periodo, freq, dati, autore, date, formula from conflitti where tag = ?"
+    } else {
+      params <- cbind(params, name)
+      names(params) <- c("tag", "name")
+      "select name, tag, anno, prd as periodo, freq, dati, autore, date, formula  from conflitti where tag = ? and name = ?"
+    }
+    dbGetPreparedQuery(con, sql, bind.data = params) 
+  })
