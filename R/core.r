@@ -212,52 +212,13 @@ setMethod(
 #' g <- GrafoDB(...)
 #' expr(g, "TETSZ0AC") # ritorna list(TETSZ0AC = "TETSZ0AC = ASTSZ0AC...")
 #' }
+#' @export
 
 setMethod(
   "expr",
   c("GrafoDB", "character", "ANY"),
   function(x, nomi, echo=TRUE) {
-    functions <- x@functions
-    in.functions <- intersect(keys(functions), nomi)
-    da.caricare.db <- setdiff(nomi, in.functions)
-    from.db <- if(length(da.caricare.db)) {
-      con <- pgConnect()
-      on.exit(dbDisconnect(con))
-      params <- as.data.frame(cbind(x@tag, da.caricare.db))
-      names(params) <- c("tag", "name")
-      dbGetPreparedQuery(
-        con,
-        "select name, formula from formule where tag = ? and name = ?",
-        bind.data = params)
-    } else {
-      data.frame(name=character(), formula=character())
-    }
-
-
-    in.functions <- foreach(row=iter(in.functions, by='row'), .combine=rbind) %do% {
-      data.frame(name=row, formula=functions[[row]])
-    }
-
-    formule <- rbind(in.functions, from.db)
-   
-    if(nrow(formule) == 0) {
-      NULL
-    } else if(nrow(formule) == 1) {
-      task <- as.character(formule$formula)
-      if(interactive() && echo) {
-        message(task)
-      }
-      invisible(task)
-    } else {
-      nomi <- formule$name
-      ret <- vector(length(nomi), mode="list")
-      for(i in seq_along(nomi)) {
-        name <- nomi[[i]]
-        ret[i] <- as.character(formule[formule$name == name,]$formula)
-      }
-      names(ret) <- nomi
-      ret
-    }
+    .expr(x, nomi, echo)
   })
 
 #' Implementazione del generic `evaluate` del package `grafo`
@@ -372,3 +333,71 @@ setMethod(
   g <- setMeta(g, "B", "key", "value")
   setMeta(g, "C", "key", "value1")
 }
+
+
+setGeneric(
+  "edita",
+  function(x, name) {
+    standardGeneric("edita")
+  })
+
+setMethod(
+  "edita",
+  signature("GrafoDB", "character"),
+  function(x, name) {
+    nameObject <- deparse(substitute(x))
+    x <- .edita(x, name)
+    assign(nameObject, x, envir=parent.frame())
+    invisible(x)
+  })
+
+setMethod(
+  "as.list",
+  signature("GrafoDB"),
+  function(x) {
+    x[[names(x)]]
+  })
+
+#' Valuta una singola serie del grafo e ritorna il risultato
+#'
+#' @name ser
+#' @usage ser(x, name)
+#' @param x un istanza di GrafoDB
+#' @param name nome della serie da valutare
+#' @return la serie valutata
+#' @export
+
+setGeneric(
+  "ser",
+  function(x, name) {
+    standardGeneric("ser")
+  })
+
+#' Valuta una singola serie del grafo e ritorna il risultato
+#'
+#' @name ser
+#' @usage ser(x, name)
+#' @param x un istanza di GrafoDB
+#' @param name nome della serie da valutare
+#' @return la serie valutata
+#' @export
+
+setMethod(
+  "ser",
+  signature("GrafoDB", "character"),
+  function(x, name) {
+    .evaluateSingle(name, x)
+  })
+
+setGeneric(
+  "deps",
+  function(x, name) {
+    standardGeneric("deps")
+  })
+
+setMethod(
+  "deps",
+  signature("GrafoDB", "character"),
+  function(x, name) {
+    upgrf(x, name, livello=1)
+  })

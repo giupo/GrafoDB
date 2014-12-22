@@ -45,6 +45,13 @@
       dbRollback(con)
       stop(err)
     })
+
+  tryCatch(
+    .updateArchi(x, con),
+    error = function(err) {
+      dbRollback(con)
+      stop(err)
+    })
   
   tryCatch(
     .updateFunctions(x, con),
@@ -52,33 +59,83 @@
       dbRollback(con)
       stop(err)
     })
-
+  
   tryCatch({
-    df <- dbGetPreparedQuery(
+    dbGetPreparedQuery(
       con,
-      "select max(last_updated) as last_updated from dati where tag = ?",
-      bind.data = tag)
-    maxTimeStampDati <- as.numeric(df$last_updated)
-    
-    df <- dbGetPreparedQuery(
-      con,
-      "select max(last_updated) from formule where tag = ?",
-      bind.data = tag)
-    maxTimeStampFormule <- as.numeric(df$last_updated)
-    
-    timestamp <- max(maxTimeStampDati, maxTimeStampFormule)
-    
-    sql <- "update grafi set last_updated = to_timestamp(?) where tag = ?"
-    dbGetPreparedQuery(con, sql, bind.data = cbind(timestamp, tag))    
+      paste0("update grafi set last_updated = (select max(last_updated) ",
+             " from (select last_updated as last_updated from dati where tag=? ",
+             " union select last_updated as last_updated from formule ",
+             " where tag=? ",
+             " union select last_updated as last_updated from archi where tag=?)",
+             " as last_updated) where tag = ?"),
+      bind.data = cbind(tag, tag, tag, tag))   
   }, error = function(err) {
     dbRollback(con)
     stop(err)
   })
   
-  
   dbCommit(con)
 }
 
+.updateArchi <- function(x, con) {
+  tag <- x@tag
+  in.memory <- as.data.frame(get.edgelist(x@network), stringsAsFactors = F)
+  autore <- whoami()
+  names(in.memory) <- c("partenza", "arrivo")
+  in.db <- dbGetPreparedQuery(
+    con,
+    paste("select partenza, arrivo from archi where tag = ?"),
+    bind.data = tag)
+  sep <- "-"
+  in.db <- drop.levels(in.db)
+  in.db <- paste(in.db$partenza, in.db$arrivo, sep=sep)
+  in.memory <- paste(in.memory$partenza, in.memory$arrivo, sep=sep)
+  
+  da.inserire <- setdiff(in.memory, in.db)
+  da.cancellare <- setdiff(in.db, in.memory)
+  
+  if(length(da.inserire)) {
+    params <- if(length(da.inserire) == 1) {
+      tokens <- str_split(da.inserire, sep)[[1]]
+      df <- as.data.frame(
+        list(
+          partenza = tokens[[1]],
+          arrivo=tokens[[2]]),
+        stringsAsFactors = F)
+      names(df) <- c("partenza", "arrivo")
+      df
+    } else {
+      df <- as.data.frame(str_split(da.inserire), stringsAsFactors = F)
+      names(df) <- c("partenza", "arrivo")
+      df
+    }
+    params <- c(tag, df, autore)
+    dbGetPreparedQuery(
+      con,
+      "insert into archi(tag, partenza, arrivo, autore) values(?,?,?,?)",
+      bind.data = params)
+  }
+
+  if(length(da.cancellare)) {
+    params <- if(length(da.cancellare) == 1) {
+      df <- as.data.frame(str_split(da.cancellare, sep)[[1]], stringsAsFactors = F)
+      names(df) <- c("partenza", "arrivo")
+      df
+    } else {
+      df <- as.data.frame(str_split(da.cancellare), stringsAsFactors = F)
+      names(df) <- c("partenza", "arrivo")
+      df
+    }
+    params <- c(tag, df)
+    dbGetPreparedQuery(
+      con,
+      "delete from archi where tag = ? and partenza=? and arrivo = ?",
+      bind.data = params)
+    
+  }
+}
+  
 .updateData <- function(x, con) {
   tag <- x@tag
   data <- x@data
@@ -114,7 +171,7 @@
   
   names.updated <- setdiff(keys(data), names.with.conflicts)
   if(length(names.updated)) {
-    dati <- foreach (name = iter(names.updated), .combine=rbind) %dopar% {
+    dati <- foreach (name = iter(names.updated), .combine=rbind) %do% {
       df <- to.data.frame(x[[name]])
       autore <- whoami()
       cbind(df, autore, name, tag)
@@ -155,7 +212,7 @@
   names.with.conflicts <- as.character(df$name)
   if(nrow(df)) {
     dati <- foreach (name = iter(names.with.conflicts), .combine=rbind) %do% {
-      task <- getTask(x, name)
+      task <- expr(x, name, echo=FALSE)
       autore <- whoami()
       cbind(task, autore, name, tag)
     }
@@ -181,13 +238,14 @@
   names.updated <- setdiff(keys(x@functions), names.with.conflicts)
   if(length(names.updated)) {
     formule <- foreach (name = iter(names.updated), .combine=rbind) %do% {
-      task <- getTask(x, name)
+      task <- expr(x, name, echo=FALSE)
       cbind(task, whoami(), name, tag)
     }
 
     if(dbExistsTable(con, paste0("formule_", tag))) {
       sql1 <- paste0("UPDATE formule_",tag,
-                     " SET formula=?, autore=?, last_updated = LOCALTIMESTAMP::timestamp(0) ",
+                     " SET formula=?, autore=?, ",
+                     " last_updated = LOCALTIMESTAMP::timestamp(0) ",
                      " WHERE name=? and tag=?");      
       dbGetPreparedQuery(con, sql1, bind.data=formule)
     }
@@ -198,7 +256,7 @@
       " WHERE NOT EXISTS (SELECT 1 FROM formule WHERE name=? and tag=?)")
     
     formule <- foreach (name = iter(names.updated), .combine=rbind) %do% {
-      task <- getTask(x, name)
+      task <- expr(x, name, echo=FALSE)
       cbind(task, whoami(), name, tag, name, tag)
     }
     colnames(formule) <- c("formula", "autore", "name", "tag", "name", "tag")
@@ -279,7 +337,7 @@
   }
   
   formule <- foreach(name = iter(names(x)), .combine=rbind) %do% {
-    task <- getTask(x, name)
+    task <- expr(x, name, echo=F)
     if(!is.null(task)) {
       autore <- whoami()
       cbind(tag, name, task, autore)

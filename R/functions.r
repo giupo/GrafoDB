@@ -1,3 +1,15 @@
+#' Funzione d'inizializzazione del grafo.
+#'
+#' Questa funzione va utilizzata nell'initialize S4 dell'oggetto `GrafoDB`
+#' 
+#' @name .init
+#' @rdname init-internal
+#' @param .Object (creato da new)
+#' @param tag tag del grafo (default=`cf10`)
+#' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
+#' @note e' stata scorporata dall'initialize S4 per finalita' di debug
+#' @include persistence.r
+
 .init <- function(.Object, tag="cf10") {
   if(is.null(tag)) {
     tag <- "cf10"
@@ -35,9 +47,7 @@
   if(nrow(df)) {
     nomi <- as.character(df$name)
     pending.names <- setdiff(nomi, V(network)$name)
-    for(name in pending.names) {
-      network <- network + vertex(name)
-    }
+    network <- network + vertex(pending.names)
   }
   
   df <- dbGetPreparedQuery(
@@ -54,6 +64,17 @@
   } else {
     .Object@timestamp <- Sys.time()
   }
+
+
+  sql <- paste0(
+    "INSERT INTO grafi(tag, commento, last_updated, autore) ",
+    " select ?,?,LOCALTIMESTAMP::timestamp(0),? ",
+    " WHERE NOT EXISTS (SELECT 1 FROM grafi WHERE tag=?)")
+  autore <- whoami()
+  dati <- cbind(tag, paste0('Grafo per ', tag), autore, tag)
+  names(dati) <- c("tag", "commento", "autore", "tag")
+  
+  dbGetPreparedQuery(con, sql, bind.data = dati)
   .Object
 }
 
@@ -177,6 +198,71 @@ from.data.frame <- function(df) {
   task
 }
 
+
+#' questa funzione orla la formula del grafo come una funzione
+#'
+#' I parametri della funzione ritornata sono le dipendenze della serie
+#' @name .clutter_with_params
+#' @usage .clutter_with_params(f, name, deps)
+#' @param f function task to be converted as function
+#' @param name task name
+#' @param character array di dipendenze
+#' @return Ritorna una una funzione `is.function(ret) == TRUE`
+#' @rdname clutter_with_params_internal
+
+.clutter_with_params <- function(f, name, deps) {
+  template <- "proxy <- function(--DEPS--) {
+--FUNCTION--
+  }"
+  task <- gsub("--DEPS--", paste(deps, collapse = ", "), template)
+  task <- gsub("--FUNCTION--", f, task)
+  task
+}
+
+.expr <- function(x, nomi, echo=TRUE) {
+  functions <- x@functions
+  in.functions <- intersect(keys(functions), nomi)
+  da.caricare.db <- setdiff(nomi, in.functions)
+  from.db <- if(length(da.caricare.db)) {
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    params <- as.data.frame(cbind(x@tag, da.caricare.db))
+    names(params) <- c("tag", "name")
+    dbGetPreparedQuery(
+      con,
+        "select name, formula from formule where tag = ? and name = ?",
+      bind.data = params)
+  } else {
+    data.frame(name=character(), formula=character())
+  }
+  
+  
+  in.functions <- foreach(row=iter(in.functions, by='row'), .combine=rbind) %do% {
+    data.frame(name=row, formula=functions[[row]])
+  }
+  
+  formule <- rbind(in.functions, from.db)
+  
+  if(nrow(formule) == 0) {
+    NULL
+  } else if(nrow(formule) == 1) {
+    task <- as.character(formule$formula)
+    if(interactive() && echo) {
+      message(task)
+    }
+    invisible(task)
+  } else {
+    nomi <- formule$name
+    ret <- vector(length(nomi), mode="list")
+    for(i in seq_along(nomi)) {
+      name <- nomi[[i]]
+      ret[i] <- as.character(formule[formule$name == name,]$formula)
+    }
+    names(ret) <- nomi
+    ret
+  }
+}
+
 #' Valuta un singolo oggetto del grafo identificato da `name`
 #'
 #' @name .evaluateSingle
@@ -191,7 +277,7 @@ from.data.frame <- function(df) {
 #' @rdname evaluateSingle-internal
 
 .evaluateSingle <- function(name, graph) {
-  tsformula <- expr(graph, name, echo=FALSE)
+  tsformula <- .expr(graph, name, echo=FALSE)
   nomi_padri <- upgrf(graph, name, livello=1)
   if(length(nomi_padri) == 0) {
     return(graph[[name]])
@@ -240,8 +326,7 @@ from.data.frame <- function(df) {
   }
 
   if(is.null(v_start)) {
-    ## alla prima tornata elimino le serie primitive perche' prive di formule.
-    sources_id<- V(network)[degree(network, mode="in") == 0]
+    sources_id <- V(network)[degree(network, mode="in") == 0]
     network <- delete.vertices(network, sources_id)
   } else {
     v_start <- as.character(v_start)
@@ -268,11 +353,11 @@ from.data.frame <- function(df) {
   sources_id <- V(network)[degree(network, mode="in") == 0]
   while(length(sources_id)) {
     sources <- V(network)[sources_id]$name
-
-    evaluated.data <- clusterParLapply(sources, function(name, object) {
+    
+    evaluated.data <- lapply(sources, function(name, object) {
       .evaluateSingle(name, object)
     }, object)
-
+    
     names(evaluated.data) <- sources
     for(name in names(evaluated.data)) {
       data[[name]] <- evaluated.data[[name]]
@@ -327,7 +412,7 @@ from.data.frame <- function(df) {
       })
       tempret
     } else if (length(i) > CLUSTER_LIMIT) {
-      .initDefaultCluster()
+      initDefaultCluster()
       foreach(row=iter(sub.df, by='row'), .combine=append) %dopar% from.data.frame(row)
     } else {
       foreach(row=iter(sub.df, by='row'), .combine=append) %do% from.data.frame(row)
@@ -460,6 +545,9 @@ edit.GrafoDB <- function(g, name) {
 #' @import DBI RPostgreSQL
 
 elimina <- function(tag) {
+
+  if(tag == "cf10") stop("Non cancellero' mai cf10")
+  
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
@@ -476,4 +564,16 @@ elimina <- function(tag) {
     stop(err)
   })
   dbCommit(con)
+}
+
+.edita <- function(x, name) {
+  file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
+  deps <- getDependencies(x, name)
+  task <- expr(x, name, echo=F)
+  write(.clutter_with_params(task, name, deps), file=file)
+  file.edit(file)
+  txtsrc <- paste(readLines(file), collapse="\n")
+  f <- eval(parse(text=txtsrc))
+  x[name] = f
+  invisible(x)
 }
