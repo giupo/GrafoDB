@@ -92,7 +92,7 @@ test_that("Salvare lo stesso grafo con formula aggiunta", {
 
   saveGraph(g1)
   saveGraph(g2)
-
+  
   g <- GrafoDB("test1")
 
   expect_true("D" %in% names(g))

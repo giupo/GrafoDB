@@ -24,21 +24,94 @@
   if(hasConflicts(x)) {
     stop("Il grafo ha conflitti, risolverli prima di salvare")
   }
-  if(.tagExists(tag)) {
-    x@tag <- tag
+
+  tagExists <- .tagExists(tag)
+  
+  if(tagExists) {
     .updateGraph(x)
   } else {
-    .createGraph(x, tag)
+    if (x@tag == tag) {
+      .createGraph(x, tag)  
+    } else {
+      con <- pgConnect()
+      on.exit(dbDisconnect(con))
+      dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+      dbBegin(con)
+      .copyGraph(x@tag, tag, con)
+      .updateGraph(x, con)
+      dbCommit(con)
+    }
   }
-  
 }
 
-.updateGraph <- function(x) {
+.copyGraph <- function(from, to, con=NULL) {
+  if(is.null(con)) {
+    wasNull <- TRUE
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+    dbBegin(con)
+  } else {
+    wasNull <- FALSE
+  }
+  
+  commento <- paste0("Rilascio per ", to)
+  autore <- whoami()
+  params <- cbind(to, autore, from)
+  tryCatch({
+    ## copia dati
+    dbGetPreparedQuery(
+      con,
+      paste0("insert into dati(tag, name, anno, periodo, freq, dati, autore) ",
+             " select ?, name, anno, periodo, freq, dati, ? from dati where tag = ?"),
+      bind.data = params)
+    ## copia archi
+    dbGetPreparedQuery(
+      con,
+      paste0("insert into archi(tag, partenza, arrivo, autore) ",
+             " select ?, partenza, arrivo, ? from archi where tag = ?"),
+      bind.data = params)
+    ## copia formule
+    dbGetPreparedQuery(
+      con,
+      paste0("insert into formule(tag, name, formula, autore) ",
+             " select ?, name, formula, ? from formule where tag = ?"),
+      bind.data = params)
+    ## copia metadati
+    dbGetPreparedQuery(
+      con,
+      paste0("insert into metadati(tag, name, key, value, autore) ",
+             " select ?, name, key, value, ? from metadati where tag = ?"),
+      bind.data = params)
+    ## inserisce nella tab grafi
+    dbGetPreparedQuery(
+      con,
+      paste0("insert into grafi(tag, commento, last_updated, autore) values ",
+             "(?, ?, LOCALTIMESTAMP::timestamp(0), ?)"),
+      bind.data = data.frame(to, commento, autore))
+    ## Ricordati di commiattare.
+    if(wasNull) {
+      dbCommit(con)
+    }
+  }, error = function(err) {
+    dbRollback(con)
+    stop(err)
+  })
+}
+
+.updateGraph <- function(x, con=NULL) {
+  if(is.null(con)) {
+    wasNull <- TRUE
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+    dbBegin(con)
+  } else {
+    wasNull <- FALSE
+  }
+  
   tag <- x@tag
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-  dbBegin(con)
+
   tryCatch(
     .updateData(x, con),
     error = function(err) {
@@ -74,8 +147,9 @@
     dbRollback(con)
     stop(err)
   })
-  
-  dbCommit(con)
+  if(wasNull) {
+    dbCommit(con)
+  }
 }
 
 .updateArchi <- function(x, con) {
@@ -106,7 +180,7 @@
       names(df) <- c("partenza", "arrivo")
       df
     } else {
-      df <- as.data.frame(str_split(da.inserire), stringsAsFactors = F)
+      df <- as.data.frame(str_split(da.inserire, sep), stringsAsFactors = F)
       names(df) <- c("partenza", "arrivo")
       df
     }
@@ -157,9 +231,13 @@
                   " values (?, ?, ?, ?, ?, ? ,?)")
     
     dati <- foreach (name = iter(names.with.conflicts), .combine=rbind) %do% {
-      tt <- x[[name]]
-      df <- to.data.frame(tt, name)
-      cbind(tag, df, whoami())
+      tryCatch({
+        tt <- x[[name]]
+        df <- to.data.frame(tt, name)
+        cbind(tag, df, whoami())
+      }, error = function(err) {
+        stop(name, ": ", err)
+      })
     }
     dati <- as.data.frame(dati)
     names(dati) <- c("tag", names(df), "autore")
@@ -272,7 +350,17 @@
 #' @usage .createGraph(g, tag)
 #' @import plyr
 
-.createGraph <- function(x, tag) {
+.createGraph <- function(x, tag, con=NULL) {
+  if(is.null(con)) {
+    wasNull <- TRUE
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+    dbBegin(con)
+  } else {
+    wasNull <- FALSE
+  }
+  
   commento <- if(interactive()) {
     ## readline(prompt="Inserisci un commento/nota per: ")
     "BATMAN"
@@ -280,11 +368,7 @@
     paste0("Rilascio per ", tag)
   }
   commento = "Batman"
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
 
-  dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-  dbBegin(con)
   tryCatch({
     dbGetPreparedQuery(
       con,
@@ -359,5 +443,7 @@
       stop(err)
     })
   }
-  dbCommit(con)
+  if(wasNull) {
+    dbCommit(con)
+  }
 }

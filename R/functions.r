@@ -282,7 +282,18 @@ from.data.frame <- function(df) {
   if(length(nomi_padri) == 0) {
     return(graph[[name]])
   }
-  padri <- graph[[nomi_padri]]
+  if(length(nomi_padri) > 100) {
+    padri <- list()
+    sliced <- slice(nomi_padri, n=100)
+    foreach(sliced_names = sliced) %do% {
+      padri[sliced_names] <- graph[[sliced_names]]
+    }
+    names(padri) <- nomi_padri
+    padri
+  } else {
+    padri <- graph[[nomi_padri]]
+  }
+  
   if(length(nomi_padri) == 1) {
     ## boxing
     ppp <- list()
@@ -296,10 +307,8 @@ from.data.frame <- function(df) {
     eval(parse(text=cmd))
     proxy()
   }, error = function(err) {
-    traceback()
     stop(name, ": ", err)
   }, warning = function(warn) {
-    traceback()
     stop(name, ": ", warn)
   })           
 }
@@ -317,6 +326,15 @@ from.data.frame <- function(df) {
 #' @rdname evaluate-internal
 
 .evaluate <- function(object, v_start=NULL, deep=T, ...) {
+  params <- list(...)
+  debug <- if("debug" %in% names(params)) {
+    as.logical(params[["debug"]])
+  } else {
+    FALSE
+  }
+
+  
+  
   data <- object@data
   network <- object@network
   all_names <- names(object)
@@ -324,7 +342,7 @@ from.data.frame <- function(df) {
     not.in.graph <- setdiff(v_start, all_names)
     stop("Non sono serie del grafo: ", paste(not.in.graph, collapse=", "))
   }
-
+  
   if(is.null(v_start)) {
     sources_id <- V(network)[degree(network, mode="in") == 0]
     network <- delete.vertices(network, sources_id)
@@ -336,32 +354,45 @@ from.data.frame <- function(df) {
         neighborhood(network, order=.Machine$integer.max, nodes=v_start, mode="out")
       )])
   }
-
-  #se il network e' vuoto dopo l'eliminazione delle sorgenti, ritorno senza fare nulla
+  
+  ## se il network e' vuoto dopo l'eliminazione delle sorgenti, ritorno senza fare nulla
   if(!length(V(network))) {
     return(invisible(object))
   }
-
+  
   deep <- as.logical(deep)
-
-  cl <- initDefaultCluster()
-
+  
   total <- length(V(network))
-  i = 0
+  i <- 0
   pb <- txtProgressBar(min=0, max=total)
   ## trovo le fonti
   sources_id <- V(network)[degree(network, mode="in") == 0]
+  cl <- initDefaultCluster()
   while(length(sources_id)) {
     sources <- V(network)[sources_id]$name
     
-    evaluated.data <- lapply(sources, function(name, object) {
-      .evaluateSingle(name, object)
-    }, object)
+    evaluated.data <- if(debug) {
+      lapply(sources, function(name, object) {
+        print(name)
+        .evaluateSingle(name, object)
+      }, object)
+    } else {
+      foreach(name = sources, .combine = c) %dopar% {
+        serie <- .evaluateSingle(name, object)
+        list(serie)
+      }
+    }
     
     names(evaluated.data) <- sources
-    for(name in names(evaluated.data)) {
-      data[[name]] <- evaluated.data[[name]]
+    ##for(name in names(evaluated.data)) {
+    ##  data[[name]] <- evaluated.data[[name]]
+    ##}
+    if(length(evaluated.data) == 1) {
+      data[[sources]] <- evaluated.data[[sources]]
+    } else {
+      data[sources] <- evaluated.data
     }
+    
     i <- i + length(evaluated.data)
     setTxtProgressBar(pb, i)
     network <- delete.vertices(network, sources_id)
@@ -370,6 +401,41 @@ from.data.frame <- function(df) {
   close(pb)
   object@data <- data
   object
+}
+
+
+
+testa <- function() {
+  for(name in names(g)) {
+    if(!is.null(start) && start != name) {
+      next
+    }
+    
+    if(!is.null(start) && start == name) {
+      start = NULL
+    }
+    
+    ser(g, name)
+  }
+}
+
+ratio <- function() {
+  g=GrafoDB()
+  success = 0
+  failure = 0
+  for(name in listAggregates(g)) {
+    tryCatch({
+      ser(g, name)
+      success = success + 1
+    }, error = function(err) {
+      cat(name, file="~/tacci.txt", append=T)
+      cat("\n", file="~/tacci.txt", append=T)
+      failure = failure + 1
+    })
+  }
+  total <- length(listAggregates(g))
+  message(success/total * 100, " success rate")
+  message(failure/total * 100, " failure rate")
 }
 
 
@@ -440,27 +506,6 @@ from.data.frame <- function(df) {
     ret <- ret[[1]]
   }
   ret
-}
-
-#' edita una formula del `GrafoDB`
-#'
-#' E' un metodo di tipo S3 per essere compliant con la definizione di `edit`
-#'
-#' @name edit.GrafoDB
-#' @usage edit(g, nome)
-#' @usage edit.GrafoDB(g, nome)
-#' @param g istanza di grafo
-#' @param name nome della serie da editare
-#' @export
-
-edit.GrafoDB <- function(g, name) {
-  task <- getTask(g, name)
-  task <- .clutter_function(task, name)
-  task <- eval(parse(text=task))
-  task <- edit(task)
-  task <- .declutter_function(task)
-  g@functions[[name]] <- task
-  invisible(g)
 }
 
 .showConflicts <- function(x) {
@@ -573,6 +618,7 @@ elimina <- function(tag) {
   write(.clutter_with_params(task, name, deps), file=file)
   file.edit(file)
   txtsrc <- paste(readLines(file), collapse="\n")
+  x@functions[name] <- .declutter_function(txtsrc)
   f <- eval(parse(text=txtsrc))
   x[name] = f
   invisible(x)

@@ -71,7 +71,7 @@ setMethod(
   "listAggregates",
   signature("GrafoDB"),
   function(graph) {
-    setdiff(names(g), listPrimitives(graph))
+    setdiff(names(graph), listPrimitives(graph))
   })
 
 
@@ -100,6 +100,7 @@ setMethod(
   "listPrimitives",
   signature("GrafoDB"),
   function(graph) {
+    network <- graph@network
     V(network)[degree(network, mode="in") == 0]$name
   })
 

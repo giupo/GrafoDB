@@ -78,7 +78,7 @@ test_that("Posso salvare il grafo sul database", {
   elimina("test1")
 })
 
-test_that("I names on an empty Graph return an empy array", {
+test_that("names su un grafo vuoto torna un array vuoto", {
   g <- GrafoDB("test")
   expect_equal(length(names(g)), 0)
 })

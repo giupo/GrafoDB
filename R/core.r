@@ -244,7 +244,9 @@ setMethod(
 setMethod(
   "evaluate",
   signature("GrafoDB", "ANY", "ANY"),
-  .evaluate)
+  function(object, v_start=NULL, deep=F) {
+    .evaluate(object, v_start, deep)
+  })
 
 setMethod(
   "isRoot",
@@ -340,6 +342,16 @@ setGeneric(
   function(x, name) {
     standardGeneric("edita")
   })
+
+#' Edita un la formula di una serie storica.
+#'
+#' @name edita
+#' @usage edita(x, name)
+#' @param x istanza di grafo
+#' @param name nome della serie storica
+#' @return il grafo con la formula modificata
+#' @include functions.r
+#' @export
 
 setMethod(
   "edita",
