@@ -37,8 +37,6 @@
     graph.empty(directed=TRUE)
   }
 
-  .Object@network <- network
-  
   df <- dbGetPreparedQuery(
     con,
     "select name from dati where tag=?",
@@ -49,6 +47,8 @@
     pending.names <- setdiff(nomi, V(network)$name)
     network <- network + vertex(pending.names)
   }
+  
+  .Object@network <- network
   
   df <- dbGetPreparedQuery(
     con,
@@ -426,11 +426,10 @@ ratio <- function() {
   for(name in listAggregates(g)) {
     tryCatch({
       ser(g, name)
-      success = success + 1
+      success <- success + 1
     }, error = function(err) {
-      cat(name, file="~/tacci.txt", append=T)
-      cat("\n", file="~/tacci.txt", append=T)
-      failure = failure + 1
+      cat(paste0(name, "\n"), file="~/tacci.txt", append=T)
+      failure <- failure + 1
     })
   }
   total <- length(listAggregates(g))
@@ -611,15 +610,19 @@ elimina <- function(tag) {
   dbCommit(con)
 }
 
-.edita <- function(x, name) {
+.edita <- function(x, name, ...) {
   file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
   deps <- getDependencies(x, name)
   task <- expr(x, name, echo=F)
   write(.clutter_with_params(task, name, deps), file=file)
+  on.exit(file.remove(file))
   file.edit(file)
   txtsrc <- paste(readLines(file), collapse="\n")
   x@functions[name] <- .declutter_function(txtsrc)
   f <- eval(parse(text=txtsrc))
-  x[name] = f
+  params <- list(...)
+  if("eval" %in% names(params) && as.logical(params[["eval"]])) {
+    x[name] = f
+  }
   invisible(x)
 }
