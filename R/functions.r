@@ -88,12 +88,12 @@
 #' @usage is.grafodb(x)
 #' @param x un qualsiasi oggetto `R`
 #' @return `TRUE` se `x` e' un `GrafoDB`, altrimenti `FALSE`
-#' @examples
+#' @examples \dontrun{
 #'   g = GrafoDB()
 #'   is.grafodb(g) # questo e' TRUE
 #'   x = list()
 #'   is.grafodb(x) # questo e' FALSE
-#'
+#' }
 #' @export
 
 is.grafodb <- function(x) {
@@ -308,8 +308,10 @@ from.data.frame <- function(df) {
     proxy()
   }, error = function(err) {
     stop(name, ": ", err)
+    ##getData(graph, name)
   }, warning = function(warn) {
     stop(name, ": ", warn)
+    ##getData(graph, name)
   })           
 }
 
@@ -422,19 +424,18 @@ testa <- function() {
 ratio <- function() {
   g=GrafoDB()
   success = 0
-  failure = 0
   for(name in listAggregates(g)) {
     tryCatch({
       ser(g, name)
       success <- success + 1
     }, error = function(err) {
-      cat(paste0(name, "\n"), file="~/tacci.txt", append=T)
-      failure <- failure + 1
+      cat(paste0(name, ": ", err, "\n"), file="~/tacci.txt", append=T)
+      cat(paste0(name,"\n"), file="~/failures.txt", append=T)
     })
   }
   total <- length(listAggregates(g))
   message(success/total * 100, " success rate")
-  message(failure/total * 100, " failure rate")
+  message(100 - success/total * 100, " failure rate")
 }
 
 
@@ -625,4 +626,11 @@ elimina <- function(tag) {
     x[name] = f
   }
   invisible(x)
+}
+
+.copy <- function(x,y, name) {
+  task <- .declutter_function(as.character(getTask(x, name)))
+  task <- gsub(paste0("return\\(", name, "\\)$"), "", task)
+  y@functions[[name]] = task
+  return(invisible(y))
 }
