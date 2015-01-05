@@ -379,7 +379,7 @@ from.data.frame <- function(df) {
         .evaluateSingle(name, object)
       }, object)
     } else {
-      foreach(name = sources, .combine = c) %dopar% {
+      foreach(name = sources, .combine = c) %do% {
         serie <- .evaluateSingle(name, object)
         list(serie)
       }
