@@ -371,18 +371,25 @@ from.data.frame <- function(df) {
   ## trovo le fonti
   sources_id <- V(network)[degree(network, mode="in") == 0]
   cl <- initDefaultCluster()
+  is.multi.process <- !is.null(cl) && !debug 
+  
   while(length(sources_id)) {
     sources <- V(network)[sources_id]$name
     
-    evaluated.data <- if(debug || is.null(cl)) {
+    evaluated.data <- if(!is.multi.process) {
       lapply(sources, function(name, object) {
+        i <- i + 1
+        update(pb, i, name)
         .evaluateSingle(name, object)
       }, object)
     } else {
-      foreach(name = sources, .combine = c) %dopar% {
+      evaluated.data <- foreach(name = sources, .combine = c) %dopar% {
         serie <- .evaluateSingle(name, object)
         list(serie)
       }
+      i <- i + length(evaluated.data)
+      update(pb, i, last(sources))
+      evaluated.data
     }
     
     names(evaluated.data) <- sources
@@ -393,8 +400,6 @@ from.data.frame <- function(df) {
       data[sources] <- evaluated.data
     }
     
-    i <- i + length(evaluated.data)
-    update(pb, i, last(sources))
     network <- delete.vertices(network, sources_id)
     sources_id <- V(network)[degree(network, mode="in") == 0]
   }
@@ -476,8 +481,12 @@ ratio <- function() {
       })
       tempret
     } else if (length(i) > CLUSTER_LIMIT) {
-      initDefaultCluster()
-      foreach(row=iter(sub.df, by='row'), .combine=append) %dopar% from.data.frame(row)
+      cl <- initDefaultCluster()
+      if(is.null(cl)) {
+        foreach(row=iter(sub.df, by='row'), .combine=append) %do% from.data.frame(row)
+      } else {
+        foreach(row=iter(sub.df, by='row'), .combine=append) %dopar% from.data.frame(row)
+      } 
     } else {
       foreach(row=iter(sub.df, by='row'), .combine=append) %do% from.data.frame(row)
     }

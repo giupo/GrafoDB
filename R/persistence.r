@@ -89,7 +89,7 @@
       paste0("insert into grafi(tag, commento, last_updated, autore) values ",
              "(?, ?, LOCALTIMESTAMP::timestamp(0), ?)"),
       bind.data = data.frame(to, commento, autore))
-    ## Ricordati di commiattare.
+    ## Ricordati di committare.
     if(wasNull) {
       dbCommit(con)
     }
@@ -177,7 +177,8 @@
       names(df) <- c("partenza", "arrivo")
       df
     } else {
-      df <- as.data.frame(str_split(da.inserire, sep), stringsAsFactors = F)
+      splitted <- unlist(str_split(da.inserire, sep))
+      df <- as.data.frame(matrix(splitted, nrow=2, byrow=T), stringsAsFactors = F)
       names(df) <- c("partenza", "arrivo")
       df
     }
@@ -229,16 +230,15 @@
                   " freq, dati, autore)",
                   " values (?, ?, ?, ?, ?, ? ,?)")
     
-    dati <- foreach(
-      name = iter(names.with.conflicts),.combine=rbind) %do% {
-        tryCatch({
-          tt <- x[[name]]
-          df <- to.data.frame(tt, name)
-          cbind(tag, df, autore)
-        }, error = function(err) {
-          stop(name, ": ", err)
-        })
-      }
+    dati <- foreach(name = iter(names.with.conflicts),.combine=rbind) %do% {
+      tryCatch({
+        tt <- x[[name]]
+        df <- to.data.frame(tt, name)
+        cbind(tag, df, autore)
+      }, error = function(err) {
+        stop(name, ": ", err)
+      })
+    }
     
     dati <- as.data.frame(dati)
     names(dati) <- c("tag", names(df), "autore")
@@ -250,18 +250,25 @@
   
   names.updated <- setdiff(keys(data), names.with.conflicts)
   cl <- initDefaultCluster()
+  is.multi.process <- !is.null(cl)
   autore <- whoami()
   if(length(names.updated)) { 
-    dati <- foreach (name = iter(names.updated), .combine=rbind) %dopar% {
-      df <- to.data.frame(data[[name]])
-      cbind(df, autore, name, tag) 
+    dati <- if(is.multi.process) {
+      foreach (name = iter(names.updated), .combine=rbind) %dopar% {
+        df <- to.data.frame(data[[name]])
+        cbind(df, autore, name, tag) 
+      }
+    } else {
+      foreach (name = iter(names.updated), .combine=rbind) %do% {
+        df <- to.data.frame(data[[name]])
+        cbind(df, autore, name, tag)    
+      }
     }
 
-    # dati <- cbind(dati, autore, names.updated, tag)
     if(dbExistsTable(con, paste0("dati_", tag))) {
       sql1 <- paste0("UPDATE dati_",tag,
                      " SET anno=?, periodo=?, freq=?, dati=?,",
-                    "autore=?, last_updated = LOCALTIMESTAMP::timestamp(0) ",
+                     "autore=?, last_updated = LOCALTIMESTAMP::timestamp(0) ",
                      " WHERE name=? and tag=?");
       dbGetPreparedQuery(con, sql1, bind.data=dati)
     }
@@ -274,7 +281,6 @@
     dati <- cbind(dati, names.updated, tag)
     dbGetPreparedQuery(con, sql2, bind.data=dati)
   }
-  
 }
 
 .updateFunctions <- function(x, con, tag=x@tag) {
@@ -293,11 +299,19 @@
   
   names.with.conflicts <- as.character(df$name)
   cl <- initDefaultCluster()
+  is.multi.process <- !is.null(cl)
   autore <- whoami()
   if(nrow(df)) {
-    dati <- foreach (name = iter(names.with.conflicts), .combine=rbind) %dopar% {
-      task <- expr(x, name, echo=FALSE)
-      cbind(task, autore, name, tag)
+    dati <- if(is.multi.process) {
+      foreach (name = iter(names.with.conflicts), .combine=rbind) %dopar% {
+        task <- expr(x, name, echo=FALSE)
+        cbind(task, autore, name, tag)
+      }
+    } else {
+      foreach (name = iter(names.with.conflicts), .combine=rbind) %do% {
+        task <- expr(x, name, echo=FALSE)
+        cbind(task, autore, name, tag)
+      }
     }
     
     sql1 <- paste0("UPDATE conflitti  SET formula=?, autore=?, ",
@@ -320,11 +334,18 @@
   
   names.updated <- setdiff(keys(x@functions), names.with.conflicts)
   if(length(names.updated)) {
-    formule <- foreach (name = iter(names.updated), .combine=rbind) %dopar% {
-      task <- expr(x, name, echo=FALSE)
-      cbind(task, whoami(), name, tag)
+    formule <- if(is.multi.process) {
+      foreach (name = iter(names.updated), .combine=rbind) %dopar% {
+        task <- expr(x, name, echo=FALSE)
+        cbind(task, whoami(), name, tag)
+      }
+    } else {
+      foreach (name = iter(names.updated), .combine=rbind) %do% {
+        task <- expr(x, name, echo=FALSE)
+        cbind(task, whoami(), name, tag)
+      }
     }
-
+    
     if(dbExistsTable(con, paste0("formule_", tag))) {
       sql1 <- paste0("UPDATE formule_",tag,
                      " SET formula=?, autore=?, ",

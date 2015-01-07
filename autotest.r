@@ -1,7 +1,7 @@
 library(testthat)
 library(devtools)
 # options(env="test")
-
+options(GCLUSTER=F)
 load_all()
 
 .praise <- c(
