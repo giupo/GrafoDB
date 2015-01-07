@@ -83,5 +83,5 @@ test_that("names su un grafo vuoto torna un array vuoto", {
   expect_equal(length(names(g)), 0)
 })
 
-test_that("la valutazione e' consistente". {
+test_that("la valutazione e' consistente", {
 })

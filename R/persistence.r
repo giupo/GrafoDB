@@ -38,7 +38,7 @@
       dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
       dbBegin(con)
       .copyGraph(x@tag, tag, con)
-      .updateGraph(x, con)
+      .updateGraph(x, con, tag)
       dbCommit(con)
     }
   }
@@ -99,7 +99,7 @@
   })
 }
 
-.updateGraph <- function(x, con=NULL) {
+.updateGraph <- function(x, con=NULL, tag=x@tag) {
   if(is.null(con)) {
     wasNull <- TRUE
     con <- pgConnect()
@@ -109,25 +109,23 @@
   } else {
     wasNull <- FALSE
   }
-  
-  tag <- x@tag
 
   tryCatch(
-    .updateData(x, con),
+    .updateData(x, con, tag),
     error = function(err) {
       dbRollback(con)
       stop(err)
     })
 
   tryCatch(
-    .updateArchi(x, con),
+    .updateArchi(x, con, tag),
     error = function(err) {
       dbRollback(con)
       stop(err)
     })
   
   tryCatch(
-    .updateFunctions(x, con),
+    .updateFunctions(x, con, tag),
     error = function(err) {
       dbRollback(con)
       stop(err)
@@ -152,8 +150,7 @@
   }
 }
 
-.updateArchi <- function(x, con) {
-  tag <- x@tag
+.updateArchi <- function(x, con, tag=x@tag) {
   in.memory <- as.data.frame(get.edgelist(x@network), stringsAsFactors = F)
   autore <- whoami()
   names(in.memory) <- c("partenza", "arrivo")
@@ -210,8 +207,7 @@
   }
 }
   
-.updateData <- function(x, con) {
-  tag <- x@tag
+.updateData <- function(x, con, tag=x@tag) {
   data <- x@data
   timestamp <- x@timestamp
   autore <- whoami()
@@ -281,10 +277,9 @@
   
 }
 
-.updateFunctions <- function(x, con) {
+.updateFunctions <- function(x, con, tag=x@tag) {
   ## passo la connessione perche' devono avere la stessa transazione
   ## non usare controllo di transazione qui
-  tag <- x@tag
   functions <- x@functions
   timestamp <- x@timestamp
   df <- if(length(keys(functions))) {
