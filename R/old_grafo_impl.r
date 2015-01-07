@@ -287,7 +287,8 @@ setMethod(
       con <- pgConnect()
       on.exit(dbDisconnect(con))
       sql <- "insert into metadati(tag, name, key, value, autore) values (?, ?, ?, ?, ?)"
-      params <- cbind(object@tag, tsName, attrName, value, whoami())
+      autore <- whoami()
+      params <- cbind(object@tag, tsName, attrName, value, autore)
       dbGetPreparedQuery(con, sql, bind.data=params)
     }
     object

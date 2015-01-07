@@ -1,2 +1,2 @@
 require(devtools)
-options(env="test")
+#options(env="test")

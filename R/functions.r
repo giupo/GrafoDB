@@ -370,6 +370,14 @@ from.data.frame <- function(df) {
   ## trovo le fonti
   sources_id <- V(network)[degree(network, mode="in") == 0]
   cl <- initDefaultCluster()
+  
+  clusterExport(cl, "pgConnect")
+  clusterExport(cl, "dbDisconnect")
+  clusterEvalQ(cl, {
+    require(RPostgreSQL)
+    pgConnect()
+  })
+  
   while(length(sources_id)) {
     sources <- V(network)[sources_id]$name
     
@@ -379,7 +387,7 @@ from.data.frame <- function(df) {
         .evaluateSingle(name, object)
       }, object)
     } else {
-      foreach(name = sources, .combine = c) %do% {
+      foreach(name = sources, .combine = c) %dopar% {
         serie <- .evaluateSingle(name, object)
         list(serie)
       }

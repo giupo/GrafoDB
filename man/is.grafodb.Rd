@@ -16,9 +16,11 @@ Predicato; Ritorna `TRUE` se `x` e' un istanza di `GrafoDB`, altrimenti ritorna
 `FALSE`
 }
 \examples{
-g = GrafoDB()
+\dontrun{
+  g = GrafoDB()
   is.grafodb(g) # questo e' TRUE
   x = list()
   is.grafodb(x) # questo e' FALSE
+}
 }
 
