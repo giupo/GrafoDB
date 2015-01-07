@@ -66,6 +66,12 @@ initDefaultCluster <- function(ncores=NULL, ...) {
   clusterEvalQ(cl, "require(digest)")
   clusterEvalQ(cl, "require(RPostgreSQL)")
   clusterEvalQ(cl, "require(plyr)")
+  clusterExport(cl, "pgConnect")
+  clusterExport(cl, "dbDisconnect")
+  clusterEvalQ(cl, {
+    require(RPostgreSQL)
+    pgConnect()
+  })
   setDefaultCluster(cl)
   registerDoParallel(cl)
   invisible(cl)

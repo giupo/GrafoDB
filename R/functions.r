@@ -326,6 +326,7 @@ from.data.frame <- function(df) {
 #' @return il grafo con i dati correttamente valutati
 #' @import grafo igraph rcf
 #' @rdname evaluate-internal
+#' @include progressbar.r
 
 .evaluate <- function(object, v_start=NULL, deep=T, ...) {
   params <- list(...)
@@ -366,24 +367,15 @@ from.data.frame <- function(df) {
   
   total <- length(V(network))
   i <- 0
-  pb <- txtProgressBar(min=0, max=total)
+  pb <- ProgressBar(min=0, max=total)
   ## trovo le fonti
   sources_id <- V(network)[degree(network, mode="in") == 0]
   cl <- initDefaultCluster()
-  
-  clusterExport(cl, "pgConnect")
-  clusterExport(cl, "dbDisconnect")
-  clusterEvalQ(cl, {
-    require(RPostgreSQL)
-    pgConnect()
-  })
-  
   while(length(sources_id)) {
     sources <- V(network)[sources_id]$name
     
-    evaluated.data <- if(debug) {
+    evaluated.data <- if(debug || is.null(cl)) {
       lapply(sources, function(name, object) {
-        print(name)
         .evaluateSingle(name, object)
       }, object)
     } else {
@@ -394,9 +386,7 @@ from.data.frame <- function(df) {
     }
     
     names(evaluated.data) <- sources
-    ##for(name in names(evaluated.data)) {
-    ##  data[[name]] <- evaluated.data[[name]]
-    ##}
+    
     if(length(evaluated.data) == 1) {
       data[[sources]] <- evaluated.data[[sources]]
     } else {
@@ -404,11 +394,11 @@ from.data.frame <- function(df) {
     }
     
     i <- i + length(evaluated.data)
-    setTxtProgressBar(pb, i)
+    update(pb, i, last(sources))
     network <- delete.vertices(network, sources_id)
     sources_id <- V(network)[degree(network, mode="in") == 0]
   }
-  close(pb)
+  kill(pb)
   object@data <- data
   object
 }
