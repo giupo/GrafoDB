@@ -1,7 +1,7 @@
 context("Basic Operations")
 
 test_that("Posso istanziare un GrafoDB", {
-  g <- GrafoDB()
+  g <- GrafoDB("test")
   expect_true(is.grafodb(g))
 })
 
@@ -11,14 +11,14 @@ test_that("Posso istanziare un GrafoDB con un tag", {
 })
 
 test_that("Posso impostare una timeseries con nome nel GrafoDB", {
-  g <- GrafoDB()
+  g <- GrafoDB("test")
   g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   expect_true("A" %in% names(g))
   expect_true(is.bimets(g[["A"]]))
 })
 
 test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
-  g <- GrafoDB()
+  g <- GrafoDB("test")
   g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["C"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
@@ -35,7 +35,7 @@ test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
 })
 
 test_that("Posso usare delle formule per definire le serie", {
-  g <- GrafoDB()
+  g <- GrafoDB("test")
   g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["C"] <- function(A,B) {
@@ -44,7 +44,7 @@ test_that("Posso usare delle formule per definire le serie", {
 })
 
 test_that("Posso cercare le serie con metadati", {
-  g <- GrafoDB()
+  g <- GrafoDB("test")
   g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["C"] <- function(A,B) {
@@ -81,7 +81,4 @@ test_that("Posso salvare il grafo sul database", {
 test_that("names su un grafo vuoto torna un array vuoto", {
   g <- GrafoDB("test")
   expect_equal(length(names(g)), 0)
-})
-
-test_that("la valutazione e' consistente", {
 })
