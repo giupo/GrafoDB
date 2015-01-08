@@ -219,6 +219,18 @@ from.data.frame <- function(df) {
   task
 }
 
+#' Ritorna le formule del GrafoDB
+#'
+#' Ritorna (o mostra su console, stdout) le formule delle serie `nomi`
+#'
+#' @name  .expr
+#' @usage .expr(x, name)
+#' @usage .expr(x, name, echo=FALSE)
+#' @param x istanza di GrafoDB
+#' @param nomi array di nomi di serie storiche
+#' @rdname expr-internal
+#' @import formatR
+
 .expr <- function(x, nomi, echo=TRUE) {
   functions <- x@functions
   in.functions <- intersect(keys(functions), nomi)
@@ -248,7 +260,7 @@ from.data.frame <- function(df) {
   } else if(nrow(formule) == 1) {
     task <- as.character(formule$formula)
     if(interactive() && echo) {
-      message(task)
+      tidy_source(text=task, indent= 2)
     }
     invisible(task)
   } else {

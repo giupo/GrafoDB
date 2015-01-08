@@ -178,7 +178,7 @@
       df
     } else {
       splitted <- unlist(str_split(da.inserire, sep))
-      df <- as.data.frame(matrix(splitted, nrow=2, byrow=T), stringsAsFactors = F)
+      df <- as.data.frame(matrix(splitted, nrow=length(da.inserire), byrow=T), stringsAsFactors = F)
       names(df) <- c("partenza", "arrivo")
       df
     }

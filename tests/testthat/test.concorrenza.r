@@ -86,7 +86,6 @@ test_that("Salvare lo stesso grafo con formula aggiunta", {
     D = A * C
   }
 
-  
   g2[["E"]] <- function(A, C) {
     E = A - C
   }

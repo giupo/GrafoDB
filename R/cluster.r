@@ -1,3 +1,11 @@
+#' @import rcf
+NULL
+
+if(is.windows()) {
+  # Cluster Windows I hate you
+  options(GCLUSTER=FALSE)
+}
+
 #' initializes a cluster for this package.
 #'
 #' @name .initDefaultCluster
