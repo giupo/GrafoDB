@@ -263,6 +263,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage describe(graph, nodes, order, mode, plot)
 #' @seealso `grafo::describe`
+#' @export
 
 setMethod(
   "describe",
@@ -398,8 +399,21 @@ setMethod(
   "ser",
   signature("GrafoDB", "character"),
   function(x, name) {
+    # that's the dumbest thing in my life, inverting arguments.
     .evaluateSingle(name, x)
   })
+
+#' Ritorna le dipendeze di una serie
+#'
+#' Ritorna come array di caratteri i nomi delle serie su cui la serie specificata
+#' dal parametro `name` dipende
+#'
+#' @name deps
+#' @usage deps(x, name)
+#' @param x istanza di GrafoDB
+#' @param name nome della serie
+#' @return un character array di nomi, NULL se la serie non ha dipendenze
+#' @export
 
 setGeneric(
   "deps",

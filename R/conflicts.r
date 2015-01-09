@@ -182,6 +182,18 @@ setMethod(
   })
 
 
+#' contrassegna come risolti i conflitti salvati sul DB
+#'
+#' E' appannaggio dell'utente riusolvere i conflitti nella sua sessione e provvedere
+#' a salvate un Grafo consistente.
+#'
+#' @name fixConflicts
+#' @usage fixConflicts(x)
+#' @usage fixConflicts(x, name)
+#' @param x istanza di GrafoDB
+#' @param name nome della serie da cui eliminare un conflitto
+#' @export
+
 setGeneric(
   "fixConflicts",
   function(x, name=NULL) {
