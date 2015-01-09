@@ -123,6 +123,8 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   }
 
   saveGraph(g1)
+  expect_warning(saveGraph(g2), "Ci sono conflitti sugli archi")
+  fixConflicts(g2)
   expect_warning(saveGraph(g2), "Ci sono conflitti sulle formule")
 
   g <- GrafoDB("test1")

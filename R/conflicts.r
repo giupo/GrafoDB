@@ -42,7 +42,7 @@ setGeneric(
 #' }
 #' @export
 #' @import rcf
-#' @include core.r
+#' @include db.r
 
 setMethod(
   "hasConflicts",
@@ -65,6 +65,19 @@ setMethod(
 
     nrow(df) > 0
   })
+
+
+#' Ritorna i conflitti per un Grafo
+#'
+#' Ritorna i conflitti di un grafo, tutti per serie specificate dal parametro `name`
+#'
+#' @name getConflicts
+#' @usage getConflicts(x)
+#' @usage getConflicts(x, name)
+#' @param x istanza del GrafoDB
+#' @param name vettore di nomi di serie
+#' @return un data.frame con le informazioni del conflitto
+#' @export
 
 setGeneric(
   "getConflicts",
@@ -183,18 +196,21 @@ setMethod(
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     sql <- if(is.null(name)) {
-      paste0("select a.name, a.tag, a.formula, a.autore, date, ",
-             " b.formula as current_formula, b.autore as current_autore, b.last_updated",
-             " from conflitti a, formule b ",
-             " where a.tag = ? and a.tag = b.tag and a.name = b.name",
-             " order by tag, name")
+      ##paste0("select a.name, a.tag, a.formula, a.autore, date, ",
+      ##       " b.formula as current_formula, b.autore as current_autore, b.last_updated",
+      ##       " from conflitti a, formule b ",
+      ##       " where a.tag = ? and a.tag = b.tag and a.name = b.name",
+      ##       " order by tag, name")
+
+      paste0("delete from conflitti where tag = ?")
     } else {
       params <- cbind(params, name)
-      names(params) <- c("tag", "name")
-      paste0("select a.name, a.tag, a.formula, a.autore, date, b.formula, b.autore, b.last_updated",
-             " from conflitti a, formule b ",
-             " where a.tag = ? and a.name=? and a.tag = b.tag and a.name = b.name",
-             " order by tag, name")
+      ##names(params) <- c("tag", "name")
+      ##paste0("select a.name, a.tag, a.formula, a.autore, date, b.formula, b.autore, b.last_updated",
+      ##       " from conflitti a, formule b ",
+      ##       " where a.tag = ? and a.name=? and a.tag = b.tag and a.name = b.name",
+      ##       " order by tag, name")
+      paste0("delete from conflitti where tag = ? and name = ?")
     }
     dbGetPreparedQuery(con, sql, bind.data = params)
   })

@@ -110,6 +110,8 @@
     wasNull <- FALSE
   }
 
+  ## lo divido in tre blocchi tryCatch per finalita' di debugging.
+  
   tryCatch(
     .updateData(x, con, tag),
     error = function(err) {
@@ -118,14 +120,14 @@
     })
 
   tryCatch(
-    .updateArchi(x, con, tag),
+    .updateFunctions(x, con, tag),
     error = function(err) {
       dbRollback(con)
       stop(err)
     })
-  
+
   tryCatch(
-    .updateFunctions(x, con, tag),
+    .updateArchi(x, con, tag),
     error = function(err) {
       dbRollback(con)
       stop(err)
@@ -151,7 +153,11 @@
 }
 
 .updateArchi <- function(x, con, tag=x@tag) {
-  in.memory <- as.data.frame(get.edgelist(x@network), stringsAsFactors = F)
+  data <- x@data
+  functions <- x@functions
+  timestamp <- x@timestamp
+  network <- x@network
+  in.memory <- as.data.frame(get.edgelist(network), stringsAsFactors = F)
   autore <- whoami()
   names(in.memory) <- c("partenza", "arrivo")
   in.db <- dbGetPreparedQuery(
@@ -164,7 +170,35 @@
   in.memory <- paste(in.memory$partenza, in.memory$arrivo, sep=sep)
   
   da.inserire <- setdiff(in.memory, in.db)
-  da.cancellare <- setdiff(in.db, in.memory)
+
+  df <- if(length(keys(data))) {
+    ## cerco archi aggiunti di recente.
+    params <- cbind(tag, timestamp)
+    sql <- paste("select partenza, arrivo from archi where tag = ? ",
+                 "and last_updated::timestamp(0) > to_timestamp(?)")
+    dbGetPreparedQuery(con, sql, bind.data = params)
+  } else {
+    data.frame(partenza=character(0), arrivo=character(0))
+  }
+  
+  if(nrow(df) > 0) {
+    ## controllo che i nuovi archi non siano tra le serie che ho modificato e
+    ## che non creino un anello
+    wood <- graph.data.frame(df, directed=TRUE)
+    network_aux <- graph.union(network, wood)
+    if(any(keys(functions) %in% df$arrivo)) {
+      warning("Ci sono conflitti sugli archi, continuo su dati e formule")    
+    }
+    
+    if(!is.dag(network_aux)) {
+      wrongsort <- try(topological.sort(network), silent=TRUE)
+      network_seq <- V(network)
+      cycles_seq <- network_seq[setdiff(
+        network_seq, network_seq[wrongsort])]
+      cycles_vertex <- cycles_seq$name
+      stop("Cycles found: ", paste(unlist(cycles_vertex), collapse=", "))
+    }
+  }
   
   if(length(da.inserire)) {
     params <- if(length(da.inserire) == 1) {
@@ -187,24 +221,6 @@
       con,
       "insert into archi(tag, partenza, arrivo, autore) values(?,?,?,?)",
       bind.data = params)
-  }
-
-  if(length(da.cancellare)) {
-    params <- if(length(da.cancellare) == 1) {
-      df <- as.data.frame(str_split(da.cancellare, sep)[[1]], stringsAsFactors = F)
-      names(df) <- c("partenza", "arrivo")
-      df
-    } else {
-      df <- as.data.frame(str_split(da.cancellare), stringsAsFactors = F)
-      names(df) <- c("partenza", "arrivo")
-      df
-    }
-    params <- c(tag, df)
-    dbGetPreparedQuery(
-      con,
-      "delete from archi where tag = ? and partenza=? and arrivo = ?",
-      bind.data = params)
-    
   }
 }
   
