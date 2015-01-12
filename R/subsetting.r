@@ -21,8 +21,9 @@ setMethod(
 
 setMethod(
   "[[",
-  c("GrafoDB", "character"),
-  .getdata)
+  c("GrafoDB", "character"), function(x, i) {
+    .getdata(x,i)
+  })
 
 #' implementazione per GrafoDB del subsetting '[<-'
 #'

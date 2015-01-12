@@ -466,7 +466,9 @@ ratio <- function() {
 #' @usage .getdata(x, i)
 #' @param x istanza di `GrafoDB`
 #' @param i character array di nomi di serie storiche
-#' @return ritorna una named list con all'interno le serie storiche. Se l'array e' di un solo elemento, ritorna direttamente la serie storica (questo e' un side-effect, non mi piace)
+#' @return ritorna una named list con all'interno le serie storiche. Se l'array e'
+#'         di un solo elemento, ritorna direttamente la serie storica
+#'         (questo e' un side-effect, non mi piace)
 #' @note se i e' un singolo nome e non esiste nel DB, la funzione termina con errore
 
 .getdata <- function(x,i) {
@@ -474,38 +476,27 @@ ratio <- function() {
   data <- x@data
   in.data <- intersect(keys(data), i)
   da.caricare.db <- setdiff(i, in.data)
+  tag <- x@tag
   from.db <- if(length(da.caricare.db)) {
+    ## assurdo ma conviene caricare tutta la tabella e poi discernere
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    params <- as.data.frame(cbind(x@tag, da.caricare.db))
-    names(params) <- c("tag", "name")
-    sub.df <- dbGetPreparedQuery(
-      con,
-      "select name, anno, periodo, freq, dati from dati where tag = ? and name = ? ",
-      bind.data = cbind(x@tag, da.caricare.db))
-    CLUSTER_LIMIT <- getOption("CLUSTER_LIMIT", 100)
-    if(length(i) == 1) {
-      tempret <- list()
-      tempret[[i]] <- tryCatch({
-        from.data.frame(sub.df[1,])[[i]]
-      }, error=function(err) {
-        stop("La serie ",i," non esiste nel Grafo")
-      })
-      tempret
-    } else if (length(i) > CLUSTER_LIMIT) {
-      cl <- initDefaultCluster()
-      if(is.null(cl)) {
-        foreach(row=iter(sub.df, by='row'), .combine=append) %do% from.data.frame(row)
-      } else {
-        foreach(row=iter(sub.df, by='row'), .combine=append) %dopar% from.data.frame(row)
-      } 
-    } else {
-      foreach(row=iter(sub.df, by='row'), .combine=append) %do% from.data.frame(row)
-    }
-  } else {
-    list()
-  }
 
+    df <- dbReadTable(con, paste0("dati_", tag))
+
+    closure <- function(name, df) {
+      sub.df <- df[df$name == name,]
+      from.data.frame(sub.df)
+    }
+                      
+    cl <- initDefaultCluster()
+    if(is.null(cl)) {
+      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %do% closure(row,df)
+    } else {
+      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %dopar% closure(row, df)
+    } 
+  }
+  
   ret <- list()
   for(name in names(from.db)) {
     ret[[name]] <- from.db[[name]]
