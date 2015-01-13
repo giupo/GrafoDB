@@ -38,7 +38,7 @@ setGeneric(
 
 setGeneric(
   "expr",
-  function(x, nomi, echo=TRUE) {
+  function(x, nomi, echo=FALSE) {
     standardGeneric("expr")
   })
 
@@ -217,7 +217,7 @@ setMethod(
 setMethod(
   "expr",
   c("GrafoDB", "character", "ANY"),
-  function(x, nomi, echo=TRUE) {
+  function(x, nomi, echo=FALSE) {
     .expr(x, nomi, echo)
   })
 
@@ -263,6 +263,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage describe(graph, nodes, order, mode, plot)
 #' @seealso `grafo::describe`
+#' @export
 
 setMethod(
   "describe",
@@ -376,12 +377,13 @@ setMethod(
 #' @usage ser(x, name)
 #' @param x un istanza di GrafoDB
 #' @param name nome della serie da valutare
+#' @param debug debug mode (`FALSE` default)
 #' @return la serie valutata
 #' @export
 
 setGeneric(
   "ser",
-  function(x, name) {
+  function(x, name, debug=FALSE) {
     standardGeneric("ser")
   })
 
@@ -391,15 +393,29 @@ setGeneric(
 #' @usage ser(x, name)
 #' @param x un istanza di GrafoDB
 #' @param name nome della serie da valutare
+#' @param debug se `TRUE` attiva la modalita' di debugging
 #' @return la serie valutata
 #' @export
 
 setMethod(
   "ser",
   signature("GrafoDB", "character"),
-  function(x, name) {
-    .evaluateSingle(name, x)
-  })
+  function(x, name, debug=FALSE) {
+    .ser(x, name, debug=debug)
+  }
+)
+
+#' Ritorna le dipendeze di una serie
+#'
+#' Ritorna come array di caratteri i nomi delle serie su cui la serie specificata
+#' dal parametro `name` dipende
+#'
+#' @name deps
+#' @usage deps(x, name)
+#' @param x istanza di GrafoDB
+#' @param name nome della serie
+#' @return un character array di nomi, NULL se la serie non ha dipendenze
+#' @export
 
 setGeneric(
   "deps",

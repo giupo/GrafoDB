@@ -11,7 +11,9 @@
 \item{i}{character array di nomi di serie storiche}
 }
 \value{
-ritorna una named list con all'interno le serie storiche. Se l'array e' di un solo elemento, ritorna direttamente la serie storica (questo e' un side-effect, non mi piace)
+ritorna una named list con all'interno le serie storiche. Se l'array e'
+        di un solo elemento, ritorna direttamente la serie storica
+        (questo e' un side-effect, non mi piace)
 }
 \description{
 I dati possono provenire direttamente dal Database se non modificati nella sessione

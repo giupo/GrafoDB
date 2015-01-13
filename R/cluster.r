@@ -24,33 +24,30 @@ initDefaultCluster <- function(ncores=NULL, ...) {
   if(!getOption("GCLUSTER", TRUE)) {
     return(invisible(NULL))
   }
-
-  if(is.null(ncores)) {
-    ncores <- detectCores() * 2
-  }
-
+  
   cl <- tryCatch(
     parallel:::defaultCluster(),
     error = function(cond) {
       NULL
     })
   
-  if(!is.null(cl)) {
-    return(cl)
-  }
-
-  cl <- if(is.windows()) {
-    ## on windows we still have issues on this.
-    ## when creating 2 cluster, it loops and hogs the machine
-    makePSOCKcluster(ncores, ...)
-  } else {
-    makeForkCluster(ncores, ...)
-    #hosts_ids <- c("006", "007") #, "008", "010", "011", "018", "019", "038", "039", "040", "041")
-    #hostnames <- paste0("osiride-lp-", hosts_ids)
-    #makePSOCKcluster(master = Sys.info()[["nodename"]], names = hostnames, nnodes=detectCores() * length(hostnames))
-  }
-
   if(is.null(cl)) {
+    
+    if(is.null(ncores)) {
+      ncores <- as.integer(detectCores() / 2)
+    }
+    
+    cl <- if(is.windows()) {
+      ## on windows we still have issues on this.
+      ## when creating 2 cluster, it loops and hogs the machine
+      makePSOCKcluster(ncores, ...)
+    } else {
+      makeForkCluster(ncores, ...)
+    }
+  }
+  
+  if(is.null(cl)) {
+    ## proprio non ce la faccio, ritorno NULL
     return(invisible(NULL))
   }
   

@@ -9,6 +9,8 @@
 \item{f}{character array che rappresenta la funzione}
 
 \item{name}{name of the object to be returned}
+
+\item{funcName}{name of the function (`proxy` default)}
 }
 \value{
 un character array della funzione orlata

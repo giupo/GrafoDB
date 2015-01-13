@@ -1,2 +1,3 @@
 require(devtools)
-#options(env="test")
+load_all()
+##options(env="test")
