@@ -38,7 +38,7 @@ setGeneric(
 
 setGeneric(
   "expr",
-  function(x, nomi, echo=TRUE) {
+  function(x, nomi, echo=FALSE) {
     standardGeneric("expr")
   })
 
@@ -217,7 +217,7 @@ setMethod(
 setMethod(
   "expr",
   c("GrafoDB", "character", "ANY"),
-  function(x, nomi, echo=TRUE) {
+  function(x, nomi, echo=FALSE) {
     .expr(x, nomi, echo)
   })
 
@@ -377,12 +377,13 @@ setMethod(
 #' @usage ser(x, name)
 #' @param x un istanza di GrafoDB
 #' @param name nome della serie da valutare
+#' @param debug debug mode (`FALSE` default)
 #' @return la serie valutata
 #' @export
 
 setGeneric(
   "ser",
-  function(x, name) {
+  function(x, name, debug=FALSE) {
     standardGeneric("ser")
   })
 
@@ -392,16 +393,17 @@ setGeneric(
 #' @usage ser(x, name)
 #' @param x un istanza di GrafoDB
 #' @param name nome della serie da valutare
+#' @param debug se `TRUE` attiva la modalita' di debugging
 #' @return la serie valutata
 #' @export
 
 setMethod(
   "ser",
   signature("GrafoDB", "character"),
-  function(x, name) {
-    # that's the dumbest thing in my life, inverting arguments.
-    .evaluateSingle(name, x)
-  })
+  function(x, name, debug=FALSE) {
+    .ser(x, name, debug=debug)
+  }
+)
 
 #' Ritorna le dipendeze di una serie
 #'

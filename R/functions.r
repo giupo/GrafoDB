@@ -183,17 +183,18 @@ from.data.frame <- function(df) {
 #' @usage .clutter_function(f)
 #' @param f character array che rappresenta la funzione
 #' @param name name of the object to be returned
+#' @param funcName name of the function (`proxy` default)
 #' @return un character array della funzione orlata
 #' @note funzione interna
 #' @rdname clutter_function
 
-.clutter_function <- function(f, name) {
-  template <- "proxy <- function() {
+.clutter_function <- function(f, name, funcName="proxy") {
+  template <- "--FUNCNAME-- <- function() {
 --FUNCTION--
 --NAME--
   }"
-
-  task <- gsub("--FUNCTION--", f, template)
+  task <- gsub("--FUNCNAME--", funcName, template)
+  task <- gsub("--FUNCTION--", f, task)
   task <- gsub("--NAME--", name, task)
   task
 }
@@ -231,7 +232,7 @@ from.data.frame <- function(df) {
 #' @rdname expr-internal
 #' @import formatR
 
-.expr <- function(x, nomi, echo=TRUE) {
+.expr <- function(x, nomi, echo=FALSE) {
   functions <- x@functions
   in.functions <- intersect(keys(functions), nomi)
   da.caricare.db <- setdiff(nomi, in.functions)
@@ -242,7 +243,7 @@ from.data.frame <- function(df) {
     names(params) <- c("tag", "name")
     dbGetPreparedQuery(
       con,
-        "select name, formula from formule where tag = ? and name = ?",
+      "select name, formula from formule where tag = ? and name = ?",
       bind.data = params)
   } else {
     data.frame(name=character(), formula=character())
@@ -453,8 +454,107 @@ ratio <- function() {
   message(100 - success/total * 100, " failure rate")
 }
 
+.getdata_few <- function(x, i) {
+  ## check if changed, then load internal changes
+  data <- x@data
+  in.data <- intersect(keys(data), i)
+  da.caricare.db <- setdiff(i, in.data)
+  tag <- x@tag
+  from.db <- if(length(da.caricare.db)) {
+    ## assurdo ma conviene caricare tutta la tabella e poi discernere
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    params <- cbind(tag, i)
+    names(params) <- c("tag", "name")
+    df <- dbGetPreparedQuery(
+      con,
+      paste0("select name, anno, periodo, freq, dati ",
+             " from dati where tag = ? and name = ?"),
+      bind.data = params)
+    
+    closure <- function(name, df) {
+      sub.df <- df[df$name == name,]
+      from.data.frame(sub.df)
+    }
+                      
+    foreach(row=iter(da.caricare.db, by='row'), .combine=append) %dopar% {
+      closure(row, df)
+    } 
+  }
+  
+  ret <- list()
+  for(name in names(from.db)) {
+    ret[[name]] <- from.db[[name]]
+  }
+  
+  for(name in in.data) {
+    ret[[name]] <- data[[name]]
+  }
+  
+  ## controllo di avere tutte le serie
+  if(!all(i %in% names(ret))) {
+    non.presenti <- setdiff(i, names(ret))
+    warning("le seguenti serie non sono presenti: ",
+            paste(non.presenti, collapse=", "))
+  }
+  
+  if(length(ret) == 1) {
+    ret <- ret[[1]]
+  }
+  ret
+}
 
-
+.getdata_lots <- function(x, i) {
+  ## check if changed, then load internal changes
+  data <- x@data
+  in.data <- intersect(keys(data), i)
+  da.caricare.db <- setdiff(i, in.data)
+  tag <- x@tag
+  from.db <- if(length(da.caricare.db)) {
+    ## assurdo ma conviene caricare tutta la tabella e poi discernere
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    
+    df <- dbReadTable(con, paste0("dati_", tag))
+    
+    closure <- function(name, df) {
+      sub.df <- df[df$name == name,]
+      from.data.frame(sub.df)
+    }
+    
+    cl <- initDefaultCluster()
+    if(is.null(cl)) {
+      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %do% {
+        closure(row,df)
+      }
+    } else {
+      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %dopar% {
+        closure(row, df)
+      }
+    } 
+  }
+  
+  ret <- list()
+  for(name in names(from.db)) {
+    ret[[name]] <- from.db[[name]]
+  }
+  
+  for(name in in.data) {
+    ret[[name]] <- data[[name]]
+  }
+  
+  ## controllo di avere tutte le serie
+  if(!all(i %in% names(ret))) {
+    non.presenti <- setdiff(i, names(ret))
+    warning("le seguenti serie non sono presenti: ",
+            paste(non.presenti, collapse=", "))
+  }
+  
+  if(length(ret) == 1) {
+    ret <- ret[[1]]
+  }
+  ret
+}
 #' Ottiene i dati dal GrafoDB
 #'
 #' I dati possono provenire direttamente dal Database se non modificati nella sessione
@@ -472,50 +572,11 @@ ratio <- function() {
 #' @note se i e' un singolo nome e non esiste nel DB, la funzione termina con errore
 
 .getdata <- function(x,i) {
-  ## check if changed, then load internal changes
-  data <- x@data
-  in.data <- intersect(keys(data), i)
-  da.caricare.db <- setdiff(i, in.data)
-  tag <- x@tag
-  from.db <- if(length(da.caricare.db)) {
-    ## assurdo ma conviene caricare tutta la tabella e poi discernere
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-
-    df <- dbReadTable(con, paste0("dati_", tag))
-
-    closure <- function(name, df) {
-      sub.df <- df[df$name == name,]
-      from.data.frame(sub.df)
-    }
-                      
-    cl <- initDefaultCluster()
-    if(is.null(cl)) {
-      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %do% closure(row,df)
-    } else {
-      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %dopar% closure(row, df)
-    } 
+  if(length(i) <= 30) {
+    .getdata_few(x, i)
+  } else {
+    .getdata_lots(x, i)
   }
-  
-  ret <- list()
-  for(name in names(from.db)) {
-    ret[[name]] <- from.db[[name]]
-  }
-
-  for(name in in.data) {
-    ret[[name]] <- data[[name]]
-  }
-
-  ## controllo di avere tutte le serie
-  if(!all(i %in% names(ret))) {
-    non.presenti <- setdiff(i, names(ret))
-    warning("le seguenti serie non sono presenti: ", paste(non.presenti, collapse=", "))
-  }
-
-  if(length(ret) == 1) {
-    ret <- ret[[1]]
-  }
-  ret
 }
 
 .showConflicts <- function(x) {
@@ -531,7 +592,6 @@ ratio <- function() {
     dfserie <- df[df$name == name,]
     originale <- x[[name]]
     sul.db <- from.data.frame(dfserie)
-
   }
 }
 
@@ -643,4 +703,27 @@ elimina <- function(tag) {
   task <- gsub(paste0("return\\(", name, "\\)$"), "", task)
   y@functions[[name]] = task
   return(invisible(y))
+}
+
+.ser <- function(x, name, debug=FALSE) {
+  ## that's the dumbest thing in my life, inverting arguments.
+  if(!debug) {
+    .evaluateSingle(name, x)
+  } else {
+    task <- expr(x, name, echo=FALSE)
+    f <- .clutter_function(task, name, funcName=name)
+    filetmp <- tempfile(pattern=name, fileext=".R")
+    write(f, file=filetmp)
+    
+    source(filetmp)
+    debug(name)
+    padri <- deps(x, name)
+    padri <- x[[padri]]
+    attach(padri)
+    on.exit({
+      file.remove(filetmp)
+      detach()
+    })
+    eval(parse(text=paste0(name, "()")))
+  }
 }
