@@ -383,7 +383,7 @@ from.data.frame <- function(df) {
   pb <- ProgressBar(min=0, max=total)
   ## trovo le fonti
   sources_id <- V(network)[degree(network, mode="in") == 0]
-  cl <- initDefaultCluster()
+  cl <- initCluster()
   is.multi.process <- !is.null(cl) && !debug 
   
   while(length(sources_id)) {
@@ -522,7 +522,7 @@ ratio <- function() {
       from.data.frame(sub.df)
     }
     
-    cl <- initDefaultCluster()
+    cl <- initCluster()
     if(is.null(cl)) {
       foreach(row=iter(da.caricare.db, by='row'), .combine=append) %do% {
         closure(row,df)
@@ -564,6 +564,7 @@ ratio <- function() {
 #' @name .getdata
 #' @rdname getdata_internal
 #' @usage .getdata(x, i)
+#' @include cluster.r
 #' @param x istanza di `GrafoDB`
 #' @param i character array di nomi di serie storiche
 #' @return ritorna una named list con all'interno le serie storiche. Se l'array e'
@@ -572,6 +573,7 @@ ratio <- function() {
 #' @note se i e' un singolo nome e non esiste nel DB, la funzione termina con errore
 
 .getdata <- function(x,i) {
+  cl <- initCluster()
   if(length(i) <= 30) {
     .getdata_few(x, i)
   } else {
