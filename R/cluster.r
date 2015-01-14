@@ -34,7 +34,7 @@ initDefaultCluster <- function(ncores=NULL, ...) {
   if(is.null(cl)) {
     
     if(is.null(ncores)) {
-      ncores <- as.integer(detectCores() / 2)
+      ncores <- as.integer(detectCores())
     }
     
     cl <- if(is.windows()) {
