@@ -265,7 +265,7 @@
   ## aggiorno solo le serie cambiate
   
   names.updated <- setdiff(keys(data), names.with.conflicts)
-  cl <- initDefaultCluster()
+  cl <- initCluster()
   is.multi.process <- !is.null(cl)
   autore <- whoami()
   if(length(names.updated)) { 
@@ -314,7 +314,7 @@
   }
   
   names.with.conflicts <- as.character(df$name)
-  cl <- initDefaultCluster()
+  cl <- initCluster()
   is.multi.process <- !is.null(cl)
   autore <- whoami()
   if(nrow(df)) {
