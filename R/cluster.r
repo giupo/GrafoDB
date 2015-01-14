@@ -8,10 +8,10 @@ if(is.windows()) {
 
 #' initializes a cluster for this package.
 #'
-#' @name .initDefaultCluster
-#' @usage .initDefaultCluster()
-#' @rdname initDefaultCluster
-#' @usage .initDefaultCluster(ncores)
+#' @name initCluster
+#' @usage initCluster()
+#' @rdname initCluster
+#' @usage initCluster(ncores)
 #' @param ncores number of cores for this cluster, if `NULL`
 #'               uses `parallel::detectCores`
 #' @param ... other params passed to cluster constructor
@@ -20,7 +20,7 @@ if(is.windows()) {
 #' @import parallel doParallel
 #' @export
 
-initDefaultCluster <- function(ncores=NULL, ...) {
+initCluster <- function(ncores=NULL, ...) {
   if(!getOption("GCLUSTER", TRUE)) {
     return(invisible(NULL))
   }
