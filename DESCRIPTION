@@ -1,6 +1,6 @@
 Package: GrafoDB
 Title: What the package does (one line)
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
 Description: What the package does (one paragraph)
 Depends:
@@ -27,5 +27,6 @@ Collate:
     'functions.r'
     'core.r'
     'conflicts.r'
+    'life_cycle.r'
     'old_grafo_impl.r'
     'subsetting.r'
