@@ -21,6 +21,10 @@ if(is.windows()) {
 #' @export
 
 initCluster <- function(ncores=NULL, ...) {
+  if(getOption("SLAVE", FALSE)) {
+    return(invisible(NULL))
+  }
+
   if(!getOption("GCLUSTER", TRUE)) {
     return(invisible(NULL))
   }
@@ -31,8 +35,7 @@ initCluster <- function(ncores=NULL, ...) {
       NULL
     })
   
-  if(is.null(cl)) {
-    
+  if(is.null(cl)) {    
     if(is.null(ncores)) {
       ncores <- as.integer(detectCores())
     }
@@ -42,7 +45,8 @@ initCluster <- function(ncores=NULL, ...) {
       ## when creating 2 cluster, it loops and hogs the machine
       makePSOCKcluster(ncores, ...)
     } else {
-      makeForkCluster(ncores, ...)
+      makeForkCluster(ncores, outfile="~/.GrafoDB/cluster.log", ...)
+      ## makePSOCKcluster(ncores, outfile="~/.GrafoDB/cluster.log", ...)
     }
   }
   
@@ -50,7 +54,7 @@ initCluster <- function(ncores=NULL, ...) {
     ## proprio non ce la faccio, ritorno NULL
     return(invisible(NULL))
   }
-  
+  clusterEvalQ(cl, options(SLAVE=TRUE))
   clusterEvalQ(cl, .libPaths("/home/group/main/894smf/cfin/library"))  
   clusterExport(
     cl, c(
@@ -68,11 +72,9 @@ initCluster <- function(ncores=NULL, ...) {
   clusterEvalQ(cl, "require(stringr)")
   clusterEvalQ(cl, "require(foreach)")
   clusterEvalQ(cl, "require(digest)")
-  clusterEvalQ(cl, "require(digest)")
-  clusterEvalQ(cl, "require(RPostgreSQL)")
   clusterEvalQ(cl, "require(plyr)")
-  clusterExport(cl, "pgConnect")
-  clusterExport(cl, "dbDisconnect")
+  clusterExport(cl, "pgConnect", envir=environment())
+  clusterExport(cl, "dbDisconnect", envir=environment())
   clusterEvalQ(cl, {
     require(RPostgreSQL)
     pgConnect()

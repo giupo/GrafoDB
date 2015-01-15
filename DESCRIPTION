@@ -27,5 +27,6 @@ Collate:
     'functions.r'
     'core.r'
     'conflicts.r'
+    'life_cycle.r'
     'old_grafo_impl.r'
     'subsetting.r'

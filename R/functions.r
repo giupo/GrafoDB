@@ -322,9 +322,6 @@ from.data.frame <- function(df) {
   }, error = function(err) {
     stop(name, ": ", err)
     ##getData(graph, name)
-  }, warning = function(warn) {
-    stop(name, ": ", warn)
-    ##getData(graph, name)
   })           
 }
 
@@ -476,10 +473,16 @@ ratio <- function() {
       sub.df <- df[df$name == name,]
       from.data.frame(sub.df)
     }
-                      
-    foreach(row=iter(da.caricare.db, by='row'), .combine=append) %dopar% {
-      closure(row, df)
-    } 
+    cl <- initCluster()
+    if(is.null(cl)) {
+      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %do% {
+        closure(row, df)
+      }
+    } else {
+      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %dopar% {
+        closure(row, df)
+      }
+    }
   }
   
   ret <- list()
