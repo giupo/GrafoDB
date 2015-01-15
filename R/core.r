@@ -42,17 +42,57 @@ setGeneric(
     standardGeneric("expr")
   })
 
+
+#' predicato che ritorna `TRUE` se le serie sono radici
+#'
+#' Ritorna `TRUE` se le serie date nel parametro `name` non hanno serie
+#' entranti
+#'
+#' @name isRoot
+#' @usage isRoot(x, name)
+#' @param x istanza di GrafoDB
+#' @param name vettore di nomi di serie
+#' @return `TRUE` se `name` sono serie senza archi entranti
+#' @export
+
 setGeneric(
   "isRoot",
   function(x, name) {
     standardGeneric("isRoot")
   })
 
+#' Ritorna i genitori delle serie
+#'
+#' ritorna i nomi delle serie che entrano nelle serie date in `name`
+#'
+#' @name upgrf
+#' @usage upgrf(x, name)
+#' @usage upgrf(x, name, livello)
+#' @param x un istanza di GrafoDB
+#' @param name array di nomi di serie
+#' @param livello numero di livelli (ordine) da considerare (di default, tutti)
+#' @return nomi di serie
+#' @export
+
 setGeneric(
   "upgrf",
   function(x, name, livello=.Machine$integer.max) {
     standardGeneric("upgrf")
   })
+
+
+#' Ritorna i figli delle serie
+#'
+#' ritorna i nomi delle serie che sono generate dalle serie date in `name`
+#'
+#' @name downgrf
+#' @usage downgrf(x, name)
+#' @usage downgrf(x, name, livello)
+#' @param x un istanza di GrafoDB
+#' @param name array di nomi di serie
+#' @param livello numero di livelli (ordine) da considerare (di default, tutti)
+#' @return nomi di serie
+#' @export
 
 setGeneric(
   "downgrf",
