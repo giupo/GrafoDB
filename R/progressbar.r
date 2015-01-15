@@ -82,7 +82,8 @@ setMethod(
     max <- x@max
     char <- x@char
     elapsed <- as.numeric(Sys.time() - x@time)
-    eta <- elapsed * max / value - elapsed
+    V <- value/elapsed
+    eta <- V * (max-value)
     eta <- if(eta > 3600) {
       sprintf("%02i:%02i:%02i", as.integer(floor(eta/3600)),
               as.integer(floor((eta/60) %% 60)),

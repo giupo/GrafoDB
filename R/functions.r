@@ -697,9 +697,7 @@ elimina <- function(tag) {
   x@functions[name] <- .declutter_function(txtsrc)
   f <- eval(parse(text=txtsrc))
   params <- list(...)
-  if("eval" %in% names(params) && as.logical(params[["eval"]])) {
-    x[name] = f
-  }
+  x[name] = f
   invisible(x)
 }
 
