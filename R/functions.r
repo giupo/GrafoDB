@@ -315,9 +315,12 @@ from.data.frame <- function(df) {
   }
   attach(padri)
   on.exit(detach(padri))
+  #env <- as.environment(padri)
+  #env$graph <- graph
   cmd <- .clutter_function(tsformula, name)
   tryCatch({
     eval(parse(text=cmd))
+    ##do.call(proxy, list(), envir=env)
     proxy()
   }, error = function(err) {
     stop(name, ": ", err)
