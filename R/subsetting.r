@@ -1,5 +1,5 @@
-# Questo file contiene tutte le funzioni per effettuare operazioni di subsetting
-# sul 'GrafoDB
+## Questo file contiene tutte le funzioni per effettuare operazioni di subsetting
+## sul 'GrafoDB
 
 #' @include functions.r
 NULL
@@ -72,7 +72,15 @@ setMethod(
     x <- .evaluate(x, name)
   } else {
     x@network <- network
-    x@data[[name]] <- value
+    if(is.dataset(value)) {
+      data <- x@data
+      for(n in names(value)) {
+        data[[n]] <- value[[name]]
+      }
+      x@data <- data
+    } else {  
+      x@data[[name]] <- value
+    }
     subgraph <- describe(x, name, mode="out")
     if(length(subgraph)) {    
       x <- evaluate(x, name)
@@ -95,7 +103,7 @@ setMethod(
   })
 
 setMethod(
-  "[[<-",
+  "[<-",
   signature("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., value) {
     x <- .subsetting(x, i, value)
