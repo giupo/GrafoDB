@@ -313,18 +313,14 @@ from.data.frame <- function(df) {
     ppp[[nomi_padri]] <- padri
     padri <- ppp
   }
-  attach(padri)
-  on.exit(detach(padri))
-  #env <- as.environment(padri)
-  #env$graph <- graph
+  env <- as.environment(padri)
+  env$graph <- graph
   cmd <- .clutter_function(tsformula, name)
   tryCatch({
     eval(parse(text=cmd))
-    ##do.call(proxy, list(), envir=env)
-    proxy()
+    do.call(proxy, list(), envir=env)
   }, error = function(err) {
     stop(name, ": ", err)
-    ##getData(graph, name)
   })           
 }
 
