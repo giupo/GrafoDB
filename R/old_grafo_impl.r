@@ -198,7 +198,7 @@ setMethod(
   function(object, tsName) {
     ret <- list()
     for(name in tsName) {
-      ret[[name]] <- describe(object, name, order=1, mode="in")
+      ret[[name]] <- navigate(object, name, order=1, mode="in")
     }
 
     if(length(ret) == 1) {

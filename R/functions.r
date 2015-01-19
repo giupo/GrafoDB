@@ -276,20 +276,78 @@ from.data.frame <- function(df) {
   }
 }
 
-#' Valuta un singolo oggetto del grafo identificato da `name`
-#'
-#' @name .evaluateSingle
-#' @aliases evaluateSingle
-#' @usage .evaluateSingle(name, object)
-#' @usage evaluateSingle(name, object)
-#' @param name `character` nome della serie
-#' @param graph istanza di `GrafoDB`
-#' @return la serie storica calcolata.
-#' @export
-#' @import grafo
-#' @rdname evaluateSingle-internal
+.evaluateSingle1 <- function(name, graph) {
+  tsformula <- .expr(graph, name, echo=FALSE)
+  nomi_padri <- upgrf(graph, name, livello=1)
+  if(length(nomi_padri) == 0) {
+    return(graph[[name]])
+  }
+  if(length(nomi_padri) > 100) {
+    padri <- list()
+    sliced <- slice(nomi_padri, n=100)
+    foreach(sliced_names = sliced) %do% {
+      padri[sliced_names] <- graph[[sliced_names]]
+    }
+    names(padri) <- nomi_padri
+    padri
+  } else {
+    padri <- graph[[nomi_padri]]
+  }
+  
+  if(length(nomi_padri) == 1) {
+    ## boxing
+    ppp <- list()
+    ppp[[nomi_padri]] <- padri
+    padri <- ppp
+  }
+  ## cmd <- .clutter_function(tsformula, name)
+  cmd <- .clutter_with_params(tsformula, name, nomi_padri)
+  tryCatch({
+    eval(parse(text=cmd))
+    do.call(proxy, padri)
+  }, error = function(err) {
+    stop(name, ": ", err)
+  })           
+}
 
-.evaluateSingle <- function(name, graph) {
+
+.evaluateSingle3 <- function(name, graph) {
+  tsformula <- .expr(graph, name, echo=FALSE)
+  nomi_padri <- upgrf(graph, name, livello=1)
+  if(length(nomi_padri) == 0) {
+    return(graph[[name]])
+  }
+  if(length(nomi_padri) > 100) {
+    padri <- list()
+    sliced <- slice(nomi_padri, n=100)
+    foreach(sliced_names = sliced) %do% {
+      padri[sliced_names] <- graph[[sliced_names]]
+    }
+    names(padri) <- nomi_padri
+    padri
+  } else {
+    padri <- graph[[nomi_padri]]
+  }
+  
+  if(length(nomi_padri) == 1) {
+    ## boxing
+    ppp <- list()
+    ppp[[nomi_padri]] <- padri
+    padri <- ppp
+  }
+
+  attach(padri)
+  on.exit(detach(padri))
+  cmd <- .clutter_function(tsformula, name)
+  tryCatch({
+    eval(parse(text=cmd))
+    proxy()
+  }, error = function(err) {
+    stop(name, ": ", err)
+  })           
+}
+
+.evaluateSingle2 <- function(name, graph) {
   tsformula <- .expr(graph, name, echo=FALSE)
   nomi_padri <- upgrf(graph, name, livello=1)
   if(length(nomi_padri) == 0) {
@@ -324,6 +382,21 @@ from.data.frame <- function(df) {
     stop(name, ": ", err)
   })           
 }
+
+#' Valuta un singolo oggetto del grafo identificato da `name`
+#'
+#' @name .evaluateSingle
+#' @aliases evaluateSingle
+#' @usage .evaluateSingle(name, object)
+#' @usage evaluateSingle(name, object)
+#' @param name `character` nome della serie
+#' @param graph istanza di `GrafoDB`
+#' @return la serie storica calcolata.
+#' @export
+#' @import grafo
+#' @rdname evaluateSingle-internal
+
+.evaluateSingle <- .evaluateSingle1
 
 #' Implementazione del generic `evaluate` definito nel package `grafo`
 #' per la classe `GrafoDB`
