@@ -376,7 +376,8 @@ from.data.frame <- function(df) {
   cmd <- .clutter_function(tsformula, name)
   tryCatch({
     eval(parse(text=cmd))
-    do.call(proxy, list(), envir=env)
+    attach(env)
+    do.call(proxy, list())
   }, error = function(err) {
     stop(name, ": ", err)
   })           
