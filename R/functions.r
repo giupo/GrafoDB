@@ -396,7 +396,7 @@ from.data.frame <- function(df) {
 #' @import grafo
 #' @rdname evaluateSingle-internal
 
-.evaluateSingle <- .evaluateSingle1
+.evaluateSingle <- .evaluateSingle3
 
 #' Implementazione del generic `evaluate` definito nel package `grafo`
 #' per la classe `GrafoDB`
@@ -786,7 +786,11 @@ elimina <- function(tag) {
 .ser <- function(x, name, debug=FALSE) {
   ## that's the dumbest thing in my life, inverting arguments.
   if(!debug) {
-    .evaluateSingle(name, x)
+    ret <- .evaluateSingle(name, x)
+    if(!is.bimets(ret)) {
+      stop(name, " non e' un oggetto bimets")
+    }
+    ret
   } else {
     task <- expr(x, name, echo=FALSE)
     f <- .clutter_function(task, name, funcName=name)
@@ -795,8 +799,15 @@ elimina <- function(tag) {
     
     source(filetmp)
     debug(name)
-    padri <- deps(x, name)
-    padri <- x[[padri]]
+    nomi_padri <- deps(x, name)
+    padri <- x[[nomi_padri]]
+    if(length(nomi_padri) == 1) {
+      ## boxing
+      ppp <- list()
+      ppp[[nomi_padri]] <- padri
+      padri <- ppp
+    }
+    
     attach(padri)
     on.exit({
       file.remove(filetmp)
