@@ -42,13 +42,18 @@ setMethod(
   network <- x@network
   all_names <- V(network)$name
   name <- i
+
   already_in_dag <- name %in% all_names
   network <- if(!already_in_dag) {
     network + vertex(name)
   } else {
-    network - E(network)[to(name)]
+    if(!is.dataset(value)) {
+      network - E(network)[to(name)]
+    }
   }
+
   if (is.function(value)) {
+   
     ## assert all dependencies
     dependencies <- names(as.list(formals(value)))
     if (!all(dependencies %in% all_names)) {
@@ -75,13 +80,13 @@ setMethod(
     if(is.dataset(value)) {
       data <- x@data
       for(n in names(value)) {
-        data[[n]] <- value[[name]]
+        data[n] <- value[[n]]
       }
       x@data <- data
     } else {  
       x@data[[name]] <- value
     }
-    subgraph <- describe(x, name, mode="out")
+    subgraph <- navigate(x, name, mode="out")
     if(length(subgraph)) {    
       x <- evaluate(x, name)
     }
