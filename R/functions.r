@@ -419,8 +419,6 @@ from.data.frame <- function(df) {
     FALSE
   }
 
-  
-  
   data <- object@data
   network <- object@network
   all_names <- names(object)
@@ -438,7 +436,7 @@ from.data.frame <- function(df) {
       network,
       V(network)[unlist(
         neighborhood(network, order=.Machine$integer.max, nodes=v_start, mode="out")
-      )])
+        )])
   }
   
   ## se il network e' vuoto dopo l'eliminazione delle sorgenti, ritorno senza fare nulla
@@ -466,6 +464,10 @@ from.data.frame <- function(df) {
         .evaluateSingle(name, object)
       }, object)
     } else {
+      clusterExport(
+        cl, ".evaluateSingle",
+        envir=environment())
+
       evaluated.data <- foreach(name = sources, .combine = c) %dopar% {
         serie <- .evaluateSingle(name, object)
         list(serie)
