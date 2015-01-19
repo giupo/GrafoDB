@@ -19,52 +19,6 @@ setGeneric(
     standardGeneric("lookup")
   })
 
-#' naviga nel grafo
-#'
-#' @name navigate
-#' @title Funzioni del package `grafo`
-#' @usage navugate(graph, nodes, order, mode, plot)
-#' @seealso `grafo::describe`
-#' @import igraph
-#' @export
-
-setGeneric(
-  "navigate",
-  function(object, nodes=NULL, order=1L, mode='out', plot=FALSE) { 
-    standardGeneric("navigate")
-  })
-
-setMethod(
-  "navigate",
-  signature("GrafoDB", "ANY", "ANY", "ANY", "ANY"),
-  function(object, nodes=NULL, order=1L, mode='out', plot=FALSE) {    
-    if(!is.null(nodes))  {
-      nodes <- as.character(nodes)
-    }
-    order <- as.integer(order)
-    mmode <- as.character(mode)
-    plot <- as.logical(plot)
-    
-    network <- object@network
-    x <- if (!is.null(nodes)) {
-      unlist(
-        neighborhood(graph=network, order=order, nodes=nodes, mode=mode))
-    } else {
-      nodes <- topological.sort(network)[1]
-      unlist(
-        neighborhood(graph=network, order=order, nodes=nodes, mode='out'))
-    }
-    
-    g1 <- induced.subgraph(network, x)
-    V(g1)$label=V(g1)$name
-    ret <- V(g1)$name
-    ret <- ret[ which(ret != nodes) ]
-    if (length(ret)== 0) {
-      return(invisible(NULL))
-    }
-    ret
-  })
-
 #' Formule del `GrafoDB`
 #'
 #' Ritorna come named list le formule per ogni serie specificata in `nomi`
@@ -189,6 +143,52 @@ setMethod(
     .init(.Object, tag)
   })
 
+
+#' naviga nel grafo
+#'
+#' @name navigate
+#' @title Funzioni del package `grafo`
+#' @usage navugate(graph, nodes, order, mode, plot)
+#' @seealso `grafo::describe`
+#' @import igraph
+#' @export
+
+setGeneric(
+  "navigate",
+  function(object, nodes=NULL, order=1L, mode='out', plot=FALSE) { 
+    standardGeneric("navigate")
+  })
+
+setMethod(
+  "navigate",
+  signature("GrafoDB", "ANY", "ANY", "ANY", "ANY"),
+  function(object, nodes=NULL, order=1L, mode='out', plot=FALSE) {    
+    if(!is.null(nodes))  {
+      nodes <- as.character(nodes)
+    }
+    order <- as.integer(order)
+    mmode <- as.character(mode)
+    plot <- as.logical(plot)
+    
+    network <- object@network
+    x <- if (!is.null(nodes)) {
+      unlist(
+        neighborhood(graph=network, order=order, nodes=nodes, mode=mode))
+    } else {
+      nodes <- topological.sort(network)[1]
+      unlist(
+        neighborhood(graph=network, order=order, nodes=nodes, mode='out'))
+    }
+    
+    g1 <- induced.subgraph(network, x)
+    V(g1)$label=V(g1)$name
+    ret <- V(g1)$name
+    ret <- ret[ which(ret != nodes) ]
+    if (length(ret)== 0) {
+      return(invisible(NULL))
+    }
+    ret
+  })
 
 setMethod(
   "show",
