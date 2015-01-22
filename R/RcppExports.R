@@ -3,21 +3,56 @@
 
 #' shit full
 #'
-#' @name load_data
-#' @usage load_data(username, password, hostname, port, dbname, names, tag)
+#' @name load_archi
+#' @usage load_archi(username, password, hostname, port, dbname, tag)
 #' @param username username per la connessione
 #' @param password password per la connessione
 #' @param hostname hostname del database
 #' @param port porta di ascolto del server
 #' @param dbname nome del db
+#' @param tag tag del database da cui caricare le serie
+#' @return una matrice di archi
+#' @export
+#' @import Rcpp
+#' @useDynLib GrafoDB
+NULL
+
+load_archi <- function(username, password, hostname, port, dbname, tag) {
+    .Call('GrafoDB_load_archi', PACKAGE = 'GrafoDB', username, password, hostname, port, dbname, tag)
+}
+
+#' shit full
+#'
+#' @name load_data
+#' @usage load_data(names, tag)
+NULL
+
 #' @param names nomi di serie da caricare
 #' @param tag tag del database da cui caricare le serie
 #' @return a list
 #' @export
-#' @useDynLib testpq
+#' @import Rcpp
+#' @useDynLib GrafoDB
 NULL
 
-load_data <- function(username, password, hostname, port, dbname, names, tag) {
-    .Call('testpq_load_data', PACKAGE = 'testpq', username, password, hostname, port, dbname, names, tag)
+load_data <- function(names, tag) {
+    .Call('GrafoDB_load_data', PACKAGE = 'GrafoDB', names, tag)
+}
+
+#' shit full
+#'
+#' @name save_data
+#' @usage save_data(series, tag)
+NULL
+
+#' @param series lista di serie da salvare
+#' @param tag tag del database da cui caricare le serie
+#' @export
+#' @import Rcpp
+#' @useDynLib GrafoDB
+NULL
+
+save_data <- function(series, tag) {
+    invisible(.Call('GrafoDB_save_data', PACKAGE = 'GrafoDB', series, tag))
 }
 

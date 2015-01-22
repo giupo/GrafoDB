@@ -14,14 +14,19 @@ Depends:
     bimets,
     RJSONIO,
     stringr,
-    formatR
+    formatR,
+    BH,
+    Rcpp
 License: BSD
 LazyData: true
-Imports: Rcpp (>= 0.11.3)
-LinkingTo: Rcpp
+Imports:
+    Rcpp (>= 0.11.3),
+    BH
+LinkingTo: Rcpp, BH
 Suggests:
     testthat
 Collate:
+    'RcppExports.R'
     'cluster.r'
     'db.r'
     'progressbar.r'

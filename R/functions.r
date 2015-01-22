@@ -8,7 +8,7 @@
 #' @param tag tag del grafo (default=`cf10`)
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
-#' @include persistence.r
+#' @include persistence.r RcppExports.R
 
 .init <- function(.Object, tag="cf10") {
   if(is.null(tag)) {
@@ -21,22 +21,13 @@
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   archi_table_name <- paste0("archi_", tag)
-  
-  network <- if(dbExistsTable(con, archi_table_name)) {
-    edges <- dbReadTable(con, paste0("archi_", tag))
-    if(nrow(edges)) {
-      edges$id <- NULL ## cancello gli id
-      edges$tag <- NULL ## cancello il tag
-      edges$last_updated <- NULL
-      edges$autore <- NULL
-      graph.data.frame(edges,directed=TRUE)
-    } else {
-      graph.empty(directed=TRUE)
-    }
+  network <- load_archi(whoami(), flypwd(), "osiride-lv-016", "5432", "grafo", tag);
+  network <- if(nrow(network) > 0) {
+    graph.data.frame(as.data.frame(network),directed=TRUE)
   } else {
     graph.empty(directed=TRUE)
   }
-
+  
   df <- dbGetPreparedQuery(
     con,
     "select name from dati where tag=?",
@@ -642,7 +633,7 @@ ratio <- function() {
 #' @name .getdata
 #' @rdname getdata_internal
 #' @usage .getdata(x, i)
-#' @include cluster.r
+#' @include cluster.r RcppExports.R
 #' @param x istanza di `GrafoDB`
 #' @param i character array di nomi di serie storiche
 #' @return ritorna una named list con all'interno le serie storiche. Se l'array e'
@@ -651,11 +642,19 @@ ratio <- function() {
 #' @note se i e' un singolo nome e non esiste nel DB, la funzione termina con errore
 
 .getdata <- function(x,i) {
-  cl <- initCluster()
-  if(length(i) <= 30) {
-    .getdata_few(x, i)
+  #cl <- initCluster()
+  #if(length(i) <= 30) {
+  #  .getdata_few(x, i)
+  #} else {
+  #  .getdata_lots(x, i)
+  #}
+  raw <- load_data(i, x@tag);
+  if(length(raw) > 1) {
+    ret <- Dataset();
+    ret@data <- hash(raw);
+    ret
   } else {
-    .getdata_lots(x, i)
+    raw[[1]]
   }
 }
 

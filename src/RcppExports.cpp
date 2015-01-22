@@ -5,9 +5,9 @@
 
 using namespace Rcpp;
 
-// load_data
-List load_data(SEXP username, SEXP password, SEXP hostname, SEXP port, SEXP dbname, SEXP names, SEXP tag);
-RcppExport SEXP testpq_load_data(SEXP usernameSEXP, SEXP passwordSEXP, SEXP hostnameSEXP, SEXP portSEXP, SEXP dbnameSEXP, SEXP namesSEXP, SEXP tagSEXP) {
+// load_archi
+CharacterMatrix load_archi(SEXP username, SEXP password, SEXP hostname, SEXP port, SEXP dbname, SEXP tag);
+RcppExport SEXP GrafoDB_load_archi(SEXP usernameSEXP, SEXP passwordSEXP, SEXP hostnameSEXP, SEXP portSEXP, SEXP dbnameSEXP, SEXP tagSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -17,12 +17,40 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< SEXP >::type hostname(hostnameSEXP );
         Rcpp::traits::input_parameter< SEXP >::type port(portSEXP );
         Rcpp::traits::input_parameter< SEXP >::type dbname(dbnameSEXP );
-        Rcpp::traits::input_parameter< SEXP >::type names(namesSEXP );
         Rcpp::traits::input_parameter< SEXP >::type tag(tagSEXP );
-        List __result = load_data(username, password, hostname, port, dbname, names, tag);
+        CharacterMatrix __result = load_archi(username, password, hostname, port, dbname, tag);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
+END_RCPP
+}
+// load_data
+List load_data(SEXP names, SEXP tag);
+RcppExport SEXP GrafoDB_load_data(SEXP namesSEXP, SEXP tagSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< SEXP >::type names(namesSEXP );
+        Rcpp::traits::input_parameter< SEXP >::type tag(tagSEXP );
+        List __result = load_data(names, tag);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// save_data
+void save_data(List series, CharacterVector tag);
+RcppExport SEXP GrafoDB_save_data(SEXP seriesSEXP, SEXP tagSEXP) {
+BEGIN_RCPP
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< List >::type series(seriesSEXP );
+        Rcpp::traits::input_parameter< CharacterVector >::type tag(tagSEXP );
+        save_data(series, tag);
+    }
+    return R_NilValue;
 END_RCPP
 }
