@@ -15,8 +15,10 @@ Depends:
     RJSONIO,
     stringr,
     formatR
-License: What license is it under?
+License: BSD
 LazyData: true
+Imports: Rcpp (>= 0.11.3)
+LinkingTo: Rcpp
 Suggests:
     testthat
 Collate:
