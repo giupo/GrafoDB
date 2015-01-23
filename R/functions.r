@@ -20,7 +20,6 @@
   
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  archi_table_name <- paste0("archi_", tag)
   username <- whoami()
   password <- flypwd()
   settings <- dbSettings()

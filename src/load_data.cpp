@@ -142,7 +142,6 @@ public:
 
 List load_data(SEXP username, SEXP password, SEXP hostname, 
                SEXP port, SEXP dbname, SEXP names, SEXP tag) {
-  
   string username0 = as<string>(username); 
   string password0 = as<string>(password); 
   string hostname0 = as<string>(hostname); 
