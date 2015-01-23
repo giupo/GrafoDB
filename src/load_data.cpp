@@ -122,7 +122,7 @@ public:
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins(cpp11)]]
 
-//' shit full
+//' Load Nativo
 //'
 //' @name load_data
 //' @usage load_data(username, password, hostname, port, dbname, names, tag)
@@ -137,9 +137,7 @@ public:
 //' @export
 //' @import Rcpp
 //' @useDynLib GrafoDB
-//
 // [[Rcpp::export]]
-
 List load_data(SEXP username, SEXP password, SEXP hostname, 
                SEXP port, SEXP dbname, SEXP names, SEXP tag) {
   string username0 = as<string>(username); 
