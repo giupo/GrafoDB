@@ -79,8 +79,9 @@ test_that("Posso salvare il grafo sul database", {
 })
 
 test_that("names su un grafo vuoto torna un array vuoto", {
+  elimina("test")
   g <- GrafoDB("test")
-  expect_equal(length(names(g)), 0)
+  expect_equal(length(names(g)), 0)  
 })
 
 test_that("subset with datasets", {

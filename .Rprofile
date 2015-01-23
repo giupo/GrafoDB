@@ -1,3 +1,5 @@
 require(devtools)
+require(Rcpp)
+require(BH)
 load_all()
 ##options(env="test")

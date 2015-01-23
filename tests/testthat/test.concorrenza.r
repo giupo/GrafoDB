@@ -82,11 +82,11 @@ test_that("Salvare lo stesso grafo con formula aggiunta", {
   g1 <- GrafoDB("test1")
   g2 <- GrafoDB("test1")
 
-  g1[["D"]] <- function(A, C) {
+  g1["D"] <- function(A, C) {
     D = A * C
   }
 
-  g2[["E"]] <- function(A, C) {
+  g2["E"] <- function(A, C) {
     E = A - C
   }
 
@@ -97,6 +97,7 @@ test_that("Salvare lo stesso grafo con formula aggiunta", {
 
   expect_true("D" %in% names(g))
   expect_true("E" %in% names(g))
+  expect_true(!hasConflicts(g))
 })
 
 elimina("test")
@@ -114,11 +115,11 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   g1 <- GrafoDB("test1")
   g2 <- GrafoDB("test1")
 
-  g1[["D"]] <- function(A, C) {
+  g1["D"] <- function(A, C) {
     D = A * C
   }
 
-  g2[["D"]] <- function(A, C) {
+  g2["D"] <- function(A, C) {
     D = A - C
   }
 

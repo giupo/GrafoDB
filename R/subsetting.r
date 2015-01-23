@@ -42,18 +42,20 @@ setMethod(
   network <- x@network
   all_names <- V(network)$name
   name <- i
-
-  already_in_dag <- name %in% all_names
+  
+  already_in_dag <- all(name %in% all_names)  
   network <- if(!already_in_dag) {
-    network + vertex(name)
+    toBeAdded <- setdiff(name, all_names)
+    network + vertex(toBeAdded)
   } else {
     if(!is.dataset(value)) {
       network - E(network)[to(name)]
+    } else {
+      network
     }
   }
 
   if (is.function(value)) {
-   
     ## assert all dependencies
     dependencies <- names(as.list(formals(value)))
     if (!all(dependencies %in% all_names)) {
