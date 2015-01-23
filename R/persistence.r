@@ -238,8 +238,8 @@
     data.frame()
   }
   
-  names.with.conflicts <- as.character(df$name)
-  if(nrow(df) > 0) {
+  names.with.conflicts <- intersect(keys(data), as.character(df$name))
+  if(length(names.with.conflicts) > 0) {
     ## ci sono conflitti
     ## crea il conflitto e non toccare i dati.
     sql <- paste0("insert into conflitti(tag, name, anno, prd, ",
@@ -280,6 +280,7 @@
         cbind(df, autore, name, tag)    
       }
     }
+    
 
     if(dbExistsTable(con, paste0("dati_", tag))) {
       sql1 <- paste0("UPDATE dati_",tag,
@@ -288,6 +289,7 @@
                      " WHERE name=? and tag=?");
       dbGetPreparedQuery(con, sql1, bind.data=dati)
     }
+    
     sql2 <- paste0(
       "INSERT INTO dati(anno, periodo, freq, dati, autore, ",
       " name, tag, last_updated) ",
@@ -313,11 +315,11 @@
     data.frame()
   }
   
-  names.with.conflicts <- as.character(df$name)
+  names.with.conflicts <- intersect(keys(functions), as.character(df$name))
   cl <- initCluster()
   is.multi.process <- !is.null(cl)
   autore <- whoami()
-  if(nrow(df)) {
+  if(length(names.with.conflicts)) {
     dati <- if(is.multi.process) {
       foreach (name = iter(names.with.conflicts), .combine=rbind) %dopar% {
         task <- expr(x, name, echo=FALSE)

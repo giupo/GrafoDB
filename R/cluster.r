@@ -75,11 +75,32 @@ initCluster <- function(ncores=NULL, ...) {
   clusterEvalQ(cl, "require(plyr)")
   clusterExport(cl, "pgConnect", envir=environment())
   clusterExport(cl, "dbDisconnect", envir=environment())
+  connectCluster(cl)
+  setDefaultCluster(cl)
+  registerDoParallel(cl)
+  invisible(cl)
+}
+
+
+connectCluster <- function(cl = NULL) {
+  if(is.null(cl)) {
+    cl <- initCluster()
+  }
   clusterEvalQ(cl, {
     require(RPostgreSQL)
     pgConnect()
   })
-  setDefaultCluster(cl)
-  registerDoParallel(cl)
-  invisible(cl)
+}
+
+disconnectCluster <- function(cl = NULL) {
+  if(is.null(cl)) {
+    cl <- initCluster()
+  }  
+  clusterEvalQ(cl, {
+    require(RPostgreSQL)
+    con <- getOption("pgConnect", NULL)
+    if(!is.null(con)) {
+      RPostgreSQL::dbDisconnect(con)
+    }
+  })
 }

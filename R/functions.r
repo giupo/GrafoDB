@@ -1,14 +1,14 @@
 #' Funzione d'inizializzazione del grafo.
 #'
 #' Questa funzione va utilizzata nell'initialize S4 dell'oggetto `GrafoDB`
-#' 
+#'
 #' @name .init
 #' @rdname init-internal
 #' @param .Object (creato da new)
 #' @param tag tag del grafo (default=`cf10`)
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
-#' @include persistence.r
+#' @include persistence.r RcppExports.R
 
 .init <- function(.Object, tag="cf10") {
   if(is.null(tag)) {
@@ -20,23 +20,16 @@
   
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  archi_table_name <- paste0("archi_", tag)
-  
-  network <- if(dbExistsTable(con, archi_table_name)) {
-    edges <- dbReadTable(con, paste0("archi_", tag))
-    if(nrow(edges)) {
-      edges$id <- NULL ## cancello gli id
-      edges$tag <- NULL ## cancello il tag
-      edges$last_updated <- NULL
-      edges$autore <- NULL
-      graph.data.frame(edges,directed=TRUE)
-    } else {
-      graph.empty(directed=TRUE)
-    }
+  username <- whoami()
+  password <- flypwd()
+  settings <- dbSettings()
+  network <- load_archi(username, password, settings$host, settings$port, settings$dbname, tag);
+  network <- if(nrow(network) > 0) {
+    graph.data.frame(as.data.frame(network),directed=TRUE)
   } else {
     graph.empty(directed=TRUE)
   }
-
+  
   df <- dbGetPreparedQuery(
     con,
     "select name from dati where tag=?",
@@ -526,113 +519,6 @@ ratio <- function() {
   message(100 - success/total * 100, " failure rate")
 }
 
-.getdata_few <- function(x, i) {
-  ## check if changed, then load internal changes
-  data <- x@data
-  in.data <- intersect(keys(data), i)
-  da.caricare.db <- setdiff(i, in.data)
-  tag <- x@tag
-  from.db <- if(length(da.caricare.db)) {
-    ## assurdo ma conviene caricare tutta la tabella e poi discernere
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    params <- cbind(tag, i)
-    names(params) <- c("tag", "name")
-    df <- dbGetPreparedQuery(
-      con,
-      paste0("select name, anno, periodo, freq, dati ",
-             " from dati where tag = ? and name = ?"),
-      bind.data = params)
-    
-    closure <- function(name, df) {
-      sub.df <- df[df$name == name,]
-      from.data.frame(sub.df)
-    }
-    cl <- initCluster()
-    if(is.null(cl)) {
-      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %do% {
-        closure(row, df)
-      }
-    } else {
-      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %dopar% {
-        closure(row, df)
-      }
-    }
-  }
-  
-  ret <- list()
-  for(name in names(from.db)) {
-    ret[[name]] <- from.db[[name]]
-  }
-  
-  for(name in in.data) {
-    ret[[name]] <- data[[name]]
-  }
-  
-  ## controllo di avere tutte le serie
-  if(!all(i %in% names(ret))) {
-    non.presenti <- setdiff(i, names(ret))
-    warning("le seguenti serie non sono presenti: ",
-            paste(non.presenti, collapse=", "))
-  }
-  
-  if(length(ret) == 1) {
-    ret <- ret[[1]]
-  }
-  ret
-}
-
-.getdata_lots <- function(x, i) {
-  ## check if changed, then load internal changes
-  data <- x@data
-  in.data <- intersect(keys(data), i)
-  da.caricare.db <- setdiff(i, in.data)
-  tag <- x@tag
-  from.db <- if(length(da.caricare.db)) {
-    ## assurdo ma conviene caricare tutta la tabella e poi discernere
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    
-    df <- dbReadTable(con, paste0("dati_", tag))
-    
-    closure <- function(name, df) {
-      sub.df <- df[df$name == name,]
-      from.data.frame(sub.df)
-    }
-    
-    cl <- initCluster()
-    if(is.null(cl)) {
-      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %do% {
-        closure(row,df)
-      }
-    } else {
-      foreach(row=iter(da.caricare.db, by='row'), .combine=append) %dopar% {
-        closure(row, df)
-      }
-    } 
-  }
-  
-  ret <- list()
-  for(name in names(from.db)) {
-    ret[[name]] <- from.db[[name]]
-  }
-  
-  for(name in in.data) {
-    ret[[name]] <- data[[name]]
-  }
-  
-  ## controllo di avere tutte le serie
-  if(!all(i %in% names(ret))) {
-    non.presenti <- setdiff(i, names(ret))
-    warning("le seguenti serie non sono presenti: ",
-            paste(non.presenti, collapse=", "))
-  }
-  
-  if(length(ret) == 1) {
-    ret <- ret[[1]]
-  }
-  ret
-}
 #' Ottiene i dati dal GrafoDB
 #'
 #' I dati possono provenire direttamente dal Database se non modificati nella sessione
@@ -642,7 +528,7 @@ ratio <- function() {
 #' @name .getdata
 #' @rdname getdata_internal
 #' @usage .getdata(x, i)
-#' @include cluster.r
+#' @include cluster.r RcppExports.R db.r
 #' @param x istanza di `GrafoDB`
 #' @param i character array di nomi di serie storiche
 #' @return ritorna una named list con all'interno le serie storiche. Se l'array e'
@@ -651,12 +537,50 @@ ratio <- function() {
 #' @note se i e' un singolo nome e non esiste nel DB, la funzione termina con errore
 
 .getdata <- function(x,i) {
-  cl <- initCluster()
-  if(length(i) <= 30) {
-    .getdata_few(x, i)
+                                        #cl <- initCluster()
+                                        #if(length(i) <= 30) {
+                                        #  .getdata_few(x, i)
+                                        #} else {
+                                        #  .getdata_lots(x, i)
+                                        #}
+  ## check if changed, then load internal changes
+  data <- x@data
+  in.data <- intersect(keys(data), i)
+  da.caricare.db <- setdiff(i, in.data)
+  tag <- x@tag
+  from.db <- if(length(da.caricare.db)) {
+    username <- whoami()
+    password <- flypwd()
+    settings <- dbSettings()
+    load_data(username,
+              password,
+              settings$host,
+              settings$port,
+              settings$dbname, da.caricare.db, tag); 
   } else {
-    .getdata_lots(x, i)
+    list()
   }
+  
+  ret <- list()
+  for(name in names(from.db)) {
+    ret[[name]] <- from.db[[name]]
+  }
+  
+  for(name in in.data) {
+    ret[[name]] <- data[[name]]
+  }
+  
+  ## controllo di avere tutte le serie
+  if(!all(i %in% names(ret))) {
+    non.presenti <- setdiff(i, names(ret))
+    warning("le seguenti serie non sono presenti: ",
+            paste(non.presenti, collapse=", "))
+  }
+  
+  if(length(ret) == 1) {
+    ret <- ret[[1]]
+  }
+  ret
 }
 
 .showConflicts <- function(x) {
