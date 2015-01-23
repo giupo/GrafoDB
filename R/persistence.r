@@ -280,6 +280,7 @@
         cbind(df, autore, name, tag)    
       }
     }
+    
 
     if(dbExistsTable(con, paste0("dati_", tag))) {
       sql1 <- paste0("UPDATE dati_",tag,
@@ -288,6 +289,7 @@
                      " WHERE name=? and tag=?");
       dbGetPreparedQuery(con, sql1, bind.data=dati)
     }
+    
     sql2 <- paste0(
       "INSERT INTO dati(anno, periodo, freq, dati, autore, ",
       " name, tag, last_updated) ",

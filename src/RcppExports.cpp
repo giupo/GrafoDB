@@ -26,15 +26,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // load_data
-List load_data(SEXP names, SEXP tag);
-RcppExport SEXP GrafoDB_load_data(SEXP namesSEXP, SEXP tagSEXP) {
+List load_data(SEXP username, SEXP password, SEXP hostname, SEXP port, SEXP dbname, SEXP names, SEXP tag);
+RcppExport SEXP GrafoDB_load_data(SEXP usernameSEXP, SEXP passwordSEXP, SEXP hostnameSEXP, SEXP portSEXP, SEXP dbnameSEXP, SEXP namesSEXP, SEXP tagSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< SEXP >::type username(usernameSEXP );
+        Rcpp::traits::input_parameter< SEXP >::type password(passwordSEXP );
+        Rcpp::traits::input_parameter< SEXP >::type hostname(hostnameSEXP );
+        Rcpp::traits::input_parameter< SEXP >::type port(portSEXP );
+        Rcpp::traits::input_parameter< SEXP >::type dbname(dbnameSEXP );
         Rcpp::traits::input_parameter< SEXP >::type names(namesSEXP );
         Rcpp::traits::input_parameter< SEXP >::type tag(tagSEXP );
-        List __result = load_data(names, tag);
+        List __result = load_data(username, password, hostname, port, dbname, names, tag);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

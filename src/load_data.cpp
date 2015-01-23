@@ -12,19 +12,14 @@ using namespace pqxx;
 using namespace Rcpp;
 using namespace std;
 
-List workerFunction(vector<string> names, string tag) {
+List workerFunction(string m_username, string m_password, string m_hostname, 
+                    string m_port, string m_dbname, vector<string> names, string tag) {
   List z = List::create();
   Json::Value root; // will contains the root value after parsing.
   Json::Value value; // this will contain each value while parsing
   Json::Reader reader;
   Json::StyledWriter styledWriter;
-  
-  string m_username = "m024000";
-  string m_password = "dic14dic";
-  string m_hostname = "osiride-lv-016";
-  string m_port = "5432";
-  string m_dbname =  "grafo";
-  
+   
   vector<string> quotedNames = quote(names);
   string inParams = join(quotedNames, ',');
   string conninfo = "user=" + m_username + " password="+ m_password +
@@ -89,9 +84,24 @@ private:
   List z;
   string m_tag;
   vector<string> m_names;
-  
+  string m_username;
+  string m_password;
+  string m_hostname;
+  string m_port;
+  string m_dbname;
+
 public:
-  Worker(vector<string> names, string tag) {
+  Worker(string username,
+         string password,
+         string hostname,
+         string port,
+         string dbname,
+         vector<string> names, 
+         string tag): m_username(username),
+                      m_password(password),
+                      m_hostname(hostname),
+                      m_port(port),
+                      m_dbname(dbname) {
     z = List::create();    
     m_tag = tag;
     m_names = names;
@@ -102,7 +112,8 @@ public:
   }
   
   List operator()() {
-    z = workerFunction(m_names, m_tag);
+    z = workerFunction(m_username, m_password, m_hostname, m_port, 
+                       m_dbname, m_names, m_tag);
     return getResults();
   }  
 };
@@ -114,13 +125,12 @@ public:
 //' shit full
 //'
 //' @name load_data
-//' @usage load_data(names, tag)
-// @usage load_data(username, password, hostname, port, dbname, names, tag)
-// @param username username per la connessione
-// @param password password per la connessione
-// @param hostname hostname del database
-// @param port porta di ascolto del server
-// @param dbname nome del db
+//' @usage load_data(username, password, hostname, port, dbname, names, tag)
+//' @param username username per la connessione
+//' @param password password per la connessione
+//' @param hostname hostname del database
+//' @param port porta di ascolto del server
+//' @param dbname nome del db
 //' @param names nomi di serie da caricare
 //' @param tag tag del database da cui caricare le serie
 //' @return a list
@@ -130,20 +140,16 @@ public:
 //
 // [[Rcpp::export]]
 
-List load_data(SEXP names,
-                 SEXP tag) {
-
-//CharacterVector x = CharacterVector::create( "foo", "bar" )  ;
-//NumericVector y   = NumericVector::create( 0.0, 1.0 ) ;
-//  List z            = List::create( _["x"]=x,_["y"]= y ) ;
-
-//string username0 = as<string>(username); 
-//string password0 = as<string>(password); 
-//string hostname0 = as<string>(hostname); 
-//string port0 = as<string>(port); 
-//string dbname0 = as<string>(dbname);
+List load_data(SEXP username, SEXP password, SEXP hostname, 
+               SEXP port, SEXP dbname, SEXP names, SEXP tag) {
   
+  string username0 = as<string>(username); 
+  string password0 = as<string>(password); 
+  string hostname0 = as<string>(hostname); 
+  string port0 = as<string>(port); 
+  string dbname0 = as<string>(dbname);  
   vector<string> names0 = as<vector<string> >(names);
   string tag0 = as<string>(tag);
-  return workerFunction(names0, tag0);
+  return workerFunction(username0, password0, hostname0, port0, 
+                        dbname0, names0, tag0);
 }

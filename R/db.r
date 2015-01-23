@@ -40,3 +40,13 @@ dbDisconnect <- function(con) {
     TRUE
   }
 }
+
+dbSettings <- function() {
+  settings <- getOption("dbSettings", NULL)
+  if(is.null(settings)) {
+    settings <-   ini_parse(file.path(system.file(package="rcf"),
+                                      "ini/sql.ini"))$PostgreSQL
+    settings$port <- "5432"
+  }
+  settings
+}

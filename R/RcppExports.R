@@ -24,9 +24,12 @@ load_archi <- function(username, password, hostname, port, dbname, tag) {
 #' shit full
 #'
 #' @name load_data
-#' @usage load_data(names, tag)
-NULL
-
+#' @usage load_data(username, password, hostname, port, dbname, names, tag)
+#' @param username username per la connessione
+#' @param password password per la connessione
+#' @param hostname hostname del database
+#' @param port porta di ascolto del server
+#' @param dbname nome del db
 #' @param names nomi di serie da caricare
 #' @param tag tag del database da cui caricare le serie
 #' @return a list
@@ -35,8 +38,8 @@ NULL
 #' @useDynLib GrafoDB
 NULL
 
-load_data <- function(names, tag) {
-    .Call('GrafoDB_load_data', PACKAGE = 'GrafoDB', names, tag)
+load_data <- function(username, password, hostname, port, dbname, names, tag) {
+    .Call('GrafoDB_load_data', PACKAGE = 'GrafoDB', username, password, hostname, port, dbname, names, tag)
 }
 
 #' shit full
