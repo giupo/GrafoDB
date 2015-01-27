@@ -114,10 +114,12 @@ to.data.frame <- function(x, name=NULL) {
 
   if(is.null(name)) {
     as.data.frame(
-      list(anno=anno, periodo=prd, freq=freq, dati=raw_numbers), stringsAsFactors = F)
+      list(anno=anno, periodo=prd,
+           freq=freq, dati=raw_numbers), stringsAsFactors = F)
   } else {
     as.data.frame(
-      list(name=name, anno=anno, periodo=prd, freq=freq, dati=raw_numbers), stringAsFactors = F)
+      list(name=name, anno=anno, periodo=prd,
+           freq=freq, dati=raw_numbers), stringAsFactors = F)
   }
 }
 
@@ -717,12 +719,21 @@ elimina <- function(tag) {
     ret
   } else {
     task <- expr(x, name, echo=FALSE)
-    f <- .clutter_function(task, name, funcName=name)
+    if(is.null(task)) {
+      if(name %in% names(x)) {
+        stop(name, " non e' una serie con formula")
+      } else {
+        stop(name, " non e' una serie del grafo")
+      }
+    }
+    funcName <- paste0(name, "_func")
+    f <- .clutter_function(task, name, funcName=funcName)
     filetmp <- tempfile(pattern=name, fileext=".R")
     write(f, file=filetmp)
-    
+
+    env <- new.env()
     source(filetmp)
-    debug(name)
+    debug(funcName)
     nomi_padri <- deps(x, name)
     padri <- x[[nomi_padri]]
     if(length(nomi_padri) == 1) {
@@ -734,9 +745,11 @@ elimina <- function(tag) {
     
     attach(padri)
     on.exit({
+      rm(list=c(funcName), envir=globalenv())
       file.remove(filetmp)
-      detach()
+      detach(padri)
     })
-    eval(parse(text=paste0(name, "()")))
+    eval(parse(text=paste0(funcName, "()")))
+    
   }
 }
