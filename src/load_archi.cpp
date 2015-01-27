@@ -14,7 +14,7 @@ using namespace std;
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins(cpp11)]]
 
-//' shit full
+//' Carica Archi nativo
 //'
 //' @name load_archi
 //' @usage load_archi(username, password, hostname, port, dbname, tag)
@@ -30,7 +30,6 @@ using namespace std;
 //' @useDynLib GrafoDB
 //
 // [[Rcpp::export]]
-
 CharacterMatrix  load_archi(SEXP username,
                SEXP password, 
                SEXP hostname,

@@ -40,15 +40,10 @@ public:
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins(cpp11)]]
 
-//' shit full
+//' Save Nativo (non implementato)
 //'
 //' @name save_data
 //' @usage save_data(series, tag)
-// @param username username per la connessione
-// @param password password per la connessione
-// @param hostname hostname del database
-// @param port porta di ascolto del server
-// @param dbname nome del db
 //' @param series lista di serie da salvare
 //' @param tag tag del database da cui caricare le serie
 //' @export
@@ -56,7 +51,6 @@ public:
 //' @useDynLib GrafoDB
 //
 // [[Rcpp::export]]
-
 void save_data(List series, CharacterVector tag) {
   
   //CharacterVector x = CharacterVector::create( "foo", "bar" )  ;
@@ -78,7 +72,5 @@ void save_data(List series, CharacterVector tag) {
     Rprintf("anno: %u\n", s.anno);
     Rprintf("periodo: %u\n", s.periodo);
     Rprintf("freq: %u\n", s.freq);
-
-    
   }
 }
