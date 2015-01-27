@@ -538,7 +538,7 @@ doHistory <- function(x, con) {
   if(length(nomi.history)  == 0 ) {
     return()
   }
-  message("Rolling history for ", tag)
+  message("Rolling history per ", tag)
   df <- dbGetPreparedQuery(
     con,
     "select max(ordinale) from history where tag=?",
