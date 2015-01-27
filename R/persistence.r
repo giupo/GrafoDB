@@ -111,6 +111,9 @@
   }
 
   ## lo divido in tre blocchi tryCatch per finalita' di debugging.
+
+  ## supporto per history
+  doHistory(x, con)
   
   tryCatch(
     .updateData(x, con, tag),
@@ -136,7 +139,7 @@
   tryCatch({
     dbGetPreparedQuery(
       con,
-      paste0("update grafi set last_updated = (select max(last_updated) ",
+      paste0(" update grafi set last_updated = (select max(last_updated) ",
              " from (select last_updated as last_updated from dati where tag=? ",
              " union select last_updated as last_updated from formule ",
              " where tag=? ",
@@ -489,4 +492,85 @@
   if(wasNull) {
     dbCommit(con)
   }
+}
+
+
+#' conta le versioni rolling del grafo con tag `tag`
+#'
+#' @name countRolling
+#' @usage countRolling(x)
+#' @param x istanza di grafo
+#' @param con connessione al DB
+#' @return un intero ad indicare il numero di versioni rolling salvate sul DB
+
+countRolling <- function(x, con = NULL) {
+  if(is.null(con)) {
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+  }
+  tag <- x@tag
+  sql <- paste0("select count(tag) from grafi where tag like '", tag, "p%'")
+  df <- dbGetQuery(con, sql)
+  
+  as.numeric(df[[1,1]])
+}
+
+#' Esegue il push delle release di un entita' sul DB
+#'
+#' @name pushTable
+#' @usage pushTable(x, tag)
+#' @param x entity name
+#' @param tag tag di riferimento
+#' @param con connessione su cui avviene la transazione
+#' @note funzione interna per il versionamento
+
+pushTable <- function(x, tag, con) {
+  
+}
+
+doHistory <- function(x, con) {
+  tag <- x@tag
+
+  data <- x@data
+  nomi.db <- names(x)
+  nomi.data <- keys(data)
+  nomi.history <- intersect(nomi.db, nomi.data)
+  if(length(nomi.history)  == 0 ) {
+    return()
+  }
+  message("Rolling history for ", tag)
+  df <- dbGetPreparedQuery(
+    con,
+    "select max(ordinale) from history where tag=?",
+    bind.data = tag)
+
+  ordinale <- as.numeric(df[[1,1]])
+  ordinale <- if(is.na(ordinale)) {
+    1
+  } else {
+    ordinale + 1
+  }
+  pb <- ProgressBar(0, length(nomi.history))
+  i <- 0
+  for(name in nomi.history) {
+    archi <- deps(x, name)
+    i <- i + 1
+    update(pb, i, label=name)
+    if(is.null(archi)) {
+      dbGetPreparedQuery(
+        con,
+        paste0("insert into history(name, tag, ordinale, anno, periodo, freq, dati, formula, archi_entranti, last_updated, autore)",
+               "select name, tag, ?, anno, periodo, freq, dati, last_updated, autore from dati where tag=? and name=?"),
+        bind.data = data.frame(ordinale, tag, name))      
+    } else {
+      archi <- toJSON(archi)
+      dbGetPreparedQuery(
+        con,
+        paste0("insert into history(name, tag, ordinale, anno, periodo, freq, dati, formula, archi_entranti, last_updated, autore)",
+               "select d.name, d.tag, ?, d.anno, d.periodo, d.freq, d.dati, f.formula, ?, f.last_updated, f.autore from dati d, formule f where f.tag = d.tag and d.tag=? and d.name = f.name and d.name=?"),
+        bind.data = data.frame(ordinale, archi, tag, name))      
+    }
+  }
+  kill(pb)
+  message("Rolling history completo (", paste0(tag, "p", ordinale), ")")
 }
