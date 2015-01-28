@@ -51,7 +51,7 @@ load_data <- function(username, password, hostname, port, dbname, names, tag) {
 #' @useDynLib GrafoDB
 NULL
 
-save_data <- function(series, tag) {
-    invisible(.Call('GrafoDB_save_data', PACKAGE = 'GrafoDB', series, tag))
+save_data <- function(dati, functions, archi, tag, newtag) {
+    invisible(.Call('GrafoDB_save_data', PACKAGE = 'GrafoDB', dati, functions, archi, tag, newtag))
 }
 

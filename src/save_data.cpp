@@ -8,34 +8,14 @@
 #include <pqxx/pqxx>
 #include <sstream>
 #include <math.h>
-#include "utils.hpp"
+
+#include "grafodb.hpp"
+#include "save_graph.hpp"
 
 using namespace pqxx;
 using namespace Rcpp;
 using namespace std;
 
-
-class Series {
-public:
-  unsigned int anno;
-  unsigned int periodo;
-  unsigned int freq;
-  std::vector<double> dati;
-  
-  
-  Series(NumericVector raw) {
-    dati = as<vector<double> >(raw);
-    NumericVector tsp = raw.attr("tsp");
-    double start = tsp[0];
-    freq = (unsigned int) tsp[2];
-    anno = (unsigned int) floor(start);
-    periodo = (start - anno) * freq + 1;
-    if(periodo == 0) {
-      periodo = freq;
-      --anno;
-    }    
-  }
-};
 
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins(cpp11)]]
@@ -51,7 +31,8 @@ public:
 //' @useDynLib GrafoDB
 //
 // [[Rcpp::export]]
-void save_data(List series, CharacterVector tag) {
+void save_data(List dati, List functions, CharacterMatrix archi,  
+               CharacterVector tag, CharacterVector newtag ) {
   
   //CharacterVector x = CharacterVector::create( "foo", "bar" )  ;
   //NumericVector y   = NumericVector::create( 0.0, 1.0 ) ;
@@ -62,15 +43,19 @@ void save_data(List series, CharacterVector tag) {
   //string hostname0 = as<string>(hostname); 
   //string port0 = as<string>(port); 
   //string dbname0 = as<string>(dbname);
+
+  string conninfo = "user=m24000 password=dic14dic dbname=grafo host=osiride-lv-016 port=5432";
+  
+  pqxx::connection conn(conninfo);
+  pqxx::work* T = new pqxx::work(conn, "Save Transaction");
   
   string tag0 = as<string>(tag);
-  CharacterVector nomi = series.names();
-  for(CharacterVector::iterator it = nomi.begin(); it != nomi.end(); ++it) {
-    std::string nome = as<string>(*it);
-    NumericVector serie = series[nome];
-    Series s(serie);
-    Rprintf("anno: %u\n", s.anno);
-    Rprintf("periodo: %u\n", s.periodo);
-    Rprintf("freq: %u\n", s.freq);
-  }
+  string newtag0 = as<string>(newtag);
+  
+  GrafoDB g(dati, functions, archi, tag0);
+  save_graph(g, newtag0, T);
+  
+  T->commit();
+  delete T;
+  conn.disconnect();  
 }
