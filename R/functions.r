@@ -433,7 +433,8 @@ from.data.frame <- function(df) {
         )])
   }
   
-  ## se il network e' vuoto dopo l'eliminazione delle sorgenti, ritorno senza fare nulla
+  ## se il network e' vuoto dopo l'eliminazione delle sorgenti,
+  ## ritorno senza fare nulla
   if(!length(V(network))) {
     return(invisible(object))
   }
@@ -699,7 +700,7 @@ elimina <- function(tag) {
   task <- .clutter_with_params(task, name, deps) 
   write(task, file=file)
   on.exit(file.remove(file))
-  file.edit(file)
+  utils::file.edit(file)
   txtsrc <- paste(readLines(file), collapse="\n")
   x@functions[name] <- .declutter_function(txtsrc)
   f <- eval(parse(text=txtsrc))
