@@ -30,6 +30,7 @@ Collate:
     'RcppExports.R'
     'cluster.r'
     'db.r'
+    'progressbar.r'
     'persistence.r'
     'functions.r'
     'core.r'
