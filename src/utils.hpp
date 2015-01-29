@@ -11,5 +11,5 @@ using namespace std;
 string quote(string s);
 vector<string> quote(vector<string> v);
 string join(vector<string> v, char j);
-
+string whoami();
 #endif
