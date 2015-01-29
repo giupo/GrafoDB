@@ -10,11 +10,12 @@
 
 using namespace Rcpp;
 
-void save_graph(GrafoDB x, std::string tag, pqxx::work* T) {
+void save_graph(GrafoDB x, std::string tag, pqxx::work* T)  {
+  
   if(hasConflicts(x.tag, T)) {
     stop("Il grafo ha conflitti, risolverli prima di salvare");
   }
-
+  
   if(tagExists(tag, T)) {
     update_graph(x, T);
   } else {

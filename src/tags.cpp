@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-bool tagsExists(std::string tag, pqxx::work* T) {
+bool tagExists(std::string tag, pqxx::work* T) {
   std::stringstream sql;
   sql << "select * from grafi where tag='";
   sql << tag << "'";

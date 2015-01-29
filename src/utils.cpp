@@ -3,6 +3,11 @@
 #include <vector>
 #include <string>
 #include <sstream>
+
+#include <cstdio>
+#include <cstdlib>
+#include <pwd.h>
+
 #include "utils.hpp"
 
 using namespace std;
@@ -30,4 +35,14 @@ string join(vector<string> v, char j) {
     ss << v[i];
   }
   return ss.str();
+}
+
+string whoami() {
+  register uid_t uid = geteuid();
+  register struct passwd *pw = getpwuid(uid);
+  if(!pw) {
+    return string("");
+  } else {
+    return string(pw->pw_name);
+  }
 }

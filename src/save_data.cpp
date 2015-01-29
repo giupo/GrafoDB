@@ -44,7 +44,7 @@ void save_data(List dati, List functions, CharacterMatrix archi,
   //string port0 = as<string>(port); 
   //string dbname0 = as<string>(dbname);
 
-  string conninfo = "user=m24000 password=dic14dic dbname=grafo host=osiride-lv-016 port=5432";
+  string conninfo = "user=m024000 password=dic14dic dbname=grafo host=osiride-lv-016 port=5432";
   
   pqxx::connection conn(conninfo);
   pqxx::work* T = new pqxx::work(conn, "Save Transaction");
@@ -53,9 +53,16 @@ void save_data(List dati, List functions, CharacterMatrix archi,
   string newtag0 = as<string>(newtag);
   
   GrafoDB g(dati, functions, archi, tag0);
-  save_graph(g, newtag0, T);
-  
-  T->commit();
-  delete T;
+
+  try {
+    save_graph(g, newtag0, T);
+    T->commit();
+  } catch (const pqxx::pqxx_exception &e) {
+    std::cerr << e.base().what() << std::endl;
+    const pqxx::sql_error *s = dynamic_cast<const pqxx::sql_error*>(&e.base());
+    if (s) std::cerr << "Query was: " << s->query() << std::endl;
+  }
+
+  delete T; // gets rolledback here if no commit is invoked
   conn.disconnect();  
 }

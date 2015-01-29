@@ -444,6 +444,7 @@ from.data.frame <- function(df) {
   total <- length(V(network))
   i <- 0
   pb <- ProgressBar(min=0, max=total)
+  update(pb, i, "Starting...")
   ## trovo le fonti
   sources_id <- V(network)[degree(network, mode="in") == 0]
   cl <- initCluster()
