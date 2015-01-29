@@ -398,6 +398,15 @@ setMethod(
   setMeta(g, "C", "key", "value1")
 }
 
+#' Edita un la formula di una serie storica.
+#'
+#' @name edita
+#' @usage edita(x, name)
+#' @param x istanza di grafo
+#' @param name nome della serie storica
+#' @return il grafo con la formula modificata
+#' @include functions.r
+#' @export
 
 setGeneric(
   "edita",
