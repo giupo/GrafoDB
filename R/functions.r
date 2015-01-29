@@ -185,9 +185,9 @@ from.data.frame <- function(df) {
 
 .clutter_function <- function(f, name, funcName="proxy") {
   template <- "--FUNCNAME-- <- function() {
---FUNCTION--
---NAME--
-  }"
+  --FUNCTION--
+  --NAME--
+}"
   task <- gsub("--FUNCNAME--", funcName, template)
   task <- gsub("--FUNCTION--", f, task)
   task <- gsub("--NAME--", name, task)
@@ -208,8 +208,8 @@ from.data.frame <- function(df) {
 
 .clutter_with_params <- function(f, name, deps) {
   template <- "proxy <- function(--DEPS--) {
---FUNCTION--
-  }"
+  --FUNCTION--
+}"
   task <- gsub("--DEPS--", paste(deps, collapse = ", "), template)
   task <- gsub("--FUNCTION--", f, task)
   task
@@ -690,13 +690,14 @@ elimina <- function(tag) {
 .edita <- function(x, name, ...) {
   file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
   if(!isNode(x, name)) {
-    deps <- ""
-    task <- ""
+    deps <- c("change", "me")
+    task <- paste0(name, " = ... # work it")
   } else {
     deps <- getDependencies(x, name)
     task <- expr(x, name, echo=F)    
   }
-  write(.clutter_with_params(task, name, deps), file=file)
+  task <- .clutter_with_params(task, name, deps) 
+  write(task, file=file)
   on.exit(file.remove(file))
   file.edit(file)
   txtsrc <- paste(readLines(file), collapse="\n")
