@@ -404,7 +404,6 @@ from.data.frame <- function(df) {
 #' @return il grafo con i dati correttamente valutati
 #' @import grafo igraph rcf
 #' @rdname evaluate-internal
-#' @include progressbar.r
 
 .evaluate <- function(object, v_start=NULL, deep=T, ...) {
   params <- list(...)
