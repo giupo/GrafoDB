@@ -26,7 +26,7 @@ install: $(PKG_NAME)_$(PKG_VERSION).tar.gz
  
 NAMESPACE: $(R_FILES)
 	Rscript -e "library(devtools);load_all();document()"
- 
+
 clean:
 	-rm -f $(PKG_NAME)_*.tar.gz
 	-rm -r -f $(PKG_NAME).Rcheck

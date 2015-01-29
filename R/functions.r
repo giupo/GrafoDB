@@ -702,7 +702,8 @@ elimina <- function(tag) {
   on.exit(file.remove(file))
   utils::file.edit(file)
   txtsrc <- paste(readLines(file), collapse="\n")
-  x@functions[name] <- .declutter_function(txtsrc)
+  edited <- .declutter_function(txtsrc)  
+  x@functions[name] <- edited
   f <- eval(parse(text=txtsrc))
   params <- list(...)
   x[name] = f

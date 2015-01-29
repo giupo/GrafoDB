@@ -530,11 +530,11 @@ pushTable <- function(x, tag, con) {
 
 doHistory <- function(x, con) {
   tag <- x@tag
-
   data <- x@data
   nomi.db <- names(x)
   nomi.data <- keys(data)
   nomi.history <- intersect(nomi.db, nomi.data)
+  
   if(length(nomi.history)  == 0 ) {
     return()
   }
@@ -543,15 +543,18 @@ doHistory <- function(x, con) {
     con,
     "select max(ordinale) from history where tag=?",
     bind.data = tag)
-
+  
   ordinale <- as.numeric(df[[1,1]])
+  
   ordinale <- if(is.na(ordinale)) {
     1
   } else {
     ordinale + 1
   }
+  
   pb <- ProgressBar(0, length(nomi.history))
   i <- 0
+  update(pb, 0, label="Starting")
   for(name in nomi.history) {
     archi <- deps(x, name)
     i <- i + 1
