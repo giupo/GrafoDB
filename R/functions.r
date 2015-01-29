@@ -689,8 +689,13 @@ elimina <- function(tag) {
 
 .edita <- function(x, name, ...) {
   file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
-  deps <- getDependencies(x, name)
-  task <- expr(x, name, echo=F)
+  if(!isNode(x, name)) {
+    deps <- ""
+    task <- ""
+  } else {
+    deps <- getDependencies(x, name)
+    task <- expr(x, name, echo=F)    
+  }
   write(.clutter_with_params(task, name, deps), file=file)
   on.exit(file.remove(file))
   file.edit(file)
