@@ -5,9 +5,9 @@
 #include <string>
 #include <Rcpp.h>
 #include <ctime>
-//#include <regex.h>
+#include <regex.h>
 #include "utils.hpp"
-#include <regex>
+
 using namespace Rcpp;
 using namespace std;
 
@@ -69,14 +69,16 @@ List DBAdapter::getData(vector<string> names) {
 
   // get historical data
   if(this->hasHistoricalData()) {
-    Rprintf("Loding data from history\n");
     List historical = this->getHistoricalData(names);
-    CharacterVector hNames = historical.names();
-    for(CharacterVector::iterator it = hNames.begin(); 
-        it != hNames.end(); ++it) {
-      string name = as<string>(*it);
-      z[name] = historical[name];
-    }    
+    if(historical.size() > 0) {
+      Rprintf("Loading data from history\n");
+      CharacterVector hNames = historical.names();
+      for(CharacterVector::iterator it = hNames.begin(); 
+          it != hNames.end(); ++it) {
+        string name = as<string>(*it);
+        z[name] = historical[name];
+      }  
+    }
   }
 
   return z;
@@ -118,51 +120,42 @@ bool DBAdapter::hasHistoricalData() {
 }
 
 void DBAdapter::matchOrdinal() {
-  cout << "called" << endl;
-  try {
-    std::regex re("p(\\d+)$");
-    std::sregex_iterator next(tag.begin(), tag.end(), re);
-    std::sregex_iterator end;
-    while (next != end) {
-      std::smatch match = *next;
-      std::cout << match.str() << "\n";
-      next++;
-    } 
-  } catch (std::regex_error& e) {
-    cout << e.what() << endl;
-  } 
-/* regex_t regex;
+  regex_t regex;
   int reti;
   regmatch_t pmatch[1];
+  char errmsg[100];
 
-  reti = regcomp(&regex, "p(\\d+)$", 0);
+  reti = regcomp(&regex, "p[[:digit:]]+$", REG_EXTENDED);
   if (reti) {
-    stop("Could not compile regex");
+    regerror(reti, &regex, errmsg,  sizeof(errmsg));  
+    regfree(&regex);
+    stop(string(errmsg));
   }
-  
   reti = regexec(&regex, this->tag.c_str(), 1, pmatch, 0);
-  if (!reti) {
+  if (0 == reti) {
     unsigned int start = pmatch[0].rm_so;
     unsigned int finish =  pmatch[0].rm_eo;
-    Rprintf("Fuck you found : %u %u\n", start, finish);
-    this->ordinal = (unsigned int) atoi(this->tag.substr(start, finish).c_str());
+    this->ordinal = (unsigned int) atoi(this->tag.substr(start+1, finish).c_str());
     this->tag = this->tag.substr(0, start);
-  } else {
+  } else if(REG_NOMATCH == reti) {
     this->ordinal = 0;
+  } else {
+    regerror(reti, &regex, errmsg,  sizeof(errmsg));  
+    regfree(&regex);
+    stop(string(errmsg));
   }
-  regfree(&regex);*/
+  regfree(&regex);
 }
 
 List DBAdapter::getHistoricalData(vector<string> names) {
   vector<string> quotedNames = quote(names);
   string inParams = join(quotedNames, ',');     
+
   stringstream sql;
   sql << "select name, anno, periodo, freq, dati ";
   sql << "from history where tag ='" << tag << "' and name in (";
-  sql << inParams << ") and ordinale = " << this->ordinal;
-  
+  sql << inParams << ") and ordinale = " << this->ordinal;    
   List z = this->internalGetDataWithQuery(names, sql.str());  
-
   return z;
 }
 
