@@ -20,17 +20,45 @@ public:
   
   CharacterMatrix getArchi();
   List getData(vector<string> names);
+
+  bool hasHistoricalData();
+  List getHistoricalData(vector<string> names);
   List getData();
   vector<string> getNames();
-  
+  void commit();
 protected:
   void init();
-
+  void matchOrdinal();
 private:  
   std::string conninfo;
   std::string tag;
   pqxx::connection* conn;
   pqxx::work* T;
+  unsigned int ordinal;
+
+  List internalGetDataWithQuery(vector<string> names, string sql) {  
+    List z = List::create();  
+    pqxx::result res = T->exec(sql); 
+    
+    unsigned int i;
+    unsigned int totalSize = res.size();             
+    
+    string name;
+    double anno;
+    double periodo;
+    double freq;
+    string sDati;
+    
+    for (i = 0; i < totalSize; ++i) {        
+      res[i]["name"].to(name);
+      res[i]["anno"].to(anno);
+      res[i]["periodo"].to(periodo);
+      res[i]["freq"].to(freq);
+      res[i]["dati"].to(sDati);
+      z[name] = createTimeSeries(anno, periodo, freq, sDati);
+    }
+    return z;
+  }
 };
 
 #endif

@@ -108,3 +108,14 @@ test_that("subset with datasets", {
   expect_equal(g[["B"]], ds[["B"]])
   elimina("test")
 })
+
+test_that("a tag with 'p' returns the tag with the ordinal", {
+  g = GrafoDB("test")
+  expect_equal(g@ordinal, 0)
+  expect_equal(g@tag, "test")
+
+  g = GrafoDB("testp1")
+  expect_equal(g@ordinal, 1)
+  expect_equal(g@tag, "test")
+  elimina("test")
+})

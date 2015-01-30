@@ -9,23 +9,34 @@
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
 #' @include persistence.r RcppExports.R
+#' @import stringr
 
 .init <- function(.Object, tag="cf10") {
   if(is.null(tag)) {
     tag <- "cf10"
   }
-  .Object@tag <- tag
+  
   .Object@data <- hash()
   .Object@functions <- hash()
   
+  .Object@ordinal <- if(grepl("p(\\d+)$", tag)) {
+    mth = str_match(tag, "p(\\d+)$")
+    tag <- gsub(paste0(mth[1,1], "$"), "", tag)
+    as.numeric(mth[1,2])
+  } else {
+    0
+  }
+  .Object@tag <- tag
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   username <- whoami()
   password <- flypwd()
   settings <- dbSettings()
-  network <- load_archi(username, password, settings$host, settings$port, settings$dbname, tag);
+  network <- load_archi(username, password, settings$host,
+                        settings$port, settings$dbname, tag);
+  
   network <- if(nrow(network) > 0) {
-    graph.data.frame(as.data.frame(network),directed=TRUE)
+    graph.data.frame(as.data.frame(network), directed=TRUE)
   } else {
     graph.empty(directed=TRUE)
   }
@@ -761,7 +772,6 @@ elimina <- function(tag) {
       file.remove(filetmp)
       detach(padri)
     })
-    eval(parse(text=paste0(funcName, "()")))
-    
+    eval(parse(text=paste0(funcName, "()")))    
   }
 }

@@ -4,6 +4,7 @@
 #include <string>
 #include <Rcpp.h>
 #include <ctime>
+#include <regex.h>
 #include "utils.hpp"
 
 using namespace Rcpp;
@@ -15,12 +16,14 @@ DBAdapter::DBAdapter(string username, string password, string host,
      " dbname=" + dbname + " host=" + host + " port=" + port;
    this->init();
    this->tag = tag;
+   this->matchOrdinal();
 }
 
 DBAdapter::DBAdapter(string host, string port, string dbname, string tag) {
   this->conninfo = "dbname=" + dbname + " host=" + host + " port=" + port;
   this->init();
   this->tag = tag;
+  this->matchOrdinal();
 }
   
 DBAdapter::~DBAdapter() {
@@ -49,42 +52,31 @@ CharacterMatrix DBAdapter::getArchi() {
     z(i,0) = partenza;
     z(i,1) = arrivo;
   }
-  T->commit();
   return z;
 }
   
-List DBAdapter::getData(vector<string> names) {
-  List z = List::create();   
+List DBAdapter::getData(vector<string> names) {  
   vector<string> quotedNames = quote(names);
   string inParams = join(quotedNames, ',');
   
-  unsigned int i;
-  unsigned int totalSize;
-    
   stringstream sql;
   sql << "select name, anno, periodo, freq, dati ";
   sql << "from dati where tag ='" << tag << "' and name in (";
   sql << inParams << ")";
   
-  pqxx::result res = T->exec(sql.str()); 
-  
-  totalSize = res.size();             
-  string name;
-  double anno;
-  double periodo;
-  double freq;
-  string sDati;
+  List z = this->internalGetDataWithQuery(names, sql.str());  
 
-  for (i = 0; i < totalSize; ++i) {        
-    res[i]["name"].to(name);
-    res[i]["anno"].to(anno);
-    res[i]["periodo"].to(periodo);
-    res[i]["freq"].to(freq);
-    res[i]["dati"].to(sDati);
-    z[name] = createTimeSeries(anno, periodo, freq, sDati);
+  // get historical data
+  if(this->hasHistoricalData()) {
+    List historical = this->getHistoricalData(names);
+    CharacterVector hNames = historical.names();
+    for(CharacterVector::iterator it = hNames.begin(); 
+        it != hNames.end(); ++it) {
+      string name = as<string>(*it);
+      z[name] = historical[name];
+    }    
   }
 
-  T->commit();
   return z;
 }
 
@@ -117,4 +109,49 @@ void DBAdapter::init() {
   string tname = whoami() + " " + string(buffer);
   this->conn = new pqxx::connection(conninfo);
   this->T = new pqxx::work(*conn, tname);
+}
+
+bool DBAdapter::hasHistoricalData() {
+  return this->ordinal !=  0;
+}
+
+void DBAdapter::matchOrdinal() {
+  regex_t regex;
+  int reti;
+  regmatch_t pmatch[1];
+
+  /* Compile regular expression */
+  reti = regcomp(&regex, "p([[:digit:]]+)$", 0);
+  if (reti) {
+    stop("Could not compile regex");
+  }
+  
+  /* Execute regular expression */
+  reti = regexec(&regex, this->tag.c_str(), 1, pmatch, 0);
+  if (!reti) {
+    unsigned int start = pmatch[0].rm_so;
+    unsigned int finish =  pmatch[0].rm_eo;
+    this->ordinal = (unsigned int) atoi(this->tag.substr(start, finish).c_str());
+    this->tag = this->tag.substr(0, start);
+  } else {
+    this->ordinal = 0;
+  }
+  regfree(&regex);
+}
+
+List DBAdapter::getHistoricalData(vector<string> names) {
+  vector<string> quotedNames = quote(names);
+  string inParams = join(quotedNames, ',');     
+  stringstream sql;
+  sql << "select name, anno, periodo, freq, dati ";
+  sql << "from history where tag ='" << tag << "' and name in (";
+  sql << inParams << ") and ordinale = " << this->ordinal;
+  
+  List z = this->internalGetDataWithQuery(names, sql.str());  
+
+  return z;
+}
+
+void DBAdapter::commit() {
+  T->commit();
 }

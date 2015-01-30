@@ -114,9 +114,16 @@ setGeneric(
 #' @slot tag edition of this Graph
 #' @slot network \link[igraph]{igraph} containing the DAG
 #' @slot metadati temporary metadata added by the user to be saved on the DB
+#' @slot ordinal ordinale dei dati storici (0 per la produzione corrente)
 #' @exportClass GrafoDB
 #' @export GrafoDB
 #' @import igraph hash methods rcf
+#' @examples \dontrun{
+#'    g = GrafoDB("cf10") # istanzia il grafo chiamato 'cf10'
+#'                        # in questo caso ordinal e' 0
+#'    g = GrafoDB("cf10p2") # istanzia il grafo cf10 con provvisorio p2;
+#'                          # in questo caso ordinal e' 2
+#' }
 
 GrafoDB <- setClass(
   "GrafoDB",
@@ -125,6 +132,7 @@ GrafoDB <- setClass(
     network = "igraph",
     data = "hash",
     functions = "hash",
+    ordinal = "numeric",
     timestamp = "POSIXct"
   ),
   contains = "DBDataset")

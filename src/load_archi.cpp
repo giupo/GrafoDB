@@ -41,5 +41,6 @@ CharacterMatrix  load_archi(SEXP username,
   
   DBAdapter db(username0, password0, hostname0, port0, dbname0, tag0);
   CharacterMatrix z = db.getArchi();
+  db.commit();
   return z;
 }

@@ -21,5 +21,15 @@ Classe per accedere ai dati immagazzinati in PostgreSQL del Grafo CF
 \item{\code{network}}{\link[igraph]{igraph} containing the DAG}
 
 \item{\code{metadati}}{temporary metadata added by the user to be saved on the DB}
+
+\item{\code{ordinal}}{ordinale dei dati storici (0 per la produzione corrente)}
 }}
+\examples{
+\dontrun{
+   g = GrafoDB("cf10") # istanzia il grafo chiamato 'cf10'
+                       # in questo caso ordinal e' 0
+   g = GrafoDB("cf10p2") # istanzia il grafo cf10 con provvisorio p2;
+                         # in questo caso ordinal e' 2
+}
+}
 
