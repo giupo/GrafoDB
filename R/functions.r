@@ -443,8 +443,11 @@ from.data.frame <- function(df) {
   
   total <- length(V(network))
   i <- 0
-  pb <- ProgressBar(min=0, max=total)
-  update(pb, i, "Starting...")
+  is.interactive <- interactive()
+  if(is.interactive) {
+    pb <- ProgressBar(min=0, max=total)
+    update(pb, i, "Starting...")
+  }  
   ## trovo le fonti
   sources_id <- V(network)[degree(network, mode="in") == 0]
   cl <- initCluster()
@@ -456,7 +459,7 @@ from.data.frame <- function(df) {
     evaluated.data <- if(!is.multi.process) {
       lapply(sources, function(name, object) {
         i <- i + 1
-        update(pb, i, name)
+        if(is.interactive) update(pb, i, name)
         .evaluateSingle(name, object)
       }, object)
     } else {
@@ -469,7 +472,7 @@ from.data.frame <- function(df) {
         list(serie)
       }
       i <- i + length(evaluated.data)
-      update(pb, i, last(sources))
+      if(is.interactive) update(pb, i, last(sources))
       evaluated.data
     }
     
@@ -484,7 +487,7 @@ from.data.frame <- function(df) {
     network <- delete.vertices(network, sources_id)
     sources_id <- V(network)[degree(network, mode="in") == 0]
   }
-  kill(pb)
+  if(is.interactive )kill(pb)
   object@data <- data
   object
 }
@@ -681,6 +684,7 @@ elimina <- function(tag) {
     dbGetQuery(con, paste0("drop table if exists dati_", tag))
     dbGetQuery(con, paste0("drop table if exists metadati_", tag))
     dbGetQuery(con, paste0("drop table if exists formule_", tag))
+    dbGetQuery(con, paste0("drop table if exists history_", tag))
   }, error = function(err) {
     dbRollback(con)
     stop(err)

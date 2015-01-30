@@ -110,10 +110,13 @@
     wasNull <- FALSE
   }
 
-  ## lo divido in tre blocchi tryCatch per finalita' di debugging.
-
   ## supporto per history
-  doHistory(x, con)
+  tryCatch(
+    doHistory(x, con),
+    error = function(err) {
+      dbRollback(con)
+      stop(err)
+    })
   
   tryCatch(
     .updateData(x, con, tag),
@@ -562,15 +565,22 @@ doHistory <- function(x, con) {
     if(is.null(archi)) {
       dbGetPreparedQuery(
         con,
-        paste0("insert into history(name, tag, ordinale, anno, periodo, freq, dati, formula, archi_entranti, last_updated, autore)",
-               "select name, tag, ?, anno, periodo, freq, dati, last_updated, autore from dati where tag=? and name=?"),
+        paste0("insert into history(name, tag, ordinale, ",
+               "anno, periodo, freq, dati,  last_updated, autore)",
+               "select name, tag, ?, anno, periodo, freq, dati, ",
+               " last_updated, autore from dati where tag=? and name=?"),
         bind.data = data.frame(ordinale, tag, name))      
     } else {
       archi <- toJSON(archi)
       dbGetPreparedQuery(
         con,
-        paste0("insert into history(name, tag, ordinale, anno, periodo, freq, dati, formula, archi_entranti, last_updated, autore)",
-               "select d.name, d.tag, ?, d.anno, d.periodo, d.freq, d.dati, f.formula, ?, f.last_updated, f.autore from dati d, formule f where f.tag = d.tag and d.tag=? and d.name = f.name and d.name=?"),
+        paste0("insert into history(name, tag, ordinale, anno, ",
+               " periodo, freq, dati, formula, archi_entranti, ",
+               " last_updated, autore) ",
+               "select d.name, d.tag, ?, d.anno, d.periodo, d.freq, ", 
+               "d.dati, f.formula, ?, f.last_updated, f.autore ",
+               " from dati d, formule f where f.tag = d.tag and d.tag=? ",
+               " and d.name = f.name and d.name=?"),
         bind.data = data.frame(ordinale, archi, tag, name))      
     }
   }
