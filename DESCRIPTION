@@ -33,6 +33,7 @@ Collate:
     'persistence.r'
     'functions.r'
     'core.r'
+    'history.r'
     'conflicts.r'
     'life_cycle.r'
     'old_grafo_impl.r'

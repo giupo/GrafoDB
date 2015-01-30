@@ -569,6 +569,9 @@ ratio <- function() {
     username <- whoami()
     password <- flypwd()
     settings <- dbSettings()
+    if(x@ordinal != 0) {
+      tag <- paste0(tag, "p", x@ordinal)
+    }
     load_data(username,
               password,
               settings$host,

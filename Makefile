@@ -39,3 +39,5 @@ list:
 	@echo $(SRC_FILES)
 autotest:
 	Rscript autotest.r
+so:
+	Rscript --vanilla -e 'devtools::compile_dll()'
