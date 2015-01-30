@@ -1,13 +1,8 @@
 #include <Rcpp.h>
-#include <string.h>
-#include <iostream>
-#include <stdlib.h>
-#include <pthread.h>
 #include <vector>
 #include <string>
-#include <pqxx/pqxx>
+#include "db_adapter.hpp"
 
-using namespace pqxx;
 using namespace Rcpp;
 using namespace std;
 
@@ -42,36 +37,9 @@ CharacterMatrix  load_archi(SEXP username,
   string hostname0 = as<string>(hostname); 
   string port0 = as<string>(port); 
   string dbname0 = as<string>(dbname);
-  string conninfo = "user="+username0+" password="+password0 +
-    " dbname="+dbname0 + " host="+hostname0+" port="+port0; 
   string tag0 = as<string>(tag);
   
-  unsigned int i;
-  unsigned int totalSize;
-  
-  pqxx::connection conn(conninfo);
-  const char* sql = "select partenza, arrivo "
-                    "from archi where tag = $1";
-  
-  conn.prepare("getarchi", sql);  
-  pqxx::work T(conn, "DemoTransaction");
-  
-
-  pqxx::result res = T.prepared("getarchi")(tag0.c_str()).exec();
-  totalSize = res.size();
-  CharacterMatrix z(totalSize, 2);  
-  for (i = 0; i < totalSize; ++i) {    
-    string partenza;
-    string arrivo;
-    
-    res[i]["partenza"].to(partenza);
-    res[i]["arrivo"].to(arrivo);
-    
-    z(i,0) = partenza;
-    z(i,1) = arrivo;
-  }
-  
-  T.commit();
-  conn.disconnect();
-  return z ;
+  DBAdapter db(username0, password0, hostname0, port0, dbname0, tag0);
+  CharacterMatrix z = db.getArchi();
+  return z;
 }
