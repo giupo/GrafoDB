@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <Rcpp.h>
-
+#include <ctime>
 #include "utils.hpp"
 
 using namespace Rcpp;
@@ -11,17 +11,15 @@ using namespace std;
 
 DBAdapter::DBAdapter(string username, string password, string host, 
                        string port, string dbname, string tag) {
-  this->conninfo = "user=" + username + " password="+ password +
-    " dbname=" + dbname + " host=" + host+" port="+ port; ;
-  this->conn = new pqxx::connection(conninfo);
-  this->T = new pqxx::work(*conn, "DemoTransaction");
-  this->tag = tag;
+   this->conninfo = "user="+username+" password="+ password + 
+     " dbname=" + dbname + " host=" + host + " port=" + port;
+   this->init();
+   this->tag = tag;
 }
 
 DBAdapter::DBAdapter(string host, string port, string dbname, string tag) {
-  this->conninfo = "dbname=" + dbname + " host=" + host + " port=" + port; ;
-  this->conn = new pqxx::connection(conninfo);
-  this->T = new pqxx::work(*conn, "DemoTransaction");
+  this->conninfo = "dbname=" + dbname + " host=" + host + " port=" + port;
+  this->init();
   this->tag = tag;
 }
   
@@ -109,4 +107,14 @@ vector<string> DBAdapter::getNames() {
     z.push_back(name);
   }
   return z;
+}
+
+void DBAdapter::init() {
+  time_t now = time(NULL);
+  tm* ptm = std::localtime(&now); 
+  char buffer[32];
+  std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm);
+  string tname = whoami() + " " + string(buffer);
+  this->conn = new pqxx::connection(conninfo);
+  this->T = new pqxx::work(*conn, tname);
 }

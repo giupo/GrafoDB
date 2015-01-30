@@ -37,8 +37,6 @@ CharacterMatrix  load_archi(SEXP username,
   string hostname0 = as<string>(hostname); 
   string port0 = as<string>(port); 
   string dbname0 = as<string>(dbname);
-  string conninfo = "user="+username0+" password="+password0 +
-    " dbname="+dbname0 + " host="+hostname0+" port="+port0; 
   string tag0 = as<string>(tag);
   
   DBAdapter db(username0, password0, hostname0, port0, dbname0, tag0);

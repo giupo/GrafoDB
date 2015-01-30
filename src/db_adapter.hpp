@@ -23,6 +23,9 @@ public:
   List getData();
   vector<string> getNames();
   
+protected:
+  void init();
+
 private:  
   std::string conninfo;
   std::string tag;
