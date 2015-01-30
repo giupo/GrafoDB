@@ -8,9 +8,13 @@
 #include <cstdlib>
 #include <pwd.h>
 
+#include <Rcpp.h>
+#include <json/json.h>
+
 #include "utils.hpp"
 
 using namespace std;
+using namespace Rcpp;
 
 string quote(string s) {
   std::stringstream ss;
@@ -45,4 +49,33 @@ string whoami() {
   } else {
     return string(pw->pw_name);
   }
+}
+
+NumericVector createTimeSeries(double anno, double periodo, 
+                               double freq, string json_dati) {
+
+  Json::Value root;
+  Json::Value value;
+  Json::Reader reader;
+  unsigned int i;
+  
+  reader.parse(json_dati, root);    
+  // for tsp
+  double start = anno + periodo/freq - 1/freq;
+  double end = start + root.size()/freq - 1/freq; 
+
+  vector<double> buffer(root.size());
+  NumericVector dati(root.size()); 
+  for(i = 0; i < buffer.size(); ++i) {
+    value = root[i];
+    if(value.isNull()) {
+      dati[i] = NA_REAL;
+    } else {
+      dati[i] = value.asDouble();
+    }
+  }
+    
+  dati.attr("tsp") = NumericVector::create(start, end, freq);
+  dati.attr("class") = "ts";
+  return dati; 
 }
