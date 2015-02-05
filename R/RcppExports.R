@@ -55,3 +55,14 @@ save_data <- function(dati, functions, archi, tag, newtag) {
     invisible(.Call('GrafoDB_save_data', PACKAGE = 'GrafoDB', dati, functions, archi, tag, newtag))
 }
 
+#' controlla se un `tag` esiste nel db
+#'
+#' @name tagExists
+#' @param tag tag da controllare
+#' @param T `pqxx::work` che delimita la transazione corrente
+#' @return `true` se `tag` e' presente nel DB, altrimenti `false` 
+#' @useDynLib GrafoDB.so
+tagExists <- function(tag, T) {
+    .Call('GrafoDB_tagExists', PACKAGE = 'GrafoDB', tag, T)
+}
+

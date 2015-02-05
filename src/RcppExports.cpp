@@ -62,3 +62,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// tagExists
+bool tagExists(std::string tag, pqxx::work* T);
+RcppExport SEXP GrafoDB_tagExists(SEXP tagSEXP, SEXP TSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< std::string >::type tag(tagSEXP );
+        Rcpp::traits::input_parameter< pqxx::work* >::type T(TSEXP );
+        bool __result = tagExists(tag, T);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}

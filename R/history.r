@@ -7,7 +7,7 @@
 #' @name showHistory
 #' @usage showHistory(x)
 #' @param x oggetto R su cui mostrare la history. Puo' essere un istanza
-#'          di `GrafoDB` (da cui si prende la tag con `x@tag`), oppure
+#'          di `GrafoDB` (da cui si prende la tag con `slot(x, 'tag')`), oppure
 #'          la `tag` stessa
 #' @return un dataframe con le informazioni (autore, last_updated, ordinale)
 #' @include core.r db.r
