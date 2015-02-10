@@ -1,6 +1,6 @@
 Package: GrafoDB
 Title: What the package does (one line)
-Version: 0.7.0
+Version: 0.7.1
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
 Description: What the package does (one paragraph)
 Depends:

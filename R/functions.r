@@ -213,8 +213,8 @@ from.data.frame <- function(df) {
 #' @usage .clutter_with_params(f, name, deps)
 #' @param f function task to be converted as function
 #' @param name task name
-#' @param character array di dipendenze
-#' @return Ritorna una una funzione `is.function(ret) == TRUE`
+#' @param deps character array di dipendenze
+#' @return Ritorna una una funzione `is.character(ret) == TRUE`
 #' @rdname clutter_with_params_internal
 
 .clutter_with_params <- function(f, name, deps) {
@@ -225,6 +225,35 @@ from.data.frame <- function(df) {
   task <- gsub("--FUNCTION--", f, task)
   task
 }
+
+#' questa funzione orla la formula del grafo come una funzione
+#'
+#' I parametri della funzione ritornata sono le dipendenze della serie,
+#' ed aggiunge il nome della funzione al termine per dichiarare il
+#' dato ritornato
+#' 
+#' @name .clutter_with_params_and_return
+#' @usage .clutter_with_params_and_return(f, name, deps, funcName)
+#' @param f function task to be converted as function
+#' @param name task name
+#' @param deps array di dipendenze
+#' @param funcName nome della funzione definita
+#' @return Ritorna un character array `is.character(ret) == TRUE`
+#' @rdname clutter_with_params_and_return_internal
+
+.clutter_with_params_and_return <- function(f, name, deps, funcName="proxy") {
+  template <- "--FUNCNAME-- <- function(--DEPS--) {
+  --FUNCTION--
+  --NAME--
+}"
+
+  task <- gsub("--DEPS--", paste(deps, collapse=", "), template)
+  task <- gsub("--FUNCTION--", f, task)
+  task <- gsub("--FUNCNAME--", funcName, task)
+  task <- gsub("--NAME--", name, task)
+  task
+}
+
 
 #' Ritorna le formule del GrafoDB
 #'
@@ -256,9 +285,11 @@ from.data.frame <- function(df) {
   }
   
   
-  in.functions <- foreach(row=iter(in.functions, by='row'), .combine=rbind) %do% {
-    data.frame(name=row, formula=functions[[row]])
-  }
+  in.functions <- foreach(
+    row=iter(in.functions, by='row'),
+    .combine=rbind) %do% {
+      data.frame(name=row, formula=functions[[row]])
+    }
   
   formule <- rbind(in.functions, from.db)
   
@@ -307,10 +338,10 @@ from.data.frame <- function(df) {
     padri <- ppp
   }
   ## cmd <- .clutter_function(tsformula, name)
-  cmd <- .clutter_with_params(tsformula, name, nomi_padri)
-  tryCatch({
+  cmd <- .clutter_with_params_and_return(tsformula, name, nomi_padri)
+  tryCatch({    
     eval(parse(text=cmd))
-    do.call(proxy, padri)
+    do.call(proxy, padri)    
   }, error = function(err) {
     stop(name, ": ", err)
   })           
@@ -402,7 +433,7 @@ from.data.frame <- function(df) {
 #' @import grafo
 #' @rdname evaluateSingle-internal
 
-.evaluateSingle <- .evaluateSingle3
+.evaluateSingle <- .evaluateSingle1
 
 #' Implementazione del generic `evaluate` definito nel package `grafo`
 #' per la classe `GrafoDB`

@@ -1,6 +1,6 @@
 ## Use the R_HOME indirection to support installations of multiple R version
 
-cfin=/usr/local
+## cfin=/usr/local
 PKG_CPPFLAGS= -I$(cfin)/boost -I$(cfin)/jsoncpp/include -I$(cfin)/include -std=c++0x  -I$(cfin)/include/soci -I$(cfin)/include/jsoncpp
 PKG_LIBS=-lpq -lpqxx -ljsoncpp -L$(cfin)/jsoncpp/dist -L$(cfin)/lib -L$(cfin)/lib64
 
