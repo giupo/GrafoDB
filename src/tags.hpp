@@ -11,7 +11,6 @@
 //' @param T `pqxx::work` che delimita la transazione corrente
 //' @return `true` se `tag` e' presente nel DB, altrimenti `false` 
 //' @useDynLib GrafoDB.so
-// [[Rcpp::export]]
 
 bool tagExists(std::string tag, pqxx::work* T);
 
