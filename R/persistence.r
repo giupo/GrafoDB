@@ -24,7 +24,7 @@
   if(hasConflicts(x)) {
     stop("Il grafo ha conflitti, risolverli prima di salvare")
   }
-
+  
   tagExists <- .tagExists(tag)
   
   if(tagExists) {
@@ -518,23 +518,33 @@ countRolling <- function(x, con = NULL) {
   as.numeric(df[[1,1]])
 }
 
-#' Esegue il push delle release di un entita' sul DB
+#' Esegue il rolling dei vintage del `GrafoDB`
 #'
-#' @name pushTable
-#' @usage pushTable(x, tag)
-#' @param x entity name
-#' @param tag tag di riferimento
-#' @param con connessione su cui avviene la transazione
-#' @note funzione interna per il versionamento
-
-pushTable <- function(x, tag, con) {
-  
-}
+#' Ad ogni salvataggio con il metodo `saveGraph` se non impostiamo un nuovo `tag`
+#' il `GrafoDB` salva i dati sullo stesso `tag` ma contemporaneamente salva la versione
+#' precedente con un progressivo, in modo da tener traccia di chi ha fatto cosa nel tempo.
+#'
+#' Le versioni sono contraddistinte da un nuovo tag, `tag`p`X` dove `X` e' un numero progressivo
+#'
+#' Il grafo potra' successivamente essere caricato con il nuovo tag.
+#'
+#' @name doHistory
+#' @usage doHistory(x, con)
+#' @param x istanza di `GrafoDB`
+#' @param con connessione al database
+#' @note questa e' una funzione interna del grafo invocata da `updateGraph`
+#' @seealso saveGraph updateGraph
 
 doHistory <- function(x, con) {
   tag <- x@tag
   data <- x@data
-  nomi.db <- names(x)
+  df <- dbGetQuery(con, paste0("select name from dati where tag = '",tag,"'"))
+  if(nrow(df)) {
+    nomi.db <- df$name
+  } else {
+    ## non faccio niente, non c'e' nulla sul DB
+    return(invisible(NULL))
+  }
   nomi.data <- keys(data)
   nomi.history <- intersect(nomi.db, nomi.data)
   

@@ -754,8 +754,12 @@ getdb <- function(name, tag="cf10") {
 
 elimina <- function(tag) {
 
-  if(tag == "cf10") stop("Non cancellero' mai cf10")
+  if(is.grafodb(tag)) {
+    tag <- tag@tag
+  }
   
+  if(tag == "cf10") stop("Non cancellero' mai cf10")
+ 
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
