@@ -316,7 +316,7 @@ from.data.frame <- function(df) {
 .evaluateSingle1 <- function(name, graph) {
   tsformula <- .expr(graph, name, echo=FALSE)
   nomi_padri <- upgrf(graph, name, livello=1)
-  if(length(nomi_padri) == 0) {
+  if(length(nomi_padri) == 0 && is.null(tsformula)) {
     return(graph[[name]])
   }
   if(length(nomi_padri) > 100) {
@@ -327,8 +327,10 @@ from.data.frame <- function(df) {
     }
     names(padri) <- nomi_padri
     padri
-  } else {
+  } else if (length(nomi_padri)) {
     padri <- graph[[nomi_padri]]
+  } else {
+    padri <- list()
   }
   
   if(length(nomi_padri) == 1) {
@@ -432,6 +434,8 @@ from.data.frame <- function(df) {
 #' @export
 #' @import grafo
 #' @rdname evaluateSingle-internal
+#' @note la scelta di evaluateSingle ricade su .evaluateSingle1, le altre due
+#'       implementazioni NON SUPPORTANO LE SERIE ELEMENTARI
 
 .evaluateSingle <- .evaluateSingle1
 
@@ -465,7 +469,7 @@ from.data.frame <- function(df) {
   
   if(is.null(v_start)) {
     sources_id <- V(network)[degree(network, mode="in") == 0]
-    network <- delete.vertices(network, sources_id)
+    # network <- delete.vertices(network, sources_id)
   } else {
     v_start <- as.character(v_start)
     network <- induced.subgraph(
@@ -567,6 +571,40 @@ ratio <- function() {
   message(100 - success/total * 100, " failure rate")
 }
 
+
+
+
+#' Carica i dati dal DB
+#'
+#' Carica i dati direttamente dal DB senza necessita' d'inizializzare un `GrafoDB`
+#'
+#' @name getdb
+#' @usage getdb(name, tag)
+#' @param name nome serie
+#' @param tag id del grafo (default su `cf10`)
+#' @return una serie o una lista di serie
+#' @export
+
+getdb <- function(name, tag="cf10") {
+  settings <- dbSettings()
+  username <- whoami()
+  password <- flypwd()
+
+  dati <- load_data(
+    username,
+    password,
+    settings$host,
+    settings$port,
+    settings$dbname, name, tag); 
+  
+  if(length(dati)==1) {
+    dati[[1]]
+  } else {
+    dati
+  }
+}
+
+
 #' Ottiene i dati dal GrafoDB
 #'
 #' I dati possono provenire direttamente dal Database se non modificati nella sessione
@@ -597,17 +635,17 @@ ratio <- function() {
   da.caricare.db <- setdiff(i, in.data)
   tag <- x@tag
   from.db <- if(length(da.caricare.db)) {
-    username <- whoami()
-    password <- flypwd()
-    settings <- dbSettings()
     if(x@ordinal != 0) {
       tag <- paste0(tag, "p", x@ordinal)
     }
-    load_data(username,
-              password,
-              settings$host,
-              settings$port,
-              settings$dbname, da.caricare.db, tag); 
+    ret <- getdb(da.caricare.db, tag)
+    if(is.bimets(ret)) {
+      ret1 <- list()
+      ret1[[da.caricare.db]] <- ret
+      ret1
+    } else {
+      ret
+    }
   } else {
     list()
   }
