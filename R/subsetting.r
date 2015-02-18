@@ -58,10 +58,16 @@ setMethod(
   if (is.function(value)) {
     ## assert all dependencies
     dependencies <- names(as.list(formals(value)))
+
+    if(length(dependencies) == 0) {
+      ## e' una serie elementare
+    }
+
     if (!all(dependencies %in% all_names)) {
       miss <- setdiff(dependencies, all_names)
       stop("Missing dependencies ", paste(miss, collapse=", "))
     }
+
     for(dep in dependencies) {
       network <- network + edge(dep, name)
     }
