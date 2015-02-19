@@ -757,8 +757,9 @@ elimina <- function(tag) {
   if(is.grafodb(tag)) {
     tag <- tag@tag
   }
-  
-  if(tag == "cf10") stop("Non cancellero' mai cf10")
+
+  incancellabili <- c("cf10", "biss", "pne", "dbcong", "prim")
+  if(tag %in% incancellabili) stop("Non cancellero' mai ", tag)
  
   con <- pgConnect()
   on.exit(dbDisconnect(con))

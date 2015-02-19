@@ -110,12 +110,43 @@ test_that("subset with datasets", {
 })
 
 test_that("a tag with 'p' returns the tag with the ordinal", {
-  g = GrafoDB("test")
+  g <- GrafoDB("test")
   expect_equal(g@ordinal, 0)
   expect_equal(g@tag, "test")
 
-  g = GrafoDB("testp1")
+  g <- GrafoDB("testp1")
   expect_equal(g@ordinal, 1)
   expect_equal(g@tag, "test")
+  elimina("test")
+})
+
+test_that("posso rimuovere archi", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A) {
+    C=A
+  }
+  expect_true("A" %in% upgrf(g, "C"))
+  expect_true(!"B" %in% upgrf(g, "C"))
+  expect_equal(length(upgrf(g, "C")), 1)
+
+  g["C"] <- function(B) {
+    C=B
+  }
+  
+  expect_true(!"A" %in% upgrf(g, "C")) 
+  expect_true("B" %in% upgrf(g, "C"))
+  expect_equal(length(upgrf(g, "C")), 1)
+
+  ## ora salvo, e vediamo cosa succede
+  g <- saveGraph(g)
+
+  g["C"] <- function(A) {
+    C=A
+  }
+  expect_true("A" %in% upgrf(g, "C"))
+  expect_true(!"B" %in% upgrf(g, "C"))
+  expect_equal(length(upgrf(g, "C")), 1)
+  
   elimina("test")
 })
