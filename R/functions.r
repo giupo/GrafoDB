@@ -846,7 +846,12 @@ elimina <- function(tag) {
     source(filetmp)
     debug(funcName)
     nomi_padri <- deps(x, name)
-    padri <- x[[nomi_padri]]
+    if(is.null(nomi_padri) || length(nomi_padri) == 0) {
+      padri <- list()
+    } else {
+      padri <- x[[nomi_padri]]
+    }
+
     if(length(nomi_padri) == 1) {
       ## boxing
       ppp <- list()
