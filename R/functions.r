@@ -784,7 +784,11 @@ elimina <- function(tag) {
   file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
   if(!isNode(x, name)) {
     deps <- c("change", "me")
-    task <- paste0(name, " = ... # work it")
+    if(name %in% keys(x@functions)) {
+      task <- x@functions[[name]]
+    } else {
+      task <- paste0(name, " = ... # work it")
+    }
   } else {
     deps <- getDependencies(x, name)
     task <- expr(x, name, echo=F)    
@@ -792,17 +796,19 @@ elimina <- function(tag) {
   task <- .clutter_with_params(task, name, deps) 
   write(task, file=file)
   on.exit(file.remove(file))
-  utils::file.edit(file)
+  utils::file.edit(file, title=name)
   txtsrc <- paste(readLines(file), collapse="\n")
   edited <- .declutter_function(txtsrc)  
   x@functions[name] <- edited
-  f <- eval(parse(text=txtsrc))
   params <- list(...)
   tryCatch({
+    .evaluateSingle(name, g)
+    f <- eval(parse(text=txtsrc))
     x[name] = f
   }, error = function(cond) {
     # la risetto per poterla editare
     x@functions[name] <- edited
+    stop(cond)
   })
   invisible(x)
 }
