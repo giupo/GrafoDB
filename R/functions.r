@@ -798,7 +798,12 @@ elimina <- function(tag) {
   x@functions[name] <- edited
   f <- eval(parse(text=txtsrc))
   params <- list(...)
-  x[name] = f
+  tryCatch({
+    x[name] = f
+  }, error = function(cond) {
+    # la risetto per poterla editare
+    x@functions[name] <- edited
+  })
   invisible(x)
 }
 
