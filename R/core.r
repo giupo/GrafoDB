@@ -289,7 +289,12 @@ setMethod(
 
     remaining <- setdiff(all_names, nodes)
     # per preservare l'ordinamento topologico
-    c(nodes, remaining)
+    ret <- c(nodes, remaining)
+    if(is.null(ret)) {
+      character(0)
+    } else {
+      ret
+    }
   })
 
 
@@ -506,4 +511,18 @@ setMethod(
   signature("GrafoDB", "character"),
   function(x, name) {
     upgrf(x, name, livello=1)
+  })
+
+setMethod(
+  "as.dataset",
+  signature("GrafoDB"),
+  function(x, ...) {
+    x[names(x)]
+  })
+
+setMethod(
+  "as.list",
+  signature("GrafoDB"),
+  function(x, ...) {
+    x[[names(x)]]
   })
