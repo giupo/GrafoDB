@@ -150,3 +150,22 @@ test_that("posso rimuovere archi", {
   
   elimina("test")
 })
+
+test_that("I can cast a empty GrafoDB to a Dataset", {
+  g <- GrafoDB("test")
+  d <- as.dataset(g)
+  expect_true(is.dataset(d))
+  elimina("test")
+})
+
+test_that("I can cast a GrafoDB to a Dataset", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A) {
+    C=A
+  }
+  d <- as.dataset(g)
+  expect_true(is.dataset(d))
+  expect_true(all(c("A", "B", "C") %in% names(d)))
+  elimina("test")
+}) 

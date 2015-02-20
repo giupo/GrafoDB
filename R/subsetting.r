@@ -8,6 +8,9 @@ setMethod(
   "[",
   c("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., drop = TRUE) {
+    if(length(i) == 0) {
+      return(Dataset())
+    }
     raw <- x[[i]]
     if(length(i)==1) {
       ret <- list()
@@ -22,6 +25,9 @@ setMethod(
 setMethod(
   "[[",
   c("GrafoDB", "character"), function(x, i) {
+    if(length(i) == 0) {
+      return(list())
+    }
     .getdata(x,i)
   })
 
@@ -116,7 +122,7 @@ setMethod(
   })
 
 setMethod(
-  "[<-",
+  "[[<-",
   signature("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., value) {
     x <- .subsetting(x, i, value)
