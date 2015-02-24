@@ -104,12 +104,13 @@ is.grafodb <- function(x) {
   inherits(x, "GrafoDB")
 }
 
-#' converte una timeseries `BIMETS` in un data.frame.
+#' converte una timeseries `BIMETS`
+#' o un generico scalare in un data.frame.
 #' funzione utilizzata per convertire il dato in una forma accettabile dal DB
 #'
 #' @name to.data.frame
 #' @usage to.data.frame(x)
-#' @param x una timeseries `BIMETS`
+#' @param x una timeseries `BIMETS` o uno scalare
 #' @param name nome da dare alla timeseries
 #' @return una rappresentazione a data.frame della serie `x`
 #' @note funzione interna
@@ -118,9 +119,15 @@ is.grafodb <- function(x) {
 to.data.frame <- function(x, name=NULL) {
   ## questa funzione converte a dataframe la timeseries,
   ## utile per l'inserimento nel DB
-  anno <- TSINFO(x, MODE="STARTY")
-  prd  <- TSINFO(x, MODE="STARTP")
-  freq <- TSINFO(x, MODE="FREQ")
+  if(is.bimets(x)) {
+    anno <- TSINFO(x, MODE="STARTY")
+    prd  <- TSINFO(x, MODE="STARTP")
+    freq <- TSINFO(x, MODE="FREQ")
+  } else {
+    anno <- 0
+    prd <- 0
+    freq <- 0
+  }
   raw_numbers <- gsub(" ", "", toJSON(x, digits=20))
 
   if(is.null(name)) {
@@ -149,11 +156,19 @@ from.data.frame <- function(df) {
 
   for(i in seq(nrow(df))) {
     row <- df[i,]
-    dati <- TSERIES(
-      fromJSON(as.character(row$dati), nullValue = NA),
-      START=c(row$anno, row$periodo),
-      FREQ=row$freq)
-    ret[[row$name]] <- dati
+    anno <- row$anno
+    periodo <- row$periodo
+    freq <- row$freq
+    params <- c(anno, periodo, freq)
+    if(any(params == 0)) {
+      ret[[row$name]] <- fromJSON(as.character(row$dati))
+    } else {
+      dati <- TSERIES(
+        fromJSON(as.character(row$dati), nullValue = NA),
+        START=c(anno, periodo),
+        FREQ=freq)
+      ret[[row$name]] <- dati
+    }
   }
   ret
 }
@@ -597,7 +612,7 @@ getdb <- function(name, tag="cf10") {
     settings$port,
     settings$dbname, name, tag); 
   
-  if(length(dati)==1) {
+  if(length(dati)==1 && is.bimets(dati[[1]])) {
     dati[[1]]
   } else {
     dati
