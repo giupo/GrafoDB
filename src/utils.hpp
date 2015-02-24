@@ -15,6 +15,7 @@ string quote(string s);
 vector<string> quote(vector<string> v);
 string join(vector<string> v, char j);
 string whoami();
+NumericVector parseJSON(string json);
 NumericVector createTimeSeries(double anno, double periodo, 
                                double freq, string json_dati);
 #endif

@@ -339,12 +339,11 @@ setMethod(
 #' g <- evaluate(g, v_start) # lo valuta solo a partire da ZERIQ
 #' }
 
-
 setMethod(
   "evaluate",
   signature("GrafoDB", "ANY", "ANY"),
-  function(object, v_start=NULL, deep=F) {
-    .evaluate(object, v_start, deep)
+  function(object, v_start=NULL, deep=F, ...) {
+    .evaluate(object, v_start, deep, ...)
   })
 
 setMethod(

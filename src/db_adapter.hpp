@@ -48,14 +48,19 @@ private:
     double periodo;
     double freq;
     string sDati;
-    
+    double tol = 0.00001;
     for (i = 0; i < totalSize; ++i) {        
-      res[i]["name"].to(name);
+      res[i]["name"].to(name); 
       res[i]["anno"].to(anno);
       res[i]["periodo"].to(periodo);
       res[i]["freq"].to(freq);
       res[i]["dati"].to(sDati);
-      z[name] = createTimeSeries(anno, periodo, freq, sDati);
+     
+      if(anno < tol  || periodo < tol || freq < tol) {
+	z[name] = parseJSON(sDati);
+      } else {	
+	z[name] = createTimeSeries(anno, periodo, freq, sDati);
+      }
     }
     return z;
   }
