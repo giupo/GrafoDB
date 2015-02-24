@@ -169,3 +169,29 @@ test_that("I can cast a GrafoDB to a Dataset", {
   expect_true(all(c("A", "B", "C") %in% names(d)))
   elimina("test")
 }) 
+
+
+test_that("Posso passare non timeseries", {
+  g <- GrafoDB("test")
+  g["A"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["B"] <- TSERIES(c(1,1,1), START=c(1990,1), FREQ=4)
+  g["periodo"] <- c(1990,2)
+  g["C"] <- function(A,B, periodo) {
+    C=TSJOIN(A,B, JPRD=periodo)
+  }
+  expect_equal(g[["periodo"]], c(1990,2))
+  elimina("test")
+})
+
+test_that("posso salvare non timeseries", {
+  g <- GrafoDB("test")
+  g["A"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["B"] <- TSERIES(c(1,1,1), START=c(1990,1), FREQ=4)
+  g["periodo"] <- c(1990,2)
+  g["C"] <- function(A,B, periodo) {
+    C=TSJOIN(A,B, JPRD=periodo)
+  }
+  g <- saveGraph(g)
+  expect_equal(g[["periodo"]], c(1990,2))
+  elimina("test")
+})

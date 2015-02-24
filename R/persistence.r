@@ -124,7 +124,7 @@
       dbRollback(con)
       stop(err)
     })
-
+  
   tryCatch(
     .updateFunctions(x, con, tag),
     error = function(err) {

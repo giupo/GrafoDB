@@ -51,30 +51,34 @@ string whoami() {
   }
 }
 
-NumericVector createTimeSeries(double anno, double periodo, 
-                               double freq, string json_dati) {
 
+NumericVector parseJSON(string json) {
   Json::Value root;
   Json::Value value;
   Json::Reader reader;
   unsigned int i;
-  
-  reader.parse(json_dati, root);    
-  // for tsp
-  double start = anno + periodo/freq - 1/freq;
-  double end = start + root.size()/freq - 1/freq; 
-
-  vector<double> buffer(root.size());
-  NumericVector dati(root.size()); 
-  for(i = 0; i < buffer.size(); ++i) {
+  reader.parse(json, root);
+  int size = root.size();
+  NumericVector z(size);
+  for(i = 0; i < size; ++i) {
     value = root[i];
     if(value.isNull()) {
-      dati[i] = NA_REAL;
+      z[i] = NA_REAL;
     } else {
-      dati[i] = value.asDouble();
+      z[i] = value.asDouble();
     }
   }
-    
+  return z;
+}
+
+NumericVector createTimeSeries(double anno, double periodo, 
+                               double freq, string json_dati) {
+
+  NumericVector dati = parseJSON(json_dati);
+  // for tsp
+  double start = anno + periodo/freq - 1/freq;
+  double end = start + dati.size()/freq - 1/freq; 
+  
   dati.attr("tsp") = NumericVector::create(start, end, freq);
   dati.attr("class") = "ts";
   return dati; 
