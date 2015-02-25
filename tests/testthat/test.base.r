@@ -195,3 +195,21 @@ test_that("posso salvare non timeseries", {
   expect_equal(g[["periodo"]], c(1990,2))
   elimina("test")
 })
+
+test_that("posso copiare un grafo da tag a tag", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B
+  }
+  setMeta(g, "A", "KEY", "VALUE")
+  g = saveGraph(g)
+  saveGraph(g, "test1")
+  g1 = GrafoDB("test1")
+  expect_true(all(names(g) %in% names(g1)))
+  expect_equal(searchNode(g, "KEY", "VALUE"), "A")
+  expect_equal(searchNode(g1, "KEY", "VALUE"), "A")
+  
+  elimina("test")
+  elimina("test1")
+})

@@ -783,11 +783,15 @@ elimina <- function(tag) {
   tryCatch({
     dbGetPreparedQuery(con, "delete from grafi where tag=?", bind.data = tag)
     dbGetPreparedQuery(con, "delete from conflitti where tag=?", bind.data = tag)
-    dbGetQuery(con, paste0("drop table if exists archi_", tag))
-    dbGetQuery(con, paste0("drop table if exists dati_", tag))
-    dbGetQuery(con, paste0("drop table if exists metadati_", tag))
-    dbGetQuery(con, paste0("drop table if exists formule_", tag))
-    dbGetQuery(con, paste0("drop table if exists history_", tag))
+
+    tables <- c("archi", "dati", "metadati", "formule", "history")
+    tables <- paste(tables, tag, sep="_")
+
+    for(table in tables) {
+      if(dbExistsTable(con, table)) {
+        dbGetQuery(con, paste0("drop table if exists ", table))
+      }
+    }
   }, error = function(err) {
     dbRollback(con)
     stop(err)
