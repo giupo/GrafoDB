@@ -638,12 +638,6 @@ getdb <- function(name, tag="cf10") {
 #' @note se i e' un singolo nome e non esiste nel DB, la funzione termina con errore
 
 .getdata <- function(x,i) {
-                                        #cl <- initCluster()
-                                        #if(length(i) <= 30) {
-                                        #  .getdata_few(x, i)
-                                        #} else {
-                                        #  .getdata_lots(x, i)
-                                        #}
   ## check if changed, then load internal changes
   data <- x@data
   in.data <- intersect(keys(data), i)

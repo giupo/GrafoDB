@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <Rcpp.h>
+#include <json/json.h>
+
 #include "utils.hpp"
 
 using namespace std;
@@ -57,9 +59,16 @@ private:
       res[i]["dati"].to(sDati);
      
       if(anno < tol  || periodo < tol || freq < tol) {
-	z[name] = parseJSON(sDati);
+        Json::Value root = parseJSON(sDati);
+        if (root.size() == 0) {
+          z[name] = NumericVector::create();
+        } else if(root[0].isNumeric()) {
+          z[name] = asNumericVector(root);
+        } else {
+          z[name] = asCharacterVector(root);
+        }
       } else {	
-	z[name] = createTimeSeries(anno, periodo, freq, sDati);
+        z[name] = createTimeSeries(anno, periodo, freq, sDati);
       }
     }
     return z;

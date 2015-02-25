@@ -213,3 +213,17 @@ test_that("posso copiare un grafo da tag a tag", {
   elimina("test")
   elimina("test1")
 })
+
+test_that("posso memorizzare stringhe", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B
+  }
+  g["archivio"] = "cippalippa"
+  saveGraph(g)
+
+  g1 <- GrafoDB("test")
+  expect_equal(g1[["archivio"]], "cippalioppa")
+  elimina("test")
+})
