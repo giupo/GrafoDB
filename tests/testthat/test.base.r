@@ -224,6 +224,6 @@ test_that("posso memorizzare stringhe", {
   saveGraph(g)
 
   g1 <- GrafoDB("test")
-  expect_equal(g1[["archivio"]], "cippalioppa")
+  expect_equal(g1[["archivio"]], "cippalippa")
   elimina("test")
 })

@@ -40,6 +40,7 @@ List load_data(SEXP username, SEXP password, SEXP hostname,
   vector<string> names0 = as<vector<string> >(names);
   string tag0 = as<string>(tag);
   DBAdapter db(username0, password0, hostname0, port0, dbname0, tag0);
+  db.init(); 
   List z = db.getData(names0);
   db.commit();
   return z;

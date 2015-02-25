@@ -7,37 +7,59 @@
 #include <Rcpp.h>
 #include <json/json.h>
 
+#include "base_adapter.hpp"
 #include "utils.hpp"
 
 using namespace std;
 using namespace Rcpp;
 
-class DBAdapter {
+class DBAdapter : public BaseAdapter {
 public:
-  DBAdapter(string username, string password, string host, 
-            string port, string dbname, string tag);
-  DBAdapter(string host, string port, string dbname, string tag);
-  
-  ~DBAdapter();
-  
-  CharacterMatrix getArchi();
-  List getData(vector<string> names);
 
-  bool hasHistoricalData();
-  List getHistoricalData(vector<string> names);
-  List getData();
-  vector<string> getNames();
-  void commit();
-protected:
-  void init();
-  void matchOrdinal();
-private:  
-  std::string conninfo;
-  std::string tag;
+  DBAdapter(const string username, 
+            const string password, 
+            const string host, 
+            const string port,
+            const string dbname, 
+            const string tag) : 
+    BaseAdapter(username, password, host, port, dbname, tag){
+  }
+  
+  DBAdapter(string host, string port, string dbname, string tag) : 
+    BaseAdapter(host, port, dbname, tag) {
+  }
+  
+  DBAdapter(const DBAdapter& other) : BaseAdapter(other) {
+  }
+  
+  DBAdapter& operator=(const DBAdapter& other) { 
+    BaseAdapter::operator=(other);
+    return *this;
+  }
+  
+  virtual ~DBAdapter() {
+    conn->disconnect();
+    delete T;
+    delete conn;
+  }
+  
+  virtual CharacterMatrix getArchi();
+  virtual List getData(vector<string> names);
+
+  virtual bool hasHistoricalData();
+  virtual List getHistoricalData(vector<string> names);
+  virtual List getData();
+  virtual vector<string> getNames();
+  virtual void commit();
+  virtual void init();
+
+  virtual bool hasConflicts(const string name = "");
+  virtual DataFrame getConflicts(const string name = "");
+
+protected:  
   pqxx::connection* conn;
   pqxx::work* T;
-  unsigned int ordinal;
-
+  
   List internalGetDataWithQuery(vector<string> names, string sql) {  
     List z = List::create();  
     pqxx::result res = T->exec(sql); 
