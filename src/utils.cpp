@@ -52,15 +52,11 @@ string whoami() {
 }
 
 
-NumericVector parseJSON(string json) {
-  Json::Value root;
+NumericVector asNumericVector(Json::Value root){
   Json::Value value;
-  Json::Reader reader;
-  unsigned int i;
-  reader.parse(json, root);
-  int size = root.size();
+  unsigned int size = root.size();
   NumericVector z(size);
-  for(i = 0; i < size; ++i) {
+  for(unsigned int i = 0; i < size; ++i) {
     value = root[i];
     if(value.isNull()) {
       z[i] = NA_REAL;
@@ -71,10 +67,32 @@ NumericVector parseJSON(string json) {
   return z;
 }
 
+CharacterVector asCharacterVector(Json::Value root) {
+  Json::Value value;
+  unsigned int size = root.size();
+  CharacterVector z(size);
+  for(unsigned int i = 0; i < size; ++i) {
+    value = root[i];
+    if(value.isNull()) {
+      z[i] = NA_STRING;
+    } else {
+      z[i] = value.asString();
+    }
+  }
+  return z;
+}
+
+
+Json::Value parseJSON(string json) {
+  Json::Value root;
+  Json::Reader reader;
+  reader.parse(json, root);
+  return root;
+}
+
 NumericVector createTimeSeries(double anno, double periodo, 
                                double freq, string json_dati) {
-
-  NumericVector dati = parseJSON(json_dati);
+  NumericVector dati = asNumericVector(parseJSON(json_dati));
   // for tsp
   double start = anno + periodo/freq - 1/freq;
   double end = start + dati.size()/freq - 1/freq; 

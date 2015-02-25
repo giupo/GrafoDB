@@ -3,36 +3,14 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
 #include <Rcpp.h>
 #include <ctime>
-#include <regex.h>
 #include "utils.hpp"
 
 using namespace Rcpp;
 using namespace std;
 
-DBAdapter::DBAdapter(string username, string password, string host, 
-                       string port, string dbname, string tag) {
-   this->conninfo = "user="+username+" password="+ password + 
-     " dbname=" + dbname + " host=" + host + " port=" + port;
-   this->init();
-   this->tag = tag;
-   this->matchOrdinal();
-}
-
-DBAdapter::DBAdapter(string host, string port, string dbname, string tag) {
-  this->conninfo = "dbname=" + dbname + " host=" + host + " port=" + port;
-  this->init();
-  this->tag = tag;
-  this->matchOrdinal();
-}
-  
-DBAdapter::~DBAdapter() {
-  conn->disconnect();
-  delete T;
-  delete conn;
-}
-  
 CharacterMatrix DBAdapter::getArchi() {
   unsigned int i;
   unsigned int totalSize;
@@ -91,10 +69,13 @@ List DBAdapter::getData() {
 vector<string> DBAdapter::getNames() {
   unsigned int i;
   unsigned int totalSize;
-
-  const char* sql = "select name from dati where tag = $1";
+  
+  const char* sql = "select partenza from archi, where tag = $1" \
+    " union select arrivo from archi where tag = $2 " \
+    " union select name from dati where tag=$3";
   conn->prepare("getnames", sql);    
-  pqxx::result res = T->prepared("getnames")(tag.c_str()).exec();
+  const char *ctag = tag.c_str();
+  pqxx::result res = T->prepared("getnames")(ctag)(ctag)(ctag).exec();
   totalSize = res.size();
   vector<string> z;
   string name;
@@ -119,34 +100,6 @@ bool DBAdapter::hasHistoricalData() {
   return this->ordinal !=  0;
 }
 
-void DBAdapter::matchOrdinal() {
-  regex_t regex;
-  int reti;
-  regmatch_t pmatch[1];
-  char errmsg[100];
-
-  reti = regcomp(&regex, "p[[:digit:]]+$", REG_EXTENDED);
-  if (reti) {
-    regerror(reti, &regex, errmsg,  sizeof(errmsg));  
-    regfree(&regex);
-    stop(string(errmsg));
-  }
-  reti = regexec(&regex, this->tag.c_str(), 1, pmatch, 0);
-  if (0 == reti) {
-    unsigned int start = pmatch[0].rm_so;
-    unsigned int finish =  pmatch[0].rm_eo;
-    this->ordinal = (unsigned int) atoi(this->tag.substr(start+1, finish).c_str());
-    this->tag = this->tag.substr(0, start);
-  } else if(REG_NOMATCH == reti) {
-    this->ordinal = 0;
-  } else {
-    regerror(reti, &regex, errmsg,  sizeof(errmsg));  
-    regfree(&regex);
-    stop(string(errmsg));
-  }
-  regfree(&regex);
-}
-
 List DBAdapter::getHistoricalData(vector<string> names) {
   vector<string> quotedNames = quote(names);
   string inParams = join(quotedNames, ',');     
@@ -162,3 +115,64 @@ List DBAdapter::getHistoricalData(vector<string> names) {
 void DBAdapter::commit() {
   T->commit();
 }
+
+bool DBAdapter::hasConflicts(const string name) {
+  stringstream sql;
+  pqxx::result res;
+  if(name.empty()) {
+    sql << "select count(name) from conflitti where tag = $1";
+    conn->prepare("hasConflicts", sql.str());
+    res = T->prepared("hasConflictsByName")(this->tag).exec();
+  } else {
+    sql << "select count(name) from conflitti where tag = $1 and name = $2";
+    conn->prepare("hasConflictsByName", sql.str());
+    res = T->prepared("hasConflictsByName")(this->tag)(name).exec();
+  }
+  unsigned int count = 0;
+  res[0][0].to(count);
+  return count > 0;  
+}
+
+DataFrame DBAdapter::getConflicts(const string name)  {
+  stringstream sql;
+  pqxx::result res;
+  if(name.empty()) {
+    sql << " select a.name, a.tag, a.formula, a.autore, date, ";
+    sql << " b.formula as current_formula, b.autore as current_autore, b.last_updated";
+    sql << " from conflitti a, formule b ";
+    sql << " where a.tag = $1 and a.tag = b.tag and a.name = b.name";
+    sql << " order by tag, name";
+    conn->prepare("getConflicts", sql.str());
+    res = T->prepared("getConflicts")(this->tag).exec();
+  } else {
+    sql <<" select a.name, a.tag, a.formula, a.autore, date, b.formula, b.autore, b.last_updated";
+    sql << " from conflitti a, formule b ";
+    sql << " where a.tag = $1 and a.name=? and a.tag = b.tag and a.name = b.name";
+    sql << " order by tag, name";
+    conn->prepare("getConflictsByName", sql.str());
+    res = T->prepared("getConflictsByName")(this->tag)(name).exec();
+  }
+
+  unsigned int size = res.size(); 
+  
+  string name1;
+  string tag;
+  string formula1;
+  string autore1;
+  string date1;
+  string formula2;
+  string autore2;
+  string date2;
+  
+  for(unsigned int i=0; i<size; ++i) {
+    res[i][0].to(name1);
+    res[i][1].to(tag);
+    res[i][2].to(formula1);
+    res[i][3].to(autore1);
+    res[i][4].to(date1);
+    res[i][5].to(formula2);
+    res[i][6].to(autore2);
+    res[i][7].to(date2);
+  }
+  return DataFrame::create();
+};
