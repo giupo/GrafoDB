@@ -1,3 +1,29 @@
+#' Ottiene i valori di un `metadato` per una `serie``
+#'
+#' Ritorna i valori di un metadato (o piu' metadati) specificati dal parametro `metadato`
+#' della serie specificata dal parametro `serie
+#'
+#' @name getMeta
+#' @usage getMeta(x, serie, metadato)
+#' @usage getMeta(x, serie)
+#' @param x istanza di `GrafoDB`
+#' @param serie nome della serie d'interesse
+#' @param metadato nome del metadato di cui si vogliono i valori
+#' @return un character vector con i nomi dei valori del metadati
+#' @examples \dontrun{
+#'   g <- GrafoDB()
+#'   getMeta(g, "TETSZ0AC", "TAVOLA_DI_OUTPUT") ## ritorna tutti i valori del metadato
+#'                                              ## 'TAVOLA_DI_OUTPUT' per 'TETSZ0AC'
+#' }
+#' @exportMethod
+#' @export
+
+setGeneric(
+  "getMeta",
+  function(x, serie, metadato) {
+    standardGeneric("getMeta")
+  })
+
 #' ricerca nei metadati del `GrafoDB`
 #'
 #' @name lookup
@@ -422,7 +448,6 @@ setMethod(
       bind.data <- cbind(object@tag, tsName))
   })
 
-
 .simpleGraph <- function(tag) {
   g <- GrafoDB(tag)
   g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
@@ -431,7 +456,8 @@ setMethod(
     C = A + B    
   }
   
-  g <- setMeta(g, "A", "key", "value")
+  g <- setMeta(g, "A", "key", "value1")
+  g <- setMeta(g, "A", "key", "value2")
   g <- setMeta(g, "B", "key", "value")
   setMeta(g, "C", "key", "value1")
 }
@@ -550,4 +576,19 @@ setMethod(
   signature("GrafoDB"),
   function(x, ...) {
     x[[names(x)]]
+  })
+
+setMethod(
+  "getMeta",
+  signature("GrafoDB", "character", "character"),
+  function (x, serie, metadato){
+    .getMeta(x, serie, metadato)
+  })
+
+
+setMethod(
+  "getMeta",
+  signature("GrafoDB", "character", "ANY"),
+  function (x, serie, metadato){
+    getMetadata(x, serie)
   })

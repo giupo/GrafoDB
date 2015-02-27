@@ -972,3 +972,17 @@ elimina <- function(tag) {
   })
   graph
 }
+
+.getMeta <- function(x, serie, metadato) {
+  con <- pgConnect()
+  on.exit(dbDisconnect(con))
+  df <- dbGetPreparedQuery(
+    con,
+    "select value from metadati where tag=? and name=? and key=?",
+    bind.data = cbind(x@tag, serie, metadato))
+  if(nrow(df)) {
+    as.character(df[,1])
+  } else {
+    character()
+  }
+}
