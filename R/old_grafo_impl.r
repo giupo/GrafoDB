@@ -27,7 +27,7 @@ setMethod(
   "isPrimitive",
   signature("GrafoDB", "character"),
   function(graph, tsName) {
-    isRoot(graph, tsName)
+    all(isRoot(graph, tsName) && is.null(expr(graph, tsName)))
   })
 
 #' implementazione di isAggregate di `package::grafo`
@@ -57,7 +57,7 @@ setMethod(
   "isElementary",
   signature("GrafoDB", "character"),
   function(graph, tsName) {
-    FALSE
+    all(isRoot(tsName) && !is.null(expr(graph, tsName)))
   })
 
 #' implementazione di listAggregates di `package::grafo`
@@ -71,7 +71,8 @@ setMethod(
   "listAggregates",
   signature("GrafoDB"),
   function(graph) {
-    setdiff(names(graph), listPrimitives(graph))
+    roots <- c(listPrimitives(graph), listElementaries(graph))
+    setdiff(names(graph), roots)
   })
 
 
@@ -86,7 +87,8 @@ setMethod(
   "listElementaries",
   signature("GrafoDB"),
   function(graph) {
-    character()
+    roots <- V(network)[degree(network, mode="in") == 0]$name  
+    setdiff(roots, listPrimitives(graph))
   })
 
 #' implementazione di listPrimitives di `package::grafo`
@@ -101,7 +103,9 @@ setMethod(
   signature("GrafoDB"),
   function(graph) {
     network <- graph@network
-    V(network)[degree(network, mode="in") == 0]$name
+    sources <- V(network)[degree(network, mode="in") == 0]$name
+    elementary <- names(expr(graph, sources))
+    setdiff(sources, elementary)
   })
 
 #' implementazione di listNodes di `package::grafo`
@@ -200,7 +204,7 @@ setMethod(
     for(name in tsName) {
       ret[[name]] <- navigate(object, name, order=1, mode="in")
     }
-
+    
     if(length(ret) == 1) {
       ret <- ret[[name]]
     }
@@ -292,4 +296,32 @@ setMethod(
       dbGetPreparedQuery(con, sql, bind.data=params)
     }
     object
+  })
+
+
+#' Elimina un nodo dal `GrafoDB`
+#'
+#' L'eliminazione prevede l'eliminazione dai dati, formule, archi e metadati
+#'
+#' @name rmNode
+#' @usage rmNode(graph, tsName, recursive)
+#' @param graph istanza di `GrafoDB`
+#' @param tsName nomi di serie da eliminare
+#' @param recursive `TRUE` se l'eliminazione deve essere rivorsiva sugli archi
+#'                  uscenti di ogni serie nel parametro `tsName`.
+#'                  `FALSE` altrimenti. Se il parametro e' impostato a `FALSE` e'
+#'                  condizione necessaria che le serie in `tsName` siano tutte
+#'                  foglie, ovvero serie senza archi uscenti
+#' @note Metodo interno
+#' @seealso .rmNode
+#' @return il grafo modificato
+#' @exportMethod
+#' @include functions.r
+#' @export 
+
+setMethod(
+  "rmNode",
+  signature("GrafoDB", "character", "ANY"),
+  function(graph, tsName, recursive=FALSE) {
+    .rmNode(graph, tsName, recursive)
   })

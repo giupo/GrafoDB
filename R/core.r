@@ -61,6 +61,24 @@ setGeneric(
     standardGeneric("isRoot")
   })
 
+#' predicato che ritorna `TRUE` se le serie sono foglie
+#'
+#' Ritorna `TRUE` se le serie date nel parametro `name` non hanno serie
+#' uscienti
+#'
+#' @name isLeaf
+#' @usage isLeaf(x, name)
+#' @param x istanza di GrafoDB
+#' @param name vettore di nomi di serie
+#' @return `TRUE` se `name` sono serie senza archi uscenti
+#' @export
+
+setGeneric(
+  "isLeaf",
+  function(x, name) {
+    standardGeneric("isLeaf")
+  })
+
 #' Ritorna i genitori delle serie
 #'
 #' ritorna i nomi delle serie che entrano nelle serie date in `name`
@@ -353,6 +371,14 @@ setMethod(
     network <- x@network
     sources <- V(network)[degree(network, mode="in") == 0]$name
     all(name %in% sources)
+  })
+
+
+setMethod(
+  "isLeaf",
+  signature("GrafoDB", "character"),
+  function(x, name) {
+    .isLeaf(x, name)
   })
 
 #' implementazione di describe di `package::grafo`

@@ -227,3 +227,46 @@ test_that("posso memorizzare stringhe", {
   expect_equal(g1[["archivio"]], "cippalippa")
   elimina("test")
 })
+
+test_that("isLeaf torna true per serie foglia", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B
+  }
+  expect_true(isLeaf(g, "C"))
+  elimina("test")
+})
+
+test_that("isLeaf torna false per una serie non foglia", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B
+  }
+  expect_true(!isLeaf(g, "A"))
+  expect_true(!isLeaf(g, "B"))
+  elimina("test")
+})
+
+
+test_that("isRoot torna false per serie foglia", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B
+  }
+  expect_true(!isRoot(g, "C"))
+  elimina("test")
+})
+
+test_that("isRoot torna true per una serie non foglia", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B
+  }
+  expect_true(isRoot(g, "A"))
+  expect_true(isRoot(g, "B"))
+  elimina("test")
+})
