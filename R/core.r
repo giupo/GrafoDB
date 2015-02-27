@@ -592,3 +592,42 @@ setMethod(
   function (x, serie, metadato){
     getMetadata(x, serie)
   })
+
+
+setMethod(
+  "keys",
+  signature("GrafoDB"),
+  function(x) {
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    dbGetPreparedQuery(
+      con,
+      "select distinct key from metadati where tag=?",
+      bind.data = x@tag)
+  })
+
+setMethod(
+  "values",
+  signature("GrafoDB"),
+  function(x, ...) {
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    tag <- x@tag
+    nomemetadato <- list(...)
+    df <- if(length(nomemetadato) == 1) {
+      key <- nomemetadato[[1]]
+      dbGetPreparedQuery(
+        con,
+        "select distinct value from metadati where tag=? and key=?",
+        bind.data = cbind(tag, key))
+    } else if(length(nomemetadato) == 0) {
+      dbGetPreparedQuery(
+        con,
+        "select distinct value from metadati where tag=?",
+        bind.data = tag)
+    } else {
+      stop("Cannot get values pased on params")
+    }
+    
+    as.character(df[,1])
+  })
