@@ -444,7 +444,7 @@ setMethod(
     on.exit(dbDisconnect(con))
     dbGetPreparedQuery(
       con,
-      "select name, key, value from metadati where tag = ? and name = ?",
+      "select name, key, value from metadati where tag = ? and name = ? order by name, key",
       bind.data <- cbind(object@tag, tsName))
   })
 
@@ -602,7 +602,7 @@ setMethod(
     on.exit(dbDisconnect(con))
     dbGetPreparedQuery(
       con,
-      "select distinct key from metadati where tag=?",
+      "select distinct key from metadati where tag=? order by 1",
       bind.data = x@tag)
   })
 
@@ -618,12 +618,12 @@ setMethod(
       key <- nomemetadato[[1]]
       dbGetPreparedQuery(
         con,
-        "select distinct value from metadati where tag=? and key=?",
+        "select distinct value from metadati where tag=? and key=? order by 1",
         bind.data = cbind(tag, key))
     } else if(length(nomemetadato) == 0) {
       dbGetPreparedQuery(
         con,
-        "select distinct value from metadati where tag=?",
+        "select distinct value from metadati where tag=? order by 1",
         bind.data = tag)
     } else {
       stop("Cannot get values pased on params")

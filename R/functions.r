@@ -980,7 +980,7 @@ elimina <- function(tag) {
   on.exit(dbDisconnect(con))
   df <- dbGetPreparedQuery(
     con,
-    "select value from metadati where tag=? and name=? and key=?",
+    "select value from metadati where tag=? and name=? and key=? order by 1",
     bind.data = cbind(x@tag, serie, metadato))
   if(nrow(df)) {
     as.character(df[,1])
