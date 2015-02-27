@@ -315,7 +315,7 @@ setMethod(
 #' @note Metodo interno
 #' @seealso .rmNode
 #' @return il grafo modificato
-#' @exportMethod
+#' @exportMethod rmNode
 #' @include functions.r
 #' @export 
 

@@ -15,7 +15,7 @@
 #'   getMeta(g, "TETSZ0AC", "TAVOLA_DI_OUTPUT") ## ritorna tutti i valori del metadato
 #'                                              ## 'TAVOLA_DI_OUTPUT' per 'TETSZ0AC'
 #' }
-#' @exportMethod
+#' @exportMethod getMeta
 #' @export
 
 setGeneric(
@@ -453,7 +453,7 @@ setMethod(
   g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["C"] <- function(A,B) {
-    C = A + B    
+    C = A + B
   }
   
   g <- setMeta(g, "A", "key", "value1")

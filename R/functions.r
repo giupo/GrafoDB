@@ -895,6 +895,7 @@ elimina <- function(tag) {
 #'          applicare il predicato
 #' @return vector di `logical` (stessa lunghezza di `i`) con i risultati
 #'         del controllo
+#' @rdname isLeaf-internal
 
 .isLeaf <- function(x, i) {
   network <- x@network
@@ -917,6 +918,7 @@ elimina <- function(tag) {
 #'                  foglie, ovvero serie senza archi uscenti
 #' @note Metodo interno
 #' @seealso rmNode
+#' @rdname rmNode-internal
 
 .rmNode <- function(graph, tsName, recursive=FALSE) {
   sono.tutte.foglie = isLeaf(graph, tsName)
