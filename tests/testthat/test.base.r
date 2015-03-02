@@ -270,3 +270,21 @@ test_that("isRoot torna true per una serie non foglia", {
   expect_true(isRoot(g, "B"))
   elimina("test")
 })
+
+test_that("Posso editare una serie esistente aggiungendo una dipendenza esistente", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B
+  }
+  g["D"] <- function(A, C) {
+    D = A + C
+  }
+  g <- saveGraph(g)
+  
+  g["D"] <- function(A, B, C) {
+    D = A + B + C
+  }
+  
+  elimina("test")
+})

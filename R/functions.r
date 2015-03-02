@@ -815,11 +815,11 @@ elimina <- function(tag) {
   x@functions[name] <- edited
   params <- list(...)
   tryCatch({
-    .evaluateSingle(name, g)
+    ## .evaluateSingle(name, g) ## perche' ho messo qui 'sto evaluateSingle?
     f <- eval(parse(text=txtsrc))
     x[name] = f
   }, error = function(cond) {
-    # la risetto per poterla editare
+    ## la risetto per poterla editare
     x@functions[name] <- edited
     stop(cond)
   })
