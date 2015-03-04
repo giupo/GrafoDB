@@ -796,7 +796,7 @@ elimina <- function(tag) {
 .edita <- function(x, name, ...) {
   file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
   if(!isNode(x, name)) {
-    deps <- c("change", "me")
+    deps <- c()
     if(name %in% keys(x@functions)) {
       task <- x@functions[[name]]
     } else {
