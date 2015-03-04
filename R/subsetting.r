@@ -77,7 +77,11 @@ setMethod(
     for(dep in dependencies) {
       network <- network + edge(dep, name)
     }
-
+    ## rimuovo i tempedges perche' li ho appena inseriti
+    if(name %in% keys(x@edges)) {
+      del(name, x@edges)
+    }
+    
     if (!is.dag(network)) {
       wrongsort <- try(topological.sort(network), silent=TRUE)
       network_seq <- V(network)
@@ -86,6 +90,7 @@ setMethod(
       cycles_vertex <- cycles_seq$name
       stop("Cycles found: ", paste(unlist(cycles_vertex), collapse=", "))
     }
+
     x@functions[[name]] <- .declutter_function(value)
     x@network <- network
     x <- .evaluate(x, name)

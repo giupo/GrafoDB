@@ -15,7 +15,8 @@
   if(is.null(tag)) {
     tag <- "cf10"
   }
-  
+
+  .Object@edges <- hash()
   .Object@data <- hash()
   .Object@functions <- hash()
   
@@ -806,6 +807,11 @@ elimina <- function(tag) {
     deps <- getDependencies(x, name)
     task <- expr(x, name, echo=F)    
   }
+
+  if(name %in% keys(x@edges)) {
+    deps <- x@edges[[name]]
+  }  
+  
   task <- .clutter_with_params(task, name, deps) 
   write(task, file=file)
   on.exit(file.remove(file))
@@ -816,7 +822,10 @@ elimina <- function(tag) {
   params <- list(...)
   tryCatch({
     ## .evaluateSingle(name, g) ## perche' ho messo qui 'sto evaluateSingle?
+    ## gestione archi temporanei
     f <- eval(parse(text=txtsrc))
+    dep <- names(as.list(formals(f)))
+    x@edges[[name]] <- dep
     x[name] = f
   }, error = function(cond) {
     ## la risetto per poterla editare
