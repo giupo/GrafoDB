@@ -632,3 +632,16 @@ setMethod(
     
     as.character(df[,1])
   })
+
+setMethod(
+  "deleteMeta",
+  signature("GrafoDB", "character", "character", "character"),
+  function (object, tsName, attrName, attrValue)  {
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    tag <- object@tag
+    params <- data.frame(tag=tag, name=tsName, key=attrName, value=attrValue)
+    sql <- "delete from metadati where tag = ? and name= ? and key = ? and value = ?"
+    dbGetPreparedQuery(con, sql, bind.data = params)
+    invisible(NULL)
+  })
