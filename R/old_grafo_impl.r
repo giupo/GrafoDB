@@ -71,8 +71,17 @@ setMethod(
   "listAggregates",
   signature("GrafoDB"),
   function(graph) {
-    roots <- c(listPrimitives(graph), listElementaries(graph))
-    setdiff(names(graph), roots)
+    network <- graph@network
+    con <- pgConnect()
+    tag <- graph@tag
+    on.exit(dbDisconnect(con))
+    formule <- dbGetPreparedQuery(
+      con,
+      "select name from formule where tag = ?",
+      bind.data = tag)
+    formule <- as.character(formule[,1])
+    leaves <- V(network)[degree(network, mode="out") == 0]$name
+    setdiff(formule, leaves)
   })
 
 
@@ -87,8 +96,17 @@ setMethod(
   "listElementaries",
   signature("GrafoDB"),
   function(graph) {
-    roots <- V(network)[degree(network, mode="in") == 0]$name  
-    setdiff(roots, listPrimitives(graph))
+    network <- graph@network
+    con <- pgConnect()
+    tag <- graph@tag
+    on.exit(dbDisconnect(con))
+    formule <- dbGetPreparedQuery(
+      con,
+      "select name from formule where tag = ?",
+      bind.data = tag)
+    formule <- as.character(formule[,1])
+    leaves <- V(network)[degree(network, mode="out") == 0]$name
+    intersect(leaves, formule)
   })
 
 #' implementazione di listPrimitives di `package::grafo`
@@ -104,7 +122,7 @@ setMethod(
   function(graph) {
     network <- graph@network
     sources <- V(network)[degree(network, mode="in") == 0]$name
-    elementary <- names(expr(graph, sources))
+    elementary <- listElementaries(graph)
     setdiff(sources, elementary)
   })
 

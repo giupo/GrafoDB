@@ -95,6 +95,17 @@ setMethod(
     x@network <- network
     x <- .evaluate(x, name)
   } else {
+    aggregate <- listAggregates(g)
+    elementari <- listElementaries(g)
+    tt <- intersect(name, c(aggregate, elementari))
+    
+    ci.sono.formule <- length(tt) != 0
+    
+    if(ci.sono.formule) {
+      stop("Non puoi impostare una serie con formula con uno scalare: ",
+           paste(tt, collapse=", "))
+    }
+    
     x@network <- network
     if(is.dataset(value)) {
       data <- x@data
