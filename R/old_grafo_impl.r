@@ -142,8 +142,13 @@ setMethod(
   "saveGraph",
   signature("GrafoDB", "ANY"),
   function(object, path=object@tag) {
+    nameObject <- deparse(substitute(object))
     .saveGraph(object, path)
-    GrafoDB(path)
+    object <- GrafoDB(path)
+    if(object@tag == path) {
+      assign(nameObject, object, envir=parent.frame())
+    }
+    object
   })
 
 #' implementazione di showInternalChanges di `package::grafo`
