@@ -95,8 +95,8 @@ setMethod(
     x@network <- network
     x <- .evaluate(x, name)
   } else {
-    aggregate <- listAggregates(g)
-    elementari <- listElementaries(g)
+    aggregate <- listAggregates(x)
+    elementari <- listElementaries(x)
     tt <- intersect(name, c(aggregate, elementari))
     
     ci.sono.formule <- length(tt) != 0

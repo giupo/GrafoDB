@@ -273,6 +273,9 @@
   names.updated <- setdiff(keys(data), names.with.conflicts)
   cl <- initCluster()
   is.multi.process <- !is.null(cl)
+  if(is.multi.process) {
+    clusterStartWorking()
+  }
   autore <- whoami()
   if(length(names.updated)) { 
     dati <- if(is.multi.process) {
@@ -305,6 +308,7 @@
     dati <- cbind(dati, names.updated, tag)
     dbGetPreparedQuery(con, sql2, bind.data=dati)
   }
+  doneWithCluster()
 }
 
 .updateFunctions <- function(x, con, tag=x@tag) {
@@ -324,6 +328,9 @@
   names.with.conflicts <- intersect(keys(functions), as.character(df$name))
   cl <- initCluster()
   is.multi.process <- !is.null(cl)
+  if(is.multi.process) {
+    clusterStartWorking()
+  }
   autore <- whoami()
   if(length(names.with.conflicts)) {
     dati <- if(is.multi.process) {
@@ -390,6 +397,7 @@
     colnames(formule) <- c("formula", "autore", "name", "tag", "name", "tag")
     dbGetPreparedQuery(con, sql2, bind.data=formule)
   }
+  doneWithCluster()
 }
 #' crea ex-novo un istanza di grafo nel databae
 #'

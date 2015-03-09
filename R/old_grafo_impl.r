@@ -105,8 +105,8 @@ setMethod(
       "select name from formule where tag = ?",
       bind.data = tag)
     formule <- as.character(formule[,1])
-    leaves <- V(network)[degree(network, mode="out") == 0]$name
-    intersect(leaves, formule)
+    sources <- V(network)[degree(network, mode="in") == 0]$name
+    intersect(sources, formule)
   })
 
 #' implementazione di listPrimitives di `package::grafo`

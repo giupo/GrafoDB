@@ -21,10 +21,18 @@ if(is.windows()) {
 #' @export
 
 initCluster <- function(ncores=NULL, ...) {
+  if(wasWorking()) {
+    tryCatch({
+      stopCluster(parallel:::defaultCluster())
+    }, error = function(cond) {
+      ## who cares?
+    })
+  }
+  
   if(getOption("SLAVE", FALSE)) {
     return(invisible(NULL))
   }
-
+  
   if(!getOption("GCLUSTER", TRUE)) {
     return(invisible(NULL))
   }
@@ -73,12 +81,22 @@ initCluster <- function(ncores=NULL, ...) {
   clusterEvalQ(cl, "require(foreach)")
   clusterEvalQ(cl, "require(digest)")
   clusterEvalQ(cl, "require(plyr)")
-  #clusterExport(cl, "pgConnect", envir=environment())
-  #clusterExport(cl, "dbDisconnect", envir=environment())
-  # connectCluster(cl)
   setDefaultCluster(cl)
   registerDoParallel(cl)
   invisible(cl)
+}
+
+
+clusterStartWorking <- function() {
+  options(clusterWorking=TRUE)
+}
+
+wasWorking <- function() {
+  getOption("clusterWorking", FALSE)
+}
+
+doneWithCluster <- function() {
+  options(clusterWorking=FALSE)
 }
 
 

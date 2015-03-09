@@ -485,7 +485,10 @@ from.data.frame <- function(df) {
   
   if(is.null(v_start)) {
     sources_id <- V(network)[degree(network, mode="in") == 0]
-    # network <- delete.vertices(network, sources_id)
+    sources <- V(network)[sources_id]$name
+    sources <- getdb(sources, "preload")
+    data[names(sources)] <- sources
+    network <- delete.vertices(network, sources_id)
   } else {
     v_start <- as.character(v_start)
     network <- induced.subgraph(
@@ -493,6 +496,14 @@ from.data.frame <- function(df) {
       V(network)[unlist(
         neighborhood(network, order=.Machine$integer.max, nodes=v_start, mode="out")
         )])
+  }
+
+  preload <- listElementaries(object)
+  preload_V_start <- intersect(preload, v_start)
+  if(length(preload_V_start)) {
+    sources <- getdb(preload_V_start, "preload")
+    data[names(sources)] <- sources
+    network <- network - vertex(names(sources))
   }
   
   ## se il network e' vuoto dopo l'eliminazione delle sorgenti,
@@ -510,11 +521,23 @@ from.data.frame <- function(df) {
     pb <- ProgressBar(min=0, max=total)
     update(pb, i, "Starting...")
   }  
-  ## trovo le fonti
-  sources_id <- V(network)[degree(network, mode="in") == 0]
+  
   cl <- initCluster()
   is.multi.process <- !is.null(cl) && !debug 
-  
+
+  if(is.multi.process) {
+    if(wasWorking()) {
+      stopCluster(cl)
+      cl <- initCluster()
+    } else {
+      clusterStartWorking()
+    }
+    clusterExport(
+      cl, ".evaluateSingle",
+      envir=environment())
+  }
+
+  sources_id <- V(network)[degree(network, mode="in") == 0]
   while(length(sources_id)) {
     sources <- V(network)[sources_id]$name
     
@@ -525,10 +548,6 @@ from.data.frame <- function(df) {
         .evaluateSingle(name, object)
       }, object)
     } else {
-      clusterExport(
-        cl, ".evaluateSingle",
-        envir=environment())
-
       evaluated.data <- foreach(name = sources, .combine = c) %dopar% {
         serie <- .evaluateSingle(name, object)
         list(serie)
@@ -549,9 +568,12 @@ from.data.frame <- function(df) {
     network <- delete.vertices(network, sources_id)
     sources_id <- V(network)[degree(network, mode="in") == 0]
   }
+
+  doneWithCluster()
   if(is.interactive )kill(pb)
   object@data <- data
   object
+  
 }
 
 

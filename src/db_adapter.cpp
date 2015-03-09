@@ -16,7 +16,7 @@ CharacterMatrix DBAdapter::getArchi() {
   unsigned int totalSize;
   
   const char* sql = "select partenza, arrivo "
-                    "from archi where tag = $1";
+    "from archi where tag = $1";
   
   conn->prepare("getarchi", sql);    
   pqxx::result res = T->prepared("getarchi")(tag.c_str()).exec();
@@ -24,7 +24,7 @@ CharacterMatrix DBAdapter::getArchi() {
   CharacterMatrix z(totalSize, 2);  
   string partenza;
   string arrivo;
-
+  
   for (i = 0; i < totalSize; ++i) {        
     res[i]["partenza"].to(partenza);
     res[i]["arrivo"].to(arrivo);    
