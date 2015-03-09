@@ -19,7 +19,7 @@
   .Object@edges <- hash()
   .Object@data <- hash()
   .Object@functions <- hash()
-  
+  .Object@touched <- character(0)
   .Object@ordinal <- if(grepl("p(\\d+)$", tag)) {
     mth = str_match(tag, "p(\\d+)$")
     tag <- gsub(paste0(mth[1,1], "$"), "", tag)
@@ -474,7 +474,8 @@ from.data.frame <- function(df) {
   } else {
     FALSE
   }
-
+  tag <- object@tag
+  PRELOAD_TAG <- "preload"
   data <- object@data
   network <- object@network
   all_names <- names(object)
@@ -483,11 +484,15 @@ from.data.frame <- function(df) {
     stop("Non sono serie del grafo: ", paste(not.in.graph, collapse=", "))
   }
   
-  if(is.null(v_start)) {
+  if(is.null(v_start) && tag != PRELOAD_TAG) {
     sources_id <- V(network)[degree(network, mode="in") == 0]
     sources <- V(network)[sources_id]$name
-    sources <- getdb(sources, "preload")
-    data[names(sources)] <- sources
+    sources <- getdb(sources, PRELOAD_TAG)
+     if(is.bimets(sources)) {
+      data[preload_V_start] <- sources
+    } else {
+      data[names(sources)] <- sources
+    }
     network <- delete.vertices(network, sources_id)
   } else {
     v_start <- as.character(v_start)
@@ -500,10 +505,16 @@ from.data.frame <- function(df) {
 
   preload <- listElementaries(object)
   preload_V_start <- intersect(preload, v_start)
-  if(length(preload_V_start)) {
-    sources <- getdb(preload_V_start, "preload")
-    data[names(sources)] <- sources
-    network <- network - vertex(names(sources))
+  
+  if(length(preload_V_start) && tag != PRELOAD_TAG) {
+    sources <- getdb(preload_V_start, PRELOAD_TAG)
+    if(is.bimets(sources)) {
+      data[preload_V_start] <- sources
+    } else {
+      data[names(sources)] <- sources
+    }
+    
+    network <- network - vertex(preload_V_start)
   }
   
   ## se il network e' vuoto dopo l'eliminazione delle sorgenti,
@@ -843,8 +854,6 @@ elimina <- function(tag) {
   x@functions[name] <- edited
   params <- list(...)
   tryCatch({
-    ## .evaluateSingle(name, g) ## perche' ho messo qui 'sto evaluateSingle?
-    ## gestione archi temporanei
     f <- eval(parse(text=txtsrc))
     dep <- names(as.list(formals(f)))
     x@edges[[name]] <- dep

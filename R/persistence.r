@@ -244,15 +244,17 @@
     data.frame()
   }
   
-  names.with.conflicts <- intersect(keys(data), as.character(df$name))
+  # names.with.conflicts <- intersect(keys(data), as.character(df$name))
+  names.with.conflicts <- intersect(x@touched, as.character(df$name))
   if(length(names.with.conflicts) > 0) {
     ## ci sono conflitti
     ## crea il conflitto e non toccare i dati.
-    sql <- paste0("insert into conflitti(tag, name, anno, prd, ",
-                  " freq, dati, autore)",
-                  " values (?, ?, ?, ?, ?, ? ,?)")
+    sql <- paste0(
+      "insert into conflitti(tag, name, anno, prd, ",
+      " freq, dati, autore)",
+      " values (?, ?, ?, ?, ?, ? ,?)")
     
-    dati <- foreach(name = iter(names.with.conflicts),.combine=rbind) %do% {
+    dati <- foreach(name = iter(names.with.conflicts), .combine=rbind) %do% {
       tryCatch({
         tt <- x[[name]]
         df <- to.data.frame(tt, name)
@@ -325,7 +327,8 @@
     data.frame()
   }
   
-  names.with.conflicts <- intersect(keys(functions), as.character(df$name))
+  ## names.with.conflicts <- intersect(keys(functions), as.character(df$name))
+  names.with.conflicts <- intersect(x@touched, as.character(df$name))
   cl <- initCluster()
   is.multi.process <- !is.null(cl)
   if(is.multi.process) {

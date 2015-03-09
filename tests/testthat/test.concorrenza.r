@@ -136,3 +136,38 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
 
 elimina("test")
 elimina("test1")
+
+test_that("Tra i conflitti viene segnalata solo le serie modificate, non le serie figlie", {
+  g <- GrafoDB("test")
+  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B    
+  }
+  g["D"] <- function(C) {
+    D = 2 * C
+  }
+  
+  saveGraph(g, "test1")
+  
+  g1 <- GrafoDB("test1")
+  g2 <- GrafoDB("test1")
+
+  g1["C"] <- function(A) {
+    C = A/2
+  }
+
+  g2["C"] <- function(A) {
+    C = A*2
+  }
+
+  saveGraph(g1)
+  expect_warning(saveGraph(g2))
+  conflicts <- getConflicts(g1)
+  lista_nomi <- as.character(conflicts$name)
+  expect_true("C" %in% lista_nomi)
+  expect_true(!"D" %in% lista_nomi)
+})
+
+elimina("test")
+elimina("test1")

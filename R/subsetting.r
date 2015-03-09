@@ -79,7 +79,7 @@ setMethod(
     }
     ## rimuovo i tempedges perche' li ho appena inseriti
     if(name %in% keys(x@edges)) {
-      del(name, x@edges)
+      suppressWarnings(del(name, x@edges))
     }
     
     if (!is.dag(network)) {
@@ -121,6 +121,7 @@ setMethod(
       x <- evaluate(x, name)
     }
   }
+  x@touched <- sort(unique(c(x@touched, name)))
   nameObject <- deparse(substitute(x))
   assign(nameObject, x, envir=parent.frame())
   invisible(x)

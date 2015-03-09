@@ -159,6 +159,7 @@ setGeneric(
 #' @slot network \link[igraph]{igraph} containing the DAG
 #' @slot metadati temporary metadata added by the user to be saved on the DB
 #' @slot ordinal ordinale dei dati storici (0 per la produzione corrente)
+#' @slot touched serie modificate in area di lavoro
 #' @exportClass GrafoDB
 #' @export GrafoDB
 #' @import igraph hash methods rcf
@@ -178,6 +179,7 @@ GrafoDB <- setClass(
     functions = "hash",
     ordinal = "numeric",
     timestamp = "POSIXct",
+    touched = "character",
     edges = "hash"
   ),
   contains = "DBDataset")
