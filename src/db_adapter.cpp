@@ -38,7 +38,7 @@ List DBAdapter::getData(vector<string> names) {
   vector<string> quotedNames = quote(names);
   string inParams = join(quotedNames, ',');
   
-  Rprintf("Loding data from: %s\n", tag.c_str());
+  //Rprintf("Loding data from: %s\n", tag.c_str());
 
   stringstream sql;
   sql << "select name, anno, periodo, freq, dati ";
