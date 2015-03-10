@@ -502,7 +502,7 @@ from.data.frame <- function(df) {
         neighborhood(network, order=.Machine$integer.max, nodes=v_start, mode="out")
         )])
   }
-
+  
   preload <- listElementaries(object)
   preload_V_start <- intersect(preload, v_start)
   
@@ -838,7 +838,10 @@ elimina <- function(tag) {
     }
   } else {
     deps <- getDependencies(x, name)
-    task <- expr(x, name, echo=F)    
+    task <- expr(x, name, echo=F)
+    if(is.null(task)) {
+      stop("la serie ", name, " e' una serie primitiva")
+    }
   }
 
   if(name %in% keys(x@edges)) {

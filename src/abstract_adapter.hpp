@@ -25,6 +25,7 @@ public:
   virtual void matchOrdinal() = 0;
   virtual bool hasConflicts(const string name = "") = 0;
   virtual DataFrame getConflicts(const string name = "") = 0;
+  virtual void do_history(const vector<string> names) = 0;
 };
 
 #endif

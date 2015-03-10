@@ -545,6 +545,7 @@ countRolling <- function(x, con = NULL) {
 #' @param con connessione al database
 #' @note questa e' una funzione interna del grafo invocata da `updateGraph`
 #' @seealso saveGraph updateGraph
+#' @import rcf parallel iterators foreach
 
 doHistory <- function(x, con) {
   tag <- x@tag
@@ -568,41 +569,75 @@ doHistory <- function(x, con) {
     "select max(ordinale) from history where tag=?",
     bind.data = tag)
   
-  ordinale <- as.numeric(df[[1,1]])
-  
+  ordinale <- as.numeric(df[[1,1]])  
   ordinale <- if(is.na(ordinale)) {
     1
   } else {
     ordinale + 1
   }
+
+  cl <- initCluster()
+  is.multi.process <- !is.null(cl)
+
+  if(is.multi.process) {
+    if(wasWorking()) {
+      stopCluster(cl)
+      cl <- initCluster()
+    } else {
+      clusterStartWorking()
+    }
+  }
   
-  pb <- ProgressBar(0, length(nomi.history))
-  i <- 0
-  update(pb, 0, label="Starting")
-  for(name in nomi.history) {
+  lista.nomi <- slice(nomi.history, detectCores())
+  
+  blinda <- function(x, name, ordinale) {
+    tag <- x@tag
     archi <- deps(x, name)
-    i <- i + 1
-    update(pb, i, label=name)
     if(is.null(archi)) {
       dbGetPreparedQuery(
         con,
-        paste0("insert into history(name, tag, ordinale, ",
-               "anno, periodo, freq, dati,  last_updated, autore)",
-               "select name, tag, ?, anno, periodo, freq, dati, ",
-               " last_updated, autore from dati where tag=? and name=?"),
-        bind.data = data.frame(ordinale, tag, name))      
+        paste0(
+          "insert into history(name, tag, ordinale, ",
+          " anno, periodo, freq, dati,  last_updated, autore)",
+          " select name, tag, ", ordinale,", anno, periodo, freq, dati, ",
+          " last_updated, autore from dati_", tag," where name=?"),
+        bind.data = data.frame(name))      
     } else {
       archi <- toJSON(archi)
       dbGetPreparedQuery(
         con,
-        paste0("insert into history(name, tag, ordinale, anno, ",
-               " periodo, freq, dati, formula, archi_entranti, ",
-               " last_updated, autore) ",
-               "select d.name, d.tag, ?, d.anno, d.periodo, d.freq, ", 
-               "d.dati, f.formula, ?, f.last_updated, f.autore ",
-               " from dati d, formule f where f.tag = d.tag and d.tag=? ",
-               " and d.name = f.name and d.name=?"),
+        paste0(
+          "insert into history(name, tag, ordinale, anno, ",
+          " periodo, freq, dati, formula, archi_entranti, ",
+          " last_updated, autore) ",
+          "select d.name, d.tag, ?, d.anno, d.periodo, d.freq, ", 
+          "d.dati, f.formula, ?, f.last_updated, f.autore ",
+          " from dati_", tag," d, formule_", tag," f where f.tag = d.tag and d.tag=? ",
+          " and d.name = f.name and d.name=?"), ## aggiunti i tag per evitare deadlock
         bind.data = data.frame(ordinale, archi, tag, name))      
+    }
+    name
+  }
+  
+  combine <- function(pb) {
+    count <- 0
+    function(...) {
+      x <- list(...)
+      count <<- count + length(x)
+      update(pb, count, last(unlist(x)))
+      c(...)
+    }
+  }
+  
+  pb <- ProgressBar(min=1, max=length(nomi.history))
+  
+  if(is.multi.process && FALSE) {
+    foreach(name = iter(nomi.history), .combine = combine(pb)) %dopar% {
+      blinda(x, name, ordinale)      
+    }
+  } else {
+    foreach(name = iter(nomi.history), .combine = combine(pb)) %do% {
+      blinda(x, name, ordinale)
     }
   }
   kill(pb)

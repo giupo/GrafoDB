@@ -55,7 +55,7 @@ public:
 
   virtual bool hasConflicts(const string name = "");
   virtual DataFrame getConflicts(const string name = "");
-
+  virtual void do_history(const vector<string> names);
 protected:  
   pqxx::connection* conn;
   pqxx::work* T;

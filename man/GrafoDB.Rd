@@ -23,6 +23,8 @@ Classe per accedere ai dati immagazzinati in PostgreSQL del Grafo CF
 \item{\code{metadati}}{temporary metadata added by the user to be saved on the DB}
 
 \item{\code{ordinal}}{ordinale dei dati storici (0 per la produzione corrente)}
+
+\item{\code{touched}}{serie modificate in area di lavoro}
 }}
 \examples{
 \dontrun{

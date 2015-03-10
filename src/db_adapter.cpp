@@ -147,7 +147,7 @@ DataFrame DBAdapter::getConflicts(const string name)  {
   } else {
     sql <<" select a.name, a.tag, a.formula, a.autore, date, b.formula, b.autore, b.last_updated";
     sql << " from conflitti a, formule b ";
-    sql << " where a.tag = $1 and a.name=? and a.tag = b.tag and a.name = b.name";
+    sql << " where a.tag = $1 and a.name=$2 and a.tag = b.tag and a.name = b.name";
     sql << " order by tag, name";
     conn->prepare("getConflictsByName", sql.str());
     res = T->prepared("getConflictsByName")(this->tag)(name).exec();
@@ -176,3 +176,59 @@ DataFrame DBAdapter::getConflicts(const string name)  {
   }
   return DataFrame::create();
 };
+
+void DBAdapter::do_history(const vector<string> names) {
+  const char* sqlOrdinale = "select max(ordinale) + 1 from history where tag = $1";
+  conn->prepare("sqlOrdinale", sqlOrdinale);
+  pqxx::result res = T->prepared("sqlOrdinale")(this->tag).exec();
+  int ordinale = 0;
+  res[0][0].to(ordinale);
+  
+  stringstream sqlArchi;
+  sqlArchi << "select partenza from archi where tag = $1 and arrivo = $2";
+  conn->prepare("sqlArchi", sqlArchi.str());
+
+  stringstream sqlHistoryNoArchi;
+  sqlHistoryNoArchi <<  "insert into history(name, tag, ordinale, " <<
+    " anno, periodo, freq, dati,  last_updated, autore)" <<
+    " select name, tag, " << ordinale << ", anno, periodo, freq, dati, " <<
+    " last_updated, autore from dati_" << tag << " where name= $1";
+  conn->prepare("sqlHistoryNoArchi", sqlHistoryNoArchi.str());
+
+  stringstream sqlHistoryArchi;
+  sqlArchi <<  "insert into history(name, tag, ordinale, anno, " << 
+    " periodo, freq, dati, formula, archi_entranti, " << 
+    " last_updated, autore) " <<
+    " select d.name, d.tag, " << ordinale << ", d.anno, d.periodo, d.freq, " <<
+    " d.dati, f.formula, $1, f.last_updated, f.autore " <<
+    " from dati_" << tag << " d, formule_" << tag << " f where f.tag = d.tag and d.tag = $2 " <<
+    " and d.name = f.name and d.name = $3"; // aggiunti i tag per evitare deadlock
+  conn->prepare("sqlHistoryArchi", sqlHistoryArchi.str());
+  
+  int nserie = names.size();
+  int countserie = 0;
+  vector<string>::const_iterator it;
+  for(it = names.begin(); it != names.end(); ++it) {
+    string name = *it;
+    Rprintf("%s\t\t( %d / %d)\n", name.c_str(), ++countserie, nserie);
+ 
+    res = T->prepared("sqlArchi")(this->tag)(name).exec();
+    int countArchi = res.size();
+    if(countArchi == 0) {
+      res = T->prepared("sqlHistoryNoArchi")(name).exec();
+    } else {
+      Json::Value archi;
+      Json::StyledWriter writer;
+      for(unsigned int i = 0; i < countArchi; ++i) {
+        string partenza;
+        Json::Value arco;
+        res[i][0].to(partenza);
+        arco.append(partenza);
+        arco.append(name);
+        archi.append(arco);
+      }
+      const string jsonArchi = writer.write(archi);
+      res = T->prepared("sqlHistoryArchi")(jsonArchi)(this->tag)(name).exec();
+    }
+  }
+}
