@@ -591,7 +591,7 @@ doHistory <- function(x, con) {
   lista.nomi <- slice(nomi.history, detectCores())
   
   blinda <- function(x, name, ordinale) {
-    tag <- x@tag
+   tag <- x@tag
     archi <- deps(x, name)
     if(is.null(archi)) {
       dbGetPreparedQuery(

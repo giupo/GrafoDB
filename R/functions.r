@@ -829,6 +829,7 @@ elimina <- function(tag) {
 
 .edita <- function(x, name, ...) {
   file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
+  new_task <- paste0()
   if(!isNode(x, name)) {
     deps <- c()
     if(name %in% keys(x@functions)) {
@@ -859,7 +860,9 @@ elimina <- function(tag) {
   tryCatch({
     f <- eval(parse(text=txtsrc))
     dep <- names(as.list(formals(f)))
-    x@edges[[name]] <- dep
+    if(!is.null(dep)) {
+      x@edges[[name]] <- dep
+    }
     x[name] = f
   }, error = function(cond) {
     ## la risetto per poterla editare

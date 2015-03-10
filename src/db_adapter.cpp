@@ -38,6 +38,8 @@ List DBAdapter::getData(vector<string> names) {
   vector<string> quotedNames = quote(names);
   string inParams = join(quotedNames, ',');
   
+  Rprintf("Loding data from: %s\n", tag.c_str());
+
   stringstream sql;
   sql << "select name, anno, periodo, freq, dati ";
   sql << "from dati where tag ='" << tag << "' and name in (";
@@ -51,8 +53,8 @@ List DBAdapter::getData(vector<string> names) {
     if(historical.size() > 0) {
       Rprintf("Loading data from history\n");
       CharacterVector hNames = historical.names();
-      for(CharacterVector::iterator it = hNames.begin(); 
-          it != hNames.end(); ++it) {
+      CharacterVector::iterator it;
+      for(it = hNames.begin(); it != hNames.end(); ++it) {
         string name = as<string>(*it);
         z[name] = historical[name];
       }  

@@ -45,6 +45,7 @@ setMethod(
 #' @include functions.r core.r
 
 .subsetting <- function(x, i, value) {
+  nameObject <- deparse(substitute(x))
   network <- x@network
   all_names <- V(network)$name
   name <- i
@@ -122,7 +123,6 @@ setMethod(
     }
   }
   x@touched <- sort(unique(c(x@touched, name)))
-  nameObject <- deparse(substitute(x))
   assign(nameObject, x, envir=parent.frame())
   invisible(x)
 }
