@@ -505,16 +505,21 @@ from.data.frame <- function(df) {
   
   preload <- listElementaries(object)
   preload_V_start <- intersect(preload, v_start)
+
+  ## tutto sto casino per velocizzare il caricamento dal DB.
+  ## Premature optimization is the root of all evil
   
-  if(length(preload_V_start) && tag != PRELOAD_TAG) {
-    sources <- getdb(preload_V_start, PRELOAD_TAG)
-    if(is.bimets(sources)) {
-      data[preload_V_start] <- sources
-    } else {
-      data[names(sources)] <- sources
+  if(!tag %in% c(PRELOAD_TAG, "biss", "prim", "dbcong")) {
+    if(length(preload_V_start)) {
+      sources <- getdb(preload_V_start, PRELOAD_TAG)
+      if(is.bimets(sources)) {
+        data[preload_V_start] <- sources
+      } else {
+        data[names(sources)] <- sources
+      }
+      
+      network <- network - vertex(preload_V_start)
     }
-    
-    network <- network - vertex(preload_V_start)
   }
   
   ## se il network e' vuoto dopo l'eliminazione delle sorgenti,
