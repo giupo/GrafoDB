@@ -22,7 +22,7 @@
 
 .saveGraph <- function(x, tag = x@tag) {
   if(hasConflicts(x)) {
-    stop("Il grafo ha conflitti, risolverli prima di salvare")
+    stop("Il grafo ",tag, " ha conflitti, risolverli prima di salvare")
   }
   
   tagExists <- .tagExists(tag)

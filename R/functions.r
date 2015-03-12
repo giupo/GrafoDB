@@ -479,21 +479,26 @@ from.data.frame <- function(df) {
   data <- object@data
   network <- object@network
   all_names <- names(object)
+  
   if(!all(v_start %in% all_names)) {
     not.in.graph <- setdiff(v_start, all_names)
     stop("Non sono serie del grafo: ", paste(not.in.graph, collapse=", "))
   }
-  
-  if(is.null(v_start) && tag != PRELOAD_TAG) {
-    sources_id <- V(network)[degree(network, mode="in") == 0]
-    sources <- V(network)[sources_id]$name
-    sources <- getdb(sources, PRELOAD_TAG)
-     if(is.bimets(sources)) {
-      data[preload_V_start] <- sources
-    } else {
-      data[names(sources)] <- sources
-    }
-    network <- delete.vertices(network, sources_id)
+
+  if(is.null(v_start)) {
+    ## le voglio valutare tutte
+    if(!tag %in% c(PRELOAD_TAG, "biss", "pne", "dbcong")) {
+      sources_id <- V(network)[degree(network, mode="in") == 0]
+      nomi_sources <- V(network)[sources_id]$name
+      sources <- getdb(nomi_sources, PRELOAD_TAG)
+      if(is.bimets(sources)) {
+        data[preload_V_start] <- sources
+      } else {
+        data[names(sources)] <- sources
+      }
+      ## fonti gia' valutate, le tolgo
+      network <- delete.vertices(network, sources_id)
+    } 
   } else {
     v_start <- as.character(v_start)
     network <- induced.subgraph(
@@ -501,25 +506,6 @@ from.data.frame <- function(df) {
       V(network)[unlist(
         neighborhood(network, order=.Machine$integer.max, nodes=v_start, mode="out")
         )])
-  }
-  
-  preload <- listElementaries(object)
-  preload_V_start <- intersect(preload, v_start)
-
-  ## tutto sto casino per velocizzare il caricamento dal DB.
-  ## Premature optimization is the root of all evil
-  
-  if(!tag %in% c(PRELOAD_TAG, "biss", "prim", "dbcong")) {
-    if(length(preload_V_start)) {
-      sources <- getdb(preload_V_start, PRELOAD_TAG)
-      if(is.bimets(sources)) {
-        data[preload_V_start] <- sources
-      } else {
-        data[names(sources)] <- sources
-      }
-      
-      network <- network - vertex(preload_V_start)
-    }
   }
   
   ## se il network e' vuoto dopo l'eliminazione delle sorgenti,

@@ -185,18 +185,25 @@ void DBAdapter::do_history(const vector<string> names) {
   pqxx::result res = T->prepared("sqlOrdinale")(this->tag).exec();
   int ordinale = 0;
   res[0][0].to(ordinale);
-  
+
+  CharacterMatrix archi = this->getArchi();
+
+  vector<string> serieConArchi;
+  vector<string> serieSenzaArchi;
   stringstream sqlArchi;
-  sqlArchi << "select partenza from archi where tag = $1 and arrivo = $2";
+  sqlArchi << "select arrivo from archi where tag = $1 and arrivo = $2";
   conn->prepare("sqlArchi", sqlArchi.str());
+
+  vector<string> quotedNames = quote(names);
+  string inParams = join(quotedNames, ',');
 
   stringstream sqlHistoryNoArchi;
   sqlHistoryNoArchi <<  "insert into history(name, tag, ordinale, " <<
     " anno, periodo, freq, dati,  last_updated, autore)" <<
     " select name, tag, " << ordinale << ", anno, periodo, freq, dati, " <<
-    " last_updated, autore from dati_" << tag << " where name= $1";
+    " last_updated, autore from dati_" << tag << " where name in (" << join(quote(serieSenzaArchi), ',') << ")";
   conn->prepare("sqlHistoryNoArchi", sqlHistoryNoArchi.str());
-
+  
   stringstream sqlHistoryArchi;
   sqlArchi <<  "insert into history(name, tag, ordinale, anno, " << 
     " periodo, freq, dati, formula, archi_entranti, " << 
@@ -204,9 +211,10 @@ void DBAdapter::do_history(const vector<string> names) {
     " select d.name, d.tag, " << ordinale << ", d.anno, d.periodo, d.freq, " <<
     " d.dati, f.formula, $1, f.last_updated, f.autore " <<
     " from dati_" << tag << " d, formule_" << tag << " f where f.tag = d.tag and d.tag = $2 " <<
-    " and d.name = f.name and d.name = $3"; // aggiunti i tag per evitare deadlock
+    " and d.name = f.name and d.name = (" << join(quote(serieConArchi),',') << ")"; // aggiunti i tag per evitare deadlock
   conn->prepare("sqlHistoryArchi", sqlHistoryArchi.str());
-  
+    
+
   int nserie = names.size();
   int countserie = 0;
   vector<string>::const_iterator it;
