@@ -820,13 +820,13 @@ elimina <- function(tag) {
 
 .edita <- function(x, name, ...) {
   file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
-  new_task <- paste0()
+  new_task <- paste0(name, " = ... # work it")
   if(!isNode(x, name)) {
     deps <- c()
     if(name %in% keys(x@functions)) {
       task <- x@functions[[name]]
     } else {
-      task <- paste0(name, " = ... # work it")
+      task <- new_task
     }
   } else {
     deps <- getDependencies(x, name)
@@ -845,7 +845,10 @@ elimina <- function(tag) {
   on.exit(file.remove(file))
   utils::file.edit(file, title=name)
   txtsrc <- paste(readLines(file), collapse="\n")
-  edited <- .declutter_function(txtsrc)  
+  edited <- .declutter_function(txtsrc)
+  if(str_trim(edited) == str_trim(new_task)) {
+    return(invisible(x))
+  }
   x@functions[name] <- edited
   params <- list(...)
   tryCatch({
