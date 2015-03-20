@@ -304,12 +304,16 @@ setMethod(
   "setMeta",
   signature("GrafoDB", "character", "character", "character"),
   function(object, tsName, attrName, value) {
-    if(!tsName %in% names(object)) {
-      stop(tsName, " non e' una serie del grafo")
+    nomiobj <- names(object)
+    if(!all(tsName %in% nomiobj)) {
+      nong <- setdiff(tsName, nomiobj)
+      stop("Non e' una serie del grafo: ", paste(nong, collapse=", "))
     }
 
-    if(tsName %in% lookup(object, attrName, value)) {
-      warning(tsName, " ha gia' un metadato ", attrName, " = ", value)
+    domain <- lookup(object, attrName, value)
+    if(any(tsName %in% domain)) {
+      already <- intersect(domain, tsName)
+      warning("Ha gia' un metadato ", attrName, " = ", value, " :", paste(already, collapse=", "))
     } else {
       con <- pgConnect()
       on.exit(dbDisconnect(con))
