@@ -835,7 +835,7 @@ elimina <- function(tag) {
       stop("la serie ", name, " e' una serie primitiva")
     }
   }
-
+  old_task <- task
   if(name %in% keys(x@edges)) {
     deps <- x@edges[[name]]
   }  
@@ -846,9 +846,11 @@ elimina <- function(tag) {
   utils::file.edit(file, title=name)
   txtsrc <- paste(readLines(file), collapse="\n")
   edited <- .declutter_function(txtsrc)
-  if(str_trim(edited) == str_trim(new_task)) {
+  
+  if(str_trim(edited) == str_trim(old_task)) {
     return(invisible(x))
   }
+  
   x@functions[name] <- edited
   params <- list(...)
   tryCatch({
