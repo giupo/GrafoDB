@@ -81,6 +81,7 @@ initCluster <- function(ncores=NULL, ...) {
   clusterEvalQ(cl, "require(foreach)")
   clusterEvalQ(cl, "require(digest)")
   clusterEvalQ(cl, "require(plyr)")
+  connectCluster(cl)
   setDefaultCluster(cl)
   registerDoParallel(cl)
   invisible(cl)
@@ -95,10 +96,6 @@ wasWorking <- function() {
   getOption("clusterWorking", FALSE)
 }
 
-doneWithCluster <- function() {
-  options(clusterWorking=FALSE)
-}
-
 
 connectCluster <- function(cl = NULL) {
   if(is.null(cl)) {
@@ -106,14 +103,21 @@ connectCluster <- function(cl = NULL) {
   }
   clusterEvalQ(cl, {
     require(RPostgreSQL)
-    pgConnect()
+    if(is.null(getOption("pgConnect",NULL))) {
+      GrafoDB::pgConnect()
+    }
   })
 }
 
 disconnectCluster <- function(cl = NULL) {
   if(is.null(cl)) {
     cl <- initCluster()
-  }  
+  }
+
+  if(is.null(cl)) {
+    return()
+  }
+  
   clusterEvalQ(cl, {
     require(RPostgreSQL)
     con <- getOption("pgConnect", NULL)
@@ -122,3 +126,9 @@ disconnectCluster <- function(cl = NULL) {
     }
   })
 }
+
+doneWithCluster <- function() {
+  disconnectCluster()
+  options(clusterWorking=FALSE)
+}
+

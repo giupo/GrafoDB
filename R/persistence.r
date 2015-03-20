@@ -641,5 +641,6 @@ doHistory <- function(x, con) {
     }
   }
   kill(pb)
+  doneWithCluster()
   message("Rolling history completo (", paste0(tag, "p", ordinale), ")")
 }

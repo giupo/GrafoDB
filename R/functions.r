@@ -575,7 +575,6 @@ from.data.frame <- function(df) {
   if(is.interactive )kill(pb)
   object@data <- data
   object
-  
 }
 
 

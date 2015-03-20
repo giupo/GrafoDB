@@ -58,21 +58,6 @@ load_data <- function(username, password, hostname, port, dbname, names, tag) {
     .Call('GrafoDB_load_data', PACKAGE = 'GrafoDB', username, password, hostname, port, dbname, names, tag)
 }
 
-#' Istanzia il Grafo in C++
-#'
-#' @name db_adapter
-#' @usage db_adapter(username, password, hostname, port, dbname, tag)
-#' @param username username per la connessione
-#' @param password password per la connessione
-#' @param hostname hostname del database
-#' @param port porta di ascolto del server
-#' @param dbname nome del db
-#' @param tag tag del database da cui caricare le serie
-#' @return un puntatore al grafo
-#' @export
-#' @import Rcpp
-#' @useDynLib GrafoDB
-NULL
 
 #' Save Nativo (non implementato)
 #'
@@ -83,7 +68,6 @@ NULL
 #' @export
 #' @import Rcpp
 #' @useDynLib GrafoDB
-NULL
 
 save_data <- function(dati, functions, archi, tag, newtag) {
     invisible(.Call('GrafoDB_save_data', PACKAGE = 'GrafoDB', dati, functions, archi, tag, newtag))
