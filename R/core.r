@@ -647,3 +647,85 @@ setMethod(
     dbGetPreparedQuery(con, sql, bind.data = params)
     invisible(NULL)
   })
+
+#' Rinomina una serie del grafo
+#'
+#' L'operazione lavora direttamente sui dati in modo persistente.
+#'
+#' @name rename
+#' @usage rename(x, vecchio, nuovo)
+#' @param x istanza di `GrafoDB`
+#' @param vecchio nome vecchio da sostituire
+#' @param nuovo nome nuovo da sostituire
+#' @return grafo modificato
+#' @examples \dontrun{
+#'     g <- GrafoDB("test")
+#'     rename(g, "TS1", "TS2")
+#'     "TS2" %in% names(g) # questo e' `TRUE`
+#'     "TS1" %in% names(g) # questo e' `FALSE`
+#' }
+
+setGeneric(
+  "rename",
+  function(x, vecchio, nuovo) {
+    standardGeneric("rename")
+  })
+
+setMethod(
+  "rename",
+  signature("GrafoDB", "character", "character"),
+  function(x, vecchio, nuovo){
+    nameObject <- deparse(substitute(x))
+  
+    if(isNode(x, nuovo)) {
+      stop(nuovo, " e' gia' una serie del grafo")
+    }
+
+    if(!isNode(x, vecchio)) {
+      stop(vecchio, " non e' una serie del grafo")
+    }
+
+    figlie <- downgrf(x, vecchio, livello=1)
+    
+    if(vecchio %in% keys(x@data) || vecchio %in% keys(x@functions) ||
+       any(figlie %in% keys(x@data)) ||
+       any(figlie %in% keys(x@functions))) {
+      stop(vecchio, " o figlie di ", vecchio,
+           " sono in modifica. Salvare prima le modifiche ed in seguito rinominare le serie")
+    }
+    
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+
+    tag <- x@tag
+    params <- as.data.frame(list(nuovo=nuovo, vecchio=vecchio))
+    dbBegin(con)
+    tryCatch({
+      dbGetPreparedQuery(con, paste0("update dati_", tag," set name = ? where name = ?"),
+                         bind.data = params)
+      dbGetPreparedQuery(con, paste0("update formule_", tag, " set name = ? where name = ?"),
+                         bind.data = params)
+      for(figlia in figlie) {
+        dbGetPreparedQuery(con, paste0("update formule_", tag,
+                                       " set formula = replace(formula, ?, ?) where name = ?"),
+                           bind.data = as.data.frame(list(vecchio=vecchio, nuovo=nuovo, name=figlia)))
+        
+      }
+      dbGetPreparedQuery(con, paste0("update archi_", tag, " set partenza = ? where partenza = ?"),
+                         bind.data = params)
+      dbGetPreparedQuery(con, paste0("update archi_", tag, " set arrivo = ? where arrivo = ?"),
+                         bind.data = params)
+      if(dbExistsTable(con, paste0("metadati_",tag))) {
+        dbGetPreparedQuery(con, paste0("update metadati_", tag, " set name = ? where name = ?"),
+                           bind.data = params)
+      }
+    
+      dbCommit(con)
+    }, error = function(cond) {
+      dbRollback(con)
+      stop(cond)
+    })
+    x <- GrafoDB(tag)
+    assign(nameObject, x, envir=parent.frame())
+    invisible(x)
+  })
