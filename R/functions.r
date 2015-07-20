@@ -522,11 +522,12 @@ from.data.frame <- function(df) {
   if(is.interactive) {
     pb <- ProgressBar(min=0, max=total)
     update(pb, i, "Starting...")
+    update(pb, i, "Try Cluster...")
   }  
   
   cl <- initCluster()
   is.multi.process <- !is.null(cl) && !debug 
-
+  
   if(is.multi.process) {
     if(wasWorking()) {
       stopCluster(cl)
@@ -537,34 +538,41 @@ from.data.frame <- function(df) {
     clusterExport(
       cl, ".evaluateSingle",
       envir=environment())
+    if(is.interactive) updateProgressBar(pb, i, "Cluster OK")
+  } else {
+    if(is.interactive) updateProgressBar(pb, i, "No Cluster")
   }
-
+  
   sources_id <- V(network)[degree(network, mode="in") == 0]
+
   while(length(sources_id)) {
     sources <- V(network)[sources_id]$name
     
-    evaluated.data <- if(!is.multi.process) {
-      lapply(sources, function(name, object) {
+    if(!is.multi.process) {
+      evaluated <- foreach(name=sources, .combine=c) %do% {
         i <- i + 1
-        if(is.interactive) update(pb, i, name)
-        .evaluateSingle(name, object)
-      }, object)
-    } else {
-      evaluated.data <- foreach(name = sources, .combine = c) %dopar% {
+        if(is.interactive) updateProgressBar(pb, i, name)
         serie <- .evaluateSingle(name, object)
         list(serie)
       }
-      i <- i + length(evaluated.data)
-      if(is.interactive) update(pb, i, last(sources))
-      evaluated.data
-    }
-    
-    names(evaluated.data) <- sources
-    
-    if(length(evaluated.data) == 1) {
-      data[[sources]] <- evaluated.data[[sources]]
     } else {
-      data[sources] <- evaluated.data
+      evaluated <- foreach(name=sources, .combine=c) %dopar% {
+        serie <- .evaluateSingle(name, object)
+        if(all(serie - old < 0.00001))
+        list(serie)
+      }
+      i <- i + length(sources)
+      if(is.interactive) {
+        updateProgressBar(pb, i, last(sources))
+      }
+    }
+   
+    names(evaluated) <- sources
+    
+    if(length(evaluated) == 1) {
+      data[[sources]] <- evaluated[[sources]]
+    } else {
+      data[sources] <- evaluated
     }
     
     network <- delete.vertices(network, sources_id)
@@ -572,7 +580,7 @@ from.data.frame <- function(df) {
   }
 
   doneWithCluster()
-  if(is.interactive )kill(pb)
+  if(is.interactive) kill(pb)
   object@data <- data
   object
 }
@@ -1028,4 +1036,27 @@ elimina <- function(tag) {
   } else {
     character()
   }
+}
+
+
+#' Checks if a TimeSeries is different from another
+#'
+#' It's a predicate, returns `TRUE` if:
+#' \item a - b != 0
+#' \item index(a) != index(b)
+#'
+#' @name tsdiff
+#' @usage tsdiff()
+#' @param a timeseries
+#' @param b timeseries
+#' @return `TRUE` if `a`!=`b`, `FALSE` otherwise
+#' @export
+
+tsdiff <- function(a, b, thr = .0001) {
+  idiff <- suppressWarnings(index(a) - index(b))
+  if(!all(idiff == 0)) {
+    return(TRUE)
+  }
+
+  all(a-b > thr) 
 }
