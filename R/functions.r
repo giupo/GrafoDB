@@ -1052,11 +1052,15 @@ elimina <- function(tag) {
 #' @return `TRUE` if `a`!=`b`, `FALSE` otherwise
 #' @export
 
-tsdiff <- function(a, b, thr = .0001) {
+tsdiff <- function(a, b, thr = .0000001) {
+  if(length(a) != length(b)) {
+    return(TRUE)
+  }
+
   idiff <- suppressWarnings(index(a) - index(b))
   if(!all(idiff == 0)) {
     return(TRUE)
   }
 
-  all(a-b > thr) 
+  any(a-b > thr) 
 }
