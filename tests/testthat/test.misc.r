@@ -59,3 +59,13 @@ test_that("valori null passati a from.data.frame vengono convertiti in NA", {
   expect_true(is.na(last(tt)))
   expect_true(is.na(first(tt)))
 })
+
+
+test_that("tsdiff returns FALSE if two timeseries are equal",  {
+  a <- b <- TSERIES(runif(10), START=c(1990,1), FREQ=1)
+  expect_true(!tsdiff(a,b))
+  a <- b <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  expect_true(!tsdiff(a,b))
+  a <- b <- TSERIES(runif(10), START=c(1990,1), FREQ=12)
+  expect_true(!tsdiff(a,b))
+})

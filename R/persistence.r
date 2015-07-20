@@ -159,6 +159,7 @@
 }
 
 .updateArchi <- function(x, con, tag=x@tag) {
+  if(interactive()) cat("Update Archi...")
   data <- x@data
   functions <- x@functions
   timestamp <- x@timestamp
@@ -228,9 +229,11 @@
       "insert into archi(tag, partenza, arrivo, autore) values(?,?,?,?)",
       bind.data = params)
   }
+  if(interactive()) cat("Done.\n")
 }
   
 .updateData <- function(x, con, tag=x@tag) {
+  if(interactive()) cat("Update Data...")
   data <- x@data
   timestamp <- x@timestamp
   autore <- whoami()
@@ -311,9 +314,11 @@
     dbGetPreparedQuery(con, sql2, bind.data=dati)
   }
   doneWithCluster()
+  cat("Done.\n")
 }
 
 .updateFunctions <- function(x, con, tag=x@tag) {
+  if(interactive()) cat("Update Functions...")
   ## passo la connessione perche' devono avere la stessa transazione
   ## non usare controllo di transazione qui
   functions <- x@functions
@@ -401,6 +406,7 @@
     dbGetPreparedQuery(con, sql2, bind.data=formule)
   }
   doneWithCluster()
+  if(interactive()) cat("Done.\n")
 }
 #' crea ex-novo un istanza di grafo nel databae
 #'
