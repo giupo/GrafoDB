@@ -6,7 +6,10 @@
 #include <sstream>
 #include <Rcpp.h>
 #include <ctime>
+#include <assert.h>
+
 #include "utils.hpp"
+
 
 using namespace Rcpp;
 using namespace std;
