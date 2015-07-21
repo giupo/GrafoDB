@@ -544,7 +544,12 @@ from.data.frame <- function(df) {
   }
   
   sources_id <- V(network)[degree(network, mode="in") == 0]
-
+  
+  proxy <- function(name, object) {
+    serie <- .evaluateSingle(name, object)
+    list(serie)
+  }
+  
   while(length(sources_id)) {
     sources <- V(network)[sources_id]$name
     
@@ -552,14 +557,11 @@ from.data.frame <- function(df) {
       evaluated <- foreach(name=sources, .combine=c) %do% {
         i <- i + 1
         if(is.interactive) updateProgressBar(pb, i, name)
-        serie <- .evaluateSingle(name, object)
-        list(serie)
+        proxy(name, object)
       }
     } else {
       evaluated <- foreach(name=sources, .combine=c) %dopar% {
-        serie <- .evaluateSingle(name, object)
-        if(all(serie - old < 0.00001))
-        list(serie)
+        proxy(name, object)
       }
       i <- i + length(sources)
       if(is.interactive) {
@@ -568,6 +570,8 @@ from.data.frame <- function(df) {
     }
    
     names(evaluated) <- sources
+    
+    ## evaluated <- Filter(function(x) length(x) != 0, evaluated)
     
     if(length(evaluated) == 1) {
       data[[sources]] <- evaluated[[sources]]
@@ -617,8 +621,6 @@ ratio <- function() {
   message(success/total * 100, " success rate")
   message(100 - success/total * 100, " failure rate")
 }
-
-
 
 
 #' Carica i dati dal DB
@@ -1052,11 +1054,15 @@ elimina <- function(tag) {
 #' @return `TRUE` if `a`!=`b`, `FALSE` otherwise
 #' @export
 
-tsdiff <- function(a, b, thr = .0001) {
+tsdiff <- function(a, b, thr = .0000001) {
+  if(length(a) != length(b)) {
+    return(TRUE)
+  }
+
   idiff <- suppressWarnings(index(a) - index(b))
   if(!all(idiff == 0)) {
     return(TRUE)
   }
 
-  all(a-b > thr) 
+  any(a-b > thr) 
 }

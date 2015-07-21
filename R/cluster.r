@@ -71,7 +71,8 @@ initCluster <- function(ncores=NULL, ...) {
       "tempdir",
       "workDir",
       "whoami",
-      "flypwd"),
+      "flypwd",
+      "tsdiff"),
     envir=environment())
   
   clusterEvalQ(cl, "require(rcf)")    
