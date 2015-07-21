@@ -8,9 +8,11 @@ using namespace std;
 
 class BaseAdapter : public AbstractAdapter {
 public:
-  BaseAdapter(const string username, const string password, const string host, 
-              const string port, const string dbname, const string tag);
-  BaseAdapter(const string host, const string port, const string dbname, const string tag);
+  BaseAdapter(const string username, const string password, 
+              const string host, const string port, 
+              const string dbname, const string tag);
+  BaseAdapter(const string host, const string port,
+              const string dbname, const string tag);
   
   BaseAdapter(const BaseAdapter& other) {
     this->conninfo = other.conninfo;

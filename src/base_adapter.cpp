@@ -2,16 +2,22 @@
 
 #include <regex.h>
 
-BaseAdapter::BaseAdapter(const string username, const string password, const string host, 
-                           const string port, const string dbname, const string tag) {
-  this->conninfo = "user="+username+" password="+ password + 
+BaseAdapter::BaseAdapter(const string username,
+                         const string password, 
+                         const string host, 
+                         const string port, 
+                         const string dbname,
+                         const string tag) {
+  this->conninfo = "user=" + username + " password=" + password + 
     " dbname=" + dbname + " host=" + host + " port=" + port;
   this->tag = tag;
   this->matchOrdinal();
 }
 
-BaseAdapter::BaseAdapter(const string host, const string port, 
-                           const string dbname, const string tag) {
+BaseAdapter::BaseAdapter(const string host,
+                         const string port, 
+                         const string dbname,
+                         const string tag) {
   this->conninfo = "dbname=" + dbname + " host=" + host + " port=" + port;
   this->tag = tag;
   this->matchOrdinal();

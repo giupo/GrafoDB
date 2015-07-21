@@ -95,7 +95,9 @@ void DBAdapter::init() {
   std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm);
   string tname = whoami() + " " + string(buffer);
   this->conn = new pqxx::connection(conninfo);
+  assert(this->conn != NULL);
   this->T = new pqxx::work(*conn, tname);
+  assert(this->T != NULL);
 }
 
 bool DBAdapter::hasHistoricalData() {

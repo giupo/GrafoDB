@@ -58,7 +58,6 @@ load_data <- function(username, password, hostname, port, dbname, names, tag) {
     .Call('GrafoDB_load_data', PACKAGE = 'GrafoDB', username, password, hostname, port, dbname, names, tag)
 }
 
-
 #' Save Nativo (non implementato)
 #'
 #' @name save_data
@@ -68,6 +67,7 @@ load_data <- function(username, password, hostname, port, dbname, names, tag) {
 #' @export
 #' @import Rcpp
 #' @useDynLib GrafoDB
+NULL
 
 save_data <- function(dati, functions, archi, tag, newtag) {
     invisible(.Call('GrafoDB_save_data', PACKAGE = 'GrafoDB', dati, functions, archi, tag, newtag))
