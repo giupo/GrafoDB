@@ -38,3 +38,4 @@ Collate:
     'life_cycle.r'
     'old_grafo_impl.r'
     'subsetting.r'
+SystemRequirements: libjsoncpp, libpqxx, libpq 
