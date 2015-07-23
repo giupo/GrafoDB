@@ -41,3 +41,10 @@ cd ext/libpqxx
 make
 ```
 
+### Problemi con Kerberos
+
+E' consigliabile usare la seguente variabile di sistema (Grazie Demetrio!)
+
+```bash
+export PGKRBSRVNAME=POSTGRES
+```
