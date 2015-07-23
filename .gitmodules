@@ -1,0 +1,6 @@
+[submodule "ext/jsoncpp"]
+	path = ext/jsoncpp
+	url = https://github.com/giupo/jsoncpp.git
+[submodule "ext/libpqxx"]
+	path = ext/libpqxx
+	url = https://github.com/giupo/libpqxx.git
