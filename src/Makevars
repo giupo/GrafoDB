@@ -1,9 +1,9 @@
 ## Use the R_HOME indirection to support installations of multiple R version
 
-cfin=/usr/local
-PKG_CPPFLAGS= -I$(cfin)/jsoncpp/include -I$(cfin)/include -std=c++0x  -I$(cfin)/include/soci -I$(cfin)/include/jsoncpp
-PKG_LIBS=-lpq -lpqxx -ljsoncpp -L$(cfin)/jsoncpp/dist -L$(cfin)/lib -L$(cfin)/lib64
-
+cfin=$(abspath )../ext
+PKG_CPPFLAGS= -I$(cfin)/libpqxx/include -I$(cfin)/jsoncpp/include/
+# PKG_LIBS=-lpq -lpqxx -ljsoncpp -L$(cfin)/jsoncpp/dist -L$(cfin)/lib -L$(cfin)/lib64
+PKG_LIBS=$(cfin)/libpqxx/src/.libs/libpqxx.a $(cfin)/jsoncpp/build/src/lib_json/libjsoncpp.a
 ## As an alternative, one can also add this code in a file 'configure'
 ##
 ## PKG_LIBS=`${R_HOME}/bin/Rscript -e "Rcpp:::LdFlags()"`
