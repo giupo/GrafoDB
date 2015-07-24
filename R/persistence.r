@@ -650,3 +650,34 @@ doHistory <- function(x, con) {
   doneWithCluster()
   message("Rolling history completo (", paste0(tag, "p", ordinale), ")")
 }
+
+#' Salva un istanza di grafo sul file system
+#'
+#' @name saveBinary
+#' @usage saveBinary(x, path)
+#' @param x istanza del GrafoDB
+#' @param path percorso del file su cui salvare il grafo
+#' @export
+
+saveBinary <- function(x, path) {
+  con <- file(path, "wb")
+  on.exit(close(con))
+  
+  ret <- serialize(x, con, ascii = TRUE)
+  invisible(ret)
+}
+
+
+#' Legge un GrafoDB dal filesystem in formato binario
+#'
+#' @name readBinary
+#' @usage readBinary(path)
+#' @param path percorso del file con il GrafoDB
+#' @return GrafoDB contenuto nel file `path`
+#' @export
+
+readBinary <- function(path) {
+  con <- file(path, "rw")
+  on.exit(close(con))
+  unserialize(con)
+}
