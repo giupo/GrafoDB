@@ -551,7 +551,7 @@ countRolling <- function(x, con = NULL) {
 #' @param con connessione al database
 #' @note questa e' una funzione interna del grafo invocata da `updateGraph`
 #' @seealso saveGraph updateGraph
-#' @import rcf parallel iterators foreach
+#' @import RPostgreSQL2 parallel iterators foreach
 
 doHistory <- function(x, con) {
   tag <- x@tag
