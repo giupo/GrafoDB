@@ -11,7 +11,7 @@
 #'          la `tag` stessa
 #' @return un dataframe con le informazioni (autore, last_updated, ordinale)
 #' @include core.r db.r
-#' @import RPostgreSQL rcf
+#' @import RPostgreSQL2
 #' @export
 
 setGeneric(

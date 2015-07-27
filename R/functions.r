@@ -9,7 +9,7 @@
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
 #' @include persistence.r RcppExports.R
-#' @import stringr
+#' @import stringr rutils
 
 .init <- function(.Object, tag="cf10") {
   if(is.null(tag)) {
@@ -464,7 +464,7 @@ from.data.frame <- function(df) {
 #' @usage .evaluate(object)
 #' @usage .evaluate(object, v_start)
 #' @return il grafo con i dati correttamente valutati
-#' @import grafo igraph rcf
+#' @import grafo igraph RPostgreSQL2
 #' @rdname evaluate-internal
 
 .evaluate <- function(object, v_start=NULL, deep=T, ...) {
@@ -632,6 +632,7 @@ ratio <- function() {
 #' @param name nome serie
 #' @param tag id del grafo (default su `cf10`)
 #' @return una serie o una lista di serie
+#' @import rutils
 #' @export
 
 getdb <- function(name, tag="cf10") {
