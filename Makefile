@@ -31,6 +31,7 @@ clean:
 	-rm -f $(PKG_NAME)_*.tar.gz
 	-rm -r -f $(PKG_NAME).Rcheck
 	-rm -r -f man/*
+	-rm -r -f src/*.o src/*.so
 .PHONY: list
 list:
 	@echo "R files:"
