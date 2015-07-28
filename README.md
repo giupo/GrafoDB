@@ -18,9 +18,8 @@ Aprire una shell, mettersi nella top dir del progetto e dare i seguenti comandi:
 
 ```bash
 ./configure
-make deps
-make
-make install
+make deps $ builda le librerie su cui dipende
+make install $ costruisce il tar.gz e lo installa
 ```
 
 ## Compilazione jsoncpp (non necessaria: assolta dal Makefile del progetto)
