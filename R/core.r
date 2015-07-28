@@ -180,8 +180,7 @@ GrafoDB <- setClass(
     ordinal = "numeric",
     timestamp = "POSIXct",
     touched = "character",
-    edges = "hash"
-  ),
+    edges = "hash"),
   contains = "DBDataset")
 
 #' costruttore per la classe GrafoDB
@@ -189,7 +188,7 @@ GrafoDB <- setClass(
 #' @name initialize
 #' @rdname GraphDB_initialize
 #' @aliases GrafoDB-initialize
-#' @import igraph RPostgreSQL rcf
+#' @import igraph RPostgreSQL
 
 setMethod(
   "initialize",
