@@ -11,7 +11,6 @@ g["C"] <- function(A,B) {
 test_that("Posso salvare e ricaricare da un file", {
   path <- tempfile()
   saveBinary(g, path)
-
   x <- readBinary(path)
   expect_true(is.grafodb(x))
   unlink(path)
