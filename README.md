@@ -12,18 +12,18 @@ git submodule init
 git submodule update
 ```
 
-E vengono clonati nella directory `ext`. Riferire ad ogni lib su come procedere all'installazione
+## Istruzioni d'installazione:
 
-- libjsoncpp usa `cmake && make`
-- libpqxx usa il classico toolchain autotools (`configure && make && make install`). Questa lib dovrebbe
-  richiedere `libpq`, che e' facilmente installabile con il package manager di riferimento dell'installazione
-  (su OSX usare brew)
+Aprire una shell, mettersi nella top dir del progetto e dare i seguenti comandi:
 
-*E' FONDMANETALE* che si vada nella directory `src` e si configurino gli header/lib per la compilazione della
-parte nativa del package. La libreria viene linkata staticamente alle altre lib su cui dipende
+```bash
+./configure
+make deps
+make
+make install
+```
 
-
-## Compilazione jsoncpp
+## Compilazione jsoncpp (non necessaria: assolta dal Makefile del progetto)
 
 ```bash
 cd ext/jsoncpp
@@ -33,7 +33,7 @@ cmake ..
 make
 ```
 
-## Compilazione libpqxx
+## Compilazione libpqxx (non necessaria, assolta dal Makefile del progetto)
 
 ```bash
 cd ext/libpqxx
@@ -41,7 +41,7 @@ cd ext/libpqxx
 make
 ```
 
-### Problemi con Kerberos
+# Importante: Problemi con Kerberos
 
 E' consigliabile usare la seguente variabile di sistema (Grazie Demetrio!)
 
