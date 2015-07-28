@@ -1045,9 +1045,10 @@ elimina <- function(tag) {
 #' Checks if a TimeSeries is different from another
 #'
 #' It's a predicate, returns `TRUE` if:
+#' \itemize{
 #' \item a - b != 0
 #' \item index(a) != index(b)
-#'
+#' }
 #' @name tsdiff
 #' @usage tsdiff()
 #' @param a timeseries
