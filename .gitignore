@@ -24,3 +24,7 @@ tests/*.xml
 packrat/lib*/
 *.o
 *.so
+config.log
+config.status
+autom4te.cache
+src/Makevars
