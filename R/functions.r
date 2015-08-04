@@ -15,7 +15,7 @@
   if(is.null(tag)) {
     tag <- "cf10"
   }
-
+  
   .Object@edges <- hash()
   .Object@data <- hash()
   .Object@functions <- hash()
@@ -475,7 +475,6 @@ from.data.frame <- function(df) {
     FALSE
   }
   tag <- object@tag
-  PRELOAD_TAG <- "preload"
   data <- object@data
   network <- object@network
   all_names <- names(object)
@@ -484,28 +483,27 @@ from.data.frame <- function(df) {
     not.in.graph <- setdiff(v_start, all_names)
     stop("Non sono serie del grafo: ", paste(not.in.graph, collapse=", "))
   }
-
+  
   if(is.null(v_start)) {
     ## le voglio valutare tutte
-    if(!tag %in% c(PRELOAD_TAG, "biss", "pne", "dbcong")) {
-      sources_id <- V(network)[degree(network, mode="in") == 0]
-      nomi_sources <- V(network)[sources_id]$name
-      sources <- getdb(nomi_sources, PRELOAD_TAG)
-      if(is.bimets(sources)) {
-        data[preload_V_start] <- sources
-      } else {
-        data[names(sources)] <- sources
-      }
-      ## fonti gia' valutate, le tolgo
-      network <- delete.vertices(network, sources_id)
-    } 
+    ## if(!tag %in% c(PRELOAD_TAG, "biss", "pne", "dbcong")) {
+    sources_id <- V(network)[degree(network, mode="in") == 0]
+    nomi_sources <- V(network)[sources_id]$name
+    sources <- getdb(nomi_sources, tag)
+    if(is.bimets(sources)) {
+      data[preload_V_start] <- sources
+    } else {
+      data[names(sources)] <- sources
+    }
+    ## fonti gia' valutate, le tolgo
+    network <- delete.vertices(network, sources_id)
   } else {
     v_start <- as.character(v_start)
     network <- induced.subgraph(
       network,
       V(network)[unlist(
         neighborhood(network, order=.Machine$integer.max, nodes=v_start, mode="out")
-        )])
+      )])
   }
   
   ## se il network e' vuoto dopo l'eliminazione delle sorgenti,
