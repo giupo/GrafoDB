@@ -559,12 +559,15 @@ from.data.frame <- function(df) {
         while(!ok) {
           tryCatch({
             proxy(name, object)
+            ok <- TRUE
           }, error=function(cond) {
+            ok <- FALSE
             message(paste0(name, ": ", cond))
             object <- .edita(object, name)
           })
         }
-      } else {
+      }
+    } else {
       evaluated <- foreach(name=sources, .combine=c) %dopar% {
         proxy(name, object)
       }
@@ -573,7 +576,7 @@ from.data.frame <- function(df) {
         updateProgressBar(pb, i, last(sources))
       }
     }
-   
+    
     names(evaluated) <- sources
     
     ## evaluated <- Filter(function(x) length(x) != 0, evaluated)
