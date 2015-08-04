@@ -1,6 +1,8 @@
 [submodule "ext/jsoncpp"]
 	path = ext/jsoncpp
 	url = https://github.com/giupo/jsoncpp.git
+  ignore = dirty
 [submodule "ext/libpqxx"]
 	path = ext/libpqxx
 	url = https://github.com/giupo/libpqxx.git
+  ignore = dirty
