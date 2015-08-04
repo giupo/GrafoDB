@@ -33,4 +33,4 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   expect_true( length(g[["D"]])>0 )
 })
 
-# elimina("test")
+elimina("test")
