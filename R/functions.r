@@ -554,18 +554,10 @@ from.data.frame <- function(df) {
     if(!is.multi.process) {
       evaluated <- foreach(name=sources, .combine=c) %do% {
         i <- i + 1
-        if(is.interactive) updateProgressBar(pb, i, name)
-        ok <- FALSE
-        while(!ok) {
-          tryCatch({
-            proxy(name, object)
-            ok <- TRUE
-          }, error=function(cond) {
-            ok <- FALSE
-            message(paste0(name, ": ", cond))
-            object <- .edita(object, name)
-          })
+        if(is.interactive) {
+          updateProgressBar(pb, i, name)
         }
+        proxy(name, object)
       }
     } else {
       evaluated <- foreach(name=sources, .combine=c) %dopar% {
