@@ -1,4 +1,4 @@
-AC_INIT(GrafoDB, 0.19.0)
+AC_INIT(GrafoDB, 0.19.1)
 AC_MSG_NOTICE([Preparing for GrafoDB shared lib])
 AC_PROG_CC
 AC_PROG_CXX

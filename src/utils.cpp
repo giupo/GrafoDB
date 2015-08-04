@@ -10,11 +10,21 @@
 #include <unistd.h>
 #include <Rcpp.h>
 #include <json/json.h>
-
+#include <algorithm>
 #include "utils.hpp"
+#include <boost/algorithm/string/replace.hpp>
 
 using namespace std;
 using namespace Rcpp;
+
+void ReplaceStringInPlace(std::string& subject, const std::string& search,
+                          const std::string& replace) {
+  size_t pos = 0;
+  while ((pos = subject.find(search, pos)) != std::string::npos) {
+    subject.replace(pos, search.length(), replace);
+    pos += replace.length();
+  }
+}
 
 string quote(string s) {
   std::stringstream ss;
@@ -86,6 +96,8 @@ CharacterVector asCharacterVector(Json::Value root) {
 Json::Value parseJSON(string json) {
   Json::Value root;
   Json::Reader reader;
+  // ReplaceStringInPlace(json, "NaN", "null");
+  boost::replace_all(json, "NaN", "null");
   reader.parse(json, root);
   return root;
 }
