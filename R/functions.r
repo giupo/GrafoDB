@@ -555,9 +555,16 @@ from.data.frame <- function(df) {
       evaluated <- foreach(name=sources, .combine=c) %do% {
         i <- i + 1
         if(is.interactive) updateProgressBar(pb, i, name)
-        proxy(name, object)
-      }
-    } else {
+        ok <- FALSE
+        while(!ok) {
+          tryCatch({
+            proxy(name, object)
+          }, error=funciton(cond) {
+            message(paste0(name, ": ", cond))
+            object <- .edita(object, name)
+          })
+        }
+      } else {
       evaluated <- foreach(name=sources, .combine=c) %dopar% {
         proxy(name, object)
       }
