@@ -559,7 +559,7 @@ from.data.frame <- function(df) {
         while(!ok) {
           tryCatch({
             proxy(name, object)
-          }, error=funciton(cond) {
+          }, error=function(cond) {
             message(paste0(name, ": ", cond))
             object <- .edita(object, name)
           })
