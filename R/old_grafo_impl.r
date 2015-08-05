@@ -57,7 +57,7 @@ setMethod(
   "isElementary",
   signature("GrafoDB", "character"),
   function(graph, tsName) {
-    all(isRoot(tsName) && !is.null(expr(graph, tsName)))
+    all(isRoot(graph, tsName) && !is.null(expr(graph, tsName)))
   })
 
 #' implementazione di listAggregates di `package::grafo`
