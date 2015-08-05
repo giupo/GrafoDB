@@ -335,6 +335,9 @@ from.data.frame <- function(df) {
   if(length(nomi_padri) == 0 && is.null(tsformula)) {
     return(graph[[name]])
   }
+
+  ## this is a patch due limitations of R language and
+  ## deeeeep limitations of my patience
   if(length(nomi_padri) > 100) {
     padri <- list()
     sliced <- slice(nomi_padri, n=100)
@@ -343,18 +346,23 @@ from.data.frame <- function(df) {
     }
     names(padri) <- nomi_padri
     padri
-  } else if (length(nomi_padri)) {
+  } else if ( length(nomi_padri) > 1 ) {
     padri <- graph[[nomi_padri]]
+  } else if ( length(nomi_padri) == 1 ) {
+    padri <- list()
+    padri[[nomi_padri]] <- graph[[nomi_padri]]
   } else {
     padri <- list()
   }
   
-  if(length(nomi_padri) == 1) {
-    ## boxing
-    ppp <- list()
-    ppp[[nomi_padri]] <- padri
-    padri <- ppp
+  if(isElementary(graph, name)) {
+    ## Se e' elementare cmq la carico (e' nato prima l'uovo o la gallina?)
+    ## e la metto nei nomi_padri
+    padri[[name]] <- graph[[name]]
+    assign(name, padri[[name]])
+    nomi_padri <- name
   }
+  
   ## cmd <- .clutter_function(tsformula, name)
   cmd <- .clutter_with_params_and_return(tsformula, name, nomi_padri)
   tryCatch({    
