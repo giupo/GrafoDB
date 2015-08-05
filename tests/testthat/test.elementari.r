@@ -10,6 +10,8 @@ test_that("posso avere serie con funzione senza padri", {
   expect_true("B" %in% names(g))
   expect_equal(length(upgrf(g, "B")),0)
   expect_equal(g[["A"]], g[["B"]])
+  expect_true(isElementary(g, "B"))
+  expect_true(!isElementary(g, "A"))
 })
 
 elimina("test")
