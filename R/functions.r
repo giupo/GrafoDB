@@ -354,10 +354,13 @@ from.data.frame <- function(df) {
   } else {
     padri <- list()
   }
-
+  
   if(isElementary(graph, name)) {
     ## Se e' elementare cmq la carico (e' nato prima l'uovo o la gallina?)
+    ## e la metto nei nomi_padri
     padri[[name]] <- graph[[name]]
+    assign(name, padri[[name]])
+    nomi_padri <- name
   }
   
   ## cmd <- .clutter_function(tsformula, name)
