@@ -30,6 +30,8 @@ NAMESPACE: $(R_FILES) $(SRC_FILES)
 DOCS: 
 	Rscript -e "devtools::document()"
 clean:
+	-rm -rf ext/jsoncpp/build
+	-cd ext/libpqxx && make clean
 	-rm -f $(PKG_NAME)_*.tar.gz
 	-rm -r -f $(PKG_NAME).Rcheck
 	-rm -r -f src/*.o src/*.so
@@ -49,7 +51,7 @@ deps: deps-jsoncpp deps-pqxx
 deps-jsoncpp:
 	cd ext/jsoncpp && mkdir -p build
 	cd ext/jsoncpp/build && cmake ..
-	cd ext/jsoncpp/build && make
+	cd ext/jsoncpp/build && make -j `nproc`
 deps-pqxx:
-	cd ext/libpqxx && ./configure
-	cd ext/libpqxx && make
+	cd ext/libpqxx && ./configure CFLAGS='-fPIC' CXXFLAGS='-fPIC'
+	cd ext/libpqxx && make CFLAGS='-fPIC' CXXFLAGS='-fPIC' -j `nproc`
