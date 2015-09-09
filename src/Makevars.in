@@ -2,7 +2,7 @@
 
 ext=@builddir@/../ext
 PKG_CPPFLAGS= -I$(ext)/libpqxx/include -I$(ext)/jsoncpp/include
-PKG_LIBS= $(ext)/libpqxx/src/.libs/libpqxx.a $(ext)/jsoncpp/build/src/lib_json/libjsoncpp.a
+PKG_LIBS= $(ext)/libpqxx/src/.libs/libpqxx.a $(ext)/jsoncpp/build/src/lib_json/libjsoncpp.a -lpq
 
 ## As an alternative, one can also add this code in a file 'configure'
 ##
