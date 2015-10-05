@@ -270,6 +270,7 @@ setMethod(
 #' @usage searchNode(graph, tsNames)
 #' @seealso `grafo::searchNode`
 #' @import grafo
+#' @export
 
 setMethod(
   "searchNode",
@@ -278,9 +279,8 @@ setMethod(
     ret <- lookup(graph, attrName, attrValue)
     if(length(ret) == 0) {
       stop("Non esistono serie con i criteri ", attrName, " == ", attrValue)
-    } else {
-      ret
-    }
+    } 
+    ret
   })
 
 #' Imposta un metadato per una particolare serie
