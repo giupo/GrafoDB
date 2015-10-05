@@ -18,7 +18,8 @@ Depends:
     formatR,
     BH,
     Rcpp,
-    rprogressbar
+    rprogressbar,
+    stats
 License: BSD
 LazyData: true
 Imports:
