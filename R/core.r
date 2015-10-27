@@ -450,20 +450,6 @@ setMethod(
       bind.data <- cbind(object@tag, tsName))
   })
 
-.simpleGraph <- function(tag) {
-  g <- GrafoDB(tag)
-  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["C"] <- function(A,B) {
-    C = A + B
-  }
-  
-  g <- setMeta(g, "A", "key", "value1")
-  g <- setMeta(g, "A", "key", "value2")
-  g <- setMeta(g, "B", "key", "value")
-  setMeta(g, "C", "key", "value1")
-}
-
 #' Edita un la formula di una serie storica.
 #'
 #' @name edita
@@ -479,6 +465,7 @@ setGeneric(
   function(x, name, ...) {
     standardGeneric("edita")
   })
+
 
 #' Edita un la formula di una serie storica.
 #'

@@ -21,7 +21,7 @@
   .Object@functions <- hash()
   .Object@touched <- character(0)
   .Object@ordinal <- if(grepl("p(\\d+)$", tag)) {
-    mth = str_match(tag, "p(\\d+)$")
+    mth <- str_match(tag, "p(\\d+)$")
     tag <- gsub(paste0(mth[1,1], "$"), "", tag)
     as.numeric(mth[1,2])
   } else {
@@ -46,7 +46,7 @@
     con,
     "select name from dati where tag=?",
     bind.data = tag)
-  
+
   if(nrow(df)) {
     nomi <- as.character(df$name)
     pending.names <- setdiff(nomi, V(network)$name)
@@ -161,14 +161,19 @@ from.data.frame <- function(df) {
     periodo <- row$periodo
     freq <- row$freq
     params <- c(anno, periodo, freq)
+    name <- as.character(if(is.null(row$name)) {
+      i
+    } else {
+      row$name
+    })
     if(any(params == 0)) {
-      ret[[row$name]] <- fromJSON(as.character(row$dati))
+      ret[[name]] <- fromJSON(as.character(row$dati), nullValue=NA)
     } else {
       dati <- TSERIES(
-        fromJSON(as.character(row$dati), nullValue = NA),
+        fromJSON(as.character(row$dati), nullValue=NA),
         START=c(anno, periodo),
         FREQ=freq)
-      ret[[row$name]] <- dati
+      ret[[name]] <- dati
     }
   }
   ret
