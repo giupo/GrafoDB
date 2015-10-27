@@ -30,3 +30,4 @@ test_that("to.data.frame converte correttamente vettori di missing", {
   df <- to.data.frame(tt, "TEST")
   expect_true(identical(tt, from.data.frame(df)$TEST))
 })
+

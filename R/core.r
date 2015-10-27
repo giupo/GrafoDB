@@ -296,9 +296,23 @@ setMethod(
   })
 
 setMethod(
+  "lookup",
+  c("GrafoDB", "numeric", "missing"),
+  function(x, key, value) {
+    tag <- x@tag
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    ## non ci sono prepared statement funzionanti. maledetti.
+    df <- dbGetPreparedQuery(
+      con, paste0("select name from dati where tag = ? and dati like '%",key,"%'"),
+      bind.data = tag)
+    as.character(df$name)    
+  })
+
+setMethod(
   "-",
   c("GrafoDB", "GrafoDB"),
-  function(e1,e2) {
+  function(e1, e2) {
     nomi1 <- names(e1)
     nomi2 <- names(e2)
     common <- intersect(nomi1,nomi2)
