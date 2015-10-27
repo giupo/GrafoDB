@@ -510,8 +510,8 @@ from.data.frame <- function(df) {
     network <- induced.subgraph(
       network,
       V(network)[unlist(
-        neighborhood(network, order=.Machine$integer.max, nodes=v_start, mode="out")
-      )])
+        neighborhood(network, order=.Machine$integer.max,
+                     nodes=v_start, mode="out"))])
   }
   
   ## se il network e' vuoto dopo l'eliminazione delle sorgenti,
