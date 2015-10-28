@@ -274,7 +274,9 @@ setMethod(
 #' @param x istanza di `GrafoDB`
 #' @param key `character` che specifica la chiave del metadato
 #' @param value `character` che specifica il valore del metadato
-#' @return un character array di nomi di serie che rispettano la clausola `key` = `value`. Se non esistono ritorna un character(0) (array vuoto)
+#' @return un character array di nomi di serie che rispettano la
+#'         clausola `key` = `value`. Se non esistono ritorna un
+#'         character(0) (array vuoto)
 #' @examples \dontrun{
 #' g = GrafoDB(...) # istanzia il grafo
 #' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie che hanno TAVOLA_DI_OUTPUT=BRI
@@ -282,16 +284,16 @@ setMethod(
 #' @export
 
 setMethod(
-  "lookup",
-  c("GrafoDB", "character", "character"),
-  function(x, key, value) {
+    "lookup",
+    c("GrafoDB", "character", "character"),
+    function(x, key, value) {
     tag <- x@tag
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     ## non ci sono prepared statement funzionanti. maledetti.
     df <- dbGetPreparedQuery(
       con, "select distinct name from metadati where tag = ? and key = ? and value = ?",
-      bind.data = cbind(tag, key, value))
+      bind.data=cbind(tag, key, value))
     as.character(df$name)    
   })
 
@@ -310,15 +312,32 @@ setMethod(
   })
 
 setMethod(
+  "lookup",
+  c("GrafoDB", "numeric", "logical"),
+  function(x, key, value) {
+    if(!value) {
+      return(lookup(x, key))
+    }
+    tag <- x@tag
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    df <- dbGetPreparedQuery(
+      con, paste0("select name from formule where tag=? and formula like '%",key,"%'"),
+      bind.data=tag)
+    as.character(df$name)
+  })
+
+
+setMethod(
   "-",
   c("GrafoDB", "GrafoDB"),
   function(e1, e2) {
     nomi1 <- names(e1)
     nomi2 <- names(e2)
-    common <- intersect(nomi1,nomi2)
-    notCommon <- setdiff(nomi1,nomi2)
-    if(length(notCommon) > 0) {
-      lapply(notCommon, function(name) {
+    common <- intersect(nomi1, nomi2)
+    not_common <- setdiff(nomi1, nomi2)
+    if(length(not_common) > 0) {
+      lapply(not_common, function(name) {
         warning(paste0(name, " not common, excluded from diff"))
       })
     }

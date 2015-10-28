@@ -15,8 +15,8 @@ using namespace std;
 
 //' Load Nativo
 //'
-//' @name load_data
-//' @usage load_data(username, password, hostname, port, dbname, names, tag)
+//' @name load_data_nativo
+//' @usage load_data_nativo(username, password, hostname, port, dbname, names, tag)
 //' @param username username per la connessione
 //' @param password password per la connessione
 //' @param hostname hostname del database
@@ -30,7 +30,7 @@ using namespace std;
 //' @useDynLib GrafoDB
 // [[Rcpp::export]]
 
-List load_data(SEXP username, SEXP password, SEXP hostname, 
+List load_data_nativo(SEXP username, SEXP password, SEXP hostname, 
                SEXP port, SEXP dbname, SEXP names, SEXP tag) {
   string username0 = as<string>(username); 
   string password0 = as<string>(password); 

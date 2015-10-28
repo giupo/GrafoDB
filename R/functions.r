@@ -653,7 +653,7 @@ getdb <- function(name, tag="cf10") {
   username <- whoami()
   password <- flypwd()
 
-  dati <- load_data(
+  dati <- load_data_nativo(
     username,
     password,
     settings$host,
