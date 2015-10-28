@@ -41,8 +41,8 @@ load_archi <- function(username, password, hostname, port, dbname, tag) {
 
 #' Load Nativo
 #'
-#' @name load_data
-#' @usage load_data(username, password, hostname, port, dbname, names, tag)
+#' @name load_data_nativo
+#' @usage load_data_nativo(username, password, hostname, port, dbname, names, tag)
 #' @param username username per la connessione
 #' @param password password per la connessione
 #' @param hostname hostname del database
@@ -54,8 +54,8 @@ load_archi <- function(username, password, hostname, port, dbname, tag) {
 #' @export
 #' @import Rcpp
 #' @useDynLib GrafoDB
-load_data <- function(username, password, hostname, port, dbname, names, tag) {
-    .Call('GrafoDB_load_data', PACKAGE = 'GrafoDB', username, password, hostname, port, dbname, names, tag)
+load_data_nativo <- function(username, password, hostname, port, dbname, names, tag) {
+    .Call('GrafoDB_load_data_nativo', PACKAGE = 'GrafoDB', username, password, hostname, port, dbname, names, tag)
 }
 
 #' Save Nativo (non implementato)
