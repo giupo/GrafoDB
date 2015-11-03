@@ -16,6 +16,16 @@ dbSettings <- function() {
     error = function(cond) {
       NULL
     })
+
+  if(is.null(con)) {
+    ## refresh kerberos ticket
+    system("flypwd -p | kinit > /dev/null")  
+    con <- tryCatch(
+      dbConnect(drv, host=settings$host, dbname=settings$dbname),
+      error = function(cond) {
+        NULL
+      })
+  }
   
   if(is.null(con)) {
     message("no kerberos ticket, fallback to userid/pwd")
@@ -30,7 +40,7 @@ dbSettings <- function() {
     } else {
       password
     }
-    c
+    
     dbConnect(drv, user=userid, password=password,
               host=settings$host, dbname=settings$dbname)
   } else {
