@@ -328,6 +328,10 @@ setMethod(
   })
 
 
+#' Esegue la differenza tra due grafi
+#'
+#' @importFrom rutils Cluster
+
 setMethod(
   "-",
   c("GrafoDB", "GrafoDB"),
@@ -342,7 +346,10 @@ setMethod(
       })
     }
     result <- Dataset()
-    data <- .myParLapply(common, function(nome) {
+    cluster <- Cluster()
+
+    data <- cluster$submit(common, function(nome) {
+    # data <- .myParLapply(common, function(nome) {
       tryCatch(
         e1[[nome]] - e2[[nome]],
         error = function(err) {
