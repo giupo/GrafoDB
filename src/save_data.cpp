@@ -44,7 +44,7 @@ void save_data(List dati, List functions, CharacterMatrix archi,
   //string port0 = as<string>(port); 
   //string dbname0 = as<string>(dbname);
 
-  string conninfo = "user=m024000 password=dic14dic dbname=grafo host=osiride-lv-016 port=5432";
+  string conninfo = "user=******* password=******* dbname=grafo host=osiride-lv-016 port=5432";
   
   pqxx::connection conn(conninfo);
   pqxx::work* T = new pqxx::work(conn, "Save Transaction");
