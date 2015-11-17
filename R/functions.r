@@ -482,11 +482,13 @@ from.data.frame <- function(df) {
 
 .evaluate <- function(object, v_start=NULL, deep=T, ...) {
   params <- list(...)
+
   debug <- if("debug" %in% names(params)) {
     as.logical(params[["debug"]])
   } else {
     FALSE
   }
+  
   tag <- object@tag
   data <- object@data
   network <- object@network
