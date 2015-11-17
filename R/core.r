@@ -284,9 +284,9 @@ setMethod(
 #' @export
 
 setMethod(
-    "lookup",
-    c("GrafoDB", "character", "character"),
-    function(x, key, value) {
+  "lookup",
+  c("GrafoDB", "character", "character"),
+  function(x, key, value) {
     tag <- x@tag
     con <- pgConnect()
     on.exit(dbDisconnect(con))
@@ -436,9 +436,7 @@ setMethod(
   "isRoot",
   signature("GrafoDB", "character"),
   function(x, name) {
-    network <- x@network
-    sources <- V(network)[degree(network, mode="in") == 0]$name
-    all(name %in% sources)
+    .isRoot(x, name)
   })
 
 
@@ -754,4 +752,49 @@ setMethod(
     x <- GrafoDB(tag)
     assign(nameObject, x, envir=parent.frame())
     invisible(x)
+  })
+
+
+#' Ritorna le radici del grafo
+#'
+#' @name roots
+#' @usage roots(x)
+#' @param x istanza di grafo
+#' @return la lista di nomi delle radici del grafo
+#' @include functions.r
+#' @export
+
+setGeneric(
+  "roots",
+  function(x, ...) {
+    standardGeneric("roots")
+  })
+
+setMethod(
+  "roots",
+  signature("GrafoDB"),
+  function (x)  {
+    .roots(x)
+  })
+
+#' Ritorna le foglie del grafo
+#'
+#' @name leaves
+#' @usage leaves(x)
+#' @param x istanza di grafo
+#' @return la lista di nomi delle foglie del grafo
+#' @include functions.r
+#' @export
+
+setGeneric(
+  "leaves",
+  function(x, ...) {
+    standardGeneric("leaves")
+  })
+
+setMethod(
+  "leaves",
+  signature("GrafoDB"),
+  function (x)  {
+    .leaves(x)
   })

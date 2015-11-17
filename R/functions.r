@@ -499,22 +499,22 @@ from.data.frame <- function(df) {
     stop("Non sono serie del grafo: ", paste(not.in.graph, collapse=", "))
   }
   
-  if(is.null(v_start)) {
+  if(!is.null(v_start)) {
     ## le voglio valutare tutte
     ## if(!tag %in% c(PRELOAD_TAG, "biss", "pne", "dbcong")) {
-    sources_id <- V(network)[degree(network, mode="in") == 0]
-    nomi_sources <- V(network)[sources_id]$name
-    sources <- getdb(nomi_sources, tag)
-    if(length(sources) > 0) {
-      if(is.bimets(sources)) {
-        data[preload_V_start] <- sources
-      } else {
-        data[names(sources)] <- sources
-      }
-      ## fonti gia' valutate, le tolgo
-      network <- delete.vertices(network, sources_id)
-    }
-  } else {
+    #sources_id <- V(network)[degree(network, mode="in") == 0]
+    #nomi_sources <- V(network)[sources_id]$name
+    #sources <- getdb(nomi_sources, tag)
+    #if(length(sources) > 0) {
+    #  if(is.bimets(sources)) {
+    #    data[preload_V_start] <- sources
+    #  } else {
+    #    data[names(sources)] <- sources
+    #  }
+    #  ## fonti gia' valutate, le tolgo
+    #  network <- delete.vertices(network, sources_id)
+    #}
+  #} else {
     v_start <- as.character(v_start)
     network <- induced.subgraph(
       network,
@@ -536,7 +536,6 @@ from.data.frame <- function(df) {
   is.interactive <- interactive()
   if(is.interactive) {
     pb <- ProgressBar(min=0, max=total)
-    update(pb, i, "Starting...")
     update(pb, i, "Try Cluster...")
   }  
   
@@ -557,6 +556,8 @@ from.data.frame <- function(df) {
   } else {
     if(is.interactive) updateProgressBar(pb, i, "No Cluster")
   }
+
+  if(is.interactive) updateProgressBar(pb, i, "Starting...")
   
   sources_id <- V(network)[degree(network, mode="in") == 0]
   
@@ -951,6 +952,36 @@ elimina <- function(tag) {
   }
 }
 
+#' Ritorna le radici del GrafoDB
+#'
+#' Ritona tutti i nodi del grafo le che non hanno archi entranti
+#'
+#' @name .roots
+#' @usage .roots(x)
+#' @param x Grafo
+#' @rdname roots-internal
+#' @return la lista delle radici del grafo
+
+.roots <- function(x) {
+  n <- x@network
+  V(n)[degree(n, mode="in") == 0]$name
+}
+
+#' Ritorna le figlie del GrafoDB
+#'
+#' Ritona tutti i nodi del grafo le che non hanno archi uscenti
+#'
+#' @name .leaves
+#' @usage .leaves(x)
+#' @param x Grafo
+#' @rdname leaves-internal
+#' @return la lista delle foglie del grafo
+
+.leaves <- function(x) {
+  n <- x@network
+  V(n)[degree(n, mode="out") == 0]$name
+}
+
 
 #' Controlla se un nodo e' una foglia
 #'
@@ -966,11 +997,25 @@ elimina <- function(tag) {
 #'         del controllo
 #' @rdname isLeaf-internal
 
-.isLeaf <- function(x, i) {
-  network <- x@network
-  leaves <- V(network)[degree(network, mode="out") == 0]$name  
-  all(i %in% leaves)
-}
+.isLeaf <- function(x, i) all(i %in% .leaves(x))
+
+
+#' Controlla se un nodo e' una radice
+#'
+#' Ritorna un array di `logical` uno per ogni elemento in `i`: `TRUE`
+#' se l'i-esimo elemento e' una radice (non ha archi uscenti), altrimenti `FALSE`
+#'
+#' @name .isRoot
+#' @usage .isRoot(x, i)
+#' @param x istanza di `GrafoDB`
+#' @param i array di `character` con i nomi delle serie su cui si vuole
+#'          applicare il predicato
+#' @return vector di `logical` (stessa lunghezza di `i`) con i risultati
+#'         del controllo
+#' @rdname isRoot-internal
+
+.isRoot <- function(x, i) all(i %in% .roots(x))
+
 
 #' Elimina un nodo dal `GrafoDB`
 #'
