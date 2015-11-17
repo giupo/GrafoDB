@@ -4,7 +4,6 @@ tt <- TSERIES(c(1,1,1,1,1), START=c(1990,1), FREQ=4)
 
 proxytest <- function(numero) {
   g <- GrafoDB("test")
-  numero_padri <- 201
   deps <- paste0("A", seq(numero))
   formula_B <- paste0("B = ", paste0(deps, collapse=" + "))
   g@functions["B"] <- formula_B
