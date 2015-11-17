@@ -482,11 +482,13 @@ from.data.frame <- function(df) {
 
 .evaluate <- function(object, v_start=NULL, deep=T, ...) {
   params <- list(...)
+
   debug <- if("debug" %in% names(params)) {
     as.logical(params[["debug"]])
   } else {
     FALSE
   }
+  
   tag <- object@tag
   data <- object@data
   network <- object@network
@@ -503,13 +505,15 @@ from.data.frame <- function(df) {
     sources_id <- V(network)[degree(network, mode="in") == 0]
     nomi_sources <- V(network)[sources_id]$name
     sources <- getdb(nomi_sources, tag)
-    if(is.bimets(sources)) {
-      data[preload_V_start] <- sources
-    } else {
-      data[names(sources)] <- sources
+    if(length(sources) > 0) {
+      if(is.bimets(sources)) {
+        data[preload_V_start] <- sources
+      } else {
+        data[names(sources)] <- sources
+      }
+      ## fonti gia' valutate, le tolgo
+      network <- delete.vertices(network, sources_id)
     }
-    ## fonti gia' valutate, le tolgo
-    network <- delete.vertices(network, sources_id)
   } else {
     v_start <- as.character(v_start)
     network <- induced.subgraph(
