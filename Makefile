@@ -29,6 +29,7 @@ NAMESPACE: $(R_FILES) $(SRC_FILES)
 
 DOCS: 
 	Rscript -e "devtools::document()"
+
 clean:
 	-rm -rf ext/jsoncpp/build
 	-cd ext/libpqxx && make clean
@@ -53,9 +54,9 @@ deps: deps-jsoncpp deps-pqxx deps-dist
 deps-dist:
 	mkdir -p ext/include
 	mkdir -p ext/libs
-	cp -R ext/jsoncpp/include/* ext/include/
+	cp -R ext/jsoncpp/include/json ext/include/
 	cp  ext/jsoncpp/build/src/lib_json/libjsoncpp.a ext/libs
-	cp -R ext/libpqxx/include/* ext/include/
+	cp -R ext/libpqxx/include/pqxx ext/include/
 	cp ext/libpqxx/src/.libs/libpqxx.a ext/libs/
 
 deps-jsoncpp:
