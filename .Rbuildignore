@@ -1,3 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 .tar.gz
+ext/jsoncpp/*
+ext/libpqxx/*
+ext/libpqxx/include/pqxx/Makefile*
+schema.sql
+src/Makevars
