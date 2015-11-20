@@ -55,7 +55,7 @@ setMethod(
     toBeAdded <- setdiff(name, all_names)
     network + vertex(toBeAdded)
   } else {
-    if(!is.dataset(value)) {
+    if(!is.dataset(value) && length(E(network)) > 0) {
       network - E(network)[to(name)]
     } else {
       network
