@@ -1,3 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 .tar.gz
+ext/jsoncpp/*
+ext/libpqxx/*
+schema.sql
