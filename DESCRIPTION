@@ -2,7 +2,7 @@ Package: GrafoDB
 Title: What the package does (one line)
 Version: 0.27.0
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
-Description: What the package does (one paragraph)
+Description: Adds DB backend to Grafo
 Depends:
     R (>= 3.0.3),
     grafo,
