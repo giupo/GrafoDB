@@ -75,7 +75,7 @@ vector<string> DBAdapter::getNames() {
   unsigned int i;
   unsigned int totalSize;
   
-  const char* sql = "select partenza from archi, where tag = $1" \
+  const char* sql = "select partenza from archi where tag = $1" \
     " union select arrivo from archi where tag = $2 " \
     " union select name from dati where tag=$3";
   conn->prepare("getnames", sql);    
@@ -92,6 +92,21 @@ vector<string> DBAdapter::getNames() {
 }
 
 void DBAdapter::init() {
+  
+  if (T != NULL) {
+    delete T;
+  }
+  
+  if (conn != NULL) {
+    try {
+      conn->disconnect();
+    } catch(const std::exception &e) {
+      Rprintf(e.what());
+      // who really cares?
+    }
+    delete conn;
+  }
+  
   time_t now = time(NULL);
   tm* ptm = std::localtime(&now); 
   char buffer[32];
@@ -101,14 +116,14 @@ void DBAdapter::init() {
     this->conn = new pqxx::connection(conninfo);
   } catch(const std::exception &e) {
     this->conn = NULL;
-    stop("GrafoDB: Cannot connect to db, %s", e.what())
+    stop("GrafoDB: Cannot connect to db, %s", e.what());
   }
   
   try {
     this->T = new pqxx::work(*conn, tname);
   } catch(const std::exception &e) {
     this->T = NULL;
-    stop("GrafoDB: Cannot create a transaction to db, %s", e.what())
+    stop("GrafoDB: Cannot create a transaction to db, %s", e.what());
   }
 }
 
