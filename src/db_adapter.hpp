@@ -22,14 +22,20 @@ public:
             const string port,
             const string dbname, 
             const string tag) : 
-    BaseAdapter(username, password, host, port, dbname, tag){
+    BaseAdapter(username, password, host, port, dbname, tag) {
+    this->conn = NULL;
+    this->T = NULL;
   }
   
   DBAdapter(string host, string port, string dbname, string tag) : 
     BaseAdapter(host, port, dbname, tag) {
+    this->conn = NULL;
+    this->T = NULL;
   }
   
   DBAdapter(const DBAdapter& other) : BaseAdapter(other) {
+    this->conn = NULL;
+    this->T = NULL;
   }
   
   DBAdapter& operator=(const DBAdapter& other) { 
@@ -38,9 +44,17 @@ public:
   }
   
   virtual ~DBAdapter() {
-    conn->disconnect();
-    delete T;
-    delete conn;
+    if(NULL != conn) {
+      conn->disconnect();
+    }
+
+    if(NULL != T) {
+      delete T;
+    }
+    
+    if(NULL != conn) {
+      delete conn;
+    }
   }
   
   virtual CharacterMatrix getArchi();
