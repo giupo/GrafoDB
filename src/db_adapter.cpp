@@ -97,10 +97,19 @@ void DBAdapter::init() {
   char buffer[32];
   std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm);
   string tname = whoami() + " " + string(buffer);
-  this->conn = new pqxx::connection(conninfo);
-  assert(this->conn != NULL);
-  this->T = new pqxx::work(*conn, tname);
-  assert(this->T != NULL);
+  try {
+    this->conn = new pqxx::connection(conninfo);
+  } catch(const std::exception &e) {
+    this->conn = NULL;
+    stop("GrafoDB: Cannot connect to db, %s", e.what())
+  }
+  
+  try {
+    this->T = new pqxx::work(*conn, tname);
+  } catch(const std::exception &e) {
+    this->T = NULL;
+    stop("GrafoDB: Cannot create a transaction to db, %s", e.what())
+  }
 }
 
 bool DBAdapter::hasHistoricalData() {
