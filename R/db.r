@@ -100,7 +100,7 @@ setupdb <- function(overwrite=FALSE) {
 #' @param flush if `TRUE` removes any option recored in the current
 #'              session and reloads the settings
 #' @return a list containing the infos used to connect via DBI/RPostgreSQL
-#' @importFrom ttutils merge.list
+#' @import ttutils
 #' @export
 
 dbSettings <- function(flush=FALSE) {
@@ -115,7 +115,7 @@ dbSettings <- function(flush=FALSE) {
     home_settings <- list()
     if(file.exists(home_ini_file)) {
       home_settings <- ini_parse(home_ini_file)
-      if("PostgreSQL" %in% names(home_settings)) {
+      if("ConnectionInfo" %in% names(home_settings)) {
         home_settings <- home_settings$ConnectionInfo
       }
     }
