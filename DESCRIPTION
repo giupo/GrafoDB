@@ -19,7 +19,8 @@ Depends:
     BH,
     Rcpp,
     rprogressbar,
-    stats
+    stats,
+    ttutils
 License: BSD
 LazyData: true
 Imports:
