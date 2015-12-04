@@ -3,13 +3,21 @@ context("metadati")
 g <- GrafoDB("test")
 g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=1)
 g["C"] <- function(A, B) {
-  C = A + 1 * (B + 2)
+  C = (A + 1) * (B + 2)
 }
 saveGraph(g)
+
 setMeta(g, "A", "KEY", "VALUE1")
 setMeta(g, "A", "KEY", "VALUE2")
 setMeta(g, "B", "KEY", "VALUE1")
 
+
+test_that("posso caricare tutti i metadati del grafo", {
+  meta <- getMeta(g)
+  expect_true(is.data.frame(meta))
+  expect_true(nrow(meta), 3)
+  
+})
 
 
 test_that("posso ottenere i metadati per una serie", {

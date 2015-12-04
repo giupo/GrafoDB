@@ -596,6 +596,20 @@ setMethod(
     getMetadata(x, serie)
   })
 
+setMethod(
+  "getMeta",
+  signature("GrafoDB", "missing", "missing"),
+  function(x) {
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    nometab <- paste0("metadati_", x@tag)
+    if(dbExistsTable(con, nometab)) {
+      dbReadTable(con, nometab)
+    } else {
+      data.frame(name=character(), key=character(), value=character())
+    }
+  })
+
 
 setMethod(
   "keys",
