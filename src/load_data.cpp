@@ -42,6 +42,5 @@ List load_data_nativo(SEXP username, SEXP password, SEXP hostname,
   DBAdapter db(username0, password0, hostname0, port0, dbname0, tag0);
   db.init(); 
   List z = db.getData(names0);
-  db.commit();
   return z;
 }

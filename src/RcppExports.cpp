@@ -55,17 +55,3 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// save_data
-void save_data(List dati, List functions, CharacterMatrix archi, CharacterVector tag, CharacterVector newtag);
-RcppExport SEXP GrafoDB_save_data(SEXP datiSEXP, SEXP functionsSEXP, SEXP archiSEXP, SEXP tagSEXP, SEXP newtagSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< List >::type dati(datiSEXP);
-    Rcpp::traits::input_parameter< List >::type functions(functionsSEXP);
-    Rcpp::traits::input_parameter< CharacterMatrix >::type archi(archiSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type tag(tagSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type newtag(newtagSEXP);
-    save_data(dati, functions, archi, tag, newtag);
-    return R_NilValue;
-END_RCPP
-}
