@@ -1161,3 +1161,28 @@ tsdiff <- function(a, b, thr = .0000001) {
     ret
   }
 }
+
+#' Ritorna la lista dei rilasci presenti nel database
+#'
+#' @name rilasci
+#' @usage rilasci()
+#' @param filtro filtro da applicare alla ricerca sul tag del grafo
+#' @export
+#' @examples \dontrun{
+#'    rilasci() # ritorna tutti i rilasci
+#'    rilasci("cf") # ritorna tutti i rilasci con contenenti cf nel tag
+#' }
+#' @return data.frame con tutti i rilasci
+
+rilasci <- function(filtro=NULL) {
+  con <- pgConnect()
+  on.exit(dbDisconnect(con))
+  sql <- "select id, tag, commento, last_updated autore from grafi"
+  sql <- if(is.null(filtro)) {
+    sql
+  } else {
+    paste0(sql, " where tag like '%",filtro,"%'")
+  }
+  sql <- paste0(sql, " order by id")
+  dbGetQuery(con, sql)
+}
