@@ -15,8 +15,7 @@ setMeta(g, "B", "KEY", "VALUE1")
 test_that("posso caricare tutti i metadati del grafo", {
   meta <- getMeta(g)
   expect_true(is.data.frame(meta))
-  expect_true(nrow(meta), 3)
-  
+  expect_equal(nrow(meta), 3)  
 })
 
 

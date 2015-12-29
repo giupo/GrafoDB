@@ -788,3 +788,10 @@ setMethod(
   function (x)  {
     .leaves(x)
   })
+
+setMethod(
+  "$",
+  signature("GrafoDB"),
+  function(x, name) {
+    x[[unlist(str_split(name, " "))]]
+  })

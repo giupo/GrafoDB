@@ -288,3 +288,20 @@ test_that("Posso editare una serie esistente aggiungendo una dipendenza esistent
   
   elimina("test")
 })
+
+test_that("", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B
+  }
+  g["D"] <- function(A, C) {
+    D = A + C
+  }
+
+  d <- g$D
+  expect_equal(g$D, g[["D"]])
+  expect_equal(g$A, g[["A"]])
+  expect_equal(g$C, g[["C"]])
+  elimina("test")
+})
