@@ -304,8 +304,7 @@ from.data.frame <- function(df) {
   } else {
     data.frame(name=character(), formula=character())
   }
-  
-  
+   
   in.functions <- foreach(
     row=iter(in.functions, by='row'),
     .combine=rbind) %do% {
@@ -321,7 +320,7 @@ from.data.frame <- function(df) {
     if(interactive() && echo) {
       tidy_source(text=task, indent= 2)
     }
-    invisible(task)
+    task
   } else {
     nomi <- formule$name
     ret <- vector(length(nomi), mode="list")
