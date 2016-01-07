@@ -271,3 +271,29 @@ void DBAdapter::do_history(const vector<string> names) {
     }
   }
 }
+
+List DBAdapter::getFormule(vector<string> names) {
+  List z = List::create();
+  
+  vector<string> quotedNames = quote(names);
+  string inParams = join(quotedNames, ',');
+  stringstream sql;
+  sql << "select name, formula ";
+  sql << "from formule where tag = $1 and name in (";
+  sql << inParams << ")";    
+  
+  conn->prepare("sqlFormule", sql.str());
+  pqxx::result res = T->prepared("sqlFormule")(this->tag).exec();
+
+  unsigned int size = res.size(); 
+  
+  string name;
+  string formula;
+  for(unsigned int i=0; i<size; ++i) {
+    res[i][0].to(name);
+    res[i][1].to(formula);
+    z[name] = formula;
+  }
+
+  return z;
+}

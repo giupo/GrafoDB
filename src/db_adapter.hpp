@@ -58,11 +58,15 @@ public:
   }
   
   virtual CharacterMatrix getArchi();
+
+  virtual List getData();
   virtual List getData(vector<string> names);
 
+  virtual List getFormule(vector<string> names);
+  
   virtual bool hasHistoricalData();
   virtual List getHistoricalData(vector<string> names);
-  virtual List getData();
+
   virtual vector<string> getNames();
   virtual void commit();
   virtual void init();

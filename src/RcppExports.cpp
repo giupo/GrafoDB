@@ -55,3 +55,20 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// load_formule_nativo
+List load_formule_nativo(SEXP username, SEXP password, SEXP hostname, SEXP port, SEXP dbname, SEXP tag, SEXP nomi);
+RcppExport SEXP GrafoDB_load_formule_nativo(SEXP usernameSEXP, SEXP passwordSEXP, SEXP hostnameSEXP, SEXP portSEXP, SEXP dbnameSEXP, SEXP tagSEXP, SEXP nomiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type username(usernameSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type password(passwordSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type hostname(hostnameSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type port(portSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type dbname(dbnameSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type tag(tagSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type nomi(nomiSEXP);
+    __result = Rcpp::wrap(load_formule_nativo(username, password, hostname, port, dbname, tag, nomi));
+    return __result;
+END_RCPP
+}
