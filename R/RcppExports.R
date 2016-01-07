@@ -58,3 +58,24 @@ load_data_nativo <- function(username, password, hostname, port, dbname, names, 
     .Call('GrafoDB_load_data_nativo', PACKAGE = 'GrafoDB', username, password, hostname, port, dbname, names, tag)
 }
 
+#' Carica le formule del grafo (metodo nativo)
+#'
+#' @name load_formule
+#' @usage load_formule(username, password, hostname, port, dbname, tag, nomi)
+#' @param username username per la connessione
+#' @param password password per la connessione
+#' @param hostname hostname del database
+#' @param port porta di ascolto del server
+#' @param dbname nome del db
+#' @param tag tag del database da cui caricare le serie
+#' @param nomi lista di nomi per cui caricare le formule
+#' @return una lista di formule
+#' @export
+#' @import Rcpp
+#' @useDynLib GrafoDB
+NULL
+
+load_formule_nativo <- function(username, password, hostname, port, dbname, tag, nomi) {
+    .Call('GrafoDB_load_formule_nativo', PACKAGE = 'GrafoDB', username, password, hostname, port, dbname, tag, nomi)
+}
+
