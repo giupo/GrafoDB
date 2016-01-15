@@ -76,14 +76,15 @@ test_that("Posso salvare il grafo sul database", {
 
   expect_true(all(c("A", "B", "C") %in% names(g1)))  
   elimina("test1")
+  elimina("test")
 })
 
 test_that("names su un grafo vuoto torna un array vuoto", {
-  elimina("test")
   g <- GrafoDB("test")
   expect_equal(length(names(g)), 0)
   elimina("test")
 })
+
 
 test_that("subset with datasets", {
   g <- GrafoDB("test")
@@ -299,7 +300,6 @@ test_that("Posso subsettare con il $ (dollaro)", {
   g["D"] <- function(A, C) {
     D = A + C
   }
-
   d <- g$D
   expect_equal(g$D, g[["D"]])
   expect_equal(g$A, g[["A"]])
@@ -330,4 +330,3 @@ test_that("I nomi del grafodb sono case insensitive nel subsetting", {
   
   elimina("test")
 })
-

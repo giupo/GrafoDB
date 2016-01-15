@@ -8,7 +8,6 @@ setMethod(
   "[",
   c("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., drop = TRUE) {
-    i <- toupper(i)
     if(length(i) == 0) {
       return(Dataset())
     }
@@ -26,7 +25,6 @@ setMethod(
 setMethod(
   "[[",
   c("GrafoDB", "character"), function(x, i) {
-    i <- toupper(i)
     if(length(i) == 0) {
       return(list())
     }
@@ -133,7 +131,6 @@ setMethod(
   "[<-",
   signature("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., value) {
-    i <- toupper(i)
     x <- .subsetting(x, i, value)
     nameObject <- deparse(substitute(x))
     assign(nameObject, x, envir=parent.frame())
@@ -144,7 +141,6 @@ setMethod(
   "[[<-",
   signature("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., value) {
-    i <- toupper(i)
     x <- .subsetting(x, i, value)
     nameObject <- deparse(substitute(x))
     assign(nameObject, x, envir=parent.frame())

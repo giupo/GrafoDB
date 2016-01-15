@@ -20,6 +20,8 @@
 #' @include conflicts.r
 #' @rdname saveGraph-internal
 
+## FIXME: #31849
+# https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 .saveGraph <- function(x, tag = x@tag) {
   if(hasConflicts(x)) {
     stop("Il grafo ",tag, " ha conflitti, risolverli prima di salvare")
@@ -99,17 +101,14 @@
   })
 }
 
-.updateGraph <- function(x, tag=x@tag, tag=x@tag) {
-  if(is.null(con)) {
-    wasNull <- TRUE
+.updateGraph <- function(x, tag=x@tag, con=NULL) {
+  wasNull <- is.null(con)
+  if(wasNull) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
     dbBegin(con)
-  } else {
-    wasNull <- FALSE
   }
-
   ## supporto per history
   tryCatch(
     doHistory(x, con),
@@ -143,10 +142,12 @@
     dbGetPreparedQuery(
       con,
       paste0(" update grafi set last_updated = (select max(last_updated) ",
-             " from (select last_updated as last_updated from dati where tag=? ",
+             " from (select last_updated as last_updated from dati ",
+             " where tag=? ",
              " union select last_updated as last_updated from formule ",
              " where tag=? ",
-             " union select last_updated as last_updated from archi where tag=?)",
+             " union select last_updated as last_updated from archi ",
+             " where tag=?)",
              " as last_updated) where tag = ?"),
       bind.data = cbind(tag, tag, tag, tag))   
   }, error = function(err) {

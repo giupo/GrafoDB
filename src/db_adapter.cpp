@@ -7,7 +7,7 @@
 #include <Rcpp.h>
 #include <ctime>
 #include <assert.h>
-
+#include <algorithm>
 #include "utils.hpp"
 
 
@@ -40,12 +40,12 @@ CharacterMatrix DBAdapter::getArchi() {
 List DBAdapter::getData(vector<string> names) {  
   vector<string> quotedNames = quote(names);
   string inParams = join(quotedNames, ',');
-  
+  std::transform(inParams.begin(), inParams.end(), inParams.begin(), ::toupper);
   //Rprintf("Loding data from: %s\n", tag.c_str());
 
   stringstream sql;
   sql << "select name, anno, periodo, freq, dati ";
-  sql << "from dati where tag ='" << tag << "' and name in (";
+  sql << "from dati where tag ='" << tag << "' and UPPER(name) in (";
   sql << inParams << ")";
   
   List z = this->internalGetDataWithQuery(names, sql.str());  
@@ -134,10 +134,10 @@ bool DBAdapter::hasHistoricalData() {
 List DBAdapter::getHistoricalData(vector<string> names) {
   vector<string> quotedNames = quote(names);
   string inParams = join(quotedNames, ',');     
-
+  std::transform(inParams.begin(), inParams.end(), inParams.begin(), ::toupper);
   stringstream sql;
   sql << "select name, anno, periodo, freq, dati ";
-  sql << "from history where tag ='" << tag << "' and name in (";
+  sql << "from history where tag ='" << tag << "' and UPPER(name) in (";
   sql << inParams << ") and ordinale = " << this->ordinal;    
   List z = this->internalGetDataWithQuery(names, sql.str());  
   return z;

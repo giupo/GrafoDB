@@ -36,6 +36,30 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
 elimina("test")
 
 test_that("I can save a graph over another existing graph", {
+  g <- GrafoDB("test")
+  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["B"] <- TSERIES(1:10, START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B    
+  }
+
+  g["D"] <- function(B) {
+    D =  B * 2
+  }
+
+  saveGraph(g)
+  saveGraph(g, "test1")
+
+  nuovaB <- g["B"] <- TSERIES(rep(0, 10), START=c(1990,1), FREQ=4)
+
+  saveGraph(g)
+  saveGraph(g, "test1")
+
+  g1 <- GrafoDB("test1")
+  
+  expect_equal(g$B, nuovaB)
+  expect_equal(g1$B, nuovaB)
+  
   elimina("test")
   elimina("test1")
 })
