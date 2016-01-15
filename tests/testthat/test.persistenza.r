@@ -34,3 +34,8 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
 })
 
 elimina("test")
+
+test_that("I can save a graph over another existing graph", {
+  elimina("test")
+  elimina("test1")
+})
