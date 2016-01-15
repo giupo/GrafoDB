@@ -81,7 +81,8 @@ test_that("Posso salvare il grafo sul database", {
 test_that("names su un grafo vuoto torna un array vuoto", {
   elimina("test")
   g <- GrafoDB("test")
-  expect_equal(length(names(g)), 0)  
+  expect_equal(length(names(g)), 0)
+  elimina("test")
 })
 
 test_that("subset with datasets", {
@@ -289,7 +290,7 @@ test_that("Posso editare una serie esistente aggiungendo una dipendenza esistent
   elimina("test")
 })
 
-test_that("", {
+test_that("Posso subsettare con il $ (dollaro)", {
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
   g["C"] <- function(A,B) {
@@ -305,3 +306,28 @@ test_that("", {
   expect_equal(g$C, g[["C"]])
   elimina("test")
 })
+
+test_that("I nomi del grafodb sono case insensitive nel subsetting", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A, B) {
+    C = A + B
+  }
+  g["D"] <- function(A, C) {
+    D = A + C
+  }
+
+  expect_equal(g$a, g$A)
+  expect_equal(g$b, g$B)
+  expect_equal(g$c, g$C)
+  expect_equal(g$d, g$D)
+  
+  for(name in names(g)) {
+    expect_equal(g[[name]], g[[tolower(name)]])
+    expect_equal(g[[name]], g[[toupper(name)]])
+  }
+  
+  
+  elimina("test")
+})
+

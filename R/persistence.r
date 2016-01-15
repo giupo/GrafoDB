@@ -38,7 +38,7 @@
       dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
       dbBegin(con)
       .copyGraph(x@tag, tag, con)
-      .updateGraph(x, con, tag)
+      .updateGraph(x, tag, con)
       dbCommit(con)
     }
   }
@@ -99,7 +99,7 @@
   })
 }
 
-.updateGraph <- function(x, con=NULL, tag=x@tag) {
+.updateGraph <- function(x, tag=x@tag, tag=x@tag) {
   if(is.null(con)) {
     wasNull <- TRUE
     con <- pgConnect()
@@ -219,7 +219,8 @@
       df
     } else {
       splitted <- unlist(str_split(da.inserire, sep))
-      df <- as.data.frame(matrix(splitted, nrow=length(da.inserire), byrow=T), stringsAsFactors = F)
+      df <- as.data.frame(matrix(splitted, nrow=length(da.inserire), byrow=T),
+                          stringsAsFactors = F)
       names(df) <- c("partenza", "arrivo")
       df
     }
@@ -461,7 +462,9 @@
   tryCatch({
     dbGetPreparedQuery(
       con,
-      paste0("insert into dati(tag, name, anno, periodo, freq, dati, autore, last_updated) values ",
+      paste0("insert into ",
+             "dati(tag, name, anno, periodo, freq,",
+             "dati, autore, last_updated) values ",
              "(?, ?, ?, ?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
       bind.data = dati)
   }, error = function(err) {
@@ -478,7 +481,8 @@
     tryCatch({
       dbGetPreparedQuery(
         con,
-        paste0("insert into archi(tag, partenza, arrivo, autore, last_updated) values ",
+        paste0("insert into ",
+               "archi(tag, partenza, arrivo, autore, last_updated) values ",
                "(?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
         bind.data = archi)
     }, error = function(err) {
@@ -492,7 +496,10 @@
     if(!is.null(task)) {
       cbind(tag, name, task, autore)
     } else {
-      data.frame(tag=character(0), name=character(0), task=character(0), autore=character(0))
+      data.frame(tag=character(0),
+                 name=character(0),
+                 task=character(0),
+                 autore=character(0))
     }
   }
 
@@ -500,7 +507,8 @@
     tryCatch({
       dbGetPreparedQuery(
         con,
-        paste0("insert into formule(tag, name, formula, autore, last_updated) values ",
+        paste0("insert into ",
+               "formule(tag, name, formula, autore, last_updated) values ",
                "(?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
         bind.data = formule)
     
@@ -569,6 +577,7 @@ doHistory <- function(x, con) {
   if(length(nomi.history)  == 0 ) {
     return()
   }
+  
   message("Rolling history per ", tag)
   df <- dbGetPreparedQuery(
     con,
