@@ -307,27 +307,30 @@ test_that("Posso subsettare con il $ (dollaro)", {
   elimina("test")
 })
 
-test_that("I nomi del grafodb sono case insensitive nel subsetting, una volta salvato", {
-  g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["C"] <- function(A, B) {
-    C = A + B
-  }
-  g["D"] <- function(A, C) {
-    D = A + C
-  }
+# test_that("I nomi del grafodb sono case insensitive nel subsetting, una volta salvato", {
+#  g <- GrafoDB("test")
+#  g["A"] <- g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+#  g["C"] <- function(A, B) {
+#    C = A + B
+#  }
+#  g["D"] <- function(A, C) {
+#    D = A + C
+#  }
 
-  g <- saveGraph(g)
+#  g <- saveGraph(g)
   
-  expect_equal(g$a, g$A)
-  expect_equal(g$b, g$B)
-  expect_equal(g$c, g$C)
-  expect_equal(g$d, g$D)
+#  expect_equal(g$a, g$A)
+#  expect_equal(g$b, g$B)
+#  expect_equal(g$c, g$C)
+#  expect_equal(g$d, g$D)
   
-  for(name in names(g)) {
-    expect_equal(g[[name]], g[[tolower(name)]])
-    expect_equal(g[[name]], g[[toupper(name)]])
-  }
+#  for(name in names(g)) {
+#    expect_equal(g[[name]], g[[tolower(name)]])
+#    expect_equal(g[[name]], g[[toupper(name)]])
+#  }
   
-  elimina("test")
-})
+#  elimina("test")
+# })
+
+elimina("test")
+elimina("test1")
