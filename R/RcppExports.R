@@ -60,8 +60,8 @@ load_data_nativo <- function(username, password, hostname, port, dbname, names, 
 
 #' Carica le formule del grafo (metodo nativo)
 #'
-#' @name load_formule
-#' @usage load_formule(username, password, hostname, port, dbname, tag, nomi)
+#' @name load_formule_nativo
+#' @usage load_formule_nativo(username, password, hostname, port, dbname, tag, nomi)
 #' @param username username per la connessione
 #' @param password password per la connessione
 #' @param hostname hostname del database

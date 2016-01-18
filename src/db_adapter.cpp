@@ -41,15 +41,16 @@ List DBAdapter::getData(vector<string> names) {
   vector<string> quotedNames = quote(names);
   string inParams = join(quotedNames, ',');
   std::transform(inParams.begin(), inParams.end(), inParams.begin(), ::toupper);
-  //Rprintf("Loding data from: %s\n", tag.c_str());
+  // Rprintf("Loding data from: %s\n", tag.c_str());
 
   stringstream sql;
   sql << "select name, anno, periodo, freq, dati ";
   sql << "from dati where tag ='" << tag << "' and UPPER(name) in (";
   sql << inParams << ")";
+  // Rprintf("Loding data with SQL : %s\n", sql.str().c_str());
   
   List z = this->internalGetDataWithQuery(names, sql.str());  
-
+  
   // get historical data
   if(this->hasHistoricalData()) {
     List historical = this->getHistoricalData(names);

@@ -25,6 +25,7 @@ using namespace std;
 //' @useDynLib GrafoDB
 //
 // [[Rcpp::export]]
+
 CharacterMatrix  load_archi(SEXP username,
                SEXP password, 
                SEXP hostname,

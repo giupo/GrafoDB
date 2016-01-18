@@ -307,7 +307,7 @@ test_that("Posso subsettare con il $ (dollaro)", {
   elimina("test")
 })
 
-test_that("I nomi del grafodb sono case insensitive nel subsetting", {
+test_that("I nomi del grafodb sono case insensitive nel subsetting, una volta salvato", {
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["C"] <- function(A, B) {
@@ -317,6 +317,8 @@ test_that("I nomi del grafodb sono case insensitive nel subsetting", {
     D = A + C
   }
 
+  g <- saveGraph(g)
+  
   expect_equal(g$a, g$A)
   expect_equal(g$b, g$B)
   expect_equal(g$c, g$C)
@@ -326,7 +328,6 @@ test_that("I nomi del grafodb sono case insensitive nel subsetting", {
     expect_equal(g[[name]], g[[tolower(name)]])
     expect_equal(g[[name]], g[[toupper(name)]])
   }
-  
   
   elimina("test")
 })
