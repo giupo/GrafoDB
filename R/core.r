@@ -161,8 +161,8 @@ setGeneric(
 #' @slot ordinal ordinale dei dati storici (0 per la produzione corrente)
 #' @slot touched serie modificate in area di lavoro
 #' @exportClass GrafoDB
+#' @importFrom rcf DBDataset
 #' @export GrafoDB
-#' @import igraph hash methods rcf
 #' @examples \dontrun{
 #'    g = GrafoDB("cf10") # istanzia il grafo chiamato 'cf10'
 #'                        # in questo caso ordinal e' 0
@@ -188,7 +188,6 @@ GrafoDB <- setClass(
 #' @name initialize
 #' @rdname GraphDB_initialize
 #' @aliases GrafoDB-initialize
-#' @import igraph RPostgreSQL
 
 setMethod(
   "initialize",
@@ -204,7 +203,6 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage navugate(graph, nodes, order, mode, plot)
 #' @seealso `grafo::describe`
-#' @import igraph
 #' @export
 
 setGeneric(
@@ -400,6 +398,7 @@ setMethod(
 #' v_start <- "ZERIQ"
 #' g <- evaluate(g, v_start) # lo valuta solo a partire da ZERIQ
 #' }
+#' @importFrom grafo evaluate
 
 setMethod(
   "evaluate",
@@ -429,6 +428,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage describe(graph, nodes, order, mode, plot)
 #' @seealso `grafo::describe`
+#' @importFrom grafo describe
 #' @export
 
 setMethod(
@@ -451,6 +451,8 @@ setMethod(
   function(x, name, livello=.Machine$integer.max) {
     navigate(x, name, order=livello, mode="out")
   })
+
+#' @importFrom grafo getMetadata
 
 setMethod(
   "getMetadata",
@@ -610,6 +612,7 @@ setMethod(
     }
   })
 
+#' @importFrom hash keys
 
 setMethod(
   "keys",
@@ -622,6 +625,8 @@ setMethod(
       "select distinct key from metadati where tag=? order by 1",
       bind.data = x@tag)
   })
+
+#' @importFrom hash values
 
 setMethod(
   "values",

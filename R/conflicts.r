@@ -41,7 +41,7 @@ setGeneric(
 #' hasConflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
 #' }
 #' @export
-#' @import RPostgreSQL2
+#' @importFrom RPostgreSQL2 dbGetPreparedQuery
 #' @include db.r
 
 setMethod(

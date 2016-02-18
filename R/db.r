@@ -100,7 +100,7 @@ setupdb <- function(overwrite=FALSE) {
 #' @param flush if `TRUE` removes any option recored in the current
 #'              session and reloads the settings
 #' @return a list containing the infos used to connect via DBI/RPostgreSQL
-#' @import ttutils
+#' @importFrom rutils ini_parse
 #' @export
 
 dbSettings <- function(flush=FALSE) {
@@ -128,7 +128,17 @@ dbSettings <- function(flush=FALSE) {
   settings
 }
 
-.buildConnection <- function(userid=NULL, password=NULL) {
+#' Factory di connessioni al database Postgresql
+#'
+#' @name .buildConnection
+#' @note Funzione interna
+#' @rdname buildConnection-internal
+#' @param userid userid utente
+#' @param password password utente (defaults to flypwd)
+#' @importFrom rutils whoami flypwd
+#' @importFrom DBI dbDriver dbConnect
+
+.buildConnection <- function(userid=whoami(), password=flypwd()) {
   settings <- dbSettings()
   drv <- dbDriver(settings$driver)
   con <- tryCatch(
@@ -176,7 +186,7 @@ dbSettings <- function(flush=FALSE) {
 #' @usage pgConnect()
 #' @return a Connection to Postgresql
 #' @note this stores the connection into options and retrieves it back
-#' @import rutils
+#' @importFrom DBI dbGetInfo
 #' @export
 
 pgConnect <- function(env="prod", userid=NULL, password=NULL) {
@@ -197,7 +207,7 @@ pgConnect <- function(env="prod", userid=NULL, password=NULL) {
 #'
 #' @name dbDisconnect
 #' @param con connection to be closed
-#' @import DBI
+#' @importFrom RPostgreSQL dbDisconnect
 #' @export
 
 dbDisconnect <- function(con) {

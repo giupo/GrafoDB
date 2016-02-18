@@ -8,6 +8,7 @@
 #' @usage isNode(graph, tsName)
 #' @seealso `grafo::isNode`
 #' @include core.r
+#' @importFrom grafo isNode
 
 setMethod(
   "isNode",
@@ -22,6 +23,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage isPrimitive(graph, tsName)
 #' @seealso `grafo::isPrimitive`
+#' @importFrom grafo isPrimitive
 
 setMethod(
   "isPrimitive",
@@ -36,6 +38,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage isAggregate(graph, tsName)
 #' @seealso `grafo::isAggregate`
+#' @importFrom grafo isAggregate
 
 setMethod(
   "isAggregate",
@@ -52,6 +55,7 @@ setMethod(
 #' @seealso `grafo::isElementary`
 #' @note `GrafoDB` non prevede l'utilizzo di serie "elementari" come il `grafo`
 #'       Quindi per compliance ritorna sempre `FALSE`, ma il metodo non ha senso
+#' @importFrom grafo isElementary
 
 setMethod(
   "isElementary",
@@ -66,6 +70,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage listAggregates(graph)
 #' @seealso `grafo::listAggregates`
+#' @importFrom grafo listAggregates
 
 setMethod(
   "listAggregates",
@@ -91,6 +96,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage listElementaries(graph)
 #' @seealso `grafo::listElementaries`
+#' @importFrom grafo listElementaries
 
 setMethod(
   "listElementaries",
@@ -115,6 +121,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage listPrimitives(graph)
 #' @seealso `grafo::listPrimitives`
+#' @importFrom grafo listPrimitives
 
 setMethod(
   "listPrimitives",
@@ -132,6 +139,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage listNodes(graph)
 #' @seealso `grafo::listNodes`
+#' @importFrom grafo listNodes
 
 setMethod(
   "listNodes",
@@ -153,15 +161,17 @@ setMethod(
 #' @param path erroneamente, dovuta al generic su `grafo` questo sarebbe il "tag" da
 #'             dare al grafo. Non c'e' modo di ovviare questo problema. Vedere il
 #'             prototipo di funzione di `.saveGraph`, e' sicuramente piu' chiaro.
+#' @param ... Parametri aggiuntivi alla `saveGraph`
 #' @note R sometimes sucks.
 #' @include persistence.r
+#' @importFrom grafo saveGraph
 
 setMethod(
   "saveGraph",
   signature("GrafoDB", "ANY"),
-  function(object, path=object@tag) {
+  function(object, path=object@tag, ...) {
     nameObject <- deparse(substitute(object))
-    .saveGraph(object, path)
+    .saveGraph(object, path, ...)
     object <- GrafoDB(path)
     if(object@tag == path) {
       assign(nameObject, object, envir=parent.frame())
@@ -175,6 +185,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage showInternalChanges(graph)
 #' @seealso `grafo::showInternalChanges`
+#' @importFrom grafo showInternalChanges
 
 setMethod(
   "showInternalChanges",
@@ -190,6 +201,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage deleteMeta(graph, tsName, attrName, attrValue)
 #' @seealso `grafo::deleteMeta`
+#' @importFrom grafo deleteMeta
 
 setMethod(
   "deleteMeta",
@@ -218,6 +230,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage getDependencies(graph, tsName)
 #' @seealso `grafo::getDependencies`
+#' @importFrom grafo getDependencies
 
 setMethod(
   "getDependencies",
@@ -240,6 +253,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage getTask(graph, tsName)
 #' @seealso `grafo::getTask`
+#' @importFrom grafo getTask
 
 setMethod(
   "getTask",
@@ -254,6 +268,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage getData(graph, tsNames)
 #' @seealso `grafo::getData`
+#' @importFrom grafo getData
 
 
 setMethod(
@@ -269,7 +284,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage searchNode(graph, tsNames)
 #' @seealso `grafo::searchNode`
-#' @import grafo
+#' @importFrom grafo searchNode
 #' @export
 
 setMethod(
@@ -297,7 +312,7 @@ setMethod(
 #'
 #' searchNode(g, "FONTE", "CODICE_FONTE") # deve tornare il nome "A"
 #' }
-#'
+#' @importFrom grafo setMeta
 
 
 setMethod(
@@ -344,6 +359,7 @@ setMethod(
 #' @return il grafo modificato
 #' @exportMethod rmNode
 #' @include functions.r
+#' @importFrom grafo rmNode
 #' @export 
 
 setMethod(

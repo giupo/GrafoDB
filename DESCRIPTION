@@ -5,6 +5,11 @@ Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
 Description: Adds DB backend to Grafo
 Depends:
     R (>= 3.0.3),
+License: BSD
+LazyData: true
+Imports:
+    Rcpp (>= 0.11.1),
+    BH,
     grafo,
     rcf,
     igraph,
@@ -16,16 +21,14 @@ Depends:
     RJSONIO,
     stringr,
     formatR,
-    BH,
-    Rcpp,
+    DBI,
     rprogressbar,
     stats,
-    ttutils
-License: BSD
-LazyData: true
-Imports:
-    Rcpp (>= 0.11.1),
-    BH
+    RPostgreSQL,
+    doParallel,
+    foreach,
+    iterators,
+    XML
 LinkingTo: Rcpp, BH
 Suggests:
     testthat

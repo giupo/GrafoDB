@@ -1,3 +1,6 @@
+#' @importFrom rutils is.windows
+NULL
+
 if(is.windows()) {
   # Cluster Windows I hate you
   options(GCLUSTER=FALSE)
@@ -14,7 +17,11 @@ if(is.windows()) {
 #' @param ... other params passed to cluster constructor
 #' @return an instance of a Cluster (as of `parallel` package).
 #'         `NULL` if on Windows (it hangs!)
-#' @import parallel doParallel rutils
+#' @importFrom rutils tempdir workDir whoami flypwd is.windows
+#' @importFrom grafo tsRead tsWrite
+#' @importFrom parallel detectCores makePSOCKcluster makeForkCluster stopCluster
+#' @importFrom parallel clusterExport clusterEvalQ setDefaultCluster
+#' @importFrom doParallel registerDoParallel
 #' @export
 
 initCluster <- function(ncores=NULL, ...) {

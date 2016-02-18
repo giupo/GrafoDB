@@ -220,4 +220,4 @@ GrowlReporter <- setRefClass(
 reporters <- MultiReporter()
 reporters$reporters <- list(SummaryReporter(), GrowlReporter())
 
-test_check("GrafoDB", reporter=reporter)
+test_check("GrafoDB", reporter=reporters)

@@ -9,7 +9,11 @@
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
 #' @include persistence.r RcppExports.R
-#' @import stringr rutils
+#' @importFrom RPostgreSQL2 dbGetPreparedQuery
+#' @importFrom rutils whoami flypwd
+#' @importFrom igraph graph.data.frame graph.empty vertex
+#' @importFrom stringr str_match
+#' @importFrom hash hash
 
 .init <- function(.Object, tag="cf10") {
   if(is.null(tag)) {
@@ -147,7 +151,8 @@ to.data.frame <- function(x, name=NULL) {
 #' @name from.data.frame
 #' @usage from.data.frame(df)
 #' @param df data.frame compilato dal database
-#' @import RJSONIO
+#' @importFrom RJSONIO fromJSON
+#' @importFrom bimets TSERIES
 #' @note i dati dal db sono memorizzati come stringhe JSON
 #' @rdname fromdataframe
 
@@ -185,7 +190,7 @@ from.data.frame <- function(df) {
 #' @name .declutter_function
 #' @usage .declutter_function(f)
 #' @param f formula in formato testo
-#' @import stringr
+#' @importFrom stringr str_locate str_trim
 #' @rdname declutter-function-internal
 
 .declutter_function <- function(f) {
@@ -286,7 +291,8 @@ from.data.frame <- function(df) {
 #' @param x istanza di GrafoDB
 #' @param nomi array di nomi di serie storiche
 #' @rdname expr-internal
-#' @import formatR
+#' @importFrom formatR tidy_source
+#' @importFrom hash keys
 
 .expr <- function(x, nomi, echo=FALSE) {
   functions <- x@functions
@@ -460,7 +466,6 @@ from.data.frame <- function(df) {
 #' @param graph istanza di `GrafoDB`
 #' @return la serie storica calcolata.
 #' @export
-#' @import grafo
 #' @rdname evaluateSingle-internal
 #' @note la scelta di evaluateSingle ricade su .evaluateSingle1, le altre due
 #'       implementazioni NON SUPPORTANO LE SERIE ELEMENTARI
@@ -475,8 +480,10 @@ from.data.frame <- function(df) {
 #' @name .evaluate
 #' @usage .evaluate(object)
 #' @usage .evaluate(object, v_start)
-#' @return il grafo con i dati correttamente valutati
-#' @import grafo igraph RPostgreSQL2
+#' @return il grafo con i dati correttamente valutato
+#' @importFrom igraph V induced.subgraph neighborhood delete.vertices degree
+#' @importFrom rprogressbar ProgressBar updateProgressBar kill
+#' @importFrom foreach foreach %do% %dopar%
 #' @rdname evaluate-internal
 
 .evaluate <- function(object, v_start=NULL, deep=T, ...) {
@@ -649,7 +656,8 @@ ratio <- function() {
 #' @param name nome serie
 #' @param tag id del grafo (default su `cf10`)
 #' @return una serie o una lista di serie
-#' @import rutils
+#' @importFrom rutils whoami flypwd
+#' @importFrom bimets is.bimets
 #' @export
 
 getdb <- function(name, tag="cf10") {
@@ -688,6 +696,7 @@ getdb <- function(name, tag="cf10") {
 #'         di un solo elemento, ritorna direttamente la serie storica
 #'         (questo e' un side-effect, non mi piace)
 #' @note se i e' un singolo nome e non esiste nel DB, la funzione termina con errore
+#' @importFrom hash keys
 
 .getdata <- function(x,i) {
   ## check if changed, then load internal changes
@@ -811,7 +820,8 @@ getdb <- function(name, tag="cf10") {
 #' @usage elimina(tag)
 #' @param tag `tag` che distingue in modo univoco il grafo ed i suoi dati
 #' @export
-#' @import DBI RPostgreSQL
+#' @importFrom RPostgreSQL2 dbGetPreparedQuery
+#' @importFrom DBI dbSendQuery dbBegin dbCommit dbRollback
 
 elimina <- function(tag) {
 

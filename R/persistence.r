@@ -20,11 +20,19 @@
 #' @include conflicts.r
 #' @rdname saveGraph-internal
 
-## FIXME: #31849
+# FIXME: #31849
 # https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
-.saveGraph <- function(x, tag = x@tag) {
+.saveGraph <- function(x, tag = x@tag, ...) {
   if(hasConflicts(x)) {
     stop("Il grafo ",tag, " ha conflitti, risolverli prima di salvare")
+  }
+
+  param_list <- as.list(...)
+
+  msg <- if('msg' %in% names(param_list)) {
+    param_list[["msg"]]
+  } else {
+    NULL
   }
   
   tagExists <- .tagExists(tag)
@@ -33,14 +41,14 @@
     .updateGraph(x)
   } else {
     if (x@tag == tag) {
-      .createGraph(x, tag)  
+      .createGraph(x, tag, msg=msg)  
     } else {
       con <- pgConnect()
       on.exit(dbDisconnect(con))
       dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
       dbBegin(con)
-      .copyGraph(x@tag, tag, con)
-      .updateGraph(x, tag, con)
+      .copyGraph(x@tag, tag, con, msg=msg)
+      .updateGraph(x, tag, con, msg=msg)
       dbCommit(con)
     }
   }
@@ -417,7 +425,11 @@
 #' @param x istanza di Grafo
 #' @param tag identificativo della versione
 #' @usage .createGraph(g, tag)
-#' @import plyr
+#' @importFrom RPostgreSQL2 dbGetPreparedQuery
+#' @importFrom foreach foreach %do%
+#' @importFrom rutils whoami
+#' @importFrom RPostgreSQL2 dbBegin
+#' @importFrom DBI dbSendQuery dbRollback
 
 .createGraph <- function(x, tag, con=NULL) {
   if(is.null(con)) {
@@ -531,6 +543,8 @@
 #' @param x istanza di grafo
 #' @param con connessione al DB
 #' @return un intero ad indicare il numero di versioni rolling salvate sul DB
+#' @importFrom DBI dbGetQuery
+#' @include db.r
 
 countRolling <- function(x, con = NULL) {
   if(is.null(con)) {
@@ -560,7 +574,12 @@ countRolling <- function(x, con = NULL) {
 #' @param con connessione al database
 #' @note questa e' una funzione interna del grafo invocata da `updateGraph`
 #' @seealso saveGraph updateGraph
-#' @import RPostgreSQL2 parallel iterators foreach
+#' @importFrom DBI dbGetQuery
+#' @importFrom RPostgreSQL2 dbGetPreparedQuery
+#' @importFrom rprogressbar ProgressBar updateProgressBar kill
+#' @importFrom RJSONIO toJSON
+#' @importFrom iterators iter
+#' @importFrom foreach foreach %do% %dopar%
 
 doHistory <- function(x, con) {
   tag <- x@tag
@@ -640,7 +659,7 @@ doHistory <- function(x, con) {
     function(...) {
       x <- list(...)
       count <<- count + length(x)
-      update(pb, count, last(unlist(x)))
+      updateProgressBar(pb, count, last(unlist(x)))
       c(...)
     }
   }

@@ -2,6 +2,8 @@
 library(testthat)
 library(devtools)
 library(methods)
+library(DBI)
+source("lib_mgt.r")
 # options(env="test")
 options(GCLUSTER=F)
 load_all()

@@ -4,6 +4,9 @@
 #' @include functions.r
 NULL
 
+
+#' @importFrom rcf as.dataset
+
 setMethod(
   "[",
   c("GrafoDB", "character", "missing", "ANY"),
