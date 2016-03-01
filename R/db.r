@@ -189,15 +189,23 @@ dbSettings <- function(flush=FALSE) {
 #' @importFrom DBI dbGetInfo
 #' @export
 
-pgConnect <- function(env="prod", userid=NULL, password=NULL) {
+pgConnect <- function(env="prod", userid=NULL, password=NULL, con=NULL) {
+  if(!is.null(con)) {
+    return(con)
+  }
+  
   con <- getOption("pgConnect", NULL)
   ## veriifico la connessione
-  con <- tryCatch({
-    dbGetInfo(con)
-    con
-  }, error = function(err) {
+  con <- if(is.null(con)) {
     .buildConnection(userid, password)
-  })
+  } else {
+    tryCatch({
+      dbGetInfo(con)
+      con
+    }, error = function(err) {
+      .buildConnection(userid, password)
+    })
+  }
   
   options(pgConnect=con)
   con

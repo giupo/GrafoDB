@@ -180,7 +180,9 @@ GrafoDB <- setClass(
     ordinal = "numeric",
     timestamp = "POSIXct",
     touched = "character",
-    edges = "hash"),
+    edges = "hash",
+    dbdati = "data.frame",
+    dbformule = "data.frame"),
   contains = "DBDataset")
 
 #' costruttore per la classe GrafoDB

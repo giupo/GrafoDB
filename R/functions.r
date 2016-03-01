@@ -24,6 +24,8 @@
   .Object@data <- hash()
   .Object@functions <- hash()
   .Object@touched <- character(0)
+  .Object@dbdati <- loadDati(tag, con=con)
+  .Object@dbformule <- loadFormule(tag, con=con)
   .Object@ordinal <- if(grepl("p(\\d+)$", tag)) {
     mth <- str_match(tag, "p(\\d+)$")
     tag <- gsub(paste0(mth[1,1], "$"), "", tag)
@@ -33,6 +35,9 @@
   }
   .Object@tag <- tag
   con <- pgConnect()
+  .Object@dbdati <- loadDati(tag, con=con)
+  .Object@dbformule <- loadFormule(tag, con=con)
+
   on.exit(dbDisconnect(con))
   username <- whoami()
   password <- flypwd()

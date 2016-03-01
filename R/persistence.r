@@ -710,3 +710,31 @@ readBinary <- function(path) {
   on.exit(close(con))
   unserialize(con)
 }
+
+
+#' Legge tutta la tabella dei dati per un determinato tag
+#'
+#' @name loadTable
+#' @usage loadTable(tableName, tag)
+#' @return un data.frame con i dati delle serie storiche
+#' @param tableName nome della tabella
+#' @param tag nome del tag
+#' @note funzione interna
+#' @importFrom DBI dbReadTable
+#' @include db.r
+
+loadTable <- function(tableName, tag, con=NULL) {
+  conWasNull <- is.null(con)
+  con <- pgConnect(con=con)
+  if(conWasNull) {
+    on.exit(dbDisconnect(con))
+  }
+
+  dbReadTable(con, paste0(tableName, '_', tag))
+}
+
+  
+loadDati <- function(tag, con=NULL) loadTable('dati', tag, con=con)
+loadArchi <- function(tag, con=NULL) loadTable('archi', tag, con=con)
+loadMetadati <- function(tag, con=NULL) loadTable('metadati', tag, con=con)
+loadFormule <- function(tag, con=NULL) loadTable('formule', tag, con=con)
