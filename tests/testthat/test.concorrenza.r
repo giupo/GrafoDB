@@ -160,7 +160,6 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
   g2["C"] <- function(A) {
     C = A*2
   }
-
   saveGraph(g1)
   expect_warning(saveGraph(g2))
   conflicts <- getConflicts(g1)

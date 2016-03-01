@@ -24,8 +24,6 @@
   .Object@data <- hash()
   .Object@functions <- hash()
   .Object@touched <- character(0)
-  .Object@dbdati <- loadDati(tag, con=con)
-  .Object@dbformule <- loadFormule(tag, con=con)
   .Object@ordinal <- if(grepl("p(\\d+)$", tag)) {
     mth <- str_match(tag, "p(\\d+)$")
     tag <- gsub(paste0(mth[1,1], "$"), "", tag)
@@ -35,58 +33,49 @@
   }
   .Object@tag <- tag
   con <- pgConnect()
+  on.exit(dbDisconnect(con))
+  
+  archi <- loadArchi(tag, con=con)
   .Object@dbdati <- loadDati(tag, con=con)
   .Object@dbformule <- loadFormule(tag, con=con)
 
-  on.exit(dbDisconnect(con))
-  username <- whoami()
-  password <- flypwd()
-  settings <- dbSettings()
-  network <- load_archi(username, password, settings$host,
-                        settings$port, settings$dbname, tag);
+  #username <- whoami()
+  #password <- flypwd()
+  #settings <- dbSettings()
   
-  network <- if(nrow(network) > 0) {
-    graph.data.frame(as.data.frame(network), directed=TRUE)
+  network <- if(nrow(archi) > 0) {
+    archi <- archi[, c("partenza", "arrivo")]
+    graph.data.frame(as.data.frame(archi), directed=TRUE)
   } else {
     graph.empty(directed=TRUE)
   }
   
-  df <- dbGetPreparedQuery(
-    con,
-    "select name from dati where tag=?",
-    bind.data = tag)
+  #df <- dbGetPreparedQuery(
+  #  con,
+  #  "select name from dati where tag=?",
+  #  bind.data = tag)
 
-  if(nrow(df)) {
-    nomi <- as.character(df$name)
+  #if(nrow(df)) {
+  .Object@network <- network
+  nomi <- names(.Object)
+  if(length(nomi) >0 ) {
     pending.names <- setdiff(nomi, V(network)$name)
     network <- network + vertex(pending.names)
   }
   
   .Object@network <- network
   
-  df <- dbGetPreparedQuery(
-    con,
-    "select * from grafi where tag = ?",
-    bind.data = tag)
-
-  
-  if(nrow(df)) {
+  df <- loadGrafi(con)
+  dftag <- df[df$tag == tag,]
+  if(nrow(dftag)) {
     ## il grafo esiste nel DB
-    .Object@timestamp <- df$last_updated
+    .Object@timestamp <- dftag$last_updated
     if(interactive()) {
-      message(df$comment)
+      message(dftag$comment)
     }
   } else {
     ## il grafo non esiste nel DB
-    .Object@timestamp <- Sys.time()
-    sql <- paste0(
-      "INSERT INTO grafi(tag, commento, last_updated, autore) ",
-      " select ?,?,LOCALTIMESTAMP::timestamp(0),? ",
-      " WHERE NOT EXISTS (SELECT 1 FROM grafi WHERE tag=?)")
-    autore <- whoami()
-    dati <- cbind(tag, paste0('Grafo per ', tag), autore, tag)
-    names(dati) <- c("tag", "commento", "autore", "tag")
-    dbGetPreparedQuery(con, sql, bind.data = dati)
+    .Object <- createNewGrafo(.Object, tag, con=con)
   }
   
   .Object
@@ -304,14 +293,8 @@ from.data.frame <- function(df) {
   in.functions <- intersect(keys(functions), nomi)
   da.caricare.db <- setdiff(nomi, in.functions)
   from.db <- if(length(da.caricare.db)) {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    params <- as.data.frame(cbind(x@tag, da.caricare.db))
-    names(params) <- c("tag", "name")
-    dbGetPreparedQuery(
-      con,
-      "select name, formula from formule where tag = ? and name = ?",
-      bind.data = params)
+    dbformule <- x@dbformule
+    dbformule[dbformule$name %in% nomi, c("name", "formula")]
   } else {
     data.frame(name=character(), formula=character())
   }
@@ -547,7 +530,7 @@ from.data.frame <- function(df) {
   is.interactive <- interactive()
   if(is.interactive) {
     pb <- ProgressBar(min=0, max=total)
-    update(pb, i, "Try Cluster...")
+    updateProgressBar(pb, i, "Try Cluster...")
   }  
   
   cl <- initCluster()
@@ -663,19 +646,34 @@ ratio <- function() {
 #' @return una serie o una lista di serie
 #' @importFrom rutils whoami flypwd
 #' @importFrom bimets is.bimets
+#' @importFrom foreach foreach %do% %dopar%
+#' @importFrom iterators iter
 #' @export
 
-getdb <- function(name, tag="cf10") {
-  settings <- dbSettings()
-  username <- whoami()
-  password <- flypwd()
+getdb <- function(x, name, tag="cf10") {
+  #settings <- dbSettings()
+  #username <- whoami()
+  #password <- flypwd()
 
-  dati <- load_data_nativo(
-    username,
-    password,
-    settings$host,
-    settings$port,
-    settings$dbname, name, tag); 
+  #dati <- load_data_nativo(
+  #  username,
+  #  password,
+  #  settings$host,
+  #  settings$port,
+  #  settings$dbname, name, tag); 
+
+  dbdati <- x@dbdati
+  df <- dbdati[dbdati$name %in% name, ]
+  dati <- if(length(name) > 1000) {
+    cl <- initCluster()
+    foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
+      from.data.frame(row)
+    }
+  } else {
+    foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %do% {
+      from.data.frame(row)
+    }
+  }
   
   if(length(dati)==1 && is.bimets(dati[[1]])) {
     dati[[1]]
@@ -713,7 +711,7 @@ getdb <- function(name, tag="cf10") {
     if(x@ordinal != 0) {
       tag <- paste0(tag, "p", x@ordinal)
     }
-    ret <- getdb(da.caricare.db, tag)
+    ret <- getdb(x, da.caricare.db, tag)
     if(is.bimets(ret)) {
       ret1 <- list()
       ret1[[da.caricare.db]] <- ret
@@ -798,9 +796,9 @@ getdb <- function(name, tag="cf10") {
   }
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-  dbBegin(con)
   tryCatch({
+    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+    dbBegin(con)
     dbGetPreparedQuery(con, sql, bind.data = params)
   }, error = function(err) {
     dbRollback(con)
@@ -825,7 +823,7 @@ getdb <- function(name, tag="cf10") {
 #' @usage elimina(tag)
 #' @param tag `tag` che distingue in modo univoco il grafo ed i suoi dati
 #' @export
-#' @importFrom RPostgreSQL2 dbGetPreparedQuery
+#' @importFrom RPostgreSQL2 dbGetPreparedQuery dbBegin
 #' @importFrom DBI dbSendQuery dbBegin dbCommit dbRollback
 
 elimina <- function(tag) {
@@ -839,20 +837,21 @@ elimina <- function(tag) {
  
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-  dbBegin(con)
   tryCatch({
-    dbGetPreparedQuery(con, "delete from grafi where tag=?", bind.data = tag)
-    dbGetPreparedQuery(con, "delete from conflitti where tag=?", bind.data = tag)
-
-    tables <- c("archi", "dati", "metadati", "formule", "history")
-    tables <- paste(tables, tag, sep="_")
-
-    for(table in tables) {
-      if(dbExistsTable(con, table)) {
-        dbGetQuery(con, paste0("drop table if exists ", table))
-      }
-    }
+     dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+     dbBegin(con)
+     
+     dbGetPreparedQuery(con, "delete from grafi where tag=?", bind.data = tag)
+     dbGetPreparedQuery(con, "delete from conflitti where tag=?", bind.data = tag)
+     
+     tables <- c("archi", "dati", "metadati", "formule", "history")
+     tables <- paste(tables, tag, sep="_")
+     
+     for(table in tables) {
+       if(dbExistsTable(con, table)) {
+         dbGetQuery(con, paste0("drop table if exists ", table))
+       }
+     }
   }, error = function(err) {
     dbRollback(con)
     stop(err)

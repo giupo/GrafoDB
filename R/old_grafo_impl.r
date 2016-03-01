@@ -77,14 +77,7 @@ setMethod(
   signature("GrafoDB"),
   function(graph) {
     network <- graph@network
-    con <- pgConnect()
-    tag <- graph@tag
-    on.exit(dbDisconnect(con))
-    formule <- dbGetPreparedQuery(
-      con,
-      "select name from formule where tag = ?",
-      bind.data = tag)
-    formule <- as.character(formule[,1])
+    formule <- graph@dbformule$name
     leaves <- V(network)[degree(network, mode="out") == 0]$name
     setdiff(formule, leaves)
   })
@@ -103,14 +96,8 @@ setMethod(
   signature("GrafoDB"),
   function(graph) {
     network <- graph@network
-    con <- pgConnect()
     tag <- graph@tag
-    on.exit(dbDisconnect(con))
-    formule <- dbGetPreparedQuery(
-      con,
-      "select name from formule where tag = ?",
-      bind.data = tag)
-    formule <- as.character(formule[,1])
+    formule <-  formule <- graph@dbformule$name
     sources <- V(network)[degree(network, mode="in") == 0]$name
     intersect(sources, formule)
   })
@@ -209,8 +196,8 @@ setMethod(
   function(object, tsName, attrName, attrValue) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    dbBegin(con)
     tryCatch({
+      dbBegin(con)
       sql <- "delete from metadati where tag = ? and name = ? and key = ? nad value =?"
       params <- cbind(object@tag, tsName, attrName, attrValue)
       dbGetPreparedQuery(con, sql, bind.data=params)

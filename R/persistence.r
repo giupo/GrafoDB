@@ -27,7 +27,7 @@
     stop("Il grafo ",tag, " ha conflitti, risolverli prima di salvare")
   }
 
-  param_list <- as.list(...)
+  param_list <- list(...)
 
   msg <- if('msg' %in% names(param_list)) {
     param_list[["msg"]]
@@ -45,22 +45,39 @@
     } else {
       con <- pgConnect()
       on.exit(dbDisconnect(con))
-      dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-      dbBegin(con)
-      .copyGraph(x@tag, tag, con, msg=msg)
-      .updateGraph(x, tag, con, msg=msg)
-      dbCommit(con)
+      tryCatch({
+        dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+        dbBegin(con)
+        .copyGraph(x@tag, tag, con, msg=msg)
+        .updateGraph(x, tag, con, msg=msg)
+        dbCommit(con)
+      }, error=function(cond) {
+        dbRollback(con)
+        stop(cond)
+      })
     }
   }
 }
 
-.copyGraph <- function(from, to, con=NULL) {
+.copyGraph <- function(from, to, con=NULL, ...) {
+  param_list <- list(...)
+  msg <- if('msg' %in% names(param_list)) {
+    param_list[["msg"]]
+  } else {
+    NULL
+  }
+  
   if(is.null(con)) {
     wasNull <- TRUE
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-    dbBegin(con)
+    tryCatch({
+      dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+      dbBegin(con)
+    }, error = function(cond) {
+      dbRollback(con)
+      stop(cond)
+    })
   } else {
     wasNull <- FALSE
   }
@@ -109,13 +126,24 @@
   })
 }
 
-.updateGraph <- function(x, tag=x@tag, con=NULL) {
+.updateGraph <- function(x, tag=x@tag, con=NULL, ...) {
+  param_list <- list(...)
+  msg <- if('msg' %in% names(param_list)) {
+    param_list[["msg"]]
+  } else {
+    NULL
+  }
   wasNull <- is.null(con)
   if(wasNull) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-    dbBegin(con)
+    tryCatch({
+      dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+      dbBegin(con)
+    }, error = function(cond) {
+      dbRollback(con)
+      stop(cond)
+    })
   }
   ## supporto per history
   tryCatch(
@@ -167,8 +195,11 @@
   }
 }
 
+#' @importFrom gdata drop.levels
+
 .updateArchi <- function(x, con, tag=x@tag) {
   if(interactive()) cat("Update Archi...")
+
   data <- x@data
   functions <- x@functions
   timestamp <- x@timestamp
@@ -431,13 +462,19 @@
 #' @importFrom RPostgreSQL2 dbBegin
 #' @importFrom DBI dbSendQuery dbRollback
 
-.createGraph <- function(x, tag, con=NULL) {
+.createGraph <- function(x, tag, con=NULL, ...) {
+  param_list <- list(...)
   if(is.null(con)) {
     wasNull <- TRUE
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-    dbBegin(con)
+    tryCatch({
+      dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+      dbBegin(con)
+    }, error = function(cond) {
+      dbRollback(con)
+      stop(cond)
+    })
   } else {
     wasNull <- FALSE
   }
@@ -716,6 +753,7 @@ readBinary <- function(path) {
 #'
 #' @name loadTable
 #' @usage loadTable(tableName, tag)
+#' @usage loadTable(tableName, tag, con)
 #' @return un data.frame con i dati delle serie storiche
 #' @param tableName nome della tabella
 #' @param tag nome del tag
@@ -729,12 +767,70 @@ loadTable <- function(tableName, tag, con=NULL) {
   if(conWasNull) {
     on.exit(dbDisconnect(con))
   }
-
-  dbReadTable(con, paste0(tableName, '_', tag))
+  fullTableName <- paste0(tableName, '_', tag)
+  if(dbExistsTable(con, fullTableName)) {
+    dbReadTable(con, fullTableName)
+  } else {
+    stop()
+  }
 }
 
-  
-loadDati <- function(tag, con=NULL) loadTable('dati', tag, con=con)
-loadArchi <- function(tag, con=NULL) loadTable('archi', tag, con=con)
+loadDati <- function(tag, con=NULL) tryCatch({
+  loadTable('dati', tag, con=con)
+}, error=function(cond) {
+  data.frame(
+    name=character(),
+    year=integer(),
+    period=integer(),
+    freq=integer(),
+    dati=character(),
+    stato=integer(),
+    notes=character(),
+    autore=character())
+})
+
+loadArchi <- function(tag, con=NULL) tryCatch({
+  loadTable('archi', tag, con=con)
+}, error=function(cond) {
+  data.frame(partenza=character(), arrivo=character())
+})
+
 loadMetadati <- function(tag, con=NULL) loadTable('metadati', tag, con=con)
-loadFormule <- function(tag, con=NULL) loadTable('formule', tag, con=con)
+loadFormule <- function(tag, con=NULL) tryCatch({
+  loadTable('formule', tag, con=con)
+}, error=function(cond) {
+  data.frame(
+    name=character(),
+    tag=character(),
+    formula=character(),
+    autore=character())
+})
+
+loadGrafi <- function(con=NULL) {
+  conWasNull <- is.null(con)
+  con <- pgConnect(con=con)
+  if(conWasNull) {
+    on.exit(dbDisconnect(con))
+  }
+  dbReadTable(con, 'grafi')
+}
+
+
+createNewGrafo <- function(x, tag, con=NULL) {
+  conWasNull <- is.null(con)
+  con <- pgConnect(con=con)
+  if(conWasNull) {
+    on.exit(dbDisconnect(con))
+  }
+  
+  x@timestamp <- Sys.time()
+  sql <- paste0(
+    "INSERT INTO grafi(tag, commento, last_updated, autore) ",
+    " select ?,?,LOCALTIMESTAMP::timestamp(0),? ",
+    " WHERE NOT EXISTS (SELECT 1 FROM grafi WHERE tag=?)")
+  autore <- whoami()
+  dati <- cbind(tag, paste0('Grafo per ', tag), autore, tag)
+  names(dati) <- c("tag", "commento", "autore", "tag")
+  dbGetPreparedQuery(con, sql, bind.data = dati)
+  x
+}

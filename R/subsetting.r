@@ -59,7 +59,7 @@ setMethod(
     network + vertex(toBeAdded)
   } else {
     if(!is.dataset(value) && length(E(network)) > 0) {
-      network - E(network)[to(name)]
+      network - E(network)[.to(name)]
     } else {
       network
     }

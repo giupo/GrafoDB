@@ -11,17 +11,21 @@ if(!require(devtools)) {
 
 package <- as.package(".")
 dep <- unlist(strsplit(package$depends, ",|\n"))
+imp <- unlist(strsplit(package$imports, ",|\n"))
 sugg <- unlist(strsplit(package$suggests, ",|\n"))
-dep <- c(dep, sugg)
+dep <- c(dep, sugg, imp)
+dep <- unique(dep)
 
 .required_pkgs <- dep[which(dep != "")]
 
 for (pkg in .required_pkgs) {
-  if(pkg != "rcf") {
+  if(pkg != "rcf" && pkg != "R (>= 3.0.3)" && pkg != "Rcpp (>= 0.11.1)") {
     tryCatch({
       library(pkg, character.only=TRUE)
     }, error = function(err) {
+      message("Installing ", pkg)
       if(is_win) {
+        
         install.packages(pkg, repos=.repos, dependencies=TRUE)
       } else {
         install.packages(

@@ -112,18 +112,19 @@ dbSettings <- function(flush=FALSE) {
   settings <- getOption("dbSettings", NULL)
   if(is.null(settings)) {
     home_ini_file <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
-    home_settings <- list()
     if(file.exists(home_ini_file)) {
       home_settings <- ini_parse(home_ini_file)
       if("ConnectionInfo" %in% names(home_settings)) {
         home_settings <- home_settings$ConnectionInfo
       }
+      options(dbSettings=home_settings)
+      return(home_settings)
     }
     
     settings <- ini_parse(
       file.path(system.file(package="GrafoDB"), "ini/sql.ini"))
     settings <- settings$ConnectionInfo
-    settings <- merge(home_settings, settings)
+    options(dbSettings=settings)
   }
   settings
 }

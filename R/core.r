@@ -346,8 +346,8 @@ setMethod(
     network <- x@network
     nodes <- V(network)[topological.sort(x@network)]$name
 
-    all_names <- dbGetPreparedQuery(
-      con,"select name from dati where tag=?", bind.data = x@tag)$name
+    all_names <- dbGetQuery(
+      con,paste("select name from dati where tag='", x@tag, "'"))$name
 
     remaining <- setdiff(all_names, nodes)
     # per preservare l'ordinamento topologico
@@ -720,8 +720,8 @@ setMethod(
 
     tag <- x@tag
     params <- as.data.frame(list(nuovo=nuovo, vecchio=vecchio))
-    dbBegin(con)
     tryCatch({
+      dbBegin(con)
       dbGetPreparedQuery(con, paste0("update dati_", tag," set name = ? where name = ?"),
                          bind.data = params)
       dbGetPreparedQuery(con, paste0("update formule_", tag, " set name = ? where name = ?"),
@@ -796,6 +796,7 @@ setMethod(
     .leaves(x)
   })
 
+#' @importFrom stringr str_split
 setMethod(
   "$",
   signature("GrafoDB"),
