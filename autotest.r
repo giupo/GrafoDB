@@ -2,6 +2,22 @@
 library(testthat)
 library(devtools)
 library(methods)
+library(DBI)
+library(rutils)
+library(grafo)
+library(rcf)
+library(hash)
+library(xts)
+library(DBI)
+library(igraph)
+library(bimets)
+library(stringr)
+library(RPostgreSQL)
+library(RPostgreSQL2)
+library(foreach)
+library(iterators)
+library(gdata)
+source("lib_mgt.r")
 # options(env="test")
 options(GCLUSTER=F)
 load_all()
@@ -38,7 +54,7 @@ GrowlReporter <- setRefClass(
       show_praise <<- TRUE
       callSuper(...)
     },
-    
+
     add_result = function(result) {
       if (result$passed) {
         passed_count <<- passed_count + 1L
