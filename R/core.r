@@ -341,13 +341,13 @@ setMethod(
   "names",
   c("GrafoDB"),
   function(x) {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
+    data <- x@data
+    dbdati <- x@dbdati
     network <- x@network
-    nodes <- V(network)[topological.sort(x@network)]$name
-
-    all_names <- dbGetQuery(
-      con,paste("select name from dati where tag='", x@tag, "'"))$name
+    nodes <- V(network)[topological.sort(network)]$name
+    
+    all_names <- union(keys(data), if(is.null(dbdati$name)) character() else dbdati$name)
+    all_names <- union(all_names, V(network)$name)
 
     remaining <- setdiff(all_names, nodes)
     # per preservare l'ordinamento topologico

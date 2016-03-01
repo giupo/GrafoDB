@@ -147,6 +147,21 @@ test_that("Cascade subsetting works", {
   expect_true("B" %in% names(g))
 })
 
+test_that("Saving preserves network and nodes", {
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["C"] <- function(A,B) {
+    C = A + B
+  }
+  ## ora salvo, e vediamo cosa succede
+  g <- saveGraph(g)
+  
+  expect_true("A" %in% names(g))
+  expect_true("B" %in% names(g))
+  expect_true("A" %in% upgrf(g, "C", livello=1))
+  expect_true("B" %in% upgrf(g, "C", livello=1))
+})
+
 elimina("test")
 
 test_that("posso rimuovere archi", {
@@ -170,10 +185,9 @@ test_that("posso rimuovere archi", {
   ## ora salvo, e vediamo cosa succede
   g <- saveGraph(g)
 
-
-  expect_true("A" %in% names(g))
   expect_true("B" %in% names(g))
   expect_true("C" %in% names(g))
+  expect_true("A" %in% names(g))
   
   g["C"] <- function(A) {
     C=A
@@ -190,6 +204,12 @@ test_that("I can cast a empty GrafoDB to a Dataset", {
   g <- GrafoDB("test")
   d <- as.dataset(g)
   expect_true(is.dataset(d))
+  expect_true(all(names(d) %in% names(g)))
+  for(name in names(d)) {
+    d1 <- d[[name]]
+    g1 <- g[[name]]
+    expect_equal(d1, g1)
+  }
 })
 
 elimina("test")
