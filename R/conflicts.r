@@ -1,4 +1,45 @@
 
+#' @importFrom DBI dbGetQuery
+#' @importFrom RPostgreSQL dbGetQuery
+#' @include db.r 
+
+.showConflicts <- function(x) {
+  con <- pgConnect()
+  on.exit(dbDisconnect(con))
+  tag <- x@tag
+  df <- dbGetQuery(
+    con,
+    paste0("select * from conflitti where tag = '", tag,"'"))
+
+  for(name in df$name) {
+    dfserie <- df[df$name == name,]
+    originale <- x[[name]]
+    sul.db <- from.data.frame(dfserie)
+  }
+}
+
+.removeConflicts <- function(x, name=NULL) {
+  tag <- x@tag
+  
+  sql <- if(is.character(name)) {
+    paste0("delete from conflitti where tag = '", tag,"' and name ='", name, "'")
+  } else {
+    paste0("delete from conflitti where tag = '", tag, "'")
+  }
+  
+  con <- pgConnect()
+  on.exit(dbDisconnect(con))
+  tryCatch({
+    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+    dbBegin(con)
+    dbGetQuery(con, sql)
+  }, error = function(err) {
+    dbRollback(con)
+    stop(err)
+  })
+  dbCommit(con)
+}
+
 #' Ritorna `TRUE` se il grafo ha conflitti
 #'
 #' @name hasConflicts

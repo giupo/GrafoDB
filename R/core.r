@@ -31,12 +31,14 @@ setGeneric(
 #' @param x istanza di `GrafoDB`
 #' @param key `character` che specifica la chiave del metadato
 #' @param value `character` che specifica il valore del metadato
-#' @return un character array di nomi di serie che rispettano la clausola `key` = `value`. Se non esistono ritorna un character(0) (array vuoto)
+#' @return un character array di nomi di serie che rispettano la clausola `key` = `value`.
+#'         Se non esistono ritorna un character(0) (array vuoto)
 #' @examples \dontrun{
 #' g = GrafoDB(...) # istanzia il grafo
 #' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie che hanno TAVOLA_DI_OUTPUT=BRI
 #' }
 #' @rdname lookup_generic
+#' @include lookup.r
 #' @export
 
 setGeneric(
@@ -205,6 +207,7 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage navugate(graph, nodes, order, mode, plot)
 #' @seealso `grafo::describe`
+#' @include navigate.r
 #' @export
 
 setGeneric(
@@ -258,49 +261,27 @@ setMethod(
 #' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie che hanno TAVOLA_DI_OUTPUT=BRI
 #' }
 #' @export
+#' @include lookup.r
 
 setMethod(
   "lookup",
   c("GrafoDB", "character", "character"),
   function(x, key, value) {
-    tag <- x@tag
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    ## non ci sono prepared statement funzionanti. maledetti.
-    df <- dbGetPreparedQuery(
-      con, "select distinct name from metadati where tag = ? and key = ? and value = ?",
-      bind.data=cbind(tag, key, value))
-    as.character(df$name)    
+    .lookup(x, key, value)
   })
 
 setMethod(
   "lookup",
   c("GrafoDB", "numeric", "missing"),
   function(x, key, value) {
-    tag <- x@tag
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    ## non ci sono prepared statement funzionanti. maledetti.
-    df <- dbGetPreparedQuery(
-      con, paste0("select name from dati where tag = ? and dati like '%",key,"%'"),
-      bind.data = tag)
-    as.character(df$name)    
+    .lookup_dati(x, key)
   })
 
 setMethod(
   "lookup",
-  c("GrafoDB", "numeric", "logical"),
+  c("GrafoDB", "character", "missing"),
   function(x, key, value) {
-    if(!value) {
-      return(lookup(x, key))
-    }
-    tag <- x@tag
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    df <- dbGetPreparedQuery(
-      con, paste0("select name from formule where tag=? and formula like '%",key,"%'"),
-      bind.data=tag)
-    as.character(df$name)
+    .lookup_formula(x, key)
   })
 
 
@@ -401,6 +382,7 @@ setMethod(
 #' g <- evaluate(g, v_start) # lo valuta solo a partire da ZERIQ
 #' }
 #' @importFrom grafo evaluate
+#' @include evaluate.r
 
 setMethod(
   "evaluate",
@@ -455,17 +437,13 @@ setMethod(
   })
 
 #' @importFrom grafo getMetadata
+#' @include metadati.r
 
 setMethod(
   "getMetadata",
   signature("GrafoDB", "character", "ANY"),
   function(object, tsName, full=FALSE) {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    dbGetPreparedQuery(
-      con,
-      "select name, key, value from metadati where tag = ? and name = ? order by name, key",
-      bind.data <- cbind(object@tag, tsName))
+    .getMetadata(x, name)
   })
 
 #' Edita un la formula di una serie storica.
@@ -536,6 +514,7 @@ setGeneric(
 #' @param name nome della serie da valutare
 #' @param debug se `TRUE` attiva la modalita' di debugging
 #' @return la serie valutata
+#' @include ser.r
 #' @export
 
 setMethod(
@@ -585,6 +564,8 @@ setMethod(
     x[[names(x)]]
   })
 
+#' @include metadati.r
+
 setMethod(
   "getMeta",
   signature("GrafoDB", "character", "character"),
@@ -615,58 +596,38 @@ setMethod(
   })
 
 #' @importFrom hash keys
+#' @include metadati.r
 
 setMethod(
   "keys",
   signature("GrafoDB"),
   function(x) {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    dbGetPreparedQuery(
-      con,
-      "select distinct key from metadati where tag=? order by 1",
-      bind.data = x@tag)
+    .keys(x)
   })
 
 #' @importFrom hash values
+#' @include metadati.r
 
 setMethod(
   "values",
   signature("GrafoDB"),
   function(x, ...) {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    tag <- x@tag
     nomemetadato <- list(...)
-    df <- if(length(nomemetadato) == 1) {
-      key <- nomemetadato[[1]]
-      dbGetPreparedQuery(
-        con,
-        "select distinct value from metadati where tag=? and key=? order by 1",
-        bind.data = cbind(tag, key))
-    } else if(length(nomemetadato) == 0) {
-      dbGetPreparedQuery(
-        con,
-        "select distinct value from metadati where tag=? order by 1",
-        bind.data = tag)
+    key <- if(length(nomemetadato) == 1) {
+      nomemetadati[[1]]
     } else {
-      stop("Cannot get values pased on params")
+      NULL
     }
-    
-    as.character(df[,1])
+    .keys(x, key=key)
   })
+
+#' @include metadati.r
 
 setMethod(
   "deleteMeta",
   signature("GrafoDB", "character", "character", "character"),
   function (object, tsName, attrName, attrValue)  {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    tag <- object@tag
-    params <- data.frame(tag=tag, name=tsName, key=attrName, value=attrValue)
-    sql <- "delete from metadati where tag = ? and name= ? and key = ? and value = ?"
-    dbGetPreparedQuery(con, sql, bind.data = params)
-    invisible(NULL)
+    .deleteMeta(object, tsName, attrName, attrValue)
   })
 
 #' Rinomina una serie del grafo
@@ -685,6 +646,7 @@ setMethod(
 #'     "TS2" %in% names(g) # questo e' `TRUE`
 #'     "TS1" %in% names(g) # questo e' `FALSE`
 #' }
+#' @include rename.r
 
 setGeneric(
   "rename",
@@ -697,55 +659,7 @@ setMethod(
   signature("GrafoDB", "character", "character"),
   function(x, vecchio, nuovo){
     nameObject <- deparse(substitute(x))
-  
-    if(isNode(x, nuovo)) {
-      stop(nuovo, " e' gia' una serie del grafo")
-    }
-
-    if(!isNode(x, vecchio)) {
-      stop(vecchio, " non e' una serie del grafo")
-    }
-
-    figlie <- downgrf(x, vecchio, livello=1)
-    
-    if(vecchio %in% keys(x@data) || vecchio %in% keys(x@functions) ||
-       any(figlie %in% keys(x@data)) ||
-       any(figlie %in% keys(x@functions))) {
-      stop(vecchio, " o figlie di ", vecchio,
-           " sono in modifica. Salvare prima le modifiche ed in seguito rinominare le serie")
-    }
-    
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-
-    tag <- x@tag
-    params <- as.data.frame(list(nuovo=nuovo, vecchio=vecchio))
-    tryCatch({
-      dbBegin(con)
-      dbGetPreparedQuery(con, paste0("update dati_", tag," set name = ? where name = ?"),
-                         bind.data = params)
-      dbGetPreparedQuery(con, paste0("update formule_", tag, " set name = ? where name = ?"),
-                         bind.data = params)
-      for(figlia in figlie) {
-        dbGetPreparedQuery(con, paste0("update formule_", tag,
-                                       " set formula = replace(formula, ?, ?) where name = ?"),
-                           bind.data = as.data.frame(list(vecchio=vecchio, nuovo=nuovo, name=figlia)))
-        
-      }
-      dbGetPreparedQuery(con, paste0("update archi_", tag, " set partenza = ? where partenza = ?"),
-                         bind.data = params)
-      dbGetPreparedQuery(con, paste0("update archi_", tag, " set arrivo = ? where arrivo = ?"),
-                         bind.data = params)
-      if(dbExistsTable(con, paste0("metadati_",tag))) {
-        dbGetPreparedQuery(con, paste0("update metadati_", tag, " set name = ? where name = ?"),
-                           bind.data = params)
-      }
-    
-      dbCommit(con)
-    }, error = function(cond) {
-      dbRollback(con)
-      stop(cond)
-    })
+    .rename(x, vecchio, nuovo)
     x <- GrafoDB(tag)
     assign(nameObject, x, envir=parent.frame())
     invisible(x)

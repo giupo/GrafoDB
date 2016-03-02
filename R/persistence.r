@@ -834,3 +834,28 @@ createNewGrafo <- function(x, tag, con=NULL) {
   dbGetPreparedQuery(con, sql, bind.data = dati)
   x
 }
+
+
+resync <- function(x, con=NULL) {
+  conWasNull <- is.null(con)
+  con <- pgConnect(con=con)
+  if(conWasNull) {
+    on.exit(dbDisconnect(con))
+  }
+  tag <- x@tag
+  x@dbdati <- loadDati(tag, con=con)
+  x@dbformule <- loadFormule(tag, con=con)
+  x
+}
+
+need_resync <- function(x) {
+  timeStamp <- x@timestamp
+  con <- pgConnect()
+  on.exit(dbDisconnect(con))
+  
+  sql <- paste0("select count(tag) from grafi where tag='", x@tag,
+                "' and last_updated > '", as.character(timeStamp), "'")
+
+  df <- dbGetQuery(con, sql)
+  df[[1]] > 0
+}
