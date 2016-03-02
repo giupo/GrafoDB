@@ -129,6 +129,14 @@ dbSettings <- function(flush=FALSE) {
   settings
 }
 
+initdb <- function(con) {
+  settings <- dbSettings()
+  schemaFileName <- paste0("schema-", settings$driver, ".sql")
+  file <- file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
+  sql <- paste(readLines(file), collapse="\n")
+  dbGetQuery(con, sql)
+}
+
 #' Factory di connessioni al database Postgresql
 #'
 #' @name .buildConnection
@@ -138,9 +146,22 @@ dbSettings <- function(flush=FALSE) {
 #' @param password password utente (defaults to flypwd)
 #' @importFrom rutils whoami flypwd
 #' @importFrom DBI dbDriver dbConnect
+#' @import RSQLite
+#' @import RPostgreSQL
 
 .buildConnection <- function(userid=whoami(), password=flypwd()) {
   settings <- dbSettings()
+  drv <- dbDriver(settings$driver)
+  
+  if(settings$driver == "SQLite") {
+    con <- dbConnect(drv, dbname=settings$dbname)
+    if(settings$dbname == ":memory:") {
+      initdb(con)
+    }
+    options(pgConnect=con)
+    return(con)
+  } 
+
   drv <- dbDriver(settings$driver)
   con <- tryCatch(
     dbConnect(drv, host=settings$host, dbname=settings$dbname),
@@ -221,7 +242,7 @@ pgConnect <- function(env="prod", userid=NULL, password=NULL, con=NULL) {
 
 dbDisconnect <- function(con) {
   if(is.null(getOption("pgConnect", NULL))) {
-    RPostgreSQL::dbDisconnect(con)
+    DBI::dbDisconnect(con)
   } else {
     TRUE
   }

@@ -4,11 +4,18 @@ library(devtools)
 library(methods)
 library(rcf)
 library(DBI)
+library(RSQLite)
 library(RPostgreSQL)
 library(RPostgreSQL2)
 source("lib_mgt.r")
 # options(env="test")
 options(GCLUSTER=F)
+
+#settings <- list(
+#  driver="SQLite",
+#  dbname=":memory:"
+# )
+# options(dbSettings=settings)
 load_all()
 
 .praise <- c(

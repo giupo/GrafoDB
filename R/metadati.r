@@ -109,3 +109,30 @@
   dbGetQuery(con, sql)
   invisible(NULL)
 }
+
+#' @importFrom rutils whoami
+#' @include db.r
+#' @importFrom DBI dbGetQuery
+#' @importFrom RPostgreSQL dbGetQuery
+
+.setMeta <- function(x, name, key, value) {
+  nomiobj <- names(x)
+  if(!all(tsName %in% nomiobj)) {
+    nong <- setdiff(name, nomiobj)
+    stop("Non e' una serie del grafo: ", paste(nong, collapse=", "))
+  }
+  
+  domain <- lookup(x, key, value)
+  if(any(name %in% domain)) {
+    already <- intersect(domain, tsName)
+    warning("Ha gia' un metadato ", key, " = ", value, " :", paste(already, collapse=", "))
+  } else {
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+    sql <- paste0("insert into metadati(tag, name, key, value, autore) values ('", x@tag,"', '",
+                  name, "', '", key, "', '", value , "', '", whoami(), "')")
+    
+    dbGetQuery(con, sql)
+  }
+  object
+}

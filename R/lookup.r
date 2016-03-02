@@ -17,8 +17,8 @@
   on.exit(dbDisconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
 
-  sql <- paste0("select name from dati where tag = '", tag,
-                "' and key = '%",key,"%' and value = '", value,"'")
+  sql <- paste0("select name from metadati where tag = '", tag,
+                "' and key = '",key,"' and value = '", value,"'")
   
   df <- dbGetQuery(con, sql)
   as.character(df$name)
@@ -31,7 +31,7 @@
 #' @rdname lookup-formula-internal
 #' @param x istanza di grafo
 #' @param key Stringa da cercare
-#' @return lista di nomi che matchano `key` nella formula
+#' @return lista di nomi che hanno `key` nella formula
 #' @include db.r
 #' @importFrom DBI dbGetQuery
 #' @importFrom RPostgreSQL dbGetQuery
@@ -63,7 +63,7 @@
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
-  sql <- paste0("select name from formule where tag = '", tag,
+  sql <- paste0("select name from dati where tag = '", tag,
                 "' and dati like '%",as.character(key),"%'")
   df <- dbGetQuery(con, sql)
   as.character(df$name)

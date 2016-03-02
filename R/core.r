@@ -185,7 +185,8 @@ GrafoDB <- setClass(
     edges = "hash",
     dbdati = "data.frame",
     dbformule = "data.frame"),
-  contains = "DBDataset")
+  # contains = "DBDataset"
+)
 
 #' costruttore per la classe GrafoDB
 #'
@@ -443,7 +444,7 @@ setMethod(
   "getMetadata",
   signature("GrafoDB", "character", "ANY"),
   function(object, tsName, full=FALSE) {
-    .getMetadata(x, name)
+    .getMetadata(object, tsName)
   })
 
 #' Edita un la formula di una serie storica.

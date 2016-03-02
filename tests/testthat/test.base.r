@@ -90,6 +90,7 @@ test_that("Posso salvare il grafo sul database", {
   expect_true(all(c("A", "B", "C") %in% names(g1)))  
 })
 
+
 elimina("test1")
 elimina("test")
 

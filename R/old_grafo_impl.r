@@ -300,6 +300,7 @@ setMethod(
 #' searchNode(g, "FONTE", "CODICE_FONTE") # deve tornare il nome "A"
 #' }
 #' @importFrom grafo setMeta
+#' @include metadati.r
 
 
 setMethod(
@@ -312,17 +313,17 @@ setMethod(
       stop("Non e' una serie del grafo: ", paste(nong, collapse=", "))
     }
 
-    domain <- lookup(object, attrName, value)
+    domain <- .lookup(object, attrName, value)
     if(any(tsName %in% domain)) {
       already <- intersect(domain, tsName)
       warning("Ha gia' un metadato ", attrName, " = ", value, " :", paste(already, collapse=", "))
     } else {
       con <- pgConnect()
       on.exit(dbDisconnect(con))
-      sql <- "insert into metadati(tag, name, key, value, autore) values (?, ?, ?, ?, ?)"
-      autore <- whoami()
-      params <- cbind(object@tag, tsName, attrName, value, autore)
-      dbGetPreparedQuery(con, sql, bind.data=params)
+      sql <- paste0("insert into metadati(tag, name, key, value, autore) values ('", object@tag,"', '",
+                    tsName, "', '", attrName, "', '", value , "', '", whoami(), "')")
+      
+      dbGetQuery(con, sql)
     }
     object
   })
