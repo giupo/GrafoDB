@@ -31,12 +31,9 @@ DOCS:
 	Rscript -e "devtools::document()"
 
 clean:
-	-rm -rf ext/jsoncpp/build
-	-cd ext/libpqxx && make clean
 	-rm -f $(PKG_NAME)_*.tar.gz
 	-rm -r -f $(PKG_NAME).Rcheck
 	-rm -r -f src/*.o src/*.so
-	-rm -r -f ext/libs ext/include
 .PHONY: list
 list:
 	@echo "R files:"
