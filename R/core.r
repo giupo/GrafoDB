@@ -659,11 +659,7 @@ setMethod(
   "rename",
   signature("GrafoDB", "character", "character"),
   function(x, vecchio, nuovo){
-    nameObject <- deparse(substitute(x))
     .rename(x, vecchio, nuovo)
-    x <- GrafoDB(tag)
-    assign(nameObject, x, envir=parent.frame())
-    invisible(x)
   })
 
 

@@ -9,6 +9,8 @@ g["C"] <- function(A,B) {
 
 g["D"] <- TSERIES(c(NA,1,NA), START=c(1990,1), FREQ=4)
 
+g <- saveGraph(g)
+
 test_that("Posso salvare e ricaricare da un file", {
   path <- tempfile()
   saveBinary(g, path)
@@ -16,7 +18,6 @@ test_that("Posso salvare e ricaricare da un file", {
   expect_true(is.grafodb(x))
   unlink(path)
 })
-
 
 test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   ## il problema qui e' che quando serializzo python giustamente
@@ -47,19 +48,19 @@ test_that("I can save a graph over another existing graph", {
     D =  B * 2
   }
 
-  saveGraph(g)
-  saveGraph(g, "test1")
+  g <- saveGraph(g)
+  g <- saveGraph(g, "test1")
 
   nuovaB <- g["B"] <- TSERIES(rep(0, 10), START=c(1990,1), FREQ=4)
 
-  saveGraph(g)
-  saveGraph(g, "test1")
+  g <- saveGraph(g)
+  g <- saveGraph(g, "test1")
 
   g1 <- GrafoDB("test1")
   
   expect_equal(g$B, nuovaB)
-  expect_equal(g1$B, nuovaB)
-  
-  elimina("test")
-  elimina("test1")
+  expect_equal(g1$B, nuovaB)  
 })
+
+elimina("test")
+elimina("test1")

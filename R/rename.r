@@ -23,10 +23,11 @@
   }
   
   figlie <- downgrf(x, vecchio, livello=1)
-  
-  if(vecchio %in% keys(x@data) || vecchio %in% keys(x@functions) ||
-       any(figlie %in% keys(x@data)) ||
-       any(figlie %in% keys(x@functions))) {
+  data <- x@data
+  functions <- x@functions
+  if(vecchio %in% keys(data) || vecchio %in% keys(functions) ||
+       any(figlie %in% keys(data)) ||
+       any(figlie %in% keys(functions))) {
     stop(vecchio, " o figlie di ", vecchio,
          " sono in modifica. Salvare prima le modifiche ed in seguito rinominare le serie")
   }
@@ -63,8 +64,14 @@
       sqlMetadati <- paste0("update metadati_", tag, " set name = '",nuovo,"' where name = '", vecchio,"'")
       dbGetQuery(con, sqlMetadati)
     }
-    
+
+
+    nomiarchi <- get.vertex.attribute(x@network, "name")
+    nomiarchi[nomiarchi == vecchio] <- nuovo
+    x@network <- set.vertex.attribute(x@network, "name", value=nomiarchi)
+    x <- resync(x, con=con)    
     dbCommit(con)
+    x
   }, error = function(cond) {
     dbRollback(con)
     stop(cond)

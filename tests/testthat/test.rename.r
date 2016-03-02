@@ -1,6 +1,6 @@
 context("Rename serie")
 
-test_that("I can rename a series before of saving it", {
+test_that("I can rename a series before saving it", {
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
   g["C"] <- function(A,B) {
@@ -10,7 +10,7 @@ test_that("I can rename a series before of saving it", {
     D = A + C
   }
   saveGraph(g)
-  rename(g, "A", "A1")
+  g <- rename(g, "A", "A1")
 
   expect_true(!"A" %in% names(g))
   expect_true("A1" %in% names(g))
@@ -30,8 +30,8 @@ test_that("I cannot rename a series being modified", {
     C = A + B
   }
   expect_error(rename(g, "A", "A1"))
-  saveGraph(g)
-  rename(g, "A", "A1")
+  g <- saveGraph(g)
+  g <- rename(g, "A", "A1")
   expect_true(!"A" %in% names(g))
   expect_true("A1" %in% names(g))
 })
@@ -45,7 +45,7 @@ test_that("I cannot rename a series into an existing series", {
     C = A + B
   }
   expect_error(rename(g, "A", "B"))
-  saveGraph(g)
+  g <- saveGraph(g)
   expect_error(rename(g, "A", "B"))
 })
 
@@ -58,7 +58,7 @@ test_that("I cannot rename a non existing series", {
     C = A + B
   }
   expect_error(rename(g, "D", "D1"))
-  saveGraph(g)
+  g <- saveGraph(g)
   expect_error(rename(g, "D", "D1"))
 })
 
