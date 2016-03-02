@@ -8,8 +8,6 @@ Depends:
 License: BSD
 LazyData: true
 Imports:
-    Rcpp (>= 0.11.1),
-    BH,
     grafo,
     rcf,
     igraph,
@@ -30,16 +28,19 @@ Imports:
     iterators,
     gdata,
     XML
-LinkingTo: Rcpp, BH
 Suggests:
     testthat
 Collate:
-    'RcppExports.R'
     'cluster.r'
     'db.r'
-    'ser.r'
+    'persistence_utils.r'
+    'update_functions.r'
+    'update_data.r'
+    'update_archi.r'
+    'copy_graph.r'
     'persistence.r'
     'functions.r'
+    'ser.r'
     'rename.r'
     'navigate.r'
     'metadati.r'
@@ -55,4 +56,3 @@ Collate:
     'old_grafo_impl.r'
     'rmNode.r'
     'subsetting.r'
-SystemRequirements: libjsoncpp, libpqxx, libpq

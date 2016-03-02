@@ -30,7 +30,6 @@
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tryCatch({
-    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
     dbBegin(con)
     dbGetQuery(con, sql)
   }, error = function(err) {
@@ -267,3 +266,83 @@ setMethod(
     }
     dbGetPreparedQuery(con, sql, bind.data = params)
   })
+
+getOuterDataNames <- function(x, con=NULL) {
+  conWasNull <- is.null(con)
+  con <- pgConnect(con=con)
+  if(conWasNull) {
+    on.exit(dbDisconnect(con))
+  }
+  
+  tag <- x@tag
+  timestamp <- x@timestamp
+  sql <- paste0("select name from dati where tag='", tag,
+                "' and last_updated > '", timestamp,"'")
+  df <- dbGetQuery(con, sql)
+  as.character(df$name)
+}
+
+getOuterFormulaNames <- function(x, con=NULL) {
+  conWasNull <- is.null(con)
+  con <- pgConnect(con=con)
+  if(conWasNull) {
+    on.exit(dbDisconnect(con))
+  }
+  
+  tag <- x@tag
+  timestamp <- x@timestamp
+  sql <- paste0("select name from formule where tag='", tag,
+                "' and last_updated > '", timestamp,"'")
+  df <- dbGetQuery(con, sql)
+  as.character(df$name)
+}
+
+#' @include functions.r
+#' @importFrom hash keys
+#' @include db.r persistence_utils.r
+
+checkConflicts <- function(x, con=NULL) {
+  conWasNull <- is.null(con)
+  con <- pgConnect(con=con)
+  if(conWasNull) {
+    on.exit(dbDisconnect(con))
+  }
+
+  tag <- x@tag
+
+  nameData <- keys(x@data)
+  namesFormule <- keys(x@functions)
+
+  outerDataNames <- getOuterDataNames(x, con=con)
+  outerFormulaNames <- getOuterFormulaNames(x, con=con)
+
+  formuleComuni <- intersect(namesFormule, outerFormulaNames)
+  if(length(formuleComuni) > 0) {  
+    #controllo ogni nome per verificare differenze.
+    formule.db <- loadFormule(tag, con=con)
+    formule.db <- formule.db[formule.db$name %in% formuleComuni,]
+    for(name in as.character(formule.db$name)) {
+      formula.db <- formule.db[formule.db == name,]$formula
+      if(formula.db != functions[[name]]) {
+        ## crea conflitto su formule per name
+      }
+    }
+  }
+
+  datiComuni <- intersect(namesData, outerDataNames)
+  if(length(datiComuni) > 0) {
+    # trovo solo le root
+    soloRoots <- intersect(.roots(x), datiComuni)
+    if(length(soloRoots) > 0) {
+      # Controllo una ad una le radici e verifico differenze di valori
+      dati.db <- loadDati(tag, con=con)
+      for(name in soloRoots) {
+        outerTs <- from.data.frame(dati.db[dati.db$name == name, ])
+        innerTs <- x[[name]]
+        if(any(outerTs != innerTs)) {
+          #crea conflitto su dati per name
+        }
+      }
+    }
+  }
+}

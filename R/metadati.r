@@ -103,7 +103,6 @@
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tag <- object@tag
-  params <- data.frame(tag=tag, name=tsName, key=attrName, value=attrValue)
   sql <- paste0("delete from metadati where tag = '", tag,
                 "' and name= '", name, "' and key = '", key, "' and value = '", value, "'")
   dbGetQuery(con, sql)
@@ -117,14 +116,14 @@
 
 .setMeta <- function(x, name, key, value) {
   nomiobj <- names(x)
-  if(!all(tsName %in% nomiobj)) {
+  if(!all(name %in% nomiobj)) {
     nong <- setdiff(name, nomiobj)
     stop("Non e' una serie del grafo: ", paste(nong, collapse=", "))
   }
   
   domain <- lookup(x, key, value)
   if(any(name %in% domain)) {
-    already <- intersect(domain, tsName)
+    already <- intersect(domain, name)
     warning("Ha gia' un metadato ", key, " = ", value, " :", paste(already, collapse=", "))
   } else {
     con <- pgConnect()

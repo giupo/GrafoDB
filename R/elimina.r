@@ -24,7 +24,6 @@ elimina <- function(tag) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tryCatch({
-     dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
      dbBegin(con)
      
      dbGetQuery(con, paste0("delete from grafi where tag='", tag, "'"))

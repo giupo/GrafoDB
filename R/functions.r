@@ -8,11 +8,11 @@
 #' @param tag tag del grafo (default=`cf10`)
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
-#' @include persistence.r RcppExports.R
+#' @include persistence.r
 #' @importFrom igraph graph.data.frame graph.empty vertex
 #' @importFrom stringr str_match
 #' @importFrom hash hash
-#' @include db.r
+#' @include db.r persistence_utils.r
 
 .init <- function(.Object, tag="cf10") {
   if(is.null(tag)) {
@@ -312,7 +312,7 @@ getdb <- function(x, name, tag="cf10") {
 #' @name .getdata
 #' @rdname getdata_internal
 #' @usage .getdata(x, i)
-#' @include cluster.r RcppExports.R db.r
+#' @include cluster.r db.r
 #' @param x istanza di `GrafoDB`
 #' @param i character array di nomi di serie storiche
 #' @return ritorna una named list con all'interno le serie storiche. Se l'array e'

@@ -307,25 +307,7 @@ setMethod(
   "setMeta",
   signature("GrafoDB", "character", "character", "character"),
   function(object, tsName, attrName, value) {
-    nomiobj <- names(object)
-    if(!all(tsName %in% nomiobj)) {
-      nong <- setdiff(tsName, nomiobj)
-      stop("Non e' una serie del grafo: ", paste(nong, collapse=", "))
-    }
-
-    domain <- .lookup(object, attrName, value)
-    if(any(tsName %in% domain)) {
-      already <- intersect(domain, tsName)
-      warning("Ha gia' un metadato ", attrName, " = ", value, " :", paste(already, collapse=", "))
-    } else {
-      con <- pgConnect()
-      on.exit(dbDisconnect(con))
-      sql <- paste0("insert into metadati(tag, name, key, value, autore) values ('", object@tag,"', '",
-                    tsName, "', '", attrName, "', '", value , "', '", whoami(), "')")
-      
-      dbGetQuery(con, sql)
-    }
-    object
+    .setMeta(object, tsName, attrName, value)
   })
 
 

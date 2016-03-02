@@ -26,7 +26,6 @@
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tryCatch({  
-    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
     dbBegin(con)
     
     figlie <- downgrf(graph, tsName)
