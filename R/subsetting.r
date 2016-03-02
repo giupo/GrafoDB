@@ -46,6 +46,9 @@ setMethod(
 #' @note funzione interna
 #' @rdname subsetting_internal
 #' @include functions.r core.r
+#' @importFrom igraph V E is.dag vertex topological.sort edge
+#' @importFrom rcf is.dataset
+#' @importFrom hash del
 
 .subsetting <- function(x, i, value) {
   nameObject <- deparse(substitute(x))

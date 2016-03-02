@@ -617,6 +617,7 @@ countRolling <- function(x, con = NULL) {
 #' @importFrom RJSONIO toJSON
 #' @importFrom iterators iter
 #' @importFrom foreach foreach %do% %dopar%
+#' @importFrom rutils slice
 
 doHistory <- function(x, con) {
   tag <- x@tag
