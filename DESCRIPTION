@@ -1,6 +1,6 @@
 Package: GrafoDB
 Title: What the package does (one line)
-Version: 1.0.5
+Version: 1.1.0
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
 Description: Adds DB backend to Grafo
 Depends:
