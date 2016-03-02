@@ -68,5 +68,4 @@
     stop(cond)
   })
   resync(graph, con=con)
-  graph
 }
