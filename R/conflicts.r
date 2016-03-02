@@ -316,19 +316,6 @@ checkConflicts <- function(x, con=NULL) {
   outerDataNames <- getOuterDataNames(x, con=con)
   outerFormulaNames <- getOuterFormulaNames(x, con=con)
 
-  formuleComuni <- intersect(namesFormule, outerFormulaNames)
-  if(length(formuleComuni) > 0) {  
-    #controllo ogni nome per verificare differenze.
-    formule.db <- loadFormule(tag, con=con)
-    formule.db <- formule.db[formule.db$name %in% formuleComuni,]
-    for(name in as.character(formule.db$name)) {
-      formula.db <- formule.db[formule.db == name,]$formula
-      if(formula.db != functions[[name]]) {
-        ## crea conflitto su formule per name
-      }
-    }
-  }
-
   datiComuni <- intersect(namesData, outerDataNames)
   if(length(datiComuni) > 0) {
     # trovo solo le root
@@ -340,9 +327,89 @@ checkConflicts <- function(x, con=NULL) {
         outerTs <- from.data.frame(dati.db[dati.db$name == name, ])
         innerTs <- x[[name]]
         if(any(outerTs != innerTs)) {
-          #crea conflitto su dati per name
+          creaConflittoDati(x, name, con=con)
         }
       }
     }
   }
+  
+  formuleComuni <- intersect(namesFormule, outerFormulaNames)
+  if(length(formuleComuni) > 0) {  
+    #controllo ogni nome per verificare differenze.
+    formule.db <- loadFormule(tag, con=con)
+    formule.db <- formule.db[formule.db$name %in% formuleComuni,]
+    for(name in as.character(formule.db$name)) {
+      formula.db <- formule.db[formule.db == name,]$formula
+      if(formula.db != functions[[name]]) {
+        ## crea conflitto su formule per name
+        creaConflittoFormule(x, name, con=con)
+      }
+    }
+  }
+}
+
+#' @importFrom rutils whoami
+#' @importFrom foreach foreach %do%
+#' @importFrom iterators iter
+#' @importFrom DBI dbDisconnect
+#' @include db.r
+
+creaConflittoDati <- function(x, nomi, con=NULL) {
+  conWasNull <- is.null(con)
+  con <- pgConnect(con=con)
+  if(conWasNull) {
+    on.exit(dbDisconnect(con))
+  }
+
+  sql <- paste0(
+    "insert into conflitti(tag, name, anno, prd, ",
+    " freq, dati, autore)",
+    " values (?, ?, ?, ?, ?, ? ,?)")
+  autore <- whoami()
+  dati <- foreach(name = iter(nomi), .combine=rbind) %do% {
+    tryCatch({
+      tt <- x[[name]]
+      df <- to.data.frame(tt, name)
+      cbind(tag, df, autore)
+    }, error = function(err) {
+      stop(name, ": ", err)
+    })
+  }
+  
+  dati <- as.data.frame(dati)
+  names(dati) <- c("tag", names(df), "autore")
+  dbGetPreparedQuery(con, sql, bind.data = dati)
+  warning("Ci sono conflitti sui dati per le serie: ",
+          paste(nomi, collapse=", "))
+}
+
+creaConflittoFormule <- function(x, nomi, con=NULL) {
+  conWasNull <- is.null(con)
+  con <- pgConnect(con=con)
+  if(conWasNull) {
+    on.exit(dbDisconnect(con))
+  }
+  
+  dati <- foreach (name = iter(names.with.conflicts), .combine=rbind) %do% {
+    task <- expr(x, name, echo=FALSE)
+    cbind(task, autore, name, tag)
+  }
+  
+  sql1 <- paste0("UPDATE conflitti  SET formula=?, autore=?, ",
+                 "date = LOCALTIMESTAMP::timestamp(0) ",
+                 " WHERE name=? and tag=?");      
+  dbGetPreparedQuery(con, sql1, bind.data=dati)
+  
+  
+  sql2 <- paste0(
+    "INSERT INTO conflitti(formula, autore, date, name, tag) ",
+    " select ?,?,LOCALTIMESTAMP::timestamp(0),?,?",
+    " WHERE NOT EXISTS (SELECT 1 FROM formule WHERE name=? and tag=?)")
+  dati <- cbind(dati, names.with.conflicts, tag)
+  
+  names(dati) <- c("formula", "autore", "name", "tag", "name", "tag")
+  dbGetPreparedQuery(con, sql2, bind.data = dati)
+  warning("Ci sono conflitti sulle formule per le serie: ",
+          paste(names.with.conflicts, collapse=", "))
+
 }
