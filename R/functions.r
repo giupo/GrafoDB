@@ -287,12 +287,11 @@ getdb <- function(x, name, tag="cf10") {
   dati <- if(length(name) > 1000) {
     cl <- initCluster()
     foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
+      # convert_data_frame(row)
       from.data.frame(row)
     }
   } else {
-    foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %do% {
-      from.data.frame(row)
-    }
+    convert_data_frame(df)
   }
   
   if(length(dati)==1 && is.bimets(dati[[1]])) {

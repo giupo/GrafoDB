@@ -24,11 +24,14 @@
 # https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 .saveGraph <- function(x, tag = x@tag, ...) {
 
-  checkConflicts(x)
   if(hasConflicts(x)) {
     stop("Il grafo ",tag, " ha conflitti, risolverli prima di salvare")
   }
+  checkConflicts(x)
 
+  con <- pgConnect()
+  on.exit(dbDisconnect(con))
+           
   param_list <- list(...)
 
   msg <- if('msg' %in% names(param_list)) {
@@ -40,9 +43,11 @@
   tagExists <- .tagExists(tag)
   
   if(tagExists) {
-    .updateGraph(x)
+    # sto aggiornando il grafo tag
+    .updateGraph(x, con=con, msg=msg)
   } else {
     if (x@tag == tag) {
+      # sto creando un nuovo grafo
       .createGraph(x, tag, msg=msg)  
     } else {
       con <- pgConnect()
@@ -275,6 +280,18 @@ countRolling <- function(x, con = NULL) {
   as.numeric(df[[1,1]])
 }
 
+
+#' Costruice il progressivo per il grafo `x`
+#'
+#' @name nextRollingNameFor
+#' @usage nextRollingNameFor(x)
+
+nextRollingNameFor <- function(x) {
+  tag <- x@tag
+  p <- countRolling(x) + 1
+  paste0(tag, 'p', p)
+}
+
 #' Esegue il rolling dei vintage del `GrafoDB`
 #'
 #' Ad ogni salvataggio con il metodo `saveGraph` se non impostiamo un nuovo `tag`
@@ -300,102 +317,7 @@ countRolling <- function(x, con = NULL) {
 #' @importFrom rutils slice
 
 doHistory <- function(x, con) {
-  tag <- x@tag
-  data <- x@data
-  df <- dbGetQuery(con, paste0("select name from dati where tag = '",tag,"'"))
-  if(nrow(df)) {
-    nomi.db <- df$name
-  } else {
-    ## non faccio niente, non c'e' nulla sul DB
-    return(invisible(NULL))
-  }
-  nomi.data <- keys(data)
-  nomi.history <- intersect(nomi.db, nomi.data)
-  
-  if(length(nomi.history)  == 0 ) {
-    return()
-  }
-  
-  message("Rolling history per ", tag)
-  df <- dbGetPreparedQuery(
-    con,
-    "select max(ordinale) from history where tag=?",
-    bind.data = tag)
-  
-  ordinale <- as.numeric(df[[1,1]])  
-  ordinale <- if(is.na(ordinale)) {
-    1
-  } else {
-    ordinale + 1
-  }
-
-  cl <- initCluster()
-  is.multi.process <- !is.null(cl)
-
-  if(is.multi.process) {
-    if(wasWorking()) {
-      stopCluster(cl)
-      cl <- initCluster()
-    } else {
-      clusterStartWorking()
-    }
-  }
-  
-  lista.nomi <- slice(nomi.history, detectCores())
-  
-  blinda <- function(x, name, ordinale) {
-   tag <- x@tag
-    archi <- deps(x, name)
-    if(is.null(archi)) {
-      dbGetPreparedQuery(
-        con,
-        paste0(
-          "insert into history(name, tag, ordinale, ",
-          " anno, periodo, freq, dati,  last_updated, autore)",
-          " select name, tag, ", ordinale,", anno, periodo, freq, dati, ",
-          " last_updated, autore from dati_", tag," where name=?"),
-        bind.data = data.frame(name))      
-    } else {
-      archi <- toJSON(archi)
-      dbGetPreparedQuery(
-        con,
-        paste0(
-          "insert into history(name, tag, ordinale, anno, ",
-          " periodo, freq, dati, formula, archi_entranti, ",
-          " last_updated, autore) ",
-          "select d.name, d.tag, ?, d.anno, d.periodo, d.freq, ", 
-          "d.dati, f.formula, ?, f.last_updated, f.autore ",
-          " from dati_", tag," d, formule_", tag," f where f.tag = d.tag and d.tag=? ",
-          " and d.name = f.name and d.name=?"), ## aggiunti i tag per evitare deadlock
-        bind.data = data.frame(ordinale, archi, tag, name))      
-    }
-    name
-  }
-  
-  combine <- function(pb) {
-    count <- 0
-    function(...) {
-      x <- list(...)
-      count <<- count + length(x)
-      updateProgressBar(pb, count, last(unlist(x)))
-      c(...)
-    }
-  }
-  
-  pb <- ProgressBar(min=1, max=length(nomi.history))
-  
-  if(is.multi.process && FALSE) {
-    foreach(name = iter(nomi.history), .combine = combine(pb)) %dopar% {
-      blinda(x, name, ordinale)      
-    }
-  } else {
-    foreach(name = iter(nomi.history), .combine = combine(pb)) %do% {
-      blinda(x, name, ordinale)
-    }
-  }
-  kill(pb)
-  doneWithCluster()
-  message("Rolling history completo (", paste0(tag, "p", ordinale), ")")
+  .copyGraph(x@tag, nextRollingNameFor(x), con=con)
 }
 
 #' Salva un istanza di grafo sul file system

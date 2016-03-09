@@ -13,44 +13,14 @@
     data.frame()
   }
   
-  ## names.with.conflicts <- intersect(keys(functions), as.character(df$name))
   names.with.conflicts <- intersect(x@touched, as.character(df$name))
   cl <- initCluster()
   is.multi.process <- !is.null(cl)
   if(is.multi.process) {
     clusterStartWorking()
   }
+
   autore <- whoami()
-  if(length(names.with.conflicts)) {
-    dati <- if(is.multi.process) {
-      foreach (name = iter(names.with.conflicts), .combine=rbind) %dopar% {
-        task <- expr(x, name, echo=FALSE)
-        cbind(task, autore, name, tag)
-      }
-    } else {
-      foreach (name = iter(names.with.conflicts), .combine=rbind) %do% {
-        task <- expr(x, name, echo=FALSE)
-        cbind(task, autore, name, tag)
-      }
-    }
-    
-    sql1 <- paste0("UPDATE conflitti  SET formula=?, autore=?, ",
-                   "date = LOCALTIMESTAMP::timestamp(0) ",
-                   " WHERE name=? and tag=?");      
-    dbGetPreparedQuery(con, sql1, bind.data=dati)
-    
-  
-    sql2 <- paste0(
-      "INSERT INTO conflitti(formula, autore, date, name, tag) ",
-      " select ?,?,LOCALTIMESTAMP::timestamp(0),?,?",
-      " WHERE NOT EXISTS (SELECT 1 FROM formule WHERE name=? and tag=?)")
-    dati <- cbind(dati, names.with.conflicts, tag)
-    
-    names(dati) <- c("formula", "autore", "name", "tag", "name", "tag")
-    dbGetPreparedQuery(con, sql2, bind.data = dati)
-    warning("Ci sono conflitti sulle formule per le serie: ",
-            paste(names.with.conflicts, collapse=", "))
-  } 
   
   names.updated <- setdiff(keys(x@functions), names.with.conflicts)
   if(length(names.updated)) {

@@ -1,0 +1,4 @@
+[submodule "ext/jsoncpp"]
+	path = ext/jsoncpp
+	url = git@git.utenze.bankit.it:giuseppe.acito/jsoncpp.git
+  ignore = dirty

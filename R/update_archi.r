@@ -1,4 +1,5 @@
 #' @importFrom gdata drop.levels
+#' @importFrom igraph get.edgelist
 
 .updateArchi <- function(x, con, tag=x@tag) {
   if(interactive()) cat("Update Archi...")

@@ -31,6 +31,8 @@ elimina <- function(tag) {
      
      tables <- c("archi", "dati", "metadati", "formule", "history")
      tables <- paste(tables, tag, sep="_")
+
+     dbGetQuery(con, paste0("delete from conflitti where tag='", tag,"'"))
      
      for(table in tables) {
        if(dbExistsTable(con, table)) {

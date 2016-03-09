@@ -48,6 +48,7 @@ test_that("Posso usare delle formule per definire le serie", {
   g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["C"] <- function(A,B) {
     C = A + B    
+
   }
 })
 
@@ -64,6 +65,7 @@ test_that("Posso cercare le serie con metadati", {
   g <- setMeta(g, "A", "key", "value")
   g <- setMeta(g, "B", "key", "value")
   g <- setMeta(g, "C", "key", "value1")
+
   
   res <- lookup(g, "key", "value")
   expect_equal(length(res), 2)
@@ -126,6 +128,7 @@ test_that("subset with datasets", {
   expect_equal(g[["B"]], ds[["B"]])
   elimina("test")
 })
+
 
 elimina("test")
 
