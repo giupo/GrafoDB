@@ -2,7 +2,7 @@ redisMakeKey <- function(name, tag, what) {
   paste0(name, tag, what, sep="|")
 }
 
-#' @importFrom rredis redisConnect redisDelete
+#' @importFrom rredis redisConnect redisDelete redisClose
 
 removeFromRedis <- function(x, nomi) {
   tag <- x@tag
