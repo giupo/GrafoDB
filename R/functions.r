@@ -279,16 +279,18 @@ from.data.frame <- function(df) {
 #' @importFrom bimets is.bimets
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom iterators iter
+#' @importFrom doMC registerDoMC
+#' @importFrom parallel detectCores
 #' @export
 
 getdb <- function(x, name, tag="cf10") {
   dbdati <- x@dbdati
   df <- dbdati[dbdati$name %in% name, ]
   dati <- if(length(name) > 1000) {
-    cl <- initCluster()
+    registerDoMC(detectCores())
     foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
-      # convert_data_frame(row)
-      from.data.frame(row)
+      convert_data_frame(row)
+      # from.data.frame(row)
     }
   } else {
     convert_data_frame(df)
@@ -311,7 +313,7 @@ getdb <- function(x, name, tag="cf10") {
 #' @name .getdata
 #' @rdname getdata_internal
 #' @usage .getdata(x, i)
-#' @include cluster.r db.r
+#' @include db.r
 #' @param x istanza di `GrafoDB`
 #' @param i character array di nomi di serie storiche
 #' @return ritorna una named list con all'interno le serie storiche. Se l'array e'

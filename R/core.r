@@ -289,6 +289,10 @@ setMethod(
 #' Esegue la differenza tra due grafi
 #'
 #' @importFrom rutils Cluster
+#' @importFrom doMC registerDoMC
+#' @importFrom foreach foreach %dopar%
+#' @importFrom iterators iter
+#' @importFrom parallel detectCores
 
 setMethod(
   "-",
@@ -304,16 +308,16 @@ setMethod(
       })
     }
     result <- Dataset()
-    cluster <- Cluster()
-
-    data <- cluster$submit(common, function(nome) {
-    # data <- .myParLapply(common, function(nome) {
-      tryCatch(
+    registerDoMC(detectCores())
+    data <- foreach(name=iter(common), multicombine=TRUE, .combine=c) %dopar% {
+      ret <- list()
+      ret[[name]] <- tryCatch(
         e1[[nome]] - e2[[nome]],
         error = function(err) {
           stop(nome, ": ", err, " ", class(e1), ",", class(e2))
         })
-    })
+    }
+    
     names(data) <- common
     result@data <- hash(data)
     result

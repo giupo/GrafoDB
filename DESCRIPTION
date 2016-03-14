@@ -35,7 +35,6 @@ Suggests:
 LinkingTo: Rcpp
 Collate:
     'RcppExports.R'
-    'cluster.r'
     'db.r'
     'persistence_utils.r'
     'update_functions.r'

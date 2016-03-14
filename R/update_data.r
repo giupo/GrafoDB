@@ -20,11 +20,12 @@
   ## aggiorno solo le serie cambiate
   
   names.updated <- setdiff(keys(data), names.with.conflicts)
-  cl <- initCluster()
-  is.multi.process <- !is.null(cl)
-  if(is.multi.process) {
-    clusterStartWorking()
-  }
+  registerDoMC(detectCores())
+  #cl <- initCluster()
+  is.multi.process <- TRUE #!is.null(cl)
+ # if(is.multi.process) {
+ #   clusterStartWorking()
+ # }
   autore <- whoami()
   if(length(names.updated)) { 
     dati <- if(is.multi.process) {
@@ -57,7 +58,7 @@
     dati <- cbind(dati, names.updated, tag)
     dbGetPreparedQuery(con, sql2, bind.data=dati)
   }
-  doneWithCluster()
+  # doneWithCluster()
   removeFromRedis(x, x@touched)
   cat("Done.\n")
 }

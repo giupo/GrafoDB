@@ -146,6 +146,8 @@
 #' @importFrom igraph V induced.subgraph neighborhood delete.vertices degree
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
 #' @importFrom foreach foreach %do% %dopar%
+#' @importFrom doMC registerDoMC
+#' @importFrom parallel detectCores
 #' @rdname evaluate-internal
 
 .evaluate <- function(object, v_start=NULL, deep=T, ...) {
@@ -166,6 +168,10 @@
     not.in.graph <- setdiff(v_start, all_names)
     stop("Non sono serie del grafo: ", paste(not.in.graph, collapse=", "))
   }
+
+  ## preload primitive
+  primitive <- listPrimitives(object)
+  
   
   if(!is.null(v_start)) {
     ## le voglio valutare tutte
@@ -204,26 +210,27 @@
   is.interactive <- interactive()
   if(is.interactive) {
     pb <- ProgressBar(min=0, max=total)
-    updateProgressBar(pb, i, "Try Cluster...")
+    updateProgressBar(pb, i, "Starting...")
   }  
   
-  cl <- initCluster()
-  is.multi.process <- !is.null(cl) && !debug 
+  # cl <- initCluster()
+  registerDoMC(detectCores())
+  is.multi.process <- TRUE # !is.null(cl) && !debug 
   
-  if(is.multi.process) {
-    if(wasWorking()) {
-      stopCluster(cl)
-      cl <- initCluster()
-    } else {
-      clusterStartWorking()
-    }
-    clusterExport(
-      cl, ".evaluateSingle",
-      envir=environment())
-    if(is.interactive) updateProgressBar(pb, i, "Cluster OK")
-  } else {
-    if(is.interactive) updateProgressBar(pb, i, "No Cluster")
-  }
+#  if(is.multi.process) {
+#    if(wasWorking()) {
+#      stopCluster(cl)
+#      cl <- initCluster()
+#    } else {
+#      clusterStartWorking()
+#    }
+#    clusterExport(
+#      cl, ".evaluateSingle",
+#      envir=environment())
+#    if(is.interactive) updateProgressBar(pb, i, "Cluster OK")
+#  } else {
+#    if(is.interactive) updateProgressBar(pb, i, "No Cluster")
+#  }
 
   if(is.interactive) updateProgressBar(pb, i, "Starting...")
   
@@ -236,40 +243,50 @@
   
   while(length(sources_id)) {
     sources <- V(network)[sources_id]$name
+    sprimitive <- intersect(sources, primitive)
+    i <- i + length(sprimitive)
+    prim_non_in_data <- setdiff(sprimitive, keys(data))
+    if(length(prim_non_in_data)) {
+      datip <- g[prim_non_in_data]
+      for(n in names(datip)) {
+        data[n] <- datip[[n]]
+      }
+    }
+    sources <- setdiff(sources, sprimitive)
     
-    if(!is.multi.process) {
-      evaluated <- foreach(name=sources, .combine=c) %do% {
-        i <- i + 1
-        if(is.interactive) {
-          updateProgressBar(pb, i, name)
+    if(length(sources)) {
+      if(!is.multi.process) {
+        evaluated <- foreach(name=sources, .combine=c) %do% {
+          i <- i + 1
+          if(is.interactive) {
+            updateProgressBar(pb, i, name)
+          }
+          proxy(name, object)
         }
-        proxy(name, object)
+      } else {
+        evaluated <- foreach(name=sources, .combine=c) %dopar% {
+          proxy(name, object)
+        }
+        i <- i + length(sources)
+        if(is.interactive) {
+          updateProgressBar(pb, i, last(sources))
+        }
       }
-    } else {
-      evaluated <- foreach(name=sources, .combine=c) %dopar% {
-        proxy(name, object)
-      }
-      i <- i + length(sources)
-      if(is.interactive) {
-        updateProgressBar(pb, i, last(sources))
+      
+      names(evaluated) <- sources
+    
+      ## evaluated <- Filter(function(x) length(x) != 0, evaluated)
+    
+      if(length(evaluated) == 1) {
+        data[[sources]] <- evaluated[[sources]]
+      } else {
+        data[sources] <- evaluated
       }
     }
-    
-    names(evaluated) <- sources
-    
-    ## evaluated <- Filter(function(x) length(x) != 0, evaluated)
-    
-    if(length(evaluated) == 1) {
-      data[[sources]] <- evaluated[[sources]]
-    } else {
-      data[sources] <- evaluated
-    }
-    
     network <- delete.vertices(network, sources_id)
     sources_id <- V(network)[degree(network, mode="in") == 0]
   }
 
-  doneWithCluster()
   if(is.interactive) kill(pb)
   object@data <- data
   object

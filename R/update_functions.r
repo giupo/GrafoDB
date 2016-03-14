@@ -14,11 +14,12 @@
   }
   
   names.with.conflicts <- intersect(x@touched, as.character(df$name))
-  cl <- initCluster()
-  is.multi.process <- !is.null(cl)
-  if(is.multi.process) {
-    clusterStartWorking()
-  }
+  # cl <- initCluster()
+  registerDoMC(detectCores())
+  is.multi.process <- TRUE # !is.null(cl)
+  #if(is.multi.process) {
+  #  clusterStartWorking()
+  #}
 
   autore <- whoami()
   
@@ -56,6 +57,6 @@
     colnames(formule) <- c("formula", "autore", "name", "tag", "name", "tag")
     dbGetPreparedQuery(con, sql2, bind.data=formule)
   }
-  doneWithCluster()
+  # doneWithCluster()
   if(interactive()) cat("Done.\n")
 }
