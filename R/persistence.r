@@ -87,12 +87,12 @@
   }
   
   ## supporto per history
-  tryCatch(
-    doHistory(x, con),
-    error = function(err) {
-      dbRollback(con)
-      stop(err)
-    })
+  tryCatch({
+    doHistory(x, con)
+  }, error = function(err) {
+    dbRollback(con)
+    stop(err)
+  })
   
   tryCatch(
     .updateData(x, con, tag),
@@ -287,9 +287,9 @@ countRolling <- function(x, con = NULL) {
 #' @name nextRollingNameFor
 #' @usage nextRollingNameFor(x)
 
-nextRollingNameFor <- function(x) {
+nextRollingNameFor <- function(x, con) {
   tag <- x@tag
-  p <- countRolling(x) + 1
+  p <- countRolling(x, con) + 1
   paste0(tag, 'p', p)
 }
 
@@ -322,8 +322,8 @@ doHistory <- function(x, con) {
   tries <- 3
   while(tries > 0) {    
     tryCatch({
-      dest <- nextRollingNameFor(x)
-      message("Salvo il grafo in ", dest)
+      dest <- nextRollingNameFor(x, con)
+      message("Salvo il grafo ", x@tag, " in ", dest)
       .copyGraph(x@tag, dest, con=con)
       tries <- 0
       message("salvataggio ", dest, " completo")

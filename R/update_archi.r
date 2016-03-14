@@ -1,5 +1,8 @@
 #' @importFrom gdata drop.levels
-#' @importFrom igraph get.edgelist
+#' @importFrom igraph get.edgelist graph.union graph.data.frame is.dag topological.sort
+#' @importFrom stringr str_split
+#' @importFrom RPostgreSQL2 dbGetpreparedQuery
+#' @importFrom rutils whoami
 
 .updateArchi <- function(x, con, tag=x@tag) {
   if(interactive()) cat("Update Archi...")
