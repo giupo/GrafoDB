@@ -85,6 +85,7 @@
       stop(cond)
     })
   }
+  
   ## supporto per history
   tryCatch(
     doHistory(x, con),
@@ -317,7 +318,20 @@ nextRollingNameFor <- function(x) {
 #' @importFrom rutils slice
 
 doHistory <- function(x, con) {
-  .copyGraph(x@tag, nextRollingNameFor(x), con=con)
+  notOk <- TRUE
+  tries <- 3
+  while(tries > 0) {    
+    tryCatch({
+      dest <- nextRollingNameFor(x)
+      message("Salvo il grafo in ", dest)
+      .copyGraph(x@tag, dest, con=con)
+      tries <- 0
+      message("salvataggio ", dest, " completo")
+    }, error=function(cond) {
+      message("Ritento il salvataggio...")
+      tries <- tries - 1
+    })
+  } 
 }
 
 #' Salva un istanza di grafo sul file system

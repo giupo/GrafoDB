@@ -24,6 +24,12 @@
   autore <- whoami()
   params <- cbind(to, autore, from)
   tryCatch({
+    dbGetPreparedQuery(
+      con,
+      paste0("insert into grafi(tag, commento, last_updated, autore) values ",
+             "(?, ?, LOCALTIMESTAMP::timestamp(0), ?)"),
+      bind.data = data.frame(to, commento, autore))
+    
     ## copia dati
     dbGetPreparedQuery(
       con,
@@ -51,9 +57,8 @@
     ## inserisce nella tab grafi
     dbGetPreparedQuery(
       con,
-      paste0("insert into grafi(tag, commento, last_updated, autore) values ",
-             "(?, ?, LOCALTIMESTAMP::timestamp(0), ?)"),
-      bind.data = data.frame(to, commento, autore))
+      paste0("update grafi set last_updated=LOCALTIMESTAMP::timestamp(0) where tag=?"),
+      bind.data = to)
     ## Ricordati di committare.
     if(wasNull) {
       dbCommit(con)
