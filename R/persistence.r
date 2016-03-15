@@ -275,10 +275,11 @@ countRolling <- function(x, con = NULL) {
     on.exit(dbDisconnect(con))
   }
   tag <- x@tag
-  sql <- paste0("select count(tag) from grafi where tag like '", tag, "p%'")
-  df <- dbGetQuery(con, sql)
+  sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
   
-  as.numeric(df[[1,1]])
+  df <- dbGetQuery(con, sql)
+  numeri <- as.numeric(gsub("p", "", gsub("cf10", "", df[, 1])))
+  max(numeri, na.rm=TRUE)
 }
 
 

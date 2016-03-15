@@ -34,25 +34,25 @@
     dbGetPreparedQuery(
       con,
       paste0("insert into dati(tag, name, anno, periodo, freq, dati, autore) ",
-             " select ?, name, anno, periodo, freq, dati, ? from dati where tag = ?"),
+             " select distinct ?, name, anno, periodo, freq, dati, ? from dati where tag = ?"),
       bind.data = params)
     ## copia archi
     dbGetPreparedQuery(
       con,
       paste0("insert into archi(tag, partenza, arrivo, autore) ",
-             " select ?, partenza, arrivo, ? from archi where tag = ?"),
+             " select distinct ?, partenza, arrivo, ? from archi where tag = ?"),
       bind.data = params)
     ## copia formule
     dbGetPreparedQuery(
       con,
       paste0("insert into formule(tag, name, formula, autore) ",
-             " select ?, name, formula, ? from formule where tag = ?"),
+             " select distinct ?, name, formula, ? from formule where tag = ?"),
       bind.data = params)
     ## copia metadati
     dbGetPreparedQuery(
       con,
       paste0("insert into metadati(tag, name, key, value, autore) ",
-             " select ?, name, key, value, ? from metadati where tag = ?"),
+             " select distinct ?, name, key, value, ? from metadati where tag = ?"),
       bind.data = params)
     ## inserisce nella tab grafi
     dbGetPreparedQuery(
