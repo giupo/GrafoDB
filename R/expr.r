@@ -44,6 +44,7 @@
     ret <- vector(length(nomi), mode="list")
     for(i in seq_along(nomi)) {
       name <- nomi[[i]]
+      message(name)
       ret[i] <- as.character(formule[formule$name == name,]$formula)
     }
     names(ret) <- nomi

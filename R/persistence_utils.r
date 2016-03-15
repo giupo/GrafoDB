@@ -17,11 +17,13 @@ loadTable <- function(tableName, tag, con=NULL) {
     on.exit(dbDisconnect(con))
   }
   fullTableName <- paste0(tableName, '_', tag)
-  if(dbExistsTable(con, fullTableName)) {
+  df <- if(dbExistsTable(con, fullTableName)) {
     dbReadTable(con, fullTableName)
   } else {
     stop()
   }
+
+  unique(df)
 }
 
 loadDati <- function(tag, con=NULL) tryCatch({
