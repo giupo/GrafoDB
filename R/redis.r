@@ -16,3 +16,16 @@ removeFromRedis <- function(x, nomi) {
     redisClose()
   })
 }
+
+#' @importFrom rredis redisConnect redisDelete redisClose redisLPush
+
+sendCopyMetadati <- function(sourceTag, destTag) {
+  msg = paste(sourceTag, destTag, sep="|")
+  settings <- dbSettings()
+  tryCatch({
+    redisConnect(host = settings$redisHost, port = as.integer(settings$redisPort))
+    redisLPush('grafo-copymetadati', charToRaw(msg))
+    redisClose()
+  })
+}
+

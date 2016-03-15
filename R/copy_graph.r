@@ -1,3 +1,5 @@
+#' @include redis.r 
+
 .copyGraph <- function(from, to, con=NULL, ...) {
   param_list <- list(...)
   msg <- if('msg' %in% names(param_list)) {
@@ -49,11 +51,14 @@
              " select distinct ?, name, formula, ? from formule where tag = ?"),
       bind.data = params)
     ## copia metadati
-    dbGetPreparedQuery(
-      con,
-      paste0("insert into metadati(tag, name, key, value, autore) ",
-             " select distinct ?, name, key, value, ? from metadati where tag = ?"),
-      bind.data = params)
+    #dbGetPreparedQuery(
+    #  con,
+    #  paste0("insert into metadati(tag, name, key, value, autore) ",
+    #         " select distinct ?, name, key, value, ? from metadati where tag = ?"),
+    #  bind.data = params)
+
+    sendCopyMetadati(from, to)
+    
     ## inserisce nella tab grafi
     dbGetPreparedQuery(
       con,

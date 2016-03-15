@@ -278,8 +278,12 @@ countRolling <- function(x, con = NULL) {
   sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
   
   df <- dbGetQuery(con, sql)
-  numeri <- as.numeric(gsub("p", "", gsub("cf10", "", df[, 1])))
-  max(numeri, na.rm=TRUE)
+  if(nrow(df)==0) {
+    0
+  } else {
+    numeri <- as.numeric(gsub("p", "", gsub("cf10", "", df[, 1])))
+    max(numeri, na.rm=TRUE) 
+  }
 }
 
 
@@ -322,15 +326,18 @@ doHistory <- function(x, con) {
   notOk <- TRUE
   tries <- 3
   while(tries > 0) {    
-    tryCatch({
+    tries <- tryCatch({
       dest <- nextRollingNameFor(x, con)
       message("Salvo il grafo ", x@tag, " in ", dest)
       .copyGraph(x@tag, dest, con=con)
-      tries <- 0
       message("salvataggio ", dest, " completo")
+      0
     }, error=function(cond) {
+      warning(cond)
       message("Ritento il salvataggio...")
-      tries <- tries - 1
+      if((tries - 1) == 0) {
+        stop(cond)
+      }
     })
   } 
 }
