@@ -233,17 +233,17 @@ setMethod(
     tag <- object@tag
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    num <- as.numeric(dbGetPreparedQuery(
-      con, "select count(id) from dati where tag = ?", bind.data = object@tag))
-    msg <- paste0("GrafoDB [",tag,"] with ", num, " series, ", as.character(object@timestamp))
+    num <- length(names(object))
+    msg <- paste0("GrafoDB [",tag,"] with ", num, " series, ",
+                  as.character(object@timestamp))
     if(length(data)) {
       msg <- paste0(msg, ", ", length(data), " data changes")
     }
-
+    
     if(length(functions)) {
       msg <- paste0(msg, ", ", length(functions), " function changes")
     }
-
+    
     message(msg)
   })
 
