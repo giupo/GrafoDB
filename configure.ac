@@ -1,4 +1,4 @@
-AC_INIT(GrafoDB, 1.0.4)
+AC_INIT(GrafoDB, 1.4.0)
 AC_MSG_NOTICE([Preparing for GrafoDB shared lib])
 AC_PROG_CC
 AC_PROG_CXX
@@ -9,5 +9,5 @@ AC_CHECK_HEADERS(map)
 AC_CHECK_HEADERS(iostream)
 AC_CHECK_HEADERS(vector)
 AC_CHECK_HEADERS(sstream)
-AC_CHECK_LIB(pq, PQcmdStatus)
+# AC_CHECK_LIB(pq, PQcmdStatus)
 AC_OUTPUT(src/Makevars)

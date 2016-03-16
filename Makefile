@@ -31,12 +31,9 @@ DOCS:
 	Rscript -e "devtools::document()"
 
 clean:
-	-rm -rf ext/jsoncpp/build
-	-cd ext/libpqxx && make clean
 	-rm -f $(PKG_NAME)_*.tar.gz
 	-rm -r -f $(PKG_NAME).Rcheck
 	-rm -r -f src/*.o src/*.so
-	-rm -r -f ext/libs ext/include
 .PHONY: list
 list:
 	@echo "R files:"
@@ -48,7 +45,7 @@ autotest:
 so:     deps
 	Rscript --vanilla -e 'devtools::compile_dll()'
 
-deps: deps-jsoncpp deps-pqxx deps-dist
+deps: deps-jsoncpp deps-dist
 
 
 deps-dist:
@@ -56,13 +53,8 @@ deps-dist:
 	mkdir -p ext/libs
 	cp -R ext/jsoncpp/include/json ext/include/
 	cp  ext/jsoncpp/build/src/lib_json/libjsoncpp.a ext/libs
-	cp -R ext/libpqxx/include/pqxx ext/include/
-	cp ext/libpqxx/src/.libs/libpqxx.a ext/libs/
 
 deps-jsoncpp:
 	cd ext/jsoncpp && mkdir -p build
 	cd ext/jsoncpp/build && cmake ..
 	cd ext/jsoncpp/build && make -j `nproc`
-deps-pqxx:
-	cd ext/libpqxx && ./configure CFLAGS='-fPIC' CXXFLAGS='-fPIC'
-	cd ext/libpqxx && make CFLAGS='-fPIC' CXXFLAGS='-fPIC' -j `nproc`

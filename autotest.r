@@ -2,24 +2,20 @@
 library(testthat)
 library(devtools)
 library(methods)
-library(DBI)
-library(rutils)
-library(grafo)
 library(rcf)
-library(hash)
-library(xts)
 library(DBI)
-library(igraph)
-library(bimets)
-library(stringr)
+library(RSQLite)
 library(RPostgreSQL)
 library(RPostgreSQL2)
-library(foreach)
-library(iterators)
-library(gdata)
 source("lib_mgt.r")
 # options(env="test")
 options(GCLUSTER=F)
+
+#settings <- list(
+#  driver="SQLite",
+#  dbname=":memory:"
+# )
+# options(dbSettings=settings)
 load_all()
 
 .praise <- c(

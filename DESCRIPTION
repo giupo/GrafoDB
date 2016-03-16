@@ -1,44 +1,63 @@
 Package: GrafoDB
 Title: What the package does (one line)
-Version: 1.0.4
+Version: 1.4.0
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
 Description: Adds DB backend to Grafo
 Depends:
     R (>= 3.0.3),
     grafo,
     rcf,
+    bimets
+License: BSD
+LazyData: true
+Imports:
+    Rcpp,
     igraph,
     methods,
     RPostgreSQL2,
     rutils,
     hash,
-    bimets,
     RJSONIO,
     stringr,
     formatR,
-    BH,
-    Rcpp,
+    DBI,
     rprogressbar,
     stats,
-    ttutils
-License: BSD
-LazyData: true
-Imports:
-    Rcpp (>= 0.11.1),
-    BH
-LinkingTo: Rcpp, BH
+    RPostgreSQL,
+    doParallel,
+    foreach,
+    iterators,
+    gdata,
+    XML,
+    rredis
 Suggests:
     testthat
+LinkingTo: Rcpp
 Collate:
     'RcppExports.R'
-    'cluster.r'
     'db.r'
+    'persistence_utils.r'
+    'update_functions.r'
+    'redis.r'
+    'update_data.r'
+    'update_archi.r'
+    'copy_graph.r'
     'persistence.r'
     'functions.r'
+    'ser.r'
+    'rename.r'
+    'navigate.r'
+    'metadati.r'
+    'lookup.r'
+    'expr.r'
+    'evaluate.r'
     'core.r'
     'conflicts.r'
+    'edita.r'
+    'elimina.r'
     'history.r'
     'life_cycle.r'
     'old_grafo_impl.r'
+    'rmNode.r'
     'subsetting.r'
-SystemRequirements: libjsoncpp, libpqxx, libpq
+SystemRequirements: libjsoncpp

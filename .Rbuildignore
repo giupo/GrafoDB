@@ -1,8 +1,11 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 .tar.gz
+.bumpversion.cfg
 ext/jsoncpp/*
 ext/libpqxx/*
 ext/libpqxx/include/pqxx/Makefile*
+_ext/*
+_src/*
 schema.sql
 src/Makevars$

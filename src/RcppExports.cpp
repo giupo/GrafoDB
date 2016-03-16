@@ -5,70 +5,14 @@
 
 using namespace Rcpp;
 
-// do_history_nativo
-void do_history_nativo(SEXP username, SEXP password, SEXP hostname, SEXP port, SEXP dbname, SEXP names, SEXP tag, SEXP ordinale);
-RcppExport SEXP GrafoDB_do_history_nativo(SEXP usernameSEXP, SEXP passwordSEXP, SEXP hostnameSEXP, SEXP portSEXP, SEXP dbnameSEXP, SEXP namesSEXP, SEXP tagSEXP, SEXP ordinaleSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< SEXP >::type username(usernameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type password(passwordSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type hostname(hostnameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type port(portSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type dbname(dbnameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type names(namesSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type tag(tagSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type ordinale(ordinaleSEXP);
-    do_history_nativo(username, password, hostname, port, dbname, names, tag, ordinale);
-    return R_NilValue;
-END_RCPP
-}
-// load_archi
-CharacterMatrix load_archi(SEXP username, SEXP password, SEXP hostname, SEXP port, SEXP dbname, SEXP tag);
-RcppExport SEXP GrafoDB_load_archi(SEXP usernameSEXP, SEXP passwordSEXP, SEXP hostnameSEXP, SEXP portSEXP, SEXP dbnameSEXP, SEXP tagSEXP) {
+// convert_data_frame
+List convert_data_frame(SEXP dataframe0);
+RcppExport SEXP GrafoDB_convert_data_frame(SEXP dataframe0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< SEXP >::type username(usernameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type password(passwordSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type hostname(hostnameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type port(portSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type dbname(dbnameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type tag(tagSEXP);
-    __result = Rcpp::wrap(load_archi(username, password, hostname, port, dbname, tag));
-    return __result;
-END_RCPP
-}
-// load_data_nativo
-List load_data_nativo(SEXP username, SEXP password, SEXP hostname, SEXP port, SEXP dbname, SEXP names, SEXP tag);
-RcppExport SEXP GrafoDB_load_data_nativo(SEXP usernameSEXP, SEXP passwordSEXP, SEXP hostnameSEXP, SEXP portSEXP, SEXP dbnameSEXP, SEXP namesSEXP, SEXP tagSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< SEXP >::type username(usernameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type password(passwordSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type hostname(hostnameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type port(portSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type dbname(dbnameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type names(namesSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type tag(tagSEXP);
-    __result = Rcpp::wrap(load_data_nativo(username, password, hostname, port, dbname, names, tag));
-    return __result;
-END_RCPP
-}
-// load_formule_nativo
-List load_formule_nativo(SEXP username, SEXP password, SEXP hostname, SEXP port, SEXP dbname, SEXP tag, SEXP nomi);
-RcppExport SEXP GrafoDB_load_formule_nativo(SEXP usernameSEXP, SEXP passwordSEXP, SEXP hostnameSEXP, SEXP portSEXP, SEXP dbnameSEXP, SEXP tagSEXP, SEXP nomiSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< SEXP >::type username(usernameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type password(passwordSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type hostname(hostnameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type port(portSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type dbname(dbnameSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type tag(tagSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type nomi(nomiSEXP);
-    __result = Rcpp::wrap(load_formule_nativo(username, password, hostname, port, dbname, tag, nomi));
+    Rcpp::traits::input_parameter< SEXP >::type dataframe0(dataframe0SEXP);
+    __result = Rcpp::wrap(convert_data_frame(dataframe0));
     return __result;
 END_RCPP
 }

@@ -13,6 +13,8 @@ saveGraph(object)
 \item{path}{erroneamente, dovuta al generic su `grafo` questo sarebbe il "tag" da
 dare al grafo. Non c'e' modo di ovviare questo problema. Vedere il
 prototipo di funzione di `.saveGraph`, e' sicuramente piu' chiaro.}
+
+\item{...}{Parametri aggiuntivi alla `saveGraph`}
 }
 \description{
 La funzione si preoccupa di serializzare la transazione al DB, e controllare
