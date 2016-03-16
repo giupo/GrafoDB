@@ -231,8 +231,6 @@ setMethod(
     data <- object@data
     functions <- object@functions
     tag <- object@tag
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
     num <- length(names(object))
     msg <- paste0("GrafoDB [",tag,"] with ", num, " series, ",
                   as.character(object@timestamp))
