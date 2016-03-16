@@ -17,17 +17,22 @@
 #' @name .saveGraph
 #' @usage .saveGraph(x, tag)
 #' @usage .saveGraph(x)
-#' @include conflicts.r
+#' @include conflicts.r copy_graph.r
 #' @rdname saveGraph-internal
 
 # FIXME: #31849
 # https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 .saveGraph <- function(x, tag = x@tag, ...) {
+
   if(hasConflicts(x)) {
     stop("Il grafo ",tag, " ha conflitti, risolverli prima di salvare")
   }
+  checkConflicts(x)
 
-  param_list <- as.list(...)
+  con <- pgConnect()
+  on.exit(dbDisconnect(con))
+           
+  param_list <- list(...)
 
   msg <- if('msg' %in% names(param_list)) {
     param_list[["msg"]]
@@ -38,92 +43,56 @@
   tagExists <- .tagExists(tag)
   
   if(tagExists) {
-    .updateGraph(x)
+    # sto aggiornando il grafo tag
+    .updateGraph(x, con=con, msg=msg)
   } else {
     if (x@tag == tag) {
+      # sto creando un nuovo grafo
       .createGraph(x, tag, msg=msg)  
     } else {
       con <- pgConnect()
       on.exit(dbDisconnect(con))
-      dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-      dbBegin(con)
-      .copyGraph(x@tag, tag, con, msg=msg)
-      .updateGraph(x, tag, con, msg=msg)
-      dbCommit(con)
+      tryCatch({
+        dbBegin(con)
+        .copyGraph(x@tag, tag, con, msg=msg)
+        .updateGraph(x, tag, con, msg=msg)
+        dbCommit(con)
+      }, error=function(cond) {
+        dbRollback(con)
+        stop(cond)
+      })
     }
   }
 }
 
-.copyGraph <- function(from, to, con=NULL) {
-  if(is.null(con)) {
-    wasNull <- TRUE
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-    dbBegin(con)
+#' @include update_archi.r update_data.r update_functions.r
+
+.updateGraph <- function(x, tag=x@tag, con=NULL, ...) {
+  param_list <- list(...)
+  msg <- if('msg' %in% names(param_list)) {
+    param_list[["msg"]]
   } else {
-    wasNull <- FALSE
+    NULL
   }
-  
-  commento <- paste0("Rilascio per ", to)
-  autore <- whoami()
-  params <- cbind(to, autore, from)
-  tryCatch({
-    ## copia dati
-    dbGetPreparedQuery(
-      con,
-      paste0("insert into dati(tag, name, anno, periodo, freq, dati, autore) ",
-             " select ?, name, anno, periodo, freq, dati, ? from dati where tag = ?"),
-      bind.data = params)
-    ## copia archi
-    dbGetPreparedQuery(
-      con,
-      paste0("insert into archi(tag, partenza, arrivo, autore) ",
-             " select ?, partenza, arrivo, ? from archi where tag = ?"),
-      bind.data = params)
-    ## copia formule
-    dbGetPreparedQuery(
-      con,
-      paste0("insert into formule(tag, name, formula, autore) ",
-             " select ?, name, formula, ? from formule where tag = ?"),
-      bind.data = params)
-    ## copia metadati
-    dbGetPreparedQuery(
-      con,
-      paste0("insert into metadati(tag, name, key, value, autore) ",
-             " select ?, name, key, value, ? from metadati where tag = ?"),
-      bind.data = params)
-    ## inserisce nella tab grafi
-    dbGetPreparedQuery(
-      con,
-      paste0("insert into grafi(tag, commento, last_updated, autore) values ",
-             "(?, ?, LOCALTIMESTAMP::timestamp(0), ?)"),
-      bind.data = data.frame(to, commento, autore))
-    ## Ricordati di committare.
-    if(wasNull) {
-      dbCommit(con)
-    }
-  }, error = function(err) {
-    dbRollback(con)
-    stop(err)
-  })
-}
-
-.updateGraph <- function(x, tag=x@tag, con=NULL) {
   wasNull <- is.null(con)
   if(wasNull) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-    dbBegin(con)
-  }
-  ## supporto per history
-  tryCatch(
-    doHistory(x, con),
-    error = function(err) {
+    tryCatch({
+      dbBegin(con)
+    }, error = function(cond) {
       dbRollback(con)
-      stop(err)
+      stop(cond)
     })
+  }
+  
+  ## supporto per history
+  tryCatch({
+    doHistory(x, con)
+  }, error = function(err) {
+    dbRollback(con)
+    stop(err)
+  })
   
   tryCatch(
     .updateData(x, con, tag),
@@ -167,257 +136,6 @@
   }
 }
 
-.updateArchi <- function(x, con, tag=x@tag) {
-  if(interactive()) cat("Update Archi...")
-  data <- x@data
-  functions <- x@functions
-  timestamp <- x@timestamp
-  network <- x@network
-  in.memory <- as.data.frame(get.edgelist(network), stringsAsFactors = F)
-  autore <- whoami()
-  names(in.memory) <- c("partenza", "arrivo")
-  in.db <- dbGetPreparedQuery(
-    con,
-    paste("select partenza, arrivo from archi where tag = ?"),
-    bind.data = tag)
-  sep <- "-"
-  in.db <- drop.levels(in.db)
-  in.db <- paste(in.db$partenza, in.db$arrivo, sep=sep)
-  in.memory <- paste(in.memory$partenza, in.memory$arrivo, sep=sep)
-  
-  da.inserire <- setdiff(in.memory, in.db)
-
-  df <- if(length(keys(data))) {
-    ## cerco archi aggiunti di recente.
-    params <- cbind(tag, timestamp)
-    sql <- paste("select partenza, arrivo from archi where tag = ? ",
-                 "and last_updated::timestamp(0) > to_timestamp(?)")
-    dbGetPreparedQuery(con, sql, bind.data = params)
-  } else {
-    data.frame(partenza=character(0), arrivo=character(0))
-  }
-  
-  if(nrow(df) > 0) {
-    ## controllo che i nuovi archi non siano tra le serie che ho modificato e
-    ## che non creino un anello
-    wood <- graph.data.frame(df, directed=TRUE)
-    network_aux <- graph.union(network, wood)
-    if(any(keys(functions) %in% df$arrivo)) {
-      warning("Ci sono conflitti sugli archi, continuo su dati e formule")    
-    }
-    
-    if(!is.dag(network_aux)) {
-      wrongsort <- try(topological.sort(network), silent=TRUE)
-      network_seq <- V(network)
-      cycles_seq <- network_seq[setdiff(
-        network_seq, network_seq[wrongsort])]
-      cycles_vertex <- cycles_seq$name
-      stop("Cycles found: ", paste(unlist(cycles_vertex), collapse=", "))
-    }
-  }
-  
-  if(length(da.inserire)) {
-    params <- if(length(da.inserire) == 1) {
-      tokens <- str_split(da.inserire, sep)[[1]]
-      df <- as.data.frame(
-        list(
-          partenza = tokens[[1]],
-          arrivo=tokens[[2]]),
-        stringsAsFactors = F)
-      names(df) <- c("partenza", "arrivo")
-      df
-    } else {
-      splitted <- unlist(str_split(da.inserire, sep))
-      df <- as.data.frame(matrix(splitted, nrow=length(da.inserire), byrow=T),
-                          stringsAsFactors = F)
-      names(df) <- c("partenza", "arrivo")
-      df
-    }
-    params <- c(tag, df, autore)
-    dbGetPreparedQuery(
-      con,
-      "insert into archi(tag, partenza, arrivo, autore) values(?,?,?,?)",
-      bind.data = params)
-  }
-  if(interactive()) cat("Done.\n")
-}
-  
-.updateData <- function(x, con, tag=x@tag) {
-  if(interactive()) cat("Update Data...")
-  data <- x@data
-  timestamp <- x@timestamp
-  autore <- whoami()
-  df <- if(length(keys(data))) {
-    params <- cbind(tag, timestamp)
-    sql <- paste("select name from dati where tag = ? ",
-                 "and last_updated::timestamp(0) > to_timestamp(?)")
-    
-    dbGetPreparedQuery(con, sql, bind.data = params)
-  } else {
-    data.frame()
-  }
-  
-  # names.with.conflicts <- intersect(keys(data), as.character(df$name))
-  names.with.conflicts <- intersect(x@touched, as.character(df$name))
-  if(length(names.with.conflicts) > 0) {
-    ## ci sono conflitti
-    ## crea il conflitto e non toccare i dati.
-    sql <- paste0(
-      "insert into conflitti(tag, name, anno, prd, ",
-      " freq, dati, autore)",
-      " values (?, ?, ?, ?, ?, ? ,?)")
-    
-    dati <- foreach(name = iter(names.with.conflicts), .combine=rbind) %do% {
-      tryCatch({
-        tt <- x[[name]]
-        df <- to.data.frame(tt, name)
-        cbind(tag, df, autore)
-      }, error = function(err) {
-        stop(name, ": ", err)
-      })
-    }
-    
-    dati <- as.data.frame(dati)
-    names(dati) <- c("tag", names(df), "autore")
-    dbGetPreparedQuery(con, sql, bind.data = dati)
-    warning("Ci sono conflitti sui dati per le serie: ",
-            paste(names.with.conflicts, collapse=", "))
-  }
-  ## aggiorno solo le serie cambiate
-  
-  names.updated <- setdiff(keys(data), names.with.conflicts)
-  cl <- initCluster()
-  is.multi.process <- !is.null(cl)
-  if(is.multi.process) {
-    clusterStartWorking()
-  }
-  autore <- whoami()
-  if(length(names.updated)) { 
-    dati <- if(is.multi.process) {
-      foreach (name = iter(names.updated), .combine=rbind) %dopar% {
-        df <- to.data.frame(data[[name]])
-        cbind(df, autore, name, tag) 
-      }
-    } else {
-      foreach (name = iter(names.updated), .combine=rbind) %do% {
-        df <- to.data.frame(data[[name]])
-        cbind(df, autore, name, tag)    
-      }
-    }
-    
-
-    if(dbExistsTable(con, paste0("dati_", tag))) {
-      sql1 <- paste0("UPDATE dati_",tag,
-                     " SET anno=?, periodo=?, freq=?, dati=?,",
-                     "autore=?, last_updated = LOCALTIMESTAMP::timestamp(0) ",
-                     " WHERE name=? and tag=?");
-      dbGetPreparedQuery(con, sql1, bind.data=dati)
-    }
-    
-    sql2 <- paste0(
-      "INSERT INTO dati(anno, periodo, freq, dati, autore, ",
-      " name, tag, last_updated) ",
-      " select ?,?,?,?,?,?,?,LOCALTIMESTAMP::timestamp(0)",
-      " WHERE NOT EXISTS (SELECT 1 FROM dati WHERE name=? and tag=?)")
-    
-    dati <- cbind(dati, names.updated, tag)
-    dbGetPreparedQuery(con, sql2, bind.data=dati)
-  }
-  doneWithCluster()
-  cat("Done.\n")
-}
-
-.updateFunctions <- function(x, con, tag=x@tag) {
-  if(interactive()) cat("Update Functions...")
-  ## passo la connessione perche' devono avere la stessa transazione
-  ## non usare controllo di transazione qui
-  functions <- x@functions
-  timestamp <- x@timestamp
-  df <- if(length(keys(functions))) {
-    params <- cbind(tag, timestamp)
-    sql <- paste("select name from formule where tag = ? ",
-                 "and last_updated::timestamp(0) > to_timestamp(?)")
-    dbGetPreparedQuery(con, sql, bind.data = params)
-  } else {
-    data.frame()
-  }
-  
-  ## names.with.conflicts <- intersect(keys(functions), as.character(df$name))
-  names.with.conflicts <- intersect(x@touched, as.character(df$name))
-  cl <- initCluster()
-  is.multi.process <- !is.null(cl)
-  if(is.multi.process) {
-    clusterStartWorking()
-  }
-  autore <- whoami()
-  if(length(names.with.conflicts)) {
-    dati <- if(is.multi.process) {
-      foreach (name = iter(names.with.conflicts), .combine=rbind) %dopar% {
-        task <- expr(x, name, echo=FALSE)
-        cbind(task, autore, name, tag)
-      }
-    } else {
-      foreach (name = iter(names.with.conflicts), .combine=rbind) %do% {
-        task <- expr(x, name, echo=FALSE)
-        cbind(task, autore, name, tag)
-      }
-    }
-    
-    sql1 <- paste0("UPDATE conflitti  SET formula=?, autore=?, ",
-                   "date = LOCALTIMESTAMP::timestamp(0) ",
-                   " WHERE name=? and tag=?");      
-    dbGetPreparedQuery(con, sql1, bind.data=dati)
-    
-  
-    sql2 <- paste0(
-      "INSERT INTO conflitti(formula, autore, date, name, tag) ",
-      " select ?,?,LOCALTIMESTAMP::timestamp(0),?,?",
-      " WHERE NOT EXISTS (SELECT 1 FROM formule WHERE name=? and tag=?)")
-    dati <- cbind(dati, names.with.conflicts, tag)
-    
-    names(dati) <- c("formula", "autore", "name", "tag", "name", "tag")
-    dbGetPreparedQuery(con, sql2, bind.data = dati)
-    warning("Ci sono conflitti sulle formule per le serie: ",
-            paste(names.with.conflicts, collapse=", "))
-  } 
-  
-  names.updated <- setdiff(keys(x@functions), names.with.conflicts)
-  if(length(names.updated)) {
-    formule <- if(is.multi.process) {
-      foreach (name = iter(names.updated), .combine=rbind) %dopar% {
-        task <- expr(x, name, echo=FALSE)
-        cbind(task, whoami(), name, tag)
-      }
-    } else {
-      foreach (name = iter(names.updated), .combine=rbind) %do% {
-        task <- expr(x, name, echo=FALSE)
-        cbind(task, whoami(), name, tag)
-      }
-    }
-    
-    if(dbExistsTable(con, paste0("formule_", tag))) {
-      sql1 <- paste0("UPDATE formule_",tag,
-                     " SET formula=?, autore=?, ",
-                     " last_updated = LOCALTIMESTAMP::timestamp(0) ",
-                     " WHERE name=? and tag=?");      
-      dbGetPreparedQuery(con, sql1, bind.data=formule)
-    }
-    
-    sql2 <- paste0(
-      "INSERT INTO formule(formula, autore, name, tag, last_updated) ",
-      " select ?,?,?,?,LOCALTIMESTAMP::timestamp(0) ",
-      " WHERE NOT EXISTS (SELECT 1 FROM formule WHERE name=? and tag=?)")
-    autore <- whoami()
-    formule <- foreach (name = iter(names.updated), .combine=rbind) %do% {
-      task <- expr(x, name, echo=FALSE)
-      cbind(task, autore, name, tag, name, tag)
-    }
-    colnames(formule) <- c("formula", "autore", "name", "tag", "name", "tag")
-    dbGetPreparedQuery(con, sql2, bind.data=formule)
-  }
-  doneWithCluster()
-  if(interactive()) cat("Done.\n")
-}
 #' crea ex-novo un istanza di grafo nel databae
 #'
 #' @name .createGraph
@@ -431,13 +149,18 @@
 #' @importFrom RPostgreSQL2 dbBegin
 #' @importFrom DBI dbSendQuery dbRollback
 
-.createGraph <- function(x, tag, con=NULL) {
+.createGraph <- function(x, tag, con=NULL, ...) {
+  param_list <- list(...)
   if(is.null(con)) {
     wasNull <- TRUE
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-    dbBegin(con)
+    tryCatch({
+      dbBegin(con)
+    }, error = function(cond) {
+      dbRollback(con)
+      stop(cond)
+    })
   } else {
     wasNull <- FALSE
   }
@@ -552,10 +275,27 @@ countRolling <- function(x, con = NULL) {
     on.exit(dbDisconnect(con))
   }
   tag <- x@tag
-  sql <- paste0("select count(tag) from grafi where tag like '", tag, "p%'")
-  df <- dbGetQuery(con, sql)
+  sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
   
-  as.numeric(df[[1,1]])
+  df <- dbGetQuery(con, sql)
+  if(nrow(df)==0) {
+    0
+  } else {
+    numeri <- as.numeric(gsub("p", "", gsub("cf10", "", df[, 1])))
+    max(numeri, na.rm=TRUE) 
+  }
+}
+
+
+#' Costruice il progressivo per il grafo `x`
+#'
+#' @name nextRollingNameFor
+#' @usage nextRollingNameFor(x)
+
+nextRollingNameFor <- function(x, con) {
+  tag <- x@tag
+  p <- countRolling(x, con) + 1
+  paste0(tag, 'p', p)
 }
 
 #' Esegue il rolling dei vintage del `GrafoDB`
@@ -580,104 +320,26 @@ countRolling <- function(x, con = NULL) {
 #' @importFrom RJSONIO toJSON
 #' @importFrom iterators iter
 #' @importFrom foreach foreach %do% %dopar%
+#' @importFrom rutils slice
 
 doHistory <- function(x, con) {
-  tag <- x@tag
-  data <- x@data
-  df <- dbGetQuery(con, paste0("select name from dati where tag = '",tag,"'"))
-  if(nrow(df)) {
-    nomi.db <- df$name
-  } else {
-    ## non faccio niente, non c'e' nulla sul DB
-    return(invisible(NULL))
-  }
-  nomi.data <- keys(data)
-  nomi.history <- intersect(nomi.db, nomi.data)
-  
-  if(length(nomi.history)  == 0 ) {
-    return()
-  }
-  
-  message("Rolling history per ", tag)
-  df <- dbGetPreparedQuery(
-    con,
-    "select max(ordinale) from history where tag=?",
-    bind.data = tag)
-  
-  ordinale <- as.numeric(df[[1,1]])  
-  ordinale <- if(is.na(ordinale)) {
-    1
-  } else {
-    ordinale + 1
-  }
-
-  cl <- initCluster()
-  is.multi.process <- !is.null(cl)
-
-  if(is.multi.process) {
-    if(wasWorking()) {
-      stopCluster(cl)
-      cl <- initCluster()
-    } else {
-      clusterStartWorking()
-    }
-  }
-  
-  lista.nomi <- slice(nomi.history, detectCores())
-  
-  blinda <- function(x, name, ordinale) {
-   tag <- x@tag
-    archi <- deps(x, name)
-    if(is.null(archi)) {
-      dbGetPreparedQuery(
-        con,
-        paste0(
-          "insert into history(name, tag, ordinale, ",
-          " anno, periodo, freq, dati,  last_updated, autore)",
-          " select name, tag, ", ordinale,", anno, periodo, freq, dati, ",
-          " last_updated, autore from dati_", tag," where name=?"),
-        bind.data = data.frame(name))      
-    } else {
-      archi <- toJSON(archi)
-      dbGetPreparedQuery(
-        con,
-        paste0(
-          "insert into history(name, tag, ordinale, anno, ",
-          " periodo, freq, dati, formula, archi_entranti, ",
-          " last_updated, autore) ",
-          "select d.name, d.tag, ?, d.anno, d.periodo, d.freq, ", 
-          "d.dati, f.formula, ?, f.last_updated, f.autore ",
-          " from dati_", tag," d, formule_", tag," f where f.tag = d.tag and d.tag=? ",
-          " and d.name = f.name and d.name=?"), ## aggiunti i tag per evitare deadlock
-        bind.data = data.frame(ordinale, archi, tag, name))      
-    }
-    name
-  }
-  
-  combine <- function(pb) {
-    count <- 0
-    function(...) {
-      x <- list(...)
-      count <<- count + length(x)
-      updateProgressBar(pb, count, last(unlist(x)))
-      c(...)
-    }
-  }
-  
-  pb <- ProgressBar(min=1, max=length(nomi.history))
-  
-  if(is.multi.process && FALSE) {
-    foreach(name = iter(nomi.history), .combine = combine(pb)) %dopar% {
-      blinda(x, name, ordinale)      
-    }
-  } else {
-    foreach(name = iter(nomi.history), .combine = combine(pb)) %do% {
-      blinda(x, name, ordinale)
-    }
-  }
-  kill(pb)
-  doneWithCluster()
-  message("Rolling history completo (", paste0(tag, "p", ordinale), ")")
+  notOk <- TRUE
+  tries <- 3
+  while(tries > 0) {    
+    tries <- tryCatch({
+      dest <- nextRollingNameFor(x, con)
+      message("Salvo il grafo ", x@tag, " in ", dest)
+      .copyGraph(x@tag, dest, con=con)
+      message("salvataggio ", dest, " completo")
+      0
+    }, error=function(cond) {
+      warning(cond)
+      message("Ritento il salvataggio...")
+      if((tries - 1) == 0) {
+        stop(cond)
+      }
+    })
+  } 
 }
 
 #' Salva un istanza di grafo sul file system
@@ -710,3 +372,4 @@ readBinary <- function(path) {
   on.exit(close(con))
   unserialize(con)
 }
+

@@ -8,12 +8,11 @@
 #' @param tag tag del grafo (default=`cf10`)
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
-#' @include persistence.r RcppExports.R
-#' @importFrom RPostgreSQL2 dbGetPreparedQuery
-#' @importFrom rutils whoami flypwd
+#' @include persistence.r
 #' @importFrom igraph graph.data.frame graph.empty vertex
 #' @importFrom stringr str_match
 #' @importFrom hash hash
+#' @include db.r persistence_utils.r
 
 .init <- function(.Object, tag="cf10") {
   if(is.null(tag)) {
@@ -34,54 +33,37 @@
   .Object@tag <- tag
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  username <- whoami()
-  password <- flypwd()
-  settings <- dbSettings()
-  network <- load_archi(username, password, settings$host,
-                        settings$port, settings$dbname, tag);
   
-  network <- if(nrow(network) > 0) {
-    graph.data.frame(as.data.frame(network), directed=TRUE)
+  archi <- loadArchi(tag, con=con)
+  .Object <- resync(.Object, con=con)
+  
+  network <- if(nrow(archi) > 0) {
+    archi <- archi[, c("partenza", "arrivo")]
+    graph.data.frame(as.data.frame(archi), directed=TRUE)
   } else {
     graph.empty(directed=TRUE)
   }
-  
-  df <- dbGetPreparedQuery(
-    con,
-    "select name from dati where tag=?",
-    bind.data = tag)
 
-  if(nrow(df)) {
-    nomi <- as.character(df$name)
+  .Object@network <- network
+  nomi <- names(.Object)
+  if(length(nomi) >0 ) {
     pending.names <- setdiff(nomi, V(network)$name)
     network <- network + vertex(pending.names)
   }
   
   .Object@network <- network
   
-  df <- dbGetPreparedQuery(
-    con,
-    "select * from grafi where tag = ?",
-    bind.data = tag)
-
-  
-  if(nrow(df)) {
+  df <- loadGrafi(con)
+  dftag <- df[df$tag == tag,]
+  if(nrow(dftag)) {
     ## il grafo esiste nel DB
-    .Object@timestamp <- df$last_updated
+    .Object@timestamp <- dftag$last_updated
     if(interactive()) {
-      message(df$comment)
+      message(dftag$comment)
     }
   } else {
     ## il grafo non esiste nel DB
-    .Object@timestamp <- Sys.time()
-    sql <- paste0(
-      "INSERT INTO grafi(tag, commento, last_updated, autore) ",
-      " select ?,?,LOCALTIMESTAMP::timestamp(0),? ",
-      " WHERE NOT EXISTS (SELECT 1 FROM grafi WHERE tag=?)")
-    autore <- whoami()
-    dati <- cbind(tag, paste0('Grafo per ', tag), autore, tag)
-    names(dati) <- c("tag", "commento", "autore", "tag")
-    dbGetPreparedQuery(con, sql, bind.data = dati)
+    .Object <- createNewGrafo(.Object, tag, con=con)
   }
   
   .Object
@@ -281,370 +263,7 @@ from.data.frame <- function(df) {
 }
 
 
-#' Ritorna le formule del GrafoDB
-#'
-#' Ritorna (o mostra su console, stdout) le formule delle serie `nomi`
-#'
-#' @name  .expr
-#' @usage .expr(x, name)
-#' @usage .expr(x, name, echo=FALSE)
-#' @param x istanza di GrafoDB
-#' @param nomi array di nomi di serie storiche
-#' @rdname expr-internal
-#' @importFrom formatR tidy_source
-#' @importFrom hash keys
 
-.expr <- function(x, nomi, echo=FALSE) {
-  functions <- x@functions
-  in.functions <- intersect(keys(functions), nomi)
-  da.caricare.db <- setdiff(nomi, in.functions)
-  from.db <- if(length(da.caricare.db)) {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    params <- as.data.frame(cbind(x@tag, da.caricare.db))
-    names(params) <- c("tag", "name")
-    dbGetPreparedQuery(
-      con,
-      "select name, formula from formule where tag = ? and name = ?",
-      bind.data = params)
-  } else {
-    data.frame(name=character(), formula=character())
-  }
-   
-  in.functions <- foreach(
-    row=iter(in.functions, by='row'),
-    .combine=rbind) %do% {
-      data.frame(name=row, formula=functions[[row]])
-    }
-  
-  formule <- rbind(in.functions, from.db)
-  
-  if(nrow(formule) == 0) {
-    NULL
-  } else if(nrow(formule) == 1) {
-    task <- as.character(formule$formula)
-    if(interactive() && echo) {
-      tidy_source(text=task, indent= 2)
-    }
-    task
-  } else {
-    nomi <- formule$name
-    ret <- vector(length(nomi), mode="list")
-    for(i in seq_along(nomi)) {
-      name <- nomi[[i]]
-      ret[i] <- as.character(formule[formule$name == name,]$formula)
-    }
-    names(ret) <- nomi
-    ret
-  }
-}
-
-.evaluateSingle1 <- function(name, graph) {
-  tsformula <- .expr(graph, name, echo=FALSE)
-  nomi_padri <- upgrf(graph, name, livello=1)
-  if(length(nomi_padri) == 0 && is.null(tsformula)) {
-    return(graph[[name]])
-  }
-
-  ## this is a patch due limitations of R language and
-  ## deeeeep limitations of my patience
-  if(length(nomi_padri) > 100) {
-    padri <- list()
-    sliced <- slice(nomi_padri, n=100)
-    foreach(sliced_names = sliced) %do% {
-      padri[sliced_names] <- graph[[sliced_names]]
-    }
-    names(padri) <- nomi_padri
-    padri
-  } else if ( length(nomi_padri) > 1 ) {
-    padri <- graph[[nomi_padri]]
-  } else if ( length(nomi_padri) == 1 ) {
-    padri <- list()
-    padri[[nomi_padri]] <- graph[[nomi_padri]]
-  } else {
-    padri <- list()
-  }
-  
-  if(isElementary(graph, name)) {
-    ## Se e' elementare cmq la carico (e' nato prima l'uovo o la gallina?)
-    ## e la metto nei nomi_padri
-    padri[[name]] <- graph[[name]]
-    assign(name, padri[[name]])
-    nomi_padri <- name
-  }
-  
-  ## cmd <- .clutter_function(tsformula, name)
-  cmd <- .clutter_with_params_and_return(tsformula, name, nomi_padri)
-  tryCatch({    
-    eval(parse(text=cmd))
-    do.call(proxy, padri)    
-  }, error = function(err) {
-    stop(name, ": ", err)
-  })           
-}
-
-
-.evaluateSingle3 <- function(name, graph) {
-  tsformula <- .expr(graph, name, echo=FALSE)
-  nomi_padri <- upgrf(graph, name, livello=1)
-  if(length(nomi_padri) == 0) {
-    return(graph[[name]])
-  }
-  if(length(nomi_padri) > 100) {
-    padri <- list()
-    sliced <- slice(nomi_padri, n=100)
-    foreach(sliced_names = sliced) %do% {
-      padri[sliced_names] <- graph[[sliced_names]]
-    }
-    names(padri) <- nomi_padri
-    padri
-  } else {
-    padri <- graph[[nomi_padri]]
-  }
-  
-  if(length(nomi_padri) == 1) {
-    ## boxing
-    ppp <- list()
-    ppp[[nomi_padri]] <- padri
-    padri <- ppp
-  }
-
-  attach(padri)
-  on.exit(detach(padri))
-  cmd <- .clutter_function(tsformula, name)
-  tryCatch({
-    eval(parse(text=cmd))
-    proxy()
-  }, error = function(err) {
-    stop(name, ": ", err)
-  })           
-}
-
-.evaluateSingle2 <- function(name, graph) {
-  tsformula <- .expr(graph, name, echo=FALSE)
-  nomi_padri <- upgrf(graph, name, livello=1)
-  if(length(nomi_padri) == 0) {
-    return(graph[[name]])
-  }
-  if(length(nomi_padri) > 100) {
-    padri <- list()
-    sliced <- slice(nomi_padri, n=100)
-    foreach(sliced_names = sliced) %do% {
-      padri[sliced_names] <- graph[[sliced_names]]
-    }
-    names(padri) <- nomi_padri
-    padri
-  } else {
-    padri <- graph[[nomi_padri]]
-  }
-  
-  if(length(nomi_padri) == 1) {
-    ## boxing
-    ppp <- list()
-    ppp[[nomi_padri]] <- padri
-    padri <- ppp
-  }
-  env <- as.environment(padri)
-  env$graph <- graph
-  cmd <- .clutter_function(tsformula, name)
-  tryCatch({
-    eval(parse(text=cmd))
-    attach(env)
-    do.call(proxy, list())
-  }, error = function(err) {
-    stop(name, ": ", err)
-  })           
-}
-
-#' Valuta un singolo oggetto del grafo identificato da `name`
-#'
-#' @name .evaluateSingle
-#' @aliases evaluateSingle
-#' @usage .evaluateSingle(name, object)
-#' @usage evaluateSingle(name, object)
-#' @param name `character` nome della serie
-#' @param graph istanza di `GrafoDB`
-#' @return la serie storica calcolata.
-#' @export
-#' @rdname evaluateSingle-internal
-#' @note la scelta di evaluateSingle ricade su .evaluateSingle1, le altre due
-#'       implementazioni NON SUPPORTANO LE SERIE ELEMENTARI
-
-.evaluateSingle <- .evaluateSingle1
-
-#' Implementazione del generic `evaluate` definito nel package `grafo`
-#' per la classe `GrafoDB`
-#'
-#' Questa funzione valuta i nodi del grafo in parallelo
-#'
-#' @name .evaluate
-#' @usage .evaluate(object)
-#' @usage .evaluate(object, v_start)
-#' @return il grafo con i dati correttamente valutato
-#' @importFrom igraph V induced.subgraph neighborhood delete.vertices degree
-#' @importFrom rprogressbar ProgressBar updateProgressBar kill
-#' @importFrom foreach foreach %do% %dopar%
-#' @rdname evaluate-internal
-
-.evaluate <- function(object, v_start=NULL, deep=T, ...) {
-  params <- list(...)
-
-  debug <- if("debug" %in% names(params)) {
-    as.logical(params[["debug"]])
-  } else {
-    FALSE
-  }
-  
-  tag <- object@tag
-  data <- object@data
-  network <- object@network
-  all_names <- names(object)
-  
-  if(!all(v_start %in% all_names)) {
-    not.in.graph <- setdiff(v_start, all_names)
-    stop("Non sono serie del grafo: ", paste(not.in.graph, collapse=", "))
-  }
-  
-  if(!is.null(v_start)) {
-    ## le voglio valutare tutte
-    ## if(!tag %in% c(PRELOAD_TAG, "biss", "pne", "dbcong")) {
-    #sources_id <- V(network)[degree(network, mode="in") == 0]
-    #nomi_sources <- V(network)[sources_id]$name
-    #sources <- getdb(nomi_sources, tag)
-    #if(length(sources) > 0) {
-    #  if(is.bimets(sources)) {
-    #    data[preload_V_start] <- sources
-    #  } else {
-    #    data[names(sources)] <- sources
-    #  }
-    #  ## fonti gia' valutate, le tolgo
-    #  network <- delete.vertices(network, sources_id)
-    #}
-  #} else {
-    v_start <- as.character(v_start)
-    network <- induced.subgraph(
-      network,
-      V(network)[unlist(
-        neighborhood(network, order=.Machine$integer.max,
-                     nodes=v_start, mode="out"))])
-  }
-  
-  ## se il network e' vuoto dopo l'eliminazione delle sorgenti,
-  ## ritorno senza fare nulla
-  if(!length(V(network))) {
-    return(invisible(object))
-  }
-  
-  deep <- as.logical(deep)
-  
-  total <- length(V(network))
-  i <- 0
-  is.interactive <- interactive()
-  if(is.interactive) {
-    pb <- ProgressBar(min=0, max=total)
-    update(pb, i, "Try Cluster...")
-  }  
-  
-  cl <- initCluster()
-  is.multi.process <- !is.null(cl) && !debug 
-  
-  if(is.multi.process) {
-    if(wasWorking()) {
-      stopCluster(cl)
-      cl <- initCluster()
-    } else {
-      clusterStartWorking()
-    }
-    clusterExport(
-      cl, ".evaluateSingle",
-      envir=environment())
-    if(is.interactive) updateProgressBar(pb, i, "Cluster OK")
-  } else {
-    if(is.interactive) updateProgressBar(pb, i, "No Cluster")
-  }
-
-  if(is.interactive) updateProgressBar(pb, i, "Starting...")
-  
-  sources_id <- V(network)[degree(network, mode="in") == 0]
-  
-  proxy <- function(name, object) {
-    serie <- .evaluateSingle(name, object)
-    list(serie)
-  }
-  
-  while(length(sources_id)) {
-    sources <- V(network)[sources_id]$name
-    
-    if(!is.multi.process) {
-      evaluated <- foreach(name=sources, .combine=c) %do% {
-        i <- i + 1
-        if(is.interactive) {
-          updateProgressBar(pb, i, name)
-        }
-        proxy(name, object)
-      }
-    } else {
-      evaluated <- foreach(name=sources, .combine=c) %dopar% {
-        proxy(name, object)
-      }
-      i <- i + length(sources)
-      if(is.interactive) {
-        updateProgressBar(pb, i, last(sources))
-      }
-    }
-    
-    names(evaluated) <- sources
-    
-    ## evaluated <- Filter(function(x) length(x) != 0, evaluated)
-    
-    if(length(evaluated) == 1) {
-      data[[sources]] <- evaluated[[sources]]
-    } else {
-      data[sources] <- evaluated
-    }
-    
-    network <- delete.vertices(network, sources_id)
-    sources_id <- V(network)[degree(network, mode="in") == 0]
-  }
-
-  doneWithCluster()
-  if(is.interactive) kill(pb)
-  object@data <- data
-  object
-}
-
-
-
-testa <- function() {
-  for(name in names(g)) {
-    if(!is.null(start) && start != name) {
-      next
-    }
-    
-    if(!is.null(start) && start == name) {
-      start = NULL
-    }
-    
-    ser(g, name)
-  }
-}
-
-ratio <- function() {
-  g=GrafoDB()
-  success = 0
-  for(name in listAggregates(g)) {
-    tryCatch({
-      ser(g, name)
-      success <- success + 1
-    }, error = function(err) {
-      cat(paste0(name, ": ", err, "\n"), file="~/tacci.txt", append=T)
-      cat(paste0(name,"\n"), file="~/failures.txt", append=T)
-    })
-  }
-  total <- length(listAggregates(g))
-  message(success/total * 100, " success rate")
-  message(100 - success/total * 100, " failure rate")
-}
 
 
 #' Carica i dati dal DB
@@ -658,19 +277,24 @@ ratio <- function() {
 #' @return una serie o una lista di serie
 #' @importFrom rutils whoami flypwd
 #' @importFrom bimets is.bimets
+#' @importFrom foreach foreach %do% %dopar%
+#' @importFrom iterators iter
+#' @importFrom doMC registerDoMC
+#' @importFrom parallel detectCores
 #' @export
 
-getdb <- function(name, tag="cf10") {
-  settings <- dbSettings()
-  username <- whoami()
-  password <- flypwd()
-
-  dati <- load_data_nativo(
-    username,
-    password,
-    settings$host,
-    settings$port,
-    settings$dbname, name, tag); 
+getdb <- function(x, name, tag="cf10") {
+  dbdati <- x@dbdati
+  df <- dbdati[dbdati$name %in% name, ]
+  dati <- if(length(name) > 1000) {
+    registerDoMC(detectCores())
+    foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
+      convert_data_frame(row)
+      # from.data.frame(row)
+    }
+  } else {
+    convert_data_frame(df)
+  }
   
   if(length(dati)==1 && is.bimets(dati[[1]])) {
     dati[[1]]
@@ -689,7 +313,7 @@ getdb <- function(name, tag="cf10") {
 #' @name .getdata
 #' @rdname getdata_internal
 #' @usage .getdata(x, i)
-#' @include cluster.r RcppExports.R db.r
+#' @include db.r
 #' @param x istanza di `GrafoDB`
 #' @param i character array di nomi di serie storiche
 #' @return ritorna una named list con all'interno le serie storiche. Se l'array e'
@@ -708,7 +332,7 @@ getdb <- function(name, tag="cf10") {
     if(x@ordinal != 0) {
       tag <- paste0(tag, "p", x@ordinal)
     }
-    ret <- getdb(da.caricare.db, tag)
+    ret <- getdb(x, da.caricare.db, tag)
     if(is.bimets(ret)) {
       ret1 <- list()
       ret1[[da.caricare.db]] <- ret
@@ -742,29 +366,17 @@ getdb <- function(name, tag="cf10") {
   ret
 }
 
-.showConflicts <- function(x) {
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  tag <- x@tag
-  df <- dbGetPreparedQuery(
-    con,
-    "select * from conflitti where tag = ?",
-    bind.data=tag)
-
-  for(name in df$name) {
-    dfserie <- df[df$name == name,]
-    originale <- x[[name]]
-    sul.db <- from.data.frame(dfserie)
-  }
-}
-
+#' @importFrom DBI dbGetQuery
+#' @importFrom RPostgreSQL dbGetQuery
+#' @include db.r 
+  
 .timeStampForTag <- function(tag) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  df <- dbGetPreparedQuery(
+  df <- dbGetQuery(
     con,
-    "select last_updated from grafi where tag=?",
-    bind.data = tag)
+    paste0("select last_updated from grafi where tag='", tag,"'"))
+  
   if(nrow(df)) {
     df$last_updated
   } else {
@@ -772,138 +384,19 @@ getdb <- function(name, tag="cf10") {
   }
 }
 
+#' @importFrom DBI dbGetQuery
+#' @importFrom RPostgreSQL dbGetQuery
+#' @include db.r 
+  
 .tagExists <- function(tag) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  df <- dbGetPreparedQuery(
+  df <- dbGetQuery(
     con,
-    "select * from grafi where tag=?",
-    bind.data = tag)
+    paste0("select * from grafi where tag='", tag,"'"))
   nrow(df) > 0
 }
 
-.removeConflicts <- function(x, name=NULL) {
-  tag <- x@tag
-  if(is.character(name)) {
-    params <- cbind(tag, name)
-    sql <- "delete from conflitti where tag = ? and name =?"
-  } else {
-    params <- tag
-    sql <- "delete from conflitti where tag = ?"
-  }
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-  dbBegin(con)
-  tryCatch({
-    dbGetPreparedQuery(con, sql, bind.data = params)
-  }, error = function(err) {
-    dbRollback(con)
-    stop(err)
-  })
-  dbCommit(con)
-}
-
-.createGraph <- function(x, tag) {
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-  dbBegin(con)
-  dbCommit(con)
-}
-
-#' Elimina un edizione del grafo
-#'
-#' Cancella dal database un edizione del grafo partendo dal suo `tag`
-#'
-#' @name elimina
-#' @usage elimina(tag)
-#' @param tag `tag` che distingue in modo univoco il grafo ed i suoi dati
-#' @export
-#' @importFrom RPostgreSQL2 dbGetPreparedQuery
-#' @importFrom DBI dbSendQuery dbBegin dbCommit dbRollback
-
-elimina <- function(tag) {
-
-  if(is.grafodb(tag)) {
-    tag <- tag@tag
-  }
-
-  incancellabili <- c("cf10", "biss", "pne", "dbcong", "prim")
-  if(tag %in% incancellabili) stop("Non cancellero' mai ", tag)
- 
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-  dbBegin(con)
-  tryCatch({
-    dbGetPreparedQuery(con, "delete from grafi where tag=?", bind.data = tag)
-    dbGetPreparedQuery(con, "delete from conflitti where tag=?", bind.data = tag)
-
-    tables <- c("archi", "dati", "metadati", "formule", "history")
-    tables <- paste(tables, tag, sep="_")
-
-    for(table in tables) {
-      if(dbExistsTable(con, table)) {
-        dbGetQuery(con, paste0("drop table if exists ", table))
-      }
-    }
-  }, error = function(err) {
-    dbRollback(con)
-    stop(err)
-  })
-  dbCommit(con)
-}
-
-.edita <- function(x, name, ...) {
-  file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
-  new_task <- paste0(name, " = ... # work it")
-  if(!isNode(x, name)) {
-    deps <- c()
-    if(name %in% keys(x@functions)) {
-      task <- x@functions[[name]]
-    } else {
-      task <- new_task
-    }
-  } else {
-    deps <- getDependencies(x, name)
-    task <- expr(x, name, echo=F)
-    if(is.null(task)) {
-      stop("la serie ", name, " e' una serie primitiva")
-    }
-  }
-  old_task <- task
-  if(name %in% keys(x@edges)) {
-    deps <- x@edges[[name]]
-  }  
-  
-  task <- .clutter_with_params(task, name, deps) 
-  write(task, file=file)
-  on.exit(file.remove(file))
-  utils::file.edit(file, title=name)
-  txtsrc <- paste(readLines(file), collapse="\n")
-  edited <- .declutter_function(txtsrc)
-  
-  if(str_trim(edited) == str_trim(old_task)) {
-    return(invisible(x))
-  }
-  
-  x@functions[name] <- edited
-  params <- list(...)
-  tryCatch({
-    f <- eval(parse(text=txtsrc))
-    dep <- names(as.list(formals(f)))
-    if(!is.null(dep)) {
-      x@edges[[name]] <- dep
-    }
-    x[name] = f
-  }, error = function(cond) {
-    ## la risetto per poterla editare
-    x@functions[name] <- edited
-    stop(cond)
-  })
-  invisible(x)
-}
 
 .copy <- function(x,y, name) {
   task <- .declutter_function(as.character(getTask(x, name)))
@@ -912,54 +405,7 @@ elimina <- function(tag) {
   return(invisible(y))
 }
 
-.ser <- function(x, name, debug=FALSE) {
-  ## that's the dumbest thing in my life, inverting arguments.
-  if(!debug) {
-    ret <- .evaluateSingle(name, x)
-    if(!is.bimets(ret)) {
-      stop(name, " non e' un oggetto bimets")
-    }
-    ret
-  } else {
-    task <- expr(x, name, echo=FALSE)
-    if(is.null(task)) {
-      if(name %in% names(x)) {
-        stop(name, " non e' una serie con formula")
-      } else {
-        stop(name, " non e' una serie del grafo")
-      }
-    }
-    funcName <- paste0(name, "_func")
-    f <- .clutter_function(task, name, funcName=funcName)
-    filetmp <- tempfile(pattern=name, fileext=".R")
-    write(f, file=filetmp)
 
-    env <- new.env()
-    source(filetmp)
-    debug(funcName)
-    nomi_padri <- deps(x, name)
-    if(is.null(nomi_padri) || length(nomi_padri) == 0) {
-      padri <- list()
-    } else {
-      padri <- x[[nomi_padri]]
-    }
-
-    if(length(nomi_padri) == 1) {
-      ## boxing
-      ppp <- list()
-      ppp[[nomi_padri]] <- padri
-      padri <- ppp
-    }
-    
-    attach(padri)
-    on.exit({
-      rm(list=c(funcName), envir=globalenv())
-      file.remove(filetmp)
-      detach(padri)
-    })
-    eval(parse(text=paste0(funcName, "()")))    
-  }
-}
 
 #' Ritorna le radici del GrafoDB
 #'
@@ -1026,93 +472,6 @@ elimina <- function(tag) {
 .isRoot <- function(x, i) all(i %in% .roots(x))
 
 
-#' Elimina un nodo dal `GrafoDB`
-#'
-#' L'eliminazione prevede l'eliminazione dai dati, formule, archi e metadati
-#'
-#' @name .rmNode
-#' @usage .rmNode(graph, tsName, recursive)
-#' @param graph istanza di `GrafoDB`
-#' @param tsName nomi di serie da eliminare
-#' @param recursive `TRUE` se l'eliminazione deve essere rivorsiva sugli archi
-#'                  uscenti di ogni serie nel parametro `tsName`.
-#'                  `FALSE` altrimenti. Se il parametro e' impostato a `FALSE` e'
-#'                  condizione necessaria che le serie in `tsName` siano tutte
-#'                  foglie, ovvero serie senza archi uscenti
-#' @note Metodo interno
-#' @seealso rmNode
-#' @rdname rmNode-internal
-
-.rmNode <- function(graph, tsName, recursive=FALSE) {
-  sono.tutte.foglie = isLeaf(graph, tsName)
-  tag <- graph@tag
-  if(!recursive && !sono.tutte.foglie) {
-    stop(paste("Non posso cancellare serie intermedie senza",
-               "farlo ricorsivamente (ATTENZIONE!)"))
-  }
-  
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  tryCatch({  
-    dbSendQuery(con, "SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-    dbBegin(con)
-    
-    figlie <- downgrf(graph, tsName)
-    
-    da.eliminare <- union(figlie, tsName)
-    
-    ## eliminare i dati
-    dbGetPreparedQuery(
-      con,
-      "delete from dati where tag=? and name=?",
-      bind.data = cbind(tag, da.eliminare))
-    suppressWarnings(del(da.eliminare, graph@data))
-        
-    network <- graph@network
-    ## eliminare i vertici dal grafo
-    network <- network - vertex(da.eliminare)
-    ## eliminare le formule
-    dbGetPreparedQuery(
-      con,
-      "delete from formule where tag=? and name=?",
-      bind.data = cbind(tag, da.eliminare))
-    suppressWarnings(del(da.eliminare, graph@functions))
-    ## eliminare gli archi
-    dbGetPreparedQuery(
-      con,
-      "delete from archi where tag=? and (partenza=? or arrivo=?)",
-      bind.data = cbind(tag, da.eliminare, da.eliminare))
-    
-    ## eliminare i metadati
-    dbGetPreparedQuery(
-      con,
-      "delete from metadati where tag=? and name=?",
-      bind.data = cbind(tag, da.eliminare))
-    
-    graph@network <- network
-    dbCommit(con)
-  }, error = function(cond) {
-    dbRollback(con)
-    stop(cond)
-  })
-  graph
-}
-
-.getMeta <- function(x, serie, metadato) {
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  df <- dbGetPreparedQuery(
-    con,
-    "select value from metadati where tag=? and name=? and key=? order by 1",
-    bind.data = cbind(x@tag, serie, metadato))
-  if(nrow(df)) {
-    as.character(df[,1])
-  } else {
-    character()
-  }
-}
-
-
 #' Checks if a TimeSeries is different from another
 #'
 #' It's a predicate, returns `TRUE` if:
@@ -1140,36 +499,7 @@ tsdiff <- function(a, b, thr = .0000001) {
   any(a-b > thr) 
 }
 
-.navigate <- function(object, nodes=NULL, order=1L, mode='out', plot=FALSE) {    
-  if(!is.null(nodes))  {
-    nodes <- as.character(nodes)
-  }
-  order <- as.integer(order)
-  mmode <- as.character(mode)
-  plot <- as.logical(plot)
-  
-  network <- object@network
-  x <- if (!is.null(nodes)) {
-    unlist(
-      neighborhood(
-        graph=network, order=order, nodes=nodes, mode=mmode))
-  } else {
-    nodes <- topological.sort(network)[1]
-    unlist(
-      neighborhood(
-        graph=network, order=order, nodes=nodes, mode='out'))
-  }
-  
-  g1 <- induced.subgraph(network, x)
-  # V(g1)$label <- V(g1)$name
-  ret <- V(g1)$name
-  ret <- ret[ !ret %in% nodes ]
-  if (length(ret)== 0) {
-    invisible(NULL)
-  } else {
-    ret
-  }
-}
+
 
 #' Ritorna la lista dei rilasci presenti nel database
 #'

@@ -1,0 +1,37 @@
+* TODO Refactoring dell'accesso al DB.
+  L'accesso al DB e' un collo di bottiglia eccessivo. Fare cherrypicking per serie (formula, dati, metadati) 
+  e' troppo dispendioso. 
+
+  Conviene caricare upfront tutti i dati nella struttura dati R e gestire evenquali conflitti di dati 
+  al salvataggio (ricordarsi di Redis)
+
+** TODO Init
+   Il Grafo viene caricato con :
+   > require(GrafoDB)
+   > g = GrafoDB()
+
+   il costruttore legge la tabella degli archi; la tabella dei dati e delle formule e ristruttura 
+   gli oggetti (magari in un unica passata con outer join) in modo di avere in un unica struttura dati 
+   (un env? un hash? un list) tutti i dati divisi per nome, con formule e metadati (se possibile, ci vogliono
+   12 secondi per caricarli tutti).
+
+*** Tempi di caricamento:
+    Teoricamente in poco piu' di 7 secondi dovremmo avere tutti i dati in memoria, struttre dati in sola lettura
+
+**** dati:
+     > system.time(dbReadTable(con, "dati_cf10"))
+     user  system elapsed 
+     0.641   0.036   1.261 
+**** metadati:
+     > system.time(dbReadTable(con, "metadati_cf10"))
+     user  system elapsed 
+     5.072   0.047   6.418 
+
+**** formule:
+     > system.time(dbReadTable(con, "formule_cf10"))
+     user  system elapsed 
+     0.264   0.003   0.329 
+**** archi:
+     > system.time(dbReadTable(con, "archi_cf10"))
+     user  system elapsed 
+     0.384   0.004   0.507 

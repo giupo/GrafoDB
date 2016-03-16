@@ -46,6 +46,9 @@ setMethod(
 #' @note funzione interna
 #' @rdname subsetting_internal
 #' @include functions.r core.r
+#' @importFrom igraph V E is.dag vertex topological.sort edge
+#' @importFrom rcf is.dataset
+#' @importFrom hash del
 
 .subsetting <- function(x, i, value) {
   nameObject <- deparse(substitute(x))
@@ -59,7 +62,7 @@ setMethod(
     network + vertex(toBeAdded)
   } else {
     if(!is.dataset(value) && length(E(network)) > 0) {
-      network - E(network)[to(name)]
+      network - E(network)[.to(name)]
     } else {
       network
     }

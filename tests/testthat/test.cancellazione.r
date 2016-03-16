@@ -10,8 +10,10 @@ test_that("Posso cancellare serie", {
   expect_error(rmNode(g, "A"))
   g <- rmNode(g, "C")
   expect_true(!"C" %in% names(g))
-  elimina("test")
+ 
 })
+
+elimina("test")
 
 test_that("Posso cancellare serie ricorsivamente", {
   g <- GrafoDB("test")
@@ -23,9 +25,9 @@ test_that("Posso cancellare serie ricorsivamente", {
   expect_true(!"A" %in% names(g))
   expect_true(!"C" %in% names(g))
   expect_true("B" %in% names(g))
-  elimina("test")
+ 
 })
-
+elimina("test")
 
 ### --- persistenza
 
@@ -39,9 +41,10 @@ test_that("Posso cancellare serie, DB", {
   expect_error(rmNode(g, "A"))
   g <- rmNode(g, "C")
   expect_true(!"C" %in% names(g))
-  elimina("test")
+
 })
 
+elimina("test")
 test_that("Posso cancellare serie ricorsivamente, DB", {
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
@@ -53,6 +56,7 @@ test_that("Posso cancellare serie ricorsivamente, DB", {
   expect_true(!"A" %in% names(g))
   expect_true(!"C" %in% names(g))
   expect_true("B" %in% names(g))
-  elimina("test")
+ 
 })
 
+elimina("test")

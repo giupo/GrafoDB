@@ -14,7 +14,8 @@ lookup(x, key, value)
 \item{value}{`character` che specifica il valore del metadato}
 }
 \value{
-un character array di nomi di serie che rispettano la clausola `key` = `value`. Se non esistono ritorna un character(0) (array vuoto)
+un character array di nomi di serie che rispettano la clausola `key` = `value`.
+        Se non esistono ritorna un character(0) (array vuoto)
 }
 \description{
 ricerca nei metadati del `GrafoDB`

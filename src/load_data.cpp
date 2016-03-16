@@ -5,7 +5,6 @@
 #include <sstream>
 
 #include "utils.hpp"
-#include "db_adapter.hpp"
 
 using namespace Rcpp;
 using namespace std;
@@ -13,34 +12,53 @@ using namespace std;
 // Enable C++11 via this plugin (Rcpp 0.10.3 or later)
 // [[Rcpp::plugins(cpp11)]]
 
-//' Load Nativo
+//' Converte un dataframe in timeseries
 //'
-//' @name load_data_nativo
-//' @usage load_data_nativo(username, password, hostname, port, dbname, names, tag)
-//' @param username username per la connessione
-//' @param password password per la connessione
-//' @param hostname hostname del database
-//' @param port porta di ascolto del server
-//' @param dbname nome del db
-//' @param names nomi di serie da caricare
-//' @param tag tag del database da cui caricare le serie
-//' @return a list
+//' Viene usato nella conversione dei dati dal db
+//'
+//' @name convert_data_frame
+//' @usage convert_data_frame(df)
+//' @param df data.frame con le serie storiche 
+//' @return a List
 //' @export
 //' @import Rcpp
 //' @useDynLib GrafoDB
 // [[Rcpp::export]]
 
-List load_data_nativo(SEXP username, SEXP password, SEXP hostname, 
-               SEXP port, SEXP dbname, SEXP names, SEXP tag) {
-  string username0 = as<string>(username); 
-  string password0 = as<string>(password); 
-  string hostname0 = as<string>(hostname); 
-  string port0 = as<string>(port); 
-  string dbname0 = as<string>(dbname);  
-  vector<string> names0 = as<vector<string> >(names);
-  string tag0 = as<string>(tag);
-  DBAdapter db(username0, password0, hostname0, port0, dbname0, tag0);
-  db.init(); 
-  List z = db.getData(names0);
+List convert_data_frame(SEXP dataframe0) {
+  List z = List::create();
+  DataFrame df = as<DataFrame>(dataframe0);
+  NumericVector ids = df["id"];
+  NumericVector anni = df["anno"];
+  NumericVector periodi = df["periodo"];
+  NumericVector freqs = df["freq"];
+  CharacterVector dati = df["dati"];
+  CharacterVector nomi = df["name"];
+  NumericVector stocks = df["stock"];
+  int size = ids.size();
+  double tol = 0.01;
+  for(int i = 0; i < size; i++) {
+     string name(nomi[i]);
+     int anno = anni[i];
+     int periodo = periodi[i];
+     int freq = freqs[i];
+     string data(dati[i]);
+
+     if(anno < tol  || periodo < tol || freq < tol) {
+        Json::Value root = parseJSON(data);
+        if (root.size() == 0) {
+          z[name] = NumericVector::create();
+        } else if(root[0].isNumeric()) {
+          z[name] = asNumericVector(root);
+        } else {
+          z[name] = asCharacterVector(root);
+        }
+      } else {	
+         NumericVector ts = createTimeSeries(anno, periodo, freq, data);
+         ts.attr("stock") = stocks[i];
+         ts.attr("name") = name;
+         z[name] = ts;
+      }
+  }
   return z;
 }

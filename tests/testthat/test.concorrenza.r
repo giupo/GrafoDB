@@ -123,7 +123,7 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
     D = A - C
   }
 
-  saveGraph(g1)
+  g1 <- saveGraph(g1)
   ## in seguito alla non necessita' di dare saveGraph(g1), che per usabilita' e' stato aggiunto
   ## il side-effect di cambiare g1 nel env del parent.frame, il seguente wanring non uscira' mai
   ## expect_warning(saveGraph(g2), "Ci sono conflitti sugli archi")
@@ -148,7 +148,7 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
     D = 2 * C
   }
   
-  saveGraph(g, "test1")
+  g <- saveGraph(g, "test1")
   
   g1 <- GrafoDB("test1")
   g2 <- GrafoDB("test1")
@@ -160,8 +160,7 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
   g2["C"] <- function(A) {
     C = A*2
   }
-
-  saveGraph(g1)
+  g1 <- saveGraph(g1)
   expect_warning(saveGraph(g2))
   conflicts <- getConflicts(g1)
   lista_nomi <- as.character(conflicts$name)

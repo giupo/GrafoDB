@@ -2,10 +2,20 @@
 library(testthat)
 library(devtools)
 library(methods)
+library(rcf)
 library(DBI)
+library(RSQLite)
+library(RPostgreSQL)
+library(RPostgreSQL2)
 source("lib_mgt.r")
 # options(env="test")
 options(GCLUSTER=F)
+
+#settings <- list(
+#  driver="SQLite",
+#  dbname=":memory:"
+# )
+# options(dbSettings=settings)
 load_all()
 
 .praise <- c(
@@ -40,7 +50,7 @@ GrowlReporter <- setRefClass(
       show_praise <<- TRUE
       callSuper(...)
     },
-    
+
     add_result = function(result) {
       if (result$passed) {
         passed_count <<- passed_count + 1L

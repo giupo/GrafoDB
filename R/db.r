@@ -112,20 +112,29 @@ dbSettings <- function(flush=FALSE) {
   settings <- getOption("dbSettings", NULL)
   if(is.null(settings)) {
     home_ini_file <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
-    home_settings <- list()
     if(file.exists(home_ini_file)) {
       home_settings <- ini_parse(home_ini_file)
       if("ConnectionInfo" %in% names(home_settings)) {
         home_settings <- home_settings$ConnectionInfo
       }
+      options(dbSettings=home_settings)
+      return(home_settings)
     }
     
     settings <- ini_parse(
       file.path(system.file(package="GrafoDB"), "ini/sql.ini"))
     settings <- settings$ConnectionInfo
-    settings <- merge(home_settings, settings)
+    options(dbSettings=settings)
   }
   settings
+}
+
+initdb <- function(con) {
+  settings <- dbSettings()
+  schemaFileName <- paste0("schema-", settings$driver, ".sql")
+  file <- file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
+  sql <- paste(readLines(file), collapse="\n")
+  dbGetQuery(con, sql)
 }
 
 #' Factory di connessioni al database Postgresql
@@ -137,9 +146,22 @@ dbSettings <- function(flush=FALSE) {
 #' @param password password utente (defaults to flypwd)
 #' @importFrom rutils whoami flypwd
 #' @importFrom DBI dbDriver dbConnect
+#' @import RSQLite
+#' @import RPostgreSQL
 
 .buildConnection <- function(userid=whoami(), password=flypwd()) {
   settings <- dbSettings()
+  drv <- dbDriver(settings$driver)
+  
+  if(settings$driver == "SQLite") {
+    con <- dbConnect(drv, dbname=settings$dbname)
+    if(settings$dbname == ":memory:") {
+      initdb(con)
+    }
+    options(pgConnect=con)
+    return(con)
+  } 
+
   drv <- dbDriver(settings$driver)
   con <- tryCatch(
     dbConnect(drv, host=settings$host, dbname=settings$dbname),
@@ -189,15 +211,23 @@ dbSettings <- function(flush=FALSE) {
 #' @importFrom DBI dbGetInfo
 #' @export
 
-pgConnect <- function(env="prod", userid=NULL, password=NULL) {
+pgConnect <- function(env="prod", userid=NULL, password=NULL, con=NULL) {
+  if(!is.null(con)) {
+    return(con)
+  }
+  
   con <- getOption("pgConnect", NULL)
   ## veriifico la connessione
-  con <- tryCatch({
-    dbGetInfo(con)
-    con
-  }, error = function(err) {
+  con <- if(is.null(con)) {
     .buildConnection(userid, password)
-  })
+  } else {
+    tryCatch({
+      dbGetInfo(con)
+      con
+    }, error = function(err) {
+      .buildConnection(userid, password)
+    })
+  }
   
   options(pgConnect=con)
   con
@@ -212,7 +242,7 @@ pgConnect <- function(env="prod", userid=NULL, password=NULL) {
 
 dbDisconnect <- function(con) {
   if(is.null(getOption("pgConnect", NULL))) {
-    RPostgreSQL::dbDisconnect(con)
+    DBI::dbDisconnect(con)
   } else {
     TRUE
   }
