@@ -1,5 +1,5 @@
 redisMakeKey <- function(name, tag, what) {
-  paste0(name, tag, what, sep="|")
+  paste(name, tag, what, sep="|")
 }
 
 #' @importFrom rredis redisConnect redisDelete redisClose
