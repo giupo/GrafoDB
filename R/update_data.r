@@ -59,6 +59,5 @@
     dbGetPreparedQuery(con, sql2, bind.data=dati)
   }
   # doneWithCluster()
-  removeFromRedis(x, x@touched)
   cat("Done.\n")
 }

@@ -102,7 +102,7 @@
 .deleteMeta <- function(x, name, key, value) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  tag <- object@tag
+  tag <- x@tag
   sql <- paste0("delete from metadati where tag = '", tag,
                 "' and name= '", name, "' and key = '", key, "' and value = '", value, "'")
   dbGetQuery(con, sql)

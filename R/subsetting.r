@@ -114,7 +114,8 @@ setMethod(
     }
     
     x@network <- network
-    if(is.dataset(value)) {
+    if(is.dataset(value) || is.list(value)) {
+      value <- as.dataset(value)
       data <- x@data
       for(n in names(value)) {
         data[n] <- value[[n]]
