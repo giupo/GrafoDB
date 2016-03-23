@@ -25,7 +25,7 @@
   .Object@touched <- character(0)
   .Object@ordinal <- if(grepl("p(\\d+)$", tag)) {
     mth <- str_match(tag, "p(\\d+)$")
-    tag <- gsub(paste0(mth[1,1], "$"), "", tag)
+    #tag <- gsub(paste0(mth[1,1], "$"), "", tag)
     as.numeric(mth[1,2])
   } else {
     0
