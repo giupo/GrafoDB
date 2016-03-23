@@ -63,6 +63,8 @@
       })
     }
   }
+  removeFromRedis(x, x@touched)
+  x
 }
 
 #' @include update_archi.r update_data.r update_functions.r

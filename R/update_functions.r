@@ -57,6 +57,7 @@
     colnames(formule) <- c("formula", "autore", "name", "tag", "name", "tag")
     dbGetPreparedQuery(con, sql2, bind.data=formule)
   }
+  removeFromRedis(x, x@touched)
   # doneWithCluster()
   if(interactive()) cat("Done.\n")
 }
