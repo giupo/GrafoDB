@@ -52,7 +52,7 @@
 .keys <- function(x) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  sql <- paste0("select distinct key from metadati where tag=", x@tag," order by 1")
+  sql <- paste0("select distinct key from metadati where tag='", x@tag, "' order by 1")
   dbGetQuery(con, sql)
 }
 
@@ -80,7 +80,7 @@
   } else {
     sql <- paste0("select distinct value from metadati where tag='", tag,
                   "' and key='", key, "' order by 1")
-    dbGetdQuery(con, sql)
+    dbGetQuery(con, sql)
   }
   as.character(df[,1])
 }

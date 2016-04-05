@@ -601,6 +601,7 @@ setMethod(
 
 #' @importFrom hash keys
 #' @include metadati.r
+#' @exportMethod keys
 
 setMethod(
   "keys",
@@ -611,6 +612,7 @@ setMethod(
 
 #' @importFrom hash values
 #' @include metadati.r
+#' @exportMethod values
 
 setMethod(
   "values",
@@ -618,11 +620,11 @@ setMethod(
   function(x, ...) {
     nomemetadato <- list(...)
     key <- if(length(nomemetadato) == 1) {
-      nomemetadati[[1]]
+      nomemetadato[[1]]
     } else {
       NULL
     }
-    .keys(x, key=key)
+    .values(x, key=key)
   })
 
 #' @include metadati.r
