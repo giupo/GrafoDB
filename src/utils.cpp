@@ -63,11 +63,13 @@ string whoami() {
 
 
 NumericVector asNumericVector(Json::Value root){
+  // cout << root << endl;
   Json::Value value;
   unsigned int size = root.size();
   NumericVector z(size);
   for(unsigned int i = 0; i < size; ++i) {
     value = root[i];
+    //cout << value << endl;
     if(value.isNull()) {
       z[i] = NA_REAL;
     } else {
@@ -98,12 +100,14 @@ Json::Value parseJSON(string json) {
   Json::Reader reader;
   // ReplaceStringInPlace(json, "NaN", "null");
   boost::replace_all(json, "NaN", "null");
+  boost::replace_all(json, "Infinity", "null");
   reader.parse(json, root);
   return root;
 }
 
 NumericVector createTimeSeries(double anno, double periodo, 
                                double freq, string json_dati) {
+  // cout << json_dati << endl;
   NumericVector dati = asNumericVector(parseJSON(json_dati));
   // for tsp
   double start = anno + periodo/freq - 1/freq;
