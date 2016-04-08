@@ -516,12 +516,12 @@ tsdiff <- function(a, b, thr = .0000001) {
 rilasci <- function(filtro=NULL) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  sql <- "select id, tag, commento, last_updated autore from grafi"
+  sql <- "select id, tag, commento, last_updated, autore from grafi"
   sql <- if(is.null(filtro)) {
     sql
   } else {
     paste0(sql, " where tag like '%",filtro,"%'")
   }
-  sql <- paste0(sql, " order by id")
+  sql <- paste0(sql, " order by id, last_updated")
   dbGetQuery(con, sql)
 }

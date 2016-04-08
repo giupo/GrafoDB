@@ -18,7 +18,7 @@ elimina <- function(tag) {
     tag <- tag@tag
   }
 
-  incancellabili <- c("cf10", "biss", "pne", "dbcong", "prim")
+  incancellabili <- c("cf10")
   if(tag %in% incancellabili) stop("Non cancellero' mai ", tag)
  
   con <- pgConnect()

@@ -50,17 +50,21 @@
       # sto creando un nuovo grafo
       .createGraph(x, tag, msg=msg)  
     } else {
-      con <- pgConnect()
-      on.exit(dbDisconnect(con))
-      tryCatch({
-        dbBegin(con)
-        .copyGraph(x@tag, tag, con, msg=msg)
-        .updateGraph(x, tag, con, msg=msg)
-        dbCommit(con)
-      }, error=function(cond) {
-        dbRollback(con)
-        stop(cond)
-      })
+      if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
+        .createGraph(x, tag, msg=msg)
+      } else {
+        con <- pgConnect()
+        on.exit(dbDisconnect(con))
+        tryCatch({
+          dbBegin(con)
+          .copyGraph(x@tag, tag, con, msg=msg)
+          # .updateGraph(x, tag, con, msg=msg)
+          dbCommit(con)
+        }, error=function(cond) {
+          dbRollback(con)
+          stop(cond)
+        })
+      }
     }
   }
   removeFromRedis(x, x@touched)
@@ -168,13 +172,13 @@
   }
   
   commento <- if(interactive()) {
-    ## readline(prompt="Inserisci un commento/nota per: ")
-    "BATMAN"
+    readline(prompt="Inserisci un commento/nota per: ")
   } else {
     paste0("Rilascio per ", tag)
   }
-  commento = "Batman"
+
   autore <- whoami()
+
   tryCatch({
     dbGetPreparedQuery(
       con,
@@ -187,10 +191,9 @@
   })
   
   if(length(names(x))) {
-    dati <- foreach (name = iter(names(x)), .combine=rbind) %do% {
+    dati <- foreach (name = iter(names(x)), .combine=rbind) %dopar% {
       tt <- x[[name]]
       df <- to.data.frame(tt, name)
-      autore <- whoami()
       cbind(tag, df, autore)
     }
   } else {
@@ -200,10 +203,11 @@
   tryCatch({
     dbGetPreparedQuery(
       con,
-      paste0("insert into ",
-             "dati(tag, name, anno, periodo, freq,",
-             "dati, autore, last_updated) values ",
-             "(?, ?, ?, ?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
+      paste0(
+        "insert into ",
+        "dati(tag, name, anno, periodo, freq,",
+        "dati, autore, last_updated) values ",
+        "(?, ?, ?, ?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
       bind.data = dati)
   }, error = function(err) {
     dbRollback(con)
@@ -211,7 +215,6 @@
   })
   
   archi <- as.data.frame(get.edgelist(x@network))
-  autore <- whoami()
   
   if(nrow(archi)) {
     archi <- cbind(tag, archi, autore)
@@ -219,25 +222,27 @@
     tryCatch({
       dbGetPreparedQuery(
         con,
-        paste0("insert into ",
-               "archi(tag, partenza, arrivo, autore, last_updated) values ",
-               "(?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
+        paste0(
+          "insert into ",
+          "archi(tag, partenza, arrivo, autore, last_updated) values ",
+          "(?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
         bind.data = archi)
     }, error = function(err) {
       dbRollback(con)
       stop(err)
     })
   }
-  autore <- whoami()
-  formule <- foreach(name = iter(names(x)), .combine=rbind) %do% {
+  
+  formule <- foreach(name = iter(names(x)), .combine=rbind) %dopar% {
     task <- expr(x, name, echo=F)
     if(!is.null(task)) {
       cbind(tag, name, task, autore)
     } else {
-      data.frame(tag=character(0),
-                 name=character(0),
-                 task=character(0),
-                 autore=character(0))
+      data.frame(
+        tag=character(0),
+        name=character(0),
+        task=character(0),
+        autore=character(0))
     }
   }
 
@@ -245,16 +250,17 @@
     tryCatch({
       dbGetPreparedQuery(
         con,
-        paste0("insert into ",
-               "formule(tag, name, formula, autore, last_updated) values ",
-               "(?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
+        paste0(
+          "insert into ",
+          "formule(tag, name, formula, autore, last_updated) values ",
+          "(?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
         bind.data = formule)
-    
     }, error = function(err) {
       dbRollback(con)
       stop(err)
     })
   }
+  
   if(wasNull) {
     dbCommit(con)
   }
@@ -272,18 +278,26 @@
 #' @include db.r
 
 countRolling <- function(x, con = NULL) {
+  tag <- if(is.grafodb(x)) {
+    x@tag 
+  } else if(is.character(x)){
+    x
+  } else {
+    stop("I dunno what to do here")
+  }
+
   if(is.null(con)) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
   }
-  tag <- x@tag
+  
   sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
   
   df <- dbGetQuery(con, sql)
-  if(nrow(df)==0) {
+  if(nrow(df) == 0) {
     0
   } else {
-    numeri <- as.numeric(gsub("p", "", gsub("cf10", "", df[, 1])))
+    numeri <- as.numeric(gsub("p", "", gsub(tag, "", df[, 1])))
     max(numeri, na.rm=TRUE) 
   }
 }
