@@ -1,6 +1,6 @@
 context("Serie Elementari")
 
-g = GrafoDB("test")
+g <- GrafoDB("test")
 g["A"] <- TSERIES(c(1,2,3), START=c(1990,1), FREQ=4)
 g["B"] <- function() {
   B = TSERIES(c(1,2,3), START=c(1990,1), FREQ=4)
