@@ -28,5 +28,4 @@ test_that("posso usare un elementare a patto che esistano i dati nel db",{
   }, "Error in NONESISTO")
 })
 
-
 elimina("test")

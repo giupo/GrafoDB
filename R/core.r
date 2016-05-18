@@ -1,7 +1,8 @@
 #' Ottiene i valori di un `metadato` per una `serie``
 #'
-#' Ritorna i valori di un metadato (o piu' metadati) specificati dal parametro `metadato`
-#' della serie specificata dal parametro `serie
+#' Ritorna i valori di un metadato (o piu' metadati) specificati
+#' dal parametro `metadato` della serie specificata dal
+#' parametro `serie`
 #'
 #' @name getMeta
 #' @usage getMeta(x, serie, metadato)
@@ -12,8 +13,9 @@
 #' @return un character vector con i nomi dei valori del metadati
 #' @examples \dontrun{
 #'   g <- GrafoDB()
-#'   getMeta(g, "TETSZ0AC", "TAVOLA_DI_OUTPUT") ## ritorna tutti i valori del metadato
-#'                                              ## 'TAVOLA_DI_OUTPUT' per 'TETSZ0AC'
+#'   getMeta(g, "TETSZ0AC",
+#'              "TAVOLA_DI_OUTPUT") ## ritorna tutti i valori del metadato
+#'                                  ## 'TAVOLA_DI_OUTPUT' per 'TETSZ0AC'
 #' }
 #' @exportMethod getMeta
 #' @export
@@ -31,11 +33,13 @@ setGeneric(
 #' @param x istanza di `GrafoDB`
 #' @param key `character` che specifica la chiave del metadato
 #' @param value `character` che specifica il valore del metadato
-#' @return un character array di nomi di serie che rispettano la clausola `key` = `value`.
+#' @return un character array di nomi di serie che rispettano la
+#'         clausola `key` = `value`.
 #'         Se non esistono ritorna un character(0) (array vuoto)
 #' @examples \dontrun{
 #' g = GrafoDB(...) # istanzia il grafo
-#' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie che hanno TAVOLA_DI_OUTPUT=BRI
+#' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie
+#'                                      # che hanno TAVOLA_DI_OUTPUT=BRI
 #' }
 #' @rdname lookup_generic
 #' @include lookup.r
@@ -55,8 +59,10 @@ setGeneric(
 #' @usage expr(x, nomi)
 #' @param x istanza di oggetto R
 #' @param nomi character array di nomi di serie storiche
-#' @param echo stampa con un messaggio su standard output il valore della formula
-#' @return `list` con nomi (i nomi sono gli stess del parametro `nomi`) con le formule
+#' @param echo stampa con un messaggio su standard output il
+#'             valore della formula
+#' @return `list` con nomi (i nomi sono gli stess del parametro `nomi`)
+#'         con le formule
 #' @examples \dontrun{
 #' g <- GrafoDB(...)
 #' expr(g, "TETSZ0AC") # ritorna list(TETSZ0AC = "TETSZ0AC = ASTSZ0AC...")
@@ -257,7 +263,8 @@ setMethod(
 #'         character(0) (array vuoto)
 #' @examples \dontrun{
 #' g = GrafoDB(...) # istanzia il grafo
-#' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie che hanno TAVOLA_DI_OUTPUT=BRI
+#' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie
+#'                                      # che hanno TAVOLA_DI_OUTPUT=BRI
 #' }
 #' @export
 #' @include lookup.r

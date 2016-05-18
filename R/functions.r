@@ -177,7 +177,10 @@ from.data.frame <- function(df) {
 
 .declutter_function <- function(f) {
   f <- if(is.function(f)) {
-    f <- paste(deparse(f), collapse="\n")
+    # f <- paste(deparse(f), collapse="\n")
+    f <- capture.output(f)
+    f <- f[1:length(f)-1]
+    f <- paste(f, collapse="\n")
   } else {
     f
   }

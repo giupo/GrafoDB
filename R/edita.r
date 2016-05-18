@@ -22,6 +22,7 @@
       stop("la serie ", name, " e' una serie primitiva")
     }
   }
+  
   old_task <- task
   if(name %in% keys(x@edges)) {
     deps <- x@edges[[name]]

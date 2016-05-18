@@ -31,3 +31,29 @@ test_that("to.data.frame converte correttamente vettori di missing", {
   expect_true(identical(tt, from.data.frame(df)$TEST))
 })
 
+test_that(".declutter_functions removes correctly functions from it's definitions", {
+  f <- "function(A,B,C) { A = 1 }"
+  f <- .declutter_function(f)
+  expect_equal(f, "A = 1")
+
+  f <- function(A,B,C) {
+    A = A+B+C
+  }
+
+  f <- .declutter_function(f)
+  expect_equal(f, "A = A+B+C")
+})
+
+test_that(".decluter_functions preserves commnets", {
+  f <- function(A) {
+    # comment here
+    A
+  }
+
+  f <- .declutter_function(f)
+  expect_equal(f, "# comment here\nA")
+
+  f <- "function(A) { # comment here\nA}"
+  f <- .declutter_function(f)
+  expect_equal(f, "# comment here\nA")
+})
