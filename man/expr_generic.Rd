@@ -11,10 +11,12 @@ expr(x, nomi)
 
 \item{nomi}{character array di nomi di serie storiche}
 
-\item{echo}{stampa con un messaggio su standard output il valore della formula}
+\item{echo}{stampa con un messaggio su standard output il
+valore della formula}
 }
 \value{
-`list` con nomi (i nomi sono gli stess del parametro `nomi`) con le formule
+`list` con nomi (i nomi sono gli stess del parametro `nomi`)
+        con le formule
 }
 \description{
 Ritorna come named list le formule per ogni serie specificata in `nomi`

@@ -25,7 +25,8 @@ ricerca nei metadati del `GrafoDB`
 \examples{
 \dontrun{
 g = GrafoDB(...) # istanzia il grafo
-lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie che hanno TAVOLA_DI_OUTPUT=BRI
+lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie
+                                     # che hanno TAVOLA_DI_OUTPUT=BRI
 }
 }
 
