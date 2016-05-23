@@ -22,8 +22,6 @@ test_that("Posso salvare e ricaricare da un file", {
 test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   ## il problema qui e' che quando serializzo python giustamente
   ## usa 'NaN' per i missing. mentre C++/R preferiscono 'null'
-
-
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   dbGetQuery(con, "update dati set dati=replace(dati, 'null', 'NaN') where tag='test'")
@@ -34,33 +32,37 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   expect_true( length(g[["D"]])>0 )
 })
 
-elimina("test")
+for(tag in rilasci("test")$tag) elimina(tag)
 
-test_that("I can save a graph over another existing graph", {
-  g <- GrafoDB("test")
+setup <- function(tag) {
+  g <- GrafoDB(tag)
   g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g["B"] <- TSERIES(1:10, START=c(1990,1), FREQ=4)
   g["C"] <- function(A,B) {
-    C = A + B    
+    C = A + B
   }
-
+  
   g["D"] <- function(B) {
     D =  B * 2
   }
 
-  g <- saveGraph(g)
-  g <- saveGraph(g, "test1")
+  g
+}
 
-  nuovaB <- g["B"] <- TSERIES(rep(0, 10), START=c(1990,1), FREQ=4)
+test_that("I can save a graph over another existing graph", {
+  tagA <- "test2"
+  tagB <- "test3"
+  ga <- setup(tagA)
+  gb <- setup(tagB)
+ 
+  saveGraph(ga)
+  saveGraph(gb)
 
-  g <- saveGraph(g)
-  g <- saveGraph(g, "test1")
-
-  g1 <- GrafoDB("test1")
+  saveGraph(ga, tagB)
   
-  expect_equal(g$B, nuovaB)
-  expect_equal(g1$B, nuovaB)  
+  g <- GrafoDB(tagB)
+  expect_true(all(g$B == gb$B))
 })
 
-elimina("test")
-elimina("test1")
+for(tag in rilasci("test")$tag) elimina(tag)
+

@@ -97,7 +97,7 @@ setMethod(
   function(graph) {
     network <- graph@network
     tag <- graph@tag
-    formule <-  formule <- graph@dbformule$name
+    formule <- union(graph@dbformule$name, keys(graph@functions))
     sources <- V(network)[degree(network, mode="in") == 0]$name
     intersect(sources, formule)
   })

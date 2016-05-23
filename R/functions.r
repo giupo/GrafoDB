@@ -179,14 +179,16 @@ from.data.frame <- function(df) {
   f <- if(is.function(f)) {
     # f <- paste(deparse(f), collapse="\n")
     f <- capture.output(f)
-    f <- f[1:length(f)-1]
+    #f <- f[1:length(f)-1]
     f <- paste(f, collapse="\n")
   } else {
     f
   }
-  idx <- str_locate(f, "\\{")
-  f <- substring(f, idx[[1]] + 1)
-  f <- gsub("\\}$", "", f)
+  
+  idx_inizio <- str_locate(f, "\\{")[[1]]
+  idx_fine <- sapply(gregexpr("\\}", f), tail, 1)
+  
+  f <- substring(f, idx_inizio + 1, idx_fine - 1)
   f <- gsub("^\n(.*)\n$", "\\1", f)
   str_trim(f)
 }
