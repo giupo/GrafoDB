@@ -440,7 +440,7 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
     df <- dbGetQuery(con, sql2)
     print(df)
   }
-  
+
   warning(
     "Ci sono conflitti sulle formule per le serie: ",
     paste(nomi, collapse=", "))
