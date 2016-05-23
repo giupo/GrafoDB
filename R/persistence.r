@@ -27,6 +27,7 @@
   if(hasConflicts(x)) {
     stop("Il grafo ",tag, " ha conflitti, risolverli prima di salvare")
   }
+
   checkConflicts(x)
 
   con <- pgConnect()
@@ -58,7 +59,7 @@
         tryCatch({
           dbBegin(con)
           .copyGraph(x@tag, tag, con, msg=msg)
-          # .updateGraph(x, tag, con, msg=msg)
+          .updateGraph(x, tag, con, msg=msg)
           dbCommit(con)
         }, error=function(cond) {
           dbRollback(con)
@@ -122,17 +123,17 @@
     })
   
   tryCatch({
-    dbGetPreparedQuery(
+    dbGetQuery(
       con,
-      paste0(" update grafi set last_updated = (select max(last_updated) ",
-             " from (select last_updated as last_updated from dati ",
-             " where tag=? ",
-             " union select last_updated as last_updated from formule ",
-             " where tag=? ",
-             " union select last_updated as last_updated from archi ",
-             " where tag=?)",
-             " as last_updated) where tag = ?"),
-      bind.data = cbind(tag, tag, tag, tag))   
+      paste0(
+        " update grafi set last_updated = (select max(last_updated) ",
+        " from (select last_updated as last_updated from dati ",
+        " where tag='", tag, "' ",
+        " union select last_updated as last_updated from formule ",
+        " where tag='", tag, "' ",
+        " union select last_updated as last_updated from archi ",
+        " where tag='", tag, "')",
+        " as last_updated) where tag = '", tag, "'"))   
   }, error = function(err) {
     dbRollback(con)
     stop(err)
@@ -149,7 +150,6 @@
 #' @param x istanza di Grafo
 #' @param tag identificativo della versione
 #' @usage .createGraph(g, tag)
-#' @importFrom RPostgreSQL2 dbGetPreparedQuery
 #' @importFrom foreach foreach %do%
 #' @importFrom rutils whoami
 #' @importFrom RPostgreSQL2 dbBegin
@@ -180,85 +180,79 @@
   autore <- whoami()
 
   tryCatch({
-    dbGetPreparedQuery(
+    dbGetQuery(
       con,
-      paste0("insert into grafi(tag, commento, last_updated, autore) values ",
-             "(?, ?, LOCALTIMESTAMP::timestamp(0), ?)"),
-      bind.data = data.frame(tag=tag, commento=commento, autore=autore))
+      paste0(
+        "insert into grafi(tag, commento, last_updated, autore) values ",
+             "('",tag,"', '",commento, "', LOCALTIMESTAMP::timestamp(0), '",autore,"')"))
   }, error = function(err) {
     dbRollback(con)
     stop(err)
   })
   
   if(length(names(x))) {
-    dati <- foreach (name = iter(names(x)), .combine=rbind) %dopar% {
+    dati <- foreach (name = iter(names(x)), .combine=rbind) %do% {
       tt <- x[[name]]
       df <- to.data.frame(tt, name)
-      cbind(tag, df, autore)
+      anno <- df$anno
+      periodo <- df$periodo
+      freq <- df$periodo
+      dati <- df$dati
+      sql <- paste0(
+        "insert into dati(tag, name, anno, periodo, freq, dati, autore, last_updated)",
+        " values ('", tag,"', '", name, "', ", anno, ", ", periodo, ", ", freq, ", ",
+        "'", dati, "', '", autore, "', LOCALTIMESTAMP::timestamp(0))")
+      tryCatch(
+        dbGetQuery(con, sql),
+        error = function(cond) {
+          dbRollback(con)
+          stop(cond)
+        })
     }
   } else {
     stop("Non ci sono dati da salvare.")
   }
-
-  tryCatch({
-    dbGetPreparedQuery(
-      con,
-      paste0(
-        "insert into ",
-        "dati(tag, name, anno, periodo, freq,",
-        "dati, autore, last_updated) values ",
-        "(?, ?, ?, ?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
-      bind.data = dati)
-  }, error = function(err) {
-    dbRollback(con)
-    stop(err)
-  })
   
   archi <- as.data.frame(get.edgelist(x@network))
   
   if(nrow(archi)) {
     archi <- cbind(tag, archi, autore)
     names(archi) <- c('tag', 'partenza', 'arrivo', 'autore')
-    tryCatch({
-      dbGetPreparedQuery(
-        con,
-        paste0(
-          "insert into ",
-          "archi(tag, partenza, arrivo, autore, last_updated) values ",
-          "(?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
-        bind.data = archi)
-    }, error = function(err) {
-      dbRollback(con)
-      stop(err)
-    })
-  }
-  
-  formule <- foreach(name = iter(names(x)), .combine=rbind) %dopar% {
-    task <- expr(x, name, echo=F)
-    if(!is.null(task)) {
-      cbind(tag, name, task, autore)
-    } else {
-      data.frame(
-        tag=character(0),
-        name=character(0),
-        task=character(0),
-        autore=character(0))
+    foreach(row = iter(archi, 'row')) %do% {
+      partenza <- row[,1]
+      arrivo <- row[,2]
+      tryCatch({
+        dbGetQuery(
+          con,
+          paste0(
+            "insert into ",
+            "archi(tag, partenza, arrivo, autore, last_updated) values ",
+            "('", tag, "', '", partenza, "', '", arrivo, "', '", autore,
+            "', LOCALTIMESTAMP::timestamp(0))"))
+      }, error = function(err) {
+        dbRollback(con)
+        stop(err)
+      })
     }
   }
+  
+  foreach(name = iter(names(x)), .combine=rbind) %do% {
+    formula <- expr(x, name, echo=FALSE)
+    if(!is.null(formula)) {
 
-  if(length(nrow(formule))) {
-    tryCatch({
-      dbGetPreparedQuery(
-        con,
-        paste0(
-          "insert into ",
-          "formule(tag, name, formula, autore, last_updated) values ",
-          "(?, ?, ?, ?, LOCALTIMESTAMP::timestamp(0))"),
-        bind.data = formule)
-    }, error = function(err) {
-      dbRollback(con)
-      stop(err)
-    })
+      sql <- paste0(
+        "insert into formule(tag, name, formula, autore, last_updated)",
+        "values ('", tag,"', '", name,"', '", formula,"', '", autore,"',",
+        " LOCALTIMESTAMP::timestamp(0))"
+      )
+      
+      tryCatch({
+        dbGetQuery(con, sql)
+      }, error = function(cond) {
+        dbRollback(con)
+        stop(name, ": ", cond)
+      })
+    }
   }
   
   if(wasNull) {
@@ -331,7 +325,6 @@ nextRollingNameFor <- function(x, con) {
 #' @note questa e' una funzione interna del grafo invocata da `updateGraph`
 #' @seealso saveGraph updateGraph
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL2 dbGetPreparedQuery
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
 #' @importFrom RJSONIO toJSON
 #' @importFrom iterators iter
@@ -344,18 +337,18 @@ doHistory <- function(x, con) {
   while(tries > 0) {    
     tries <- tryCatch({
       dest <- nextRollingNameFor(x, con)
-      message("Salvo il grafo ", x@tag, " in ", dest)
+      if(interactive()) message("Salvo il grafo ", x@tag, " in ", dest)
       .copyGraph(x@tag, dest, con=con)
-      message("salvataggio ", dest, " completo")
+      if(interactive()) message("salvataggio ", dest, " completo")
       0
     }, error=function(cond) {
       warning(cond)
-      message("Ritento il salvataggio...")
+      if (interactive()) message("Ritento il salvataggio...")
       if((tries - 1) == 0) {
         stop(cond)
       }
     })
-  } 
+  }  
 }
 
 #' Salva un istanza di grafo sul file system

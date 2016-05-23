@@ -148,6 +148,7 @@
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom doMC registerDoMC
 #' @importFrom parallel detectCores
+#' @importFrom hash keys
 #' @rdname evaluate-internal
 
 .evaluate <- function(object, v_start=NULL, deep=T, ...) {
@@ -161,6 +162,7 @@
   
   tag <- object@tag
   data <- object@data
+  functions <- object@functions
   network <- object@network
   all_names <- names(object)
   
@@ -246,6 +248,7 @@
     sprimitive <- intersect(sources, primitive)
     i <- i + length(sprimitive)
     prim_non_in_data <- setdiff(sprimitive, keys(data))
+    prim_non_in_data <- setdiff(prim_non_in_data, keys(functions))
     if(length(prim_non_in_data)) {
       datip <- g[prim_non_in_data]
       for(n in names(datip)) {

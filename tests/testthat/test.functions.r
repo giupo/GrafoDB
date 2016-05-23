@@ -51,7 +51,7 @@ test_that(".decluter_functions preserves commnets", {
   }
 
   f <- .declutter_function(f)
-  expect_equal(f, "# comment here\nA")
+  expect_equal(f, "# comment here\n    A")
 
   f <- "function(A) { # comment here\nA}"
   f <- .declutter_function(f)

@@ -1,7 +1,6 @@
 #' @importFrom gdata drop.levels
 #' @importFrom igraph get.edgelist graph.union graph.data.frame is.dag topological.sort
 #' @importFrom stringr str_split
-#' @importFrom RPostgreSQL2 dbGetPreparedQuery
 #' @importFrom rutils whoami
 
 .updateArchi <- function(x, con, tag=x@tag) {
@@ -14,10 +13,10 @@
   in.memory <- as.data.frame(get.edgelist(network), stringsAsFactors = F)
   autore <- whoami()
   names(in.memory) <- c("partenza", "arrivo")
-  in.db <- dbGetPreparedQuery(
+  in.db <- dbGetQuery(
     con,
-    paste("select partenza, arrivo from archi where tag = ?"),
-    bind.data = tag)
+    paste0("select partenza, arrivo from archi where tag = '", tag,"'"))
+  
   sep <- "-"
   in.db <- drop.levels(in.db)
   in.db <- paste(in.db$partenza, in.db$arrivo, sep=sep)
@@ -27,14 +26,12 @@
 
   df <- if(length(keys(data))) {
     ## cerco archi aggiunti di recente.
-    params <- cbind(tag, timestamp)
-    sql <- paste("select partenza, arrivo from archi where tag = ? ",
-                 "and last_updated::timestamp(0) > to_timestamp(?)")
-    dbGetPreparedQuery(con, sql, bind.data = params)
+    sql <- paste0("select partenza, arrivo from archi where tag = '", tag, "' ",
+                 "and last_updated::timestamp(0) > to_timestamp(", as.numeric(timestamp), ")")
+    dbGetQuery(con, sql)
   } else {
     data.frame(partenza=character(0), arrivo=character(0))
   }
-  
   if(nrow(df) > 0) {
     ## controllo che i nuovi archi non siano tra le serie che ho modificato e
     ## che non creino un anello
@@ -72,10 +69,16 @@
       df
     }
     params <- c(tag, df, autore)
-    dbGetPreparedQuery(
-      con,
-      "insert into archi(tag, partenza, arrivo, autore) values(?,?,?,?)",
-      bind.data = params)
+    
+    foreach(row=iter(df, by='row')) %do% {
+      from <- row$partenza
+      to <- row$arrivo
+      dbGetQuery(
+        con,
+        paste0("insert into archi(tag, partenza, arrivo, autore) ",
+               " values('", tag,"','", from, "','", to,"','", autore, "')"))
+    }
   }
+  
   if(interactive()) cat("Done.\n")
 }

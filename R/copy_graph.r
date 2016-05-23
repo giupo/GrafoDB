@@ -26,44 +26,40 @@
   autore <- whoami()
   params <- cbind(to, autore, from)
   tryCatch({
-    dbGetPreparedQuery(
+    dbGetQuery(
       con,
       paste0("insert into grafi(tag, commento, last_updated, autore) values ",
-             "(?, ?, LOCALTIMESTAMP::timestamp(0), ?)"),
-      bind.data = data.frame(to, commento, autore))
+             "('", to,"', '", commento,"', LOCALTIMESTAMP::timestamp(0), '", autore, "')"))
     
     ## copia dati
-    dbGetPreparedQuery(
+    dbGetQuery(
       con,
       paste0("insert into dati(tag, name, anno, periodo, freq, dati, autore) ",
-             " select distinct ?, name, anno, periodo, freq, dati, ? from dati where tag = ?"),
-      bind.data = params)
+             " select distinct '", to, "', name, anno, periodo, freq, dati, '", autore,
+             "' from dati where tag = '", from, "'"))
     ## copia archi
-    dbGetPreparedQuery(
+    dbGetQuery(
       con,
       paste0("insert into archi(tag, partenza, arrivo, autore) ",
-             " select distinct ?, partenza, arrivo, ? from archi where tag = ?"),
-      bind.data = params)
+             " select distinct '", to, "', partenza, arrivo, '", autore,
+             "' from archi where tag = '", from, "'"))
     ## copia formule
-    dbGetPreparedQuery(
+    dbGetQuery(
       con,
       paste0("insert into formule(tag, name, formula, autore) ",
-             " select distinct ?, name, formula, ? from formule where tag = ?"),
+             " select distinct '", to, "', name, formula, '", autore,
+             "' from formule where tag = '", from, "'"),
       bind.data = params)
-    ## copia metadati
-    #dbGetPreparedQuery(
-    #  con,
-    #  paste0("insert into metadati(tag, name, key, value, autore) ",
-    #         " select distinct ?, name, key, value, ? from metadati where tag = ?"),
-    #  bind.data = params)
-
+    
+    ## copia asincrona metadati 
     sendCopyMetadati(from, to)
     
     ## inserisce nella tab grafi
-    dbGetPreparedQuery(
+    dbGetQuery(
       con,
-      paste0("update grafi set last_updated=LOCALTIMESTAMP::timestamp(0) where tag=?"),
-      bind.data = to)
+      paste0("update grafi set last_updated=LOCALTIMESTAMP::timestamp(0), autore='", autore,
+             "' where tag='", to, "'"))
+    
     ## Ricordati di committare.
     if(wasNull) {
       dbCommit(con)

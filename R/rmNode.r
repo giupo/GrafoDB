@@ -33,32 +33,40 @@
     da.eliminare <- union(figlie, tsName)
     
     ## eliminare i dati
-    dbGetPreparedQuery(
-      con,
-      "delete from dati where tag=? and name=?",
-      bind.data = cbind(tag, da.eliminare))
+    for(name in da.eliminare) {
+      dbGetQuery(
+        con,
+        paste0("delete from dati where tag='", tag, "' and name='", name, "'"))
+    }
+    
     suppressWarnings(del(da.eliminare, graph@data))
-        
+    
     network <- graph@network
     ## eliminare i vertici dal grafo
     network <- network - vertex(da.eliminare)
     ## eliminare le formule
-    dbGetPreparedQuery(
-      con,
-      "delete from formule where tag=? and name=?",
-      bind.data = cbind(tag, da.eliminare))
+    for(name in da.eliminare) {
+      dbGetQuery(
+        con,
+        paste0("delete from formule where tag='", tag, "' and name='", name , "'"))
+    }
+    
     suppressWarnings(del(da.eliminare, graph@functions))
     ## eliminare gli archi
-    dbGetPreparedQuery(
-      con,
-      "delete from archi where tag=? and (partenza=? or arrivo=?)",
-      bind.data = cbind(tag, da.eliminare, da.eliminare))
+    for(name in da.eliminare) {
+      dbGetQuery(
+        con,
+        paste0("delete from archi where tag='", tag, "'",
+               " and (partenza='", name, "' or arrivo='", name, "')"))
+      
+    }
     
     ## eliminare i metadati
-    dbGetPreparedQuery(
-      con,
-      "delete from metadati where tag=? and name=?",
-      bind.data = cbind(tag, da.eliminare))
+    for(name in da.eliminare) {
+      dbGetQuery(
+        con,
+        paste0("delete from metadati where tag='", tag, "' and name='", name, "'"))
+    }
     
     graph@network <- network
     dbCommit(con)

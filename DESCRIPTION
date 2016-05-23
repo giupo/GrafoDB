@@ -14,7 +14,6 @@ Imports:
     Rcpp,
     igraph,
     methods,
-    RPostgreSQL2,
     rutils,
     hash,
     RJSONIO,

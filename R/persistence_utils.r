@@ -73,16 +73,16 @@ createNewGrafo <- function(x, tag, con=NULL) {
   if(conWasNull) {
     on.exit(dbDisconnect(con))
   }
-  
+
+  commento <- paste0('Grafo per ', tag)
+  autore <- whoami()
   x@timestamp <- Sys.time()
   sql <- paste0(
     "INSERT INTO grafi(tag, commento, last_updated, autore) ",
-    " select ?,?,LOCALTIMESTAMP::timestamp(0),? ",
-    " WHERE NOT EXISTS (SELECT 1 FROM grafi WHERE tag=?)")
-  autore <- whoami()
-  dati <- cbind(tag, paste0('Grafo per ', tag), autore, tag)
-  names(dati) <- c("tag", "commento", "autore", "tag")
-  dbGetPreparedQuery(con, sql, bind.data = dati)
+    " select '", tag, "','", commento, "',LOCALTIMESTAMP::timestamp(0),'", autore,"' ",
+    " WHERE NOT EXISTS (SELECT 1 FROM grafi WHERE tag='", tag, "')")
+ 
+  dbGetQuery(con, sql)
   x
 }
 

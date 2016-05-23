@@ -11,7 +11,7 @@
 #'          la `tag` stessa
 #' @return un dataframe con le informazioni (autore, last_updated, ordinale)
 #' @include core.r db.r
-#' @importFrom RPostgreSQL2 dbGetPreparedQuery
+#' @importFrom DBI dbGetQuery dbDisconnect
 #' @export
 
 setGeneric(
@@ -35,7 +35,7 @@ setMethod(
     con <- pgConnect();
     on.exit(dbDisconnect(con))
     sql <- paste0("select distinct tag, ordinale, autore, max(last_updated) ",
-                  " from history where tag=? group by tag, ordinale, autore ",
+                  " from history where tag='", tag, "' group by tag, ordinale, autore ",
                   "order by 4,2")
-    dbGetPreparedQuery(con, sql, bind.data = tag)
+    dbGetQuery(con, sql)
   })

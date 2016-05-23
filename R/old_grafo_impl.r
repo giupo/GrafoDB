@@ -196,11 +196,13 @@ setMethod(
   function(object, tsName, attrName, attrValue) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
+    tag <- object@tag
     tryCatch({
       dbBegin(con)
-      sql <- "delete from metadati where tag = ? and name = ? and key = ? nad value =?"
-      params <- cbind(object@tag, tsName, attrName, attrValue)
-      dbGetPreparedQuery(con, sql, bind.data=params)
+      sql <- paste0(
+        "delete from metadati where tag = '", tag, "'",
+        " and name = '", tsName,"' and key = '", attrName, "' and value = '", attrValue, "'")
+      dbGetQuery(con, sql)
       dbCommit(con)
     }, error = function(err) {
       dbRollback(con)
