@@ -1,4 +1,8 @@
 
+.hasConflicts <- function(x, name=NULL) {
+  nrow(getConflicts(x, name=name)) > 0
+}
+
 #' @importFrom DBI dbGetQuery
 #' @importFrom RPostgreSQL dbGetQuery
 #' @include db.r 
@@ -87,8 +91,9 @@ setMethod(
   "hasConflicts",
   signature("GrafoDB", "ANY"),
   function(x, name=NULL) {
-    df <- getConflicts(x, name=name)
-    nrow(df) > 0
+    .hasConflicts(x, name=name)
+    #df <- getConflicts(x, name=name)
+    #nrow(df) > 0
   })
 
 
@@ -343,8 +348,6 @@ checkConflicts <- function(x, con=NULL) {
     formule.db <- formule.db[formule.db$name %in% formuleComuni,]
     for(name in unique(as.character(formule.db$name))) {
       formula.db <- formule.db[formule.db$name == name,]$formula
-      print(formula.db)
-      print(functions)
       if(formula.db != functions[[name]]) {
         ## crea conflitto su formule per name
         creaConflittoFormule(x, name, con=con)
@@ -374,11 +377,7 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
   if(conWasNull) {
     on.exit(dbDisconnect(con))
   }
-  sql <- paste0(
-    "insert into conflitti(tag, name, anno, prd, ",
-    " freq, dati, autore)",
-    " values (?, ?, ?, ?, ?, ? ,?)")
-
+  
   tag <- x@tag
   autore <- whoami()
 
@@ -425,19 +424,21 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
     task <- expr(x, name, echo=FALSE)
     
     sql1 <- paste0(
-      "UPDATE conflitti  SET formula='", task, "', autore='", autore, "', ",
+      "UPDATE conflitti SET formula='", task, "', autore='", autore, "', ",
       "date = LOCALTIMESTAMP::timestamp(0) ",
       " WHERE name='", name, "' and tag='", tag, "'")
-    
-    dbGetQuery(con, sql1)
-    
+
+    print(sql1)
+    df <- dbGetQuery(con, sql1)
+    print(df)
     
     sql2 <- paste0(
       "INSERT INTO conflitti(formula, autore, date, name, tag) ",
       " select '", task, "', '", autore, "',LOCALTIMESTAMP::timestamp(0),'", name,"','", tag, "'",
-      " WHERE NOT EXISTS (SELECT 1 FROM formule WHERE name='", name, "' and tag='", tag, "')")
-    
-    dbGetQuery(con, sql2)
+      " WHERE NOT EXISTS (SELECT 1 FROM conflitti WHERE name='", name, "' and tag='", tag, "')")
+    print(sql2)
+    df <- dbGetQuery(con, sql2)
+    print(df)
   }
   
   warning(
