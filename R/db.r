@@ -125,6 +125,8 @@ dbSettings <- function(flush=FALSE) {
   settings
 }
 
+#' @importFrom stringr str_split str_trim
+
 initdb <- function(con) {
   settings <- dbSettings()
   
@@ -134,8 +136,24 @@ initdb <- function(con) {
   schemaFileName <- paste0("schema-", settings$driver, ".sql")
   file <- file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
   sql <- paste(readLines(file), collapse="\n")
-  dbGetQuery(con, sql)
-  message("ZIO PORCO")
+
+  statements <- str_split(sql, ";")[[1]]
+  
+  tryCatch({
+    dbGetQuery(con, "BEGIN")
+    for(stm in statements) {
+      stm <- str_trim(as.character(stm))
+      
+      if(nchar(stm) > 0) {
+        dbGetQuery(con, stm)
+      }
+    }
+    dbCommit(con)
+    message("DB init complete")
+  }, error=function(cond) {
+    dbRollback(con)
+    stop(cond)
+  })
 }
 
 #' Factory di connessioni al database Postgresql
@@ -157,8 +175,9 @@ initdb <- function(con) {
   
   settings <- settings[[paste0("ConnectionInfo_", env)]]  
   drv <- dbDriver(settings$driver)
-  options(SQLHelperType=settings$driver)
   
+  options(SQLHelperType=settings$driver)
+  message(getOption("SQLHelperType"))
   if(settings$driver == "SQLite") {
     con <- dbConnect(drv, dbname=settings$dbname)
     if(settings$dbname == ":memory:") {
