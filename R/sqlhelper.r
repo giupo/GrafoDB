@@ -52,26 +52,27 @@ setMethod(
 #' @usage getSQLbyKey(x, key, param=value, param2, value2, ...)
 #' 
 #' @param x istanza di SQLHelper
+#' @param .key nome della query nel file INI
 #' @return un character array contenente la query SQL
 #' @export
 #' @exportMethod getSQLbyKey
 
 setGeneric(
   "getSQLbyKey",
-  function(x, key, ...) {
+  function(x, .key, ...) {
     standardGeneric("getSQLbyKey")
   })
 
 setMethod(
   "getSQLbyKey",
   signature("SQLHelper"),
-  function(x, key, ...) {
-    if(! key %in% names(x@sqlContainer)) {
-      stop(key, " not in query repository")
+  function(x, .key, ...) {
+    if(! .key %in% names(x@sqlContainer)) {
+      stop(.key, " not in query repository")
     }
 
     ## retrieve sql
-    sql <- x@sqlContainer[[key]]
+    sql <- x@sqlContainer[[.key]]
 
     ## handle param list
     params <- list(...)
@@ -93,7 +94,7 @@ setMethod(
         param <- substring(sql, first=start, last=end)
         warning(param, " has not been set")
       }
-      stop("params for query ", key, " of type ", x@type, " have not been set")
+      stop("params for query ", .key, " of type ", x@type, " have not been set")
     }
     
     sql

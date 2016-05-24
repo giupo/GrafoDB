@@ -1,17 +1,4 @@
 
-#' get all tags
-#'
-#' @name .tags
-#' @rdname tags-internal
-#' @return all the tags
-
-.tags <- function() {
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  ret <- dbGetQuery(con, "select tag from grafi")
-  as.character(ret$tag)
-}
-
 #' funzione per salvare un grafo
 #'
 #' @name .saveGraph
@@ -121,19 +108,10 @@
       dbRollback(con)
       stop(err)
     })
-  
+
+  helper <- x@helper
   tryCatch({
-    dbGetQuery(
-      con,
-      paste0(
-        " update grafi set last_updated = (select max(last_updated) ",
-        " from (select last_updated as last_updated from dati ",
-        " where tag='", tag, "' ",
-        " union select last_updated as last_updated from formule ",
-        " where tag='", tag, "' ",
-        " union select last_updated as last_updated from archi ",
-        " where tag='", tag, "')",
-        " as last_updated) where tag = '", tag, "'"))   
+    dbGetQuery(con, getSQLbyKey(helper, "UPDATE_GRAFO_LAST_UPDATED", tag=tag))
   }, error = function(err) {
     dbRollback(con)
     stop(err)
@@ -177,14 +155,15 @@
     paste0("Rilascio per ", tag)
   }
 
+  
   autore <- whoami()
-
+  helper <- x@helper
   tryCatch({
-    dbGetQuery(
-      con,
-      paste0(
-        "insert into grafi(tag, commento, last_updated, autore) values ",
-             "('",tag,"', '",commento, "', LOCALTIMESTAMP::timestamp(0), '",autore,"')"))
+    dbGetQuery(con, getSQLbyKey(
+      helper, "INSERT_GRAFI",
+      tag=tag,
+      commento=commento,
+      autore=autore))
   }, error = function(err) {
     dbRollback(con)
     stop(err)
@@ -198,16 +177,21 @@
       periodo <- df$periodo
       freq <- df$periodo
       dati <- df$dati
-      sql <- paste0(
-        "insert into dati(tag, name, anno, periodo, freq, dati, autore, last_updated)",
-        " values ('", tag,"', '", name, "', ", anno, ", ", periodo, ", ", freq, ", ",
-        "'", dati, "', '", autore, "', LOCALTIMESTAMP::timestamp(0))")
-      tryCatch(
-        dbGetQuery(con, sql),
-        error = function(cond) {
-          dbRollback(con)
-          stop(cond)
-        })
+      
+      tryCatch({
+        dbGetQuery(con, getSQLbyKey(
+          helper, "INSERT_DATI",
+          tag=tag,
+          name=name,
+          anno=anno,
+          periodo=periodo,
+          freq=freq,
+          dati=dati,
+          autore=autore))
+      }, error = function(cond) {
+        dbRollback(con)
+        stop(cond)
+      })
     }
   } else {
     stop("Non ci sono dati da salvare.")
@@ -222,13 +206,12 @@
       partenza <- row[,1]
       arrivo <- row[,2]
       tryCatch({
-        dbGetQuery(
-          con,
-          paste0(
-            "insert into ",
-            "archi(tag, partenza, arrivo, autore, last_updated) values ",
-            "('", tag, "', '", partenza, "', '", arrivo, "', '", autore,
-            "', LOCALTIMESTAMP::timestamp(0))"))
+        dbGetQuery(con, getSQLbyKey(
+          helper, "INSERT_ARCO",
+          tag=tag,
+          partenza=partenza,
+          arrivo=arrivo,
+          autore=autore))
       }, error = function(err) {
         dbRollback(con)
         stop(err)
@@ -239,15 +222,13 @@
   foreach(name = iter(names(x)), .combine=rbind) %do% {
     formula <- expr(x, name, echo=FALSE)
     if(!is.null(formula)) {
-
-      sql <- paste0(
-        "insert into formule(tag, name, formula, autore, last_updated)",
-        "values ('", tag,"', '", name,"', '", formula,"', '", autore,"',",
-        " LOCALTIMESTAMP::timestamp(0))"
-      )
-      
       tryCatch({
-        dbGetQuery(con, sql)
+        dbGetQuery(con, getSQLbyKey(
+          helper, "INSERT_FORMULA",
+          tag=tag,
+          name=name,
+          formula=formula,
+          autore=autore))
       }, error = function(cond) {
         dbRollback(con)
         stop(name, ": ", cond)
@@ -286,11 +267,12 @@ countRolling <- function(x, con = NULL) {
   }
   
   sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
-  
-  df <- dbGetQuery(con, sql)
+  helper <- x@helper
+  df <- dbGetQuery(con, getSQLbyKey(helper, "COUNT_ROLLING", tag=tag))
   if(nrow(df) == 0) {
     0
   } else {
+    # FIXME: questa e' merda pura.
     numeri <- as.numeric(gsub("p", "", gsub(tag, "", df[, 1])))
     max(numeri, na.rm=TRUE) 
   }
@@ -381,4 +363,3 @@ readBinary <- function(path) {
   on.exit(close(con))
   unserialize(con)
 }
-

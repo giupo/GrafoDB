@@ -5,10 +5,11 @@
 .getMeta <- function(x, serie, metadato) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  df <- dbGetQuery(
-    con,
-    paste0("select value from metadati where tag='", x@tag,
-           "' and name='", serie, "' and key='", metadato,"' order by 1"))
+  helper <- x@helper
+  tag <- x@tag
+  df <- dbGetQuery(con, getSQLbyKey(
+    helper, "GET_META", tag=tag, name=serie, key=metadato))
+  
   if(nrow(df)) {
     as.character(df[,1])
   } else {
@@ -32,8 +33,9 @@
 .getMetadata <- function(x, name) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  sql <-  paste0("select name, key, value from metadati where tag = '",x@tag,
-                 "' and name = '", name, "' order by name, key")
+  tag <- x@tag
+  helper <- x@helper
+  sql <-  getSQLbyKey(helper, "GET_METADATA", tag=tag, name=name)
   dbGetQuery(con, sql)
 }
 
@@ -52,7 +54,10 @@
 .keys <- function(x) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  sql <- paste0("select distinct key from metadati where tag='", x@tag, "' order by 1")
+  
+  tag <- x@tag
+  helper <- x@helper
+  sql <- getSQLbyKey(helper, "KEYS_METADATA", tag=tag)
   dbGetQuery(con, sql)
 }
 
@@ -74,14 +79,13 @@
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tag <- x@tag
-  df <- if(is.null(key)) {
-    sql <- paste0("select distinct value from metadati where tag='", tag,"' order by 1")
-    dbGetQuery(con, sql)
+  helper <- x@helper
+  sql <- if(is.null(key)) {
+    getSQLbyKey(helper, "VALUES_METADATA", tag=tag)
   } else {
-    sql <- paste0("select distinct value from metadati where tag='", tag,
-                  "' and key='", key, "' order by 1")
-    dbGetQuery(con, sql)
+    getSQLbyKey(helper, "VALUES_METADATA_KEY", tag=tag, key=key)
   }
+  df <- dbGetQuery(con, sql)
   as.character(df[,1])
 }
 
@@ -103,14 +107,20 @@
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tag <- x@tag
-  sql <- paste0("delete from metadati where tag = '", tag,
-                "' and name= '", name, "' and key = '", key, "' and value = '", value, "'")
-  dbGetQuery(con, sql)
+  helper <- x@helper
+  
+  dbGetQuery(con, getSQLbyKey(
+    helper, "DELETE_META_TAG_NAME_KEY_VALUE",
+    tag=tag,
+    name=name,
+    key=key,
+    value=value))
+
   invisible(NULL)
 }
 
 #' @importFrom rutils whoami
-#' @include db.r
+#' @include db.r sqlhelper.r
 #' @importFrom DBI dbGetQuery
 #' @importFrom RPostgreSQL dbGetQuery
 
@@ -128,8 +138,17 @@
   } else {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    sql <- paste0("insert into metadati(tag, name, key, value, autore) values ('", x@tag,"', '",
-                  name, "', '", key, "', '", value , "', '", whoami(), "')")
+    tag <- x@tag
+    helper <- x@helper
+    autore <- whoami()
+    
+    sql <- getSQLbyKey(
+      helper, "INSERT_META",
+      tag=tag,
+      name=name,
+      key=key,
+      value=value,
+      autore=autore)
     
     dbGetQuery(con, sql)
   }

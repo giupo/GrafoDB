@@ -5,16 +5,16 @@
   functions <- x@functions
   timestamp <- x@timestamp
   autore <- whoami()
-  
+  helper <- x@helper
   df <- if(length(keys(functions))) {
-    params <- cbind(tag, timestamp)
-    sql <- paste0("select name from formule where tag = '", tag, "' ",
-                 "and last_updated::timestamp(0) > to_timestamp(", as.numeric(timestamp), ")")
-    dbGetQuery(con, sql)
+    dbGetQuery(con, getSQLbyKey(
+      helper, "GET_CHANGED_FORMULE",
+      tag=tag,
+      last_updated=as.numeric(timestamp)))
   } else {
     data.frame()
   }
-  
+
   names.with.conflicts <- intersect(x@touched, as.character(df$name))
   registerDoMC(detectCores())
   
@@ -29,25 +29,25 @@
       foreach(row = iter(formule, 'row')) %do% {
         formularow <- row[,1]
         namerow <- row[,3]
-        
-        sql1 <- paste0(
-          "UPDATE formule_",tag,
-          " SET formula='", formularow, "', autore='", autore, "', ",
-          " last_updated = LOCALTIMESTAMP::timestamp(0) ",
-          " WHERE name='", namerow,"' and tag='", tag, "'")
-        dbGetQuery(con, sql1)
+       
+        dbGetQuery(con, getSQLbyKey(
+          helper, "UPDATE_FORMULE",
+          tag=tag,
+          autore=autore,
+          formula=formularow,
+          name=namerow))
       }
     }
 
 
     foreach(name = iter(names.updated)) %do% {
       formula <- expr(x, name, echo=FALSE)
-      sql2 <- paste0(
-        "INSERT INTO formule(formula, autore, name, tag, last_updated) ",
-        " select '", formula, "','", autore, "', '", name, "', '", tag,"', LOCALTIMESTAMP::timestamp(0) ",
-        " WHERE NOT EXISTS (SELECT 1 FROM formule WHERE name='", name, "' and tag='", tag, "')")
-      
-      dbGetQuery(con, sql2)
+      dbGetQuery(con, getSQLbyKey(
+        helper, "UPSERT_FORMULE",
+        formula=formula,
+        autore=autore,
+        name=name,
+        tag=tag))
     }
   }
   removeFromRedis(x, x@touched)

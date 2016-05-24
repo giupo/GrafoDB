@@ -16,11 +16,14 @@
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
-
-  sql <- paste0("select name from metadati where tag = '", tag,
-                "' and key = '",key,"' and value = '", value,"'")
+  helper <- x@helper
   
-  df <- dbGetQuery(con, sql)
+  df <- dbGetQuery(con, getSQLbyKey(
+    helper, "LOOKUP_METADATI",
+    tag=tag,
+    key=key,
+    value=value))
+  
   as.character(df$name)
 }
 
@@ -38,11 +41,15 @@
 
 .lookup_formula <- function(x, key) {
   tag <- x@tag
+  helper <- x@helper
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
-  sql <- paste0("select name from formule where tag = '", tag,"' and formula like '%",key,"%'")
-  df <- dbGetQuery(con, sql)
+  df <- dbGetQuery(con, getSQLbyKey(
+    helper, "LOOKUP_FORMULA",
+    tag=tag,
+    key=as.character(key)))
+
   as.character(df$name)
 }
 
@@ -60,11 +67,14 @@
 
 .lookup_dati <- function(x, key) {
   tag <- x@tag
+  helper <- x@helper
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
-  sql <- paste0("select name from dati where tag = '", tag,
-                "' and dati like '%",as.character(key),"%'")
-  df <- dbGetQuery(con, sql)
+  df <- dbGetQuery(con, getSQLbyKey(
+    helper, "LOOKUP_DATI",
+    tag=tag,
+    key=as.character(key)))
+  
   as.character(df$name)
 }

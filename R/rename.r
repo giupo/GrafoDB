@@ -36,36 +36,57 @@
   on.exit(dbDisconnect(con))
   
   tag <- x@tag
+  helper <- x@helper
   params <- as.data.frame(list(nuovo=nuovo, vecchio=vecchio))
   tryCatch({
     dbBegin(con)
-    sqlUpdateDati <- paste0("update dati_", tag," set name = '", nuovo,
-                            "' where name = '", vecchio,"'")
-    sqlUpdateFormula <- paste0("update formule_", tag, " set name = '", nuovo,
-                               "' where name = '", vecchio,"'")
-    dbGetQuery(con, sqlUpdateDati)
-    dbGetQuery(con, sqlUpdateFormula)
+    #sqlUpdateDati <- paste0("update dati_", tag," set name = '", nuovo,
+    #                        "' where name = '", vecchio,"'")
+    #sqlUpdateFormula <- paste0("update formule_", tag, " set name = '", nuovo,
+    #                           "' where name = '", vecchio,"'")
+    
+    dbGetQuery(con, getSQLbyKey(
+      helper, "RENAME_DATI",
+      tag=tag,
+      nuovo=nuovo,
+      vecchio=vecchio))
+    
+    dbGetQuery(con, getSQLbyKey(
+      helper, "RENAME_FORMULE",
+      tag=tag,
+      nuovo=nuovo,
+      vecchio=vecchio))
     
     for(figlia in figlie) {
-      sql <- paste0("update formule_", tag,
-                    " set formula = replace(formula, '", vecchio,"', '", nuovo,
-                    "') where name = '", figlia,"'")
-      dbGetQuery(con, sql)
+      dbGetQuery(con, getSQLbyKey(
+        helper, "RENAME_FORMULA",
+        tag=tag,
+        vecchio=vecchio,
+        nuovo=nuovo,
+        figlia=figlia))
     }
 
-    sqlUpdateArchiPartenza <- paste0("update archi_", tag, " set partenza = '", nuovo,
-                                     "' where partenza = '", vecchio,"'")
-    sqlUpdateArchiArrivo <- paste0("update archi_", tag, " set arrivo = '", nuovo,
-                                     "' where arrivo = '", vecchio,"'")
-    dbGetQuery(con, sqlUpdateArchiPartenza)
-    dbGetQuery(con, sqlUpdateArchiArrivo)
+    dbGetQuery(con, getSQLbyKey(
+      helper, "RENAME_ARCHI_PARTENZA",
+      nuovo=nuovo,
+      vecchio=vecchio,
+      tag=tag))
+
+    dbGetQuery(con, getSQLbyKey(
+      helper, "RENAME_ARCHI_ARRIVO",
+      nuovo=nuovo,
+      vecchio=vecchio,
+      tag=tag))
     
     if(dbExistsTable(con, paste0("metadati_",tag))) {
-      sqlMetadati <- paste0("update metadati_", tag, " set name = '",nuovo,"' where name = '", vecchio,"'")
-      dbGetQuery(con, sqlMetadati)
+      dbGetQuery(con, getSQLbyKey(
+        helper, "RENAME_METADATI",
+        nuovo=nuovo,
+        vecchio=vecchio,
+        tag=tag))
     }
-
-
+    
+    
     nomiarchi <- get.vertex.attribute(x@network, "name")
     nomiarchi[nomiarchi == vecchio] <- nuovo
     x@network <- set.vertex.attribute(x@network, "name", value=nomiarchi)

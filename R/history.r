@@ -32,10 +32,9 @@ setMethod(
   signature("character"),
   function(x) {
     tag <- x
+    helper <- SQLHelper()
     con <- pgConnect();
     on.exit(dbDisconnect(con))
-    sql <- paste0("select distinct tag, ordinale, autore, max(last_updated) ",
-                  " from history where tag='", tag, "' group by tag, ordinale, autore ",
-                  "order by 4,2")
-    dbGetQuery(con, sql)
+
+    dbGetQuery(con, getSQLbyKey(helper, "SHOW_HISTORY", tag=tag))
   })

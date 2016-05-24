@@ -3,16 +3,15 @@
 .updateData <- function(x, con, tag=x@tag) {
   if(interactive()) cat("Update Data...")
   data <- x@data
+  helper <- x@helper
   timestamp <- x@timestamp
   autore <- whoami()
   
   df <- if(length(keys(data))) {
-    sql <- paste0(
-      "select name from dati where tag = '", tag, "' ",
-      "and last_updated::timestamp(0) > to_timestamp(",
-      as.numeric(timestamp), ")")
-    
-    dbGetQuery(con, sql)
+    dbGetQuery(con, getSQLbyKey(
+      helper, "GET_CHANGED_DATA",
+      tag=tag,
+      last_updated=as.numeric(timestamp)))
   } else {
     data.frame()
   }
@@ -35,12 +34,17 @@
         periodo <- row$periodo
         freq <- row$freq
         datirow <- row$dati
-        sql1 <- paste0(
-          "UPDATE dati_",tag,
-          " SET anno=", anno,", periodo=", periodo, ", freq=", freq,
-          ", dati='", datirow, "',", "autore='", autore,"', ",
-          "last_updated = LOCALTIMESTAMP::timestamp(0) ",
-          " WHERE name='", name, "' and tag='", tag, "'")
+
+        sql1 <- getSQLbyKey(
+          helper, "UPDATE_DATI",
+          anno=anno,
+          periodo=periodo,
+          freq=freq,
+          dati=datirow,
+          autore=autore,
+          name=name,
+          tag=tag)
+  
         dbGetQuery(con, sql1)
       }
     }
@@ -51,14 +55,17 @@
       periodo <- row$periodo
       freq <- row$freq
       datirow <- row$dati
-      sql2 <- paste0(
-        "INSERT INTO dati(anno, periodo, freq, dati, autore, ",
-        " name, tag, last_updated) ",
-        " select ",anno,", ", periodo, ",", freq, ",'", datirow, "','", autore ,"'",
-        ",'", name, "','", tag,"', LOCALTIMESTAMP::timestamp(0)",
-        " WHERE NOT EXISTS (SELECT 1 FROM dati WHERE name='", name,
-        "' and tag='", tag, "')")
 
+      sql2 <- getSQLbyKey(
+        helper, "UPSERT_DATI",
+        anno=anno,
+        periodo=periodo,
+        freq=freq,
+        dati=datirow,
+        autore=autore,
+        name=name,
+        tag=tag)
+        
       dbGetQuery(con, sql2)
     }
   }
