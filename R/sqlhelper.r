@@ -18,8 +18,6 @@
 #' @importFrom rutils ini_parse
 #' @importFrom stringr str_locate_all 
 
-
-
 SQLHelper <- setClass(
   "SQLHelper",
   representation(
@@ -39,6 +37,24 @@ setMethod(
     .Object
   })
 
+#' Factory di query (stringhe) SQL.
+#'
+#' Ritorna le query SQL cosi' come storicizzate nell'SQLHelper. Sostituisce
+#' eventuali parametri (key=value) della query nell'ellipsis del metodo
+#'
+#' Le query hanno una forma "select * from --tab-- where param='--value--'";
+#' Il metodo si occupa di sostiture '--tab--' e '--value--' secondo i valori
+#' passati come argomento: Es: `getSQLbyKey(helper, KEYQUERY, tab="A", value="B")`
+#' risultera' in `select * from A where param='B'`
+#' 
+#' @name getSQLbyKey
+#' @usage getSQLbyKey(x, key)
+#' @usage getSQLbyKey(x, key, param=value, param2, value2, ...)
+#' 
+#' @param x istanza di SQLHelper
+#' @return un character array contenente la query SQL
+#' @export
+#' @exportMethod getSQLbyKey
 
 setGeneric(
   "getSQLbyKey",

@@ -22,6 +22,8 @@
     stop(paste("Non posso cancellare serie intermedie senza",
                "farlo ricorsivamente (ATTENZIONE!)"))
   }
+
+  helper <- graph@helper
   
   con <- pgConnect()
   on.exit(dbDisconnect(con))
@@ -34,9 +36,8 @@
     
     ## eliminare i dati
     for(name in da.eliminare) {
-      dbGetQuery(
-        con,
-        paste0("delete from dati where tag='", tag, "' and name='", name, "'"))
+      dbGetQuery(con, getSQLbyKey(
+        helper, "DELETE_DATI_TAG_NAME", tag=tag, name=name))
     }
     
     suppressWarnings(del(da.eliminare, graph@data))
@@ -46,27 +47,24 @@
     network <- network - vertex(da.eliminare)
     ## eliminare le formule
     for(name in da.eliminare) {
-      dbGetQuery(
-        con,
-        paste0("delete from formule where tag='", tag, "' and name='", name , "'"))
+      dbGetQuery(con, getSQLbyKey(
+        helper, "DELETE_FORMULE_TAG_NAME", tag=tag, name=name))
     }
     
     suppressWarnings(del(da.eliminare, graph@functions))
     ## eliminare gli archi
     for(name in da.eliminare) {
-      dbGetQuery(
-        con,
-        paste0("delete from archi where tag='", tag, "'",
-               " and (partenza='", name, "' or arrivo='", name, "')"))
+      dbGetQuery(con, getSQLbyKey(
+        helper, "DELETE_ARCHI_TAG_PA", tag=tag, partenza=name, arrivo=name))
       
     }
     
     ## eliminare i metadati
     for(name in da.eliminare) {
-      dbGetQuery(
-        con,
-        paste0("delete from metadati where tag='", tag, "' and name='", name, "'"))
+      dbGetQuery(con, getSQLbyKey(
+        helper, "DELETE_META_TAG_NAME", tag=tag, name=name))
     }
+
     
     graph@network <- network
     dbCommit(con)
@@ -74,5 +72,6 @@
     dbRollback(con)
     stop(cond)
   })
+
   resync(graph, con=con)
 }

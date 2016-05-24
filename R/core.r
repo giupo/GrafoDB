@@ -169,6 +169,7 @@ setGeneric(
 #' @slot ordinal ordinale dei dati storici (0 per la produzione corrente)
 #' @slot touched serie modificate in area di lavoro
 #' @exportClass GrafoDB
+#' @include sqlhelper.r
 #' @importFrom rcf DBDataset
 #' @export GrafoDB
 #' @examples \dontrun{
@@ -190,7 +191,8 @@ GrafoDB <- setClass(
     touched = "character",
     edges = "hash",
     dbdati = "data.frame",
-    dbformule = "data.frame"),
+    dbformule = "data.frame",
+    helper = "SQLHelper")
   # contains = "DBDataset"
 )
 

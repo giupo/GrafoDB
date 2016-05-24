@@ -8,7 +8,7 @@
 #' @param tag tag del grafo (default=`cf10`)
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
-#' @include persistence.r
+#' @include persistence.r sqlhelper.r
 #' @importFrom igraph graph.data.frame graph.empty vertex
 #' @importFrom stringr str_match
 #' @importFrom hash hash
@@ -31,6 +31,8 @@
     0
   }
   .Object@tag <- tag
+  
+  .Object@helper <- SQLHelper()
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   
@@ -373,14 +375,15 @@ getdb <- function(x, name, tag="cf10") {
 
 #' @importFrom DBI dbGetQuery
 #' @importFrom RPostgreSQL dbGetQuery
-#' @include db.r 
+#' @include db.r sqlhelper.r 
   
 .timeStampForTag <- function(tag) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  df <- dbGetQuery(
-    con,
-    paste0("select last_updated from grafi where tag='", tag,"'"))
+
+  helper <- SQLHelper()
+  df <- dbGetQuery(con, getSQLbyKey(
+    helper, "TIMESTAMP_FOR_TAG", tag=tag))
   
   if(nrow(df)) {
     df$last_updated
@@ -521,12 +524,12 @@ tsdiff <- function(a, b, thr = .0000001) {
 rilasci <- function(filtro=NULL) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  sql <- "select id, tag, commento, last_updated, autore from grafi"
+  helper <- SQLHelper()
   sql <- if(is.null(filtro)) {
-    sql
+    getSQLbyKey(helper, "TUTTI_RILASCI")
   } else {
-    paste0(sql, " where tag like '%",filtro,"%'")
+    getSQLbyKey(helper, "TUTTI_RILASCI_FILTERED", filtro=filtro)
   }
-  sql <- paste0(sql, " order by id, last_updated")
+ 
   dbGetQuery(con, sql)
 }

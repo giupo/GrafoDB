@@ -11,10 +11,7 @@
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tag <- x@tag
-  df <- dbGetQuery(
-    con,
-    paste0("select * from conflitti where tag = '", tag,"'"))
-
+  df <- dbGetQuery(getSQLbyKey(helper, "SHOW_CONFLICTS", tag=tag))
   for(name in df$name) {
     dfserie <- df[df$name == name,]
     originale <- x[[name]]
@@ -24,18 +21,18 @@
 
 .removeConflicts <- function(x, name=NULL) {
   tag <- x@tag
-  
-  sql <- if(is.character(name)) {
-    paste0("delete from conflitti where tag = '", tag,"' and name ='", name, "'")
+  helper <- x@helper
+  key <- if(is.character(name)) {
+    "REMOVE_CONFLICTS_NAME"
   } else {
-    paste0("delete from conflitti where tag = '", tag, "'")
+    "REMOVE_CONFLICTS"
   }
   
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tryCatch({
     dbBegin(con)
-    dbGetQuery(con, sql)
+    dbGetQuery(con, getSQLbyKey(helper, key, tag=tag, name=name))
   }, error = function(err) {
     dbRollback(con)
     stop(err)
@@ -122,23 +119,11 @@ setMethod(
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     tag <- x@tag
+    helper <- x@helper
     sql <- if(is.null(name)) {
-      paste0("select a.name, a.tag, a.anno as anno, a.prd as periodo, a.freq as freq, ",
-             " a.dati as dati, a.autore as autore,",
-             " b.anno as old_anno, b.periodo as old_periodo, b.freq as old_freq , ",
-             " b.dati as old_dati, b.autore as old_autore,",
-             " date, last_updated, formula ",
-             " from conflitti a, dati b ",
-             " where a.tag = '", tag, "' and a.tag = b.tag and a.name = b.name",
-             " order by tag, name")
+      getSQLbyKey(helper, "GET_CONFLICTS", tag=tag)
     } else {
-      paste0("select a.name, a.tag, a.anno, a.prd as periodo, a.freq, a.dati, a.autore,",
-             "b.anno as old_anno, b.periodo as old_periodo, b.freq as old_freq , ",
-             " b.dati as old_dati, b.autore as old_autore,",
-             "date, formula ",
-             "from conflitti a, dati b ",
-             "where a.tag = '", tag, "' and a.name='", name, "' and a.tag = b.tag ",
-             "and a.name = b.name order by tag, name")
+      getSQLbyKey(helper, "GET_CONFLICTS_NAME", tag=tag, name=name)
     }
     dbGetQuery(con, sql)
   })
@@ -191,19 +176,13 @@ setMethod(
   signature("GrafoDB", "ANY"),
   function(x, name=NULL) {
     tag <- x@tag
+    helper <- x@helper
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     sql <- if(is.null(name)) {
-      paste0("select a.name, a.tag, a.formula, a.autore, date, ",
-             " b.formula as current_formula, b.autore as current_autore, b.last_updated",
-             " from conflitti a, formule b ",
-             " where a.tag = '", tag, "' and a.tag = b.tag and a.name = b.name",
-             " order by tag, name")
+      getSQLbyKey(helper, "GET_FORMULA_CONFLICTS", tag=tag)
     } else {
-      paste0("select a.name, a.tag, a.formula, a.autore, date, b.formula, b.autore, b.last_updated",
-             " from conflitti a, formule b ",
-             " where a.tag = '", tag, "' and a.name='", name, "' and a.tag = b.tag and a.name = b.name",
-             " order by tag, name")
+      getSQLbyKey(helper, "GET_FORMULA_CONFLICTS_NAME", tag=tag, name=name)
     }
     dbGetQuery(con, sql)
   })
@@ -231,17 +210,8 @@ setMethod(
   "fixConflicts",
   signature("GrafoDB"),
   function(x, name=NULL) {
-    params <- x@tag
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    sql <- if(is.null(name)) {
-      paste0("delete from conflitti where tag = '", tag, "'")
-    } else {
-      paste0("delete from conflitti where tag = '", tag, "' and name = '", name, "'")
-    }
-    dbGetQuery(con, sql)
+    .removeConflicts(x, name=name)
   })
-
 
 #' Trova le serie che sono cambiate nel database
 #'
@@ -255,13 +225,10 @@ setMethod(
 getChangedSeries <- function(x, con=NULL) {
   con <- pgConnect(con=con)
   tag <- x@tag
+  helper <- x@helper
   timestamp <- x@timestamp
-  sql <- paste0("select name from dati where tag='", tag,
-                "' and last_updated > '", timestamp, "'",
-                "union",
-                " select name from formule where tag='", tag,
-                "' and last_updated > '", timestamp, "'")
-  df <- dbGetQuery(con, sql)
+  df <- dbGetQuery(con, getSQLbyKey(
+    helper, "GET_CHANGED_SERIES", tag=tag, last_updated=timestamp))
   nomi <- as.character(df$name)
   unique(nomi)
 }
@@ -275,9 +242,9 @@ getOuterDataNames <- function(x, con=NULL) {
   
   tag <- x@tag
   timestamp <- x@timestamp
-  sql <- paste0("select name from dati where tag='", tag,
-                "' and last_updated > '", timestamp,"'")
-  df <- dbGetQuery(con, sql)
+  helper <- x@helper
+  df <- dbGetQuery(con, getSQLbyKey(
+    helper, "GET_OUTER_DATA_NAMES", tag=tag, last_updated=timestamp))
   as.character(df$name)
 }
 
@@ -290,9 +257,10 @@ getOuterFormulaNames <- function(x, con=NULL) {
   
   tag <- x@tag
   timestamp <- x@timestamp
-  sql <- paste0("select name from formule where tag='", tag,
-                "' and last_updated > '", timestamp,"'")
-  df <- dbGetQuery(con, sql)
+  helper <- x@helper
+
+  df <- dbGetQuery(con, getSQLbyKey(
+    helper, "GET_OUTER_FORMULA_NAMES", tag=tag, last_updated=timestamp))
   as.character(df$name)
 }
 
@@ -380,7 +348,7 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
   
   tag <- x@tag
   autore <- whoami()
-
+  helper <- x@helper
   dati <- foreach(name = iter(nomi), .combine=rbind) %do% {
 
     tt <- x[[name]]
@@ -389,18 +357,17 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
     prd <- df$periodo
     freq <- df$freq
     dati <- df$dati
-    
-    sql <- paste0(
-      "insert into conflitti(tag, name, anno, prd, ",
-      " freq, dati, autore)",
-      " values ('", tag,"', '", name, "', ", anno,", ", prd ,
-      ", ", freq,", '", dati , "' ,'", autore, "')")
-    
-    
-    # dati <- as.data.frame(dati)
-    # names(dati) <- c("tag", names(df), "autore")
+  
     tryCatch({
-      dbGetQuery(con, sql)
+      dbGetQuery(con, getSQLbyKey(
+        helper, "CREA_CONFLITTO_DATI",
+        tag=tag,
+        name=name,
+        anno=anno,
+        periodo=prd,
+        freq=freq,
+        dati=dati,
+        autore=autore))
     }, error = function(cond) {
       dbRollback(con)
       stop(cond)
@@ -420,23 +387,28 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
 
   autore <- whoami()
   tag <- x@tag
-  
+  helper <- x@helper
   foreach (name = iter(nomi)) %do% {
     task <- expr(x, name, echo=FALSE)
     
-    sql1 <- paste0(
-      "UPDATE conflitti SET formula='", task, "', autore='", autore, "', ",
-      "date = LOCALTIMESTAMP::timestamp(0) ",
-      " WHERE name='", name, "' and tag='", tag, "'")
-
+    sql1 <- getSQLbyKey(
+      helper, "CREA_CONFLITTO_FORMULE1",
+      formula=task,
+      autore=autore,
+      name=name,
+      tag=tag)
+    
     print(sql1)
     df <- dbGetQuery(con, sql1)
     print(df)
     
-    sql2 <- paste0(
-      "INSERT INTO conflitti(formula, autore, date, name, tag) ",
-      " select '", task, "', '", autore, "',LOCALTIMESTAMP::timestamp(0),'", name,"','", tag, "'",
-      " WHERE NOT EXISTS (SELECT 1 FROM conflitti WHERE name='", name, "' and tag='", tag, "')")
+    sql2 <- getSQLbyKey(
+      helper, "CREA_CONFLITTO_FORMULE2",
+      formula=task,
+      autore=autore,
+      name=name,
+      tag=tag)
+    
     print(sql2)
     df <- dbGetQuery(con, sql2)
     print(df)

@@ -76,12 +76,11 @@ createNewGrafo <- function(x, tag, con=NULL) {
 
   commento <- paste0('Grafo per ', tag)
   autore <- whoami()
+  # FIXME: Devo usare i timestamp di R o del DBMS?
   x@timestamp <- Sys.time()
-  sql <- paste0(
-    "INSERT INTO grafi(tag, commento, last_updated, autore) ",
-    " select '", tag, "','", commento, "',LOCALTIMESTAMP::timestamp(0),'", autore,"' ",
-    " WHERE NOT EXISTS (SELECT 1 FROM grafi WHERE tag='", tag, "')")
- 
+  helper <- x@helper
+  sql <- getSQLbyKey(helper, "CREATE_NEW_GRAFO", tag=tag,
+                     commento=commento, autore=autore)
   dbGetQuery(con, sql)
   x
 }
@@ -101,12 +100,13 @@ resync <- function(x, con=NULL) {
 
 need_resync <- function(x) {
   timeStamp <- x@timestamp
+  helper <- x@helper
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   
-  sql <- paste0("select count(tag) from grafi where tag='", x@tag,
-                "' and last_updated > '", as.character(timeStamp), "'")
-
-  df <- dbGetQuery(con, sql)
+  df <- dbGetQuery(getSQLbyKey(
+    helper, "NEED_RESYNC", tag=tag,
+    last_updated=as.character(timeStamp)))
+  
   df[[1]] > 0
 }

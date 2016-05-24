@@ -197,11 +197,14 @@ setMethod(
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     tag <- object@tag
+    helper <- object@helper
     tryCatch({
       dbBegin(con)
-      sql <- paste0(
-        "delete from metadati where tag = '", tag, "'",
-        " and name = '", tsName,"' and key = '", attrName, "' and value = '", attrValue, "'")
+
+      sql <- getSQLbyKey(
+        helper, "DELETE_META_TAG_NAME_KEY_VALUE",
+        tag=tag, name=name, key=attrName, value=attrValue)
+
       dbGetQuery(con, sql)
       dbCommit(con)
     }, error = function(err) {

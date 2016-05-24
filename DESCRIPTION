@@ -36,6 +36,7 @@ Collate:
     'RcppExports.R'
     'db.r'
     'persistence_utils.r'
+    'sqlhelper.r'
     'update_functions.r'
     'redis.r'
     'update_data.r'
@@ -58,6 +59,5 @@ Collate:
     'life_cycle.r'
     'old_grafo_impl.r'
     'rmNode.r'
-    'sqlhelper.r'
     'subsetting.r'
 SystemRequirements: libjsoncpp

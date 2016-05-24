@@ -1,4 +1,4 @@
-#' @include redis.r 
+#' @include redis.r sqlhelper.r
 
 .copyGraph <- function(from, to, con=NULL, ...) {
   param_list <- list(...)
@@ -7,7 +7,7 @@
   } else {
     NULL
   }
-  
+  helper <- SQLHelper()
   if(is.null(con)) {
     wasNull <- TRUE
     con <- pgConnect()
@@ -25,40 +25,22 @@
   commento <- paste0("Rilascio per ", to)
   autore <- whoami()
   params <- cbind(to, autore, from)
-  tryCatch({
-    dbGetQuery(
-      con,
-      paste0("insert into grafi(tag, commento, last_updated, autore) values ",
-             "('", to,"', '", commento,"', LOCALTIMESTAMP::timestamp(0), '", autore, "')"))
-    
+  tryCatch({    
     ## copia dati
-    dbGetQuery(
-      con,
-      paste0("insert into dati(tag, name, anno, periodo, freq, dati, autore) ",
-             " select distinct '", to, "', name, anno, periodo, freq, dati, '", autore,
-             "' from dati where tag = '", from, "'"))
+    dbGetQuery(con, getSQLbyKey(helper, "COPY_DATI", to=to, from=from))
+
     ## copia archi
-    dbGetQuery(
-      con,
-      paste0("insert into archi(tag, partenza, arrivo, autore) ",
-             " select distinct '", to, "', partenza, arrivo, '", autore,
-             "' from archi where tag = '", from, "'"))
+    dbGetQuery(con, getSQLbyKey(helper, "COPY_ARCHI", to=to, from=from))
+    
     ## copia formule
-    dbGetQuery(
-      con,
-      paste0("insert into formule(tag, name, formula, autore) ",
-             " select distinct '", to, "', name, formula, '", autore,
-             "' from formule where tag = '", from, "'"),
-      bind.data = params)
+    dbGetQuery(con, getSQLbyKey(helper, "COPY_FORMULE", to=to, from=from))
     
     ## copia asincrona metadati 
     sendCopyMetadati(from, to)
     
-    ## inserisce nella tab grafi
-    dbGetQuery(
-      con,
-      paste0("update grafi set last_updated=LOCALTIMESTAMP::timestamp(0), autore='", autore,
-             "' where tag='", to, "'"))
+    dbGetQuery(con, getSQLbyKey(
+      helper, "INSERT_GRAFI", tag=to, commento=commento, autore=autore
+    ))
     
     ## Ricordati di committare.
     if(wasNull) {

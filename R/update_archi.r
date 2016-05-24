@@ -9,13 +9,12 @@
   data <- x@data
   functions <- x@functions
   timestamp <- x@timestamp
+  helper <- x@helper
   network <- x@network
   in.memory <- as.data.frame(get.edgelist(network), stringsAsFactors = F)
   autore <- whoami()
   names(in.memory) <- c("partenza", "arrivo")
-  in.db <- dbGetQuery(
-    con,
-    paste0("select partenza, arrivo from archi where tag = '", tag,"'"))
+  in.db <- dbGetQuery(con, getSQLbyKey(helper, "ARCHI_TAG", tag=tag))
   
   sep <- "-"
   in.db <- drop.levels(in.db)
@@ -26,12 +25,13 @@
 
   df <- if(length(keys(data))) {
     ## cerco archi aggiunti di recente.
-    sql <- paste0("select partenza, arrivo from archi where tag = '", tag, "' ",
-                 "and last_updated::timestamp(0) > to_timestamp(", as.numeric(timestamp), ")")
-    dbGetQuery(con, sql)
+    dbGetQuery(con, getSQLbyKey(
+      helper, "ARCHI_TAG_LAST_UPDATED",
+      tag=tag, last_updated=as.numeric(timestamp)))
   } else {
     data.frame(partenza=character(0), arrivo=character(0))
   }
+  
   if(nrow(df) > 0) {
     ## controllo che i nuovi archi non siano tra le serie che ho modificato e
     ## che non creino un anello
@@ -73,10 +73,8 @@
     foreach(row=iter(df, by='row')) %do% {
       from <- row$partenza
       to <- row$arrivo
-      dbGetQuery(
-        con,
-        paste0("insert into archi(tag, partenza, arrivo, autore) ",
-               " values('", tag,"','", from, "','", to,"','", autore, "')"))
+      dbGetQuery(con, getSQLbyKey(
+        helper, "INSERT_ARCHI", tag=tag, from=from, to=to, autore=autore))
     }
   }
   
