@@ -127,14 +127,15 @@ dbSettings <- function(flush=FALSE) {
 
 initdb <- function(con) {
   settings <- dbSettings()
-
-  env <- settings$Environments$name
+  
+  env <- getOption("GrafoDB.env", settings$Environments$name)   
   settings <- settings[[paste0("ConnectionInfo_", env)]]
   
   schemaFileName <- paste0("schema-", settings$driver, ".sql")
   file <- file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
   sql <- paste(readLines(file), collapse="\n")
   dbGetQuery(con, sql)
+  message("ZIO PORCO")
 }
 
 #' Factory di connessioni al database Postgresql

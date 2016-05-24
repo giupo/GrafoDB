@@ -13,11 +13,11 @@ test_that("SQLHelper defaults to PostgreSQL", {
 test_that("SQLHelper sets type based on options", {
   oldOption <- getOption("SQLHelperType", NULL)
   options(SQLHelperType=NULL)
-  sqlHelper <- SQLHelper(type="SQLlite")
+  sqlHelper <- SQLHelper(type="SQLite")
   tryCatch({
-    expect_equal(sqlHelper@type, "SQLlite")
+    expect_equal(sqlHelper@type, "SQLite")
     options(SQLHelperType="PostgreSQL")
-    sqlHelper <- SQLHelper(type="SQLlite")
+    sqlHelper <- SQLHelper(type="SQLite")
     expect_equal(sqlHelper@type, "PostgreSQL")
   }, finally = function() {
     if(!is.null(oldOption)) {
@@ -82,5 +82,5 @@ test_that("SQLHelper raises an error if params are not set", {
   helper <- SQLHelper(type="SQLite")
   expect_error(
     getSQLbyKey(helper, "SELECT_TEST3"),
-    "params for query SELECT_TEST3 of type SQLlite have not been set")
+    "params for query SELECT_TEST3 of type SQLite have not been set")
 })

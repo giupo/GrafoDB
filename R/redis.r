@@ -26,7 +26,8 @@ sendCopyMetadati <- function(sourceTag, destTag) {
   msg = paste(sourceTag, destTag, sep="|")
   settings <- dbSettings()
   tryCatch({
-    redisConnect(host = settings$redisHost, port = as.integer(settings$redisPort))
+    redisConnect(host = settings$Redis$host,
+                 port = as.integer(settings$Redis$port))
     redisLPush('grafo-copymetadati', charToRaw(msg))
     redisClose()
   })
