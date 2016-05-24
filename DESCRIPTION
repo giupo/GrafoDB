@@ -58,5 +58,6 @@ Collate:
     'life_cycle.r'
     'old_grafo_impl.r'
     'rmNode.r'
+    'sqlhelper.r'
     'subsetting.r'
 SystemRequirements: libjsoncpp

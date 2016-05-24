@@ -411,6 +411,7 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
 }
 
 creaConflittoFormule <- function(x, nomi, con=NULL) {
+  
   conWasNull <- is.null(con)
   con <- pgConnect(con=con)
   if(conWasNull) {

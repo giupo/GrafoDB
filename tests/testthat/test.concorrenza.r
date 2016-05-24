@@ -128,7 +128,7 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   ## il side-effect di cambiare g1 nel env del parent.frame, il seguente warning non uscira' mai
   ## expect_warning(saveGraph(g2), "Ci sono conflitti sugli archi")
   
-  expect_warning(saveGraph(g2), "Ci sono conflitti sulle formule")
+  expect_warning(saveGraph(g2), "Ci sono conflitti")
 
   g <- GrafoDB("test1")
   expect_true(hasConflicts(g))  
