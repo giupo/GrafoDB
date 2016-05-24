@@ -8,7 +8,10 @@ removeFromRedis <- function(x, nomi) {
   tag <- x@tag
   settings <- dbSettings()
   tryCatch({
-    redisConnect(host = settings$redisHost, port = as.integer(settings$redisPort))
+    redisConnect(
+      host = settings$Redis$host,
+      port = as.integer(settings$Redis$port))
+    
     for(name in nomi) {
       key <- redisMakeKey(name, tag, 'data')
       suppressWarnings(redisDelete(key))

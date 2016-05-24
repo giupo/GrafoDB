@@ -35,7 +35,7 @@ test_that("SQLHelper gets different queries based on type", {
   oldOption <- getOption("SQLHelperType", NULL)
   options(SQLHelperType=NULL)
   tryCatch({
-    sqlite <- SQLHelper(type="SQLlite")
+    sqlite <- SQLHelper(type="SQLite")
     psql <- SQLHelper(type="PostgreSQL")
     expect_true(sqlite@type != psql@type)
 
@@ -54,8 +54,8 @@ test_that("SQLHelper gets different queries based on type", {
 })
 
 test_that("I can have params to be substitued into sql", {
-  helper <- SQLHelper(type="SQLlite")
-  expect_equal(helper@type, "SQLlite")
+  helper <- SQLHelper(type="SQLite")
+  expect_equal(helper@type, "SQLite")
 
   expect_equal(
     getSQLbyKey(helper, "SELECT_TEST2", tabella="A"),
@@ -67,19 +67,19 @@ test_that("I can have params to be substitued into sql", {
 })
 
 test_that("SQLHelper can handle quoted values", {
-  helper <- SQLHelper(type="SQLlite")
+  helper <- SQLHelper(type="SQLite")
   sql <- getSQLbyKey(helper, "SELECT_TEST3", tabella="A", name="d'odio")
   expect_equal(sql, "select * from A where name='d''odio'")
 })
 
 test_that("SQLHelper can handle multiple quoted values", {
-  helper <- SQLHelper(type="SQLlite")
+  helper <- SQLHelper(type="SQLite")
   sql <- getSQLbyKey(helper, "SELECT_TEST3", tabella="A", name="d'odio e d'amore")
   expect_equal(sql, "select * from A where name='d''odio e d''amore'")
 })
 
 test_that("SQLHelper raises an error if params are not set", {
-  helper <- SQLHelper(type="SQLlite")
+  helper <- SQLHelper(type="SQLite")
   expect_error(
     getSQLbyKey(helper, "SELECT_TEST3"),
     "params for query SELECT_TEST3 of type SQLlite have not been set")
