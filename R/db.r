@@ -273,3 +273,39 @@ dbDisconnect <- function(con) {
     TRUE
   }
 }
+
+
+.dbBeginPG <- function(conn) {
+  dbGetQuery(conn, "START TRANSACTION")
+  TRUE
+}
+
+.dbBeginSQLite <- function(conn) {
+  dbGetQuery(conn, "BEGIN")
+  TRUE
+}
+
+  
+# Adds implementation of DBI::dbBegin for RPostgreSQL
+#' @importFrom DBI dbBegin
+
+tryCatch(
+  setMethod("dbBegin", signature("PostgreSQLConnection"), .dbBeginPG),
+  error=function(err) {
+    setGeneric("dbBegin", function(conn) {
+      standardGeneric("dbBegin")
+    })
+    setMethod("dbBegin", signature("PostgreSQLConnection"), .dbBeginPG)
+  })
+
+tryCatch(
+  setMethod("dbBegin", signature("SQLiteConnection"), .dbBeginSQLite),
+  error=function(err) { # pass, non servono su Jenkins
+    setGeneric("dbBegin", function(conn) {
+      standardGeneric("dbBegin")
+    })
+    setMethod("dbBegin", signature("SQLiteConnection"), .dbBeginSQLite)
+  })
+
+
+

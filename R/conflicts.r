@@ -125,6 +125,7 @@ setMethod(
     } else {
       getSQLbyKey(helper, "GET_CONFLICTS_NAME", tag=tag, name=name)
     }
+
     dbGetQuery(con, sql)
   })
 
