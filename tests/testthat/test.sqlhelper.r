@@ -6,8 +6,16 @@ test_that("I can init an sql helper", {
 })
 
 test_that("SQLHelper defaults to PostgreSQL", {
-  sqlHelper <- SQLHelper()
-  expect_equal(sqlHelper@type, "PostgreSQL")
+    oldOption <- getOption("SQLHelperType", NULL)
+    options(SQLHelperType=NULL)
+    tryCatch({
+        sqlHelper <- SQLHelper()
+        expect_equal(sqlHelper@type, "PostgreSQL")
+    }, finally = function() {
+        if(!is.null(oldOption)) {
+            options(SQLHelperType=oldOption)
+        }
+    })
 })
 
 test_that("SQLHelper sets type based on options", {
