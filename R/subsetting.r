@@ -61,8 +61,12 @@ setMethod(
     toBeAdded <- setdiff(name, all_names)
     network + vertex(toBeAdded)
   } else {
-    if(!is.dataset(value) && length(E(network)) > 0) {
-      network - E(network)[.to(name)]
+      if(!is.dataset(value) && length(E(network)) > 0) {
+        if(packageVersion("igraph") >= '1.1.0') {
+            network - E(network)[.to(name)]
+        } else {
+            network - E(network)[to(name)]
+        }
     } else {
       network
     }
