@@ -600,12 +600,9 @@ setMethod(
   function(x) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    nometab <- paste0("metadati_", x@tag)
-    if(dbExistsTable(con, nometab)) {
-      dbReadTable(con, nometab)
-    } else {
-      data.frame(name=character(), key=character(), value=character())
-    }
+    dbGetQuery(con, getSQLbyKey(
+      x@helper, "GET_ALL_META",
+      tag=x@tag))
   })
 
 #' @importFrom hash keys

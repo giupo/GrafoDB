@@ -200,11 +200,11 @@ setMethod(
     helper <- object@helper
     tryCatch({
       dbBegin(con)
-
+      
       sql <- getSQLbyKey(
         helper, "DELETE_META_TAG_NAME_KEY_VALUE",
         tag=tag, name=name, key=attrName, value=attrValue)
-
+      
       dbGetQuery(con, sql)
       dbCommit(con)
     }, error = function(err) {

@@ -117,13 +117,13 @@ CREATE TABLE IF NOT EXISTS producers (
 
 
 
-CREATE UNIQUE INDEX archi_unique ON archi(partenza, arrivo);
+CREATE UNIQUE INDEX archi_unique ON archi(partenza, arrivo, tag);
 
 CREATE UNIQUE INDEX dati_tag_name_index ON dati(tag, name);
 
-CREATE INDEX meta_key ON metadati(key);
+CREATE INDEX meta_key ON metadati(key); 
 
-CREATE UNIQUE INDEX meta_unique ON metadati(name, key, value);
+CREATE UNIQUE INDEX meta_unique ON metadati(name, key, value, tag);
 
 CREATE INDEX meta_value ON metadati(value);
 

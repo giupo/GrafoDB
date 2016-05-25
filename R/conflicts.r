@@ -1,6 +1,6 @@
 
-.hasConflicts <- function(x, name=NULL) {
-  nrow(getConflicts(x, name=name)) > 0
+.hasConflicts <- function(x, name=NULL, con=NULL) {
+  nrow(getConflicts(x, name=name, con=con)) > 0
 }
 
 #' @importFrom DBI dbGetQuery
@@ -33,11 +33,11 @@
   tryCatch({
     dbBegin(con)
     dbGetQuery(con, getSQLbyKey(helper, key, tag=tag, name=name))
+    dbCommit(con)
   }, error = function(err) {
     dbRollback(con)
     stop(err)
   })
-  dbCommit(con)
 }
 
 #' Ritorna `TRUE` se il grafo ha conflitti
@@ -61,7 +61,7 @@
 
 setGeneric(
   "hasConflicts",
-  function(x, name=NULL) {
+  function(x, name=NULL, con=NULL) {
     standardGeneric("hasConflicts")
   })
 
@@ -87,10 +87,8 @@ setGeneric(
 setMethod(
   "hasConflicts",
   signature("GrafoDB", "ANY"),
-  function(x, name=NULL) {
-    .hasConflicts(x, name=name)
-    #df <- getConflicts(x, name=name)
-    #nrow(df) > 0
+  function(x, name=NULL, con=NULL) {
+    .hasConflicts(x, name=name, con=con)
   })
 
 
@@ -108,16 +106,19 @@ setMethod(
 
 setGeneric(
   "getConflicts",
-  function(x, name=NULL) {
+  function(x, name=NULL, con=NULL) {
     standardGeneric("getConflicts")
   })
 
 setMethod(
   "getConflicts",
   signature("GrafoDB", "ANY"),
-  function(x, name=NULL) {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
+  function(x, name=NULL, con=NULL) {
+    if (is.null(con)) {
+      on.exit(dbDisconnect(con))
+    }
+    con <- pgConnect(con)
+    
     tag <- x@tag
     helper <- x@helper
     sql <- if(is.null(name)) {
@@ -224,6 +225,9 @@ setMethod(
 #' @note funzione interna
 
 getChangedSeries <- function(x, con=NULL) {
+  if(is.null(con)) {
+    on.exit(dbDisconnect(con))
+  }
   con <- pgConnect(con=con)
   tag <- x@tag
   helper <- x@helper
@@ -270,18 +274,7 @@ getOuterFormulaNames <- function(x, con=NULL) {
 #' @include db.r persistence_utils.r
 
 checkConflicts <- function(x, con=NULL) {
-  conWasNull <- is.null(con)
-  con <- pgConnect(con=con)
-  if(conWasNull) {
-    on.exit(dbDisconnect(con))
-    tryCatch({
-      dbBegin(con)
-    }, error = function(cond) {
-      dbRollback(con)
-      stop(cond)
-    })
-  }
-  
+   
   tag <- x@tag
 
   data <- x@data
@@ -324,13 +317,6 @@ checkConflicts <- function(x, con=NULL) {
     }
   }
   
-  tryCatch({
-    dbCommit(con)
-  }, error = function(cond) {
-    dbRollback(con)
-    stop(cond)
-  })
-
   x
 }
 

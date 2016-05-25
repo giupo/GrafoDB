@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+
 library(testthat)
 library(devtools)
 library(methods)
@@ -9,15 +10,9 @@ library(RPostgreSQL)
 library(RPostgreSQL2)
 library(doMC)
 source("lib_mgt.r")
-# options(env="test")
-
-#settings <- list(
-#  driver="SQLite",
-#  dbname=":memory:"
-# )
-# options(dbSettings=settings)
 
 load_all()
+
 for(tag in rilasci("test")$tag) elimina(tag)
 
 .praise <- c(

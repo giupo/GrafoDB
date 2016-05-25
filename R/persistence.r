@@ -11,114 +11,58 @@
 # https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 .saveGraph <- function(x, tag = x@tag, ...) {
 
-  if(hasConflicts(x)) {
-    stop("Il grafo ",tag, " ha conflitti, risolverli prima di salvare")
-  }
-
-  checkConflicts(x)
-
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-           
+
   param_list <- list(...)
 
   msg <- if('msg' %in% names(param_list)) {
     param_list[["msg"]]
   } else {
-    NULL
+    ""
   }
-  
-  tagExists <- .tagExists(tag)
-  
-  if(tagExists) {
-    # sto aggiornando il grafo tag
-    .updateGraph(x, con=con, msg=msg)
-  } else {
-    if (x@tag == tag) {
-      # sto creando un nuovo grafo
-      .createGraph(x, tag, msg=msg)  
+
+  tryCatch({
+    dbBegin(con)
+    if(hasConflicts(x, con=con)) {
+      stop("Il grafo ", tag, " ha conflitti, risolverli prima di salvare")
+    }
+    checkConflicts(x, con=con)
+    if(.tagExists(tag, con=con)) {
+      # sto aggiornando il grafo tag
+      .updateGraph(x, con=con, msg=msg)
     } else {
-      if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
-        .createGraph(x, tag, msg=msg)
+      if (x@tag == tag) {
+        # sto creando un nuovo grafo
+        .createGraph(x, tag, con=con, msg=msg)  
       } else {
-        con <- pgConnect()
-        on.exit(dbDisconnect(con))
-        tryCatch({
-          dbBegin(con)
-          .copyGraph(x@tag, tag, con, msg=msg)
-          .updateGraph(x, tag, con, msg=msg)
-          dbCommit(con)
-        }, error=function(cond) {
-          dbRollback(con)
-          stop(cond)
-        })
+        if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
+          .createGraph(x, tag, con=con, msg=msg)
+        } else {
+          .copyGraph(x@tag, tag, con=con, msg=msg)
+          .updateGraph(x, tag, con=con, msg=msg)
+        }
       }
     }
-  }
-  removeFromRedis(x, x@touched)
+    removeFromRedis(x, x@touched)
+    dbCommit(con)
+  }, error=function(err) {
+    dbRollback(con)
+    stop(err)
+  })
   x
 }
 
 #' @include update_archi.r update_data.r update_functions.r
 
-.updateGraph <- function(x, tag=x@tag, con=NULL, ...) {
-  param_list <- list(...)
-  msg <- if('msg' %in% names(param_list)) {
-    param_list[["msg"]]
-  } else {
-    NULL
-  }
-  wasNull <- is.null(con)
-  if(wasNull) {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    tryCatch({
-      dbBegin(con)
-    }, error = function(cond) {
-      dbRollback(con)
-      stop(cond)
-    })
-  }
-  
-  ## supporto per history
-  tryCatch({
-    doHistory(x, con)
-  }, error = function(err) {
-    dbRollback(con)
-    stop(err)
-  })
-  
-  tryCatch(
-    .updateData(x, con, tag),
-    error = function(err) {
-      dbRollback(con)
-      stop(err)
-    })
-  
-  tryCatch(
-    .updateFunctions(x, con, tag),
-    error = function(err) {
-      dbRollback(con)
-      stop(err)
-    })
-
-  tryCatch(
-    .updateArchi(x, con, tag),
-    error = function(err) {
-      dbRollback(con)
-      stop(err)
-    })
-
+.updateGraph <- function(x, tag=x@tag, con=NULL, msg="") {
   helper <- x@helper
-  tryCatch({
-    dbGetQuery(con, getSQLbyKey(helper, "UPDATE_GRAFO_LAST_UPDATED", tag=tag))
-  }, error = function(err) {
-    dbRollback(con)
-    stop(err)
-  })
-  if(wasNull) {
-    dbCommit(con)
-  }
+  ## supporto per history
+  doHistory(x, con=con)
+  .updateData(x, con=con, tag=tag, msg=msg)
+  .updateFunctions(x, con=con, tag=tag, msg=msg)
+  .updateArchi(x, con=con, tag=tag)
+  dbGetQuery(con, getSQLbyKey(helper, "UPDATE_GRAFO_LAST_UPDATED", tag=tag)) 
 }
 
 #' crea ex-novo un istanza di grafo nel databae
@@ -127,47 +71,23 @@
 #' @rdname createGraph-internal
 #' @param x istanza di Grafo
 #' @param tag identificativo della versione
+#' @param con connessione al DB
 #' @usage .createGraph(g, tag)
 #' @importFrom foreach foreach %do%
 #' @importFrom rutils whoami
 #' @importFrom RPostgreSQL2 dbBegin
 #' @importFrom DBI dbSendQuery dbRollback
 
-.createGraph <- function(x, tag, con=NULL, ...) {
+.createGraph <- function(x, tag, con, ...) {
   param_list <- list(...)
-  if(is.null(con)) {
-    wasNull <- TRUE
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    tryCatch({
-      dbBegin(con)
-    }, error = function(cond) {
-      dbRollback(con)
-      stop(cond)
-    })
-  } else {
-    wasNull <- FALSE
-  }
-  
   commento <- if(interactive()) {
     readline(prompt="Inserisci un commento/nota per: ")
   } else {
     paste0("Rilascio per ", tag)
   }
-
   
   autore <- whoami()
   helper <- x@helper
-  tryCatch({
-    dbGetQuery(con, getSQLbyKey(
-      helper, "INSERT_GRAFI",
-      tag=tag,
-      commento=commento,
-      autore=autore))
-  }, error = function(err) {
-    dbRollback(con)
-    stop(err)
-  })
   
   if(length(names(x))) {
     dati <- foreach (name = iter(names(x)), .combine=rbind) %do% {
@@ -175,23 +95,18 @@
       df <- to.data.frame(tt, name)
       anno <- df$anno
       periodo <- df$periodo
-      freq <- df$periodo
+      freq <- df$freq
       dati <- df$dati
       
-      tryCatch({
-        dbGetQuery(con, getSQLbyKey(
-          helper, "INSERT_DATI",
-          tag=tag,
-          name=name,
-          anno=anno,
-          periodo=periodo,
-          freq=freq,
-          dati=dati,
-          autore=autore))
-      }, error = function(cond) {
-        dbRollback(con)
-        stop(cond)
-      })
+      dbGetQuery(con, getSQLbyKey(
+        helper, "INSERT_DATI",
+        tag=tag,
+        name=name,
+        anno=anno,
+        periodo=periodo,
+        freq=freq,
+        dati=dati,
+        autore=autore))
     }
   } else {
     stop("Non ci sono dati da salvare.")
@@ -200,45 +115,35 @@
   archi <- as.data.frame(get.edgelist(x@network))
   
   if(nrow(archi)) {
-    archi <- cbind(tag, archi, autore)
-    names(archi) <- c('tag', 'partenza', 'arrivo', 'autore')
     foreach(row = iter(archi, 'row')) %do% {
       partenza <- row[,1]
       arrivo <- row[,2]
-      tryCatch({
-        dbGetQuery(con, getSQLbyKey(
-          helper, "INSERT_ARCO",
-          tag=tag,
-          partenza=partenza,
-          arrivo=arrivo,
-          autore=autore))
-      }, error = function(err) {
-        dbRollback(con)
-        stop(err)
-      })
+      dbGetQuery(con, getSQLbyKey(
+        helper, "INSERT_ARCO",
+        tag=tag,
+        partenza=partenza,
+        arrivo=arrivo,
+        autore=autore))
     }
   }
   
   foreach(name = iter(names(x)), .combine=rbind) %do% {
     formula <- expr(x, name, echo=FALSE)
     if(!is.null(formula)) {
-      tryCatch({
-        dbGetQuery(con, getSQLbyKey(
-          helper, "INSERT_FORMULA",
-          tag=tag,
-          name=name,
-          formula=formula,
-          autore=autore))
-      }, error = function(cond) {
-        dbRollback(con)
-        stop(name, ": ", cond)
-      })
+      dbGetQuery(con, getSQLbyKey(
+        helper, "INSERT_FORMULA",
+        tag=tag,
+        name=name,
+        formula=formula,
+        autore=autore)) 
     }
   }
   
-  if(wasNull) {
-    dbCommit(con)
-  }
+  dbGetQuery(con, getSQLbyKey(
+    helper, "INSERT_GRAFI", 
+    tag=tag,
+    commento=commento,
+    autore=autore))
 }
 
 
@@ -252,18 +157,13 @@
 #' @importFrom DBI dbGetQuery
 #' @include db.r
 
-countRolling <- function(x, con = NULL) {
+countRolling <- function(x, con) {
   tag <- if(is.grafodb(x)) {
     x@tag 
   } else if(is.character(x)){
     x
   } else {
     stop("I dunno what to do here")
-  }
-
-  if(is.null(con)) {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
   }
   
   sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
@@ -316,6 +216,7 @@ nextRollingNameFor <- function(x, con) {
 doHistory <- function(x, con) {
   notOk <- TRUE
   tries <- 3
+  
   while(tries > 0) {    
     tries <- tryCatch({
       dest <- nextRollingNameFor(x, con)

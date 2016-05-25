@@ -375,30 +375,13 @@ getdb <- function(x, name, tag="cf10") {
 
 #' @importFrom DBI dbGetQuery
 #' @importFrom RPostgreSQL dbGetQuery
-#' @include db.r sqlhelper.r 
-  
-.timeStampForTag <- function(tag) {
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-
-  helper <- SQLHelper()
-  df <- dbGetQuery(con, getSQLbyKey(
-    helper, "TIMESTAMP_FOR_TAG", tag=tag))
-  
-  if(nrow(df)) {
-    df$last_updated
-  } else {
-    0
-  }
-}
-
-#' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 #' @include db.r 
   
-.tagExists <- function(tag) {
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
+.tagExists <- function(tag, con=NULL) {
+  con <- pgConnect(con)
+  if(is.null(con)) {
+    on.exit(dbDisconnect(con))
+  }
   df <- dbGetQuery(
     con,
     paste0("select * from grafi where tag='", tag,"'"))

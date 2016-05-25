@@ -1,62 +1,50 @@
-context("cancellazione serie")
+context("Cancellazione serie")
 
-test_that("Posso cancellare serie", {
-  g <- GrafoDB("test")
+setup <- function(tag) {
+  g <- GrafoDB(tag)
   g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
-  g["C"] <- function(A,B) {
+  g["C"] <- function(A, B) {
     C = A + B
   }
-  
+  g
+}
+
+test_that("Posso cancellare serie", {
+  g <- setup("test")
   expect_error(rmNode(g, "A"))
   g <- rmNode(g, "C")
   expect_true(!"C" %in% names(g))
- 
+  elimina("test")
 })
 
-elimina("test")
 
 test_that("Posso cancellare serie ricorsivamente", {
-  g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
-  g["C"] <- function(A,B) {
-    C = A + B
-  }
+  g <- setup("test")
   g <- rmNode(g, "A", TRUE)
   expect_true(!"A" %in% names(g))
   expect_true(!"C" %in% names(g))
   expect_true("B" %in% names(g))
- 
+  elimina("test")
 })
-elimina("test")
 
 ### --- persistenza
 
 test_that("Posso cancellare serie, DB", {
-  g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
-  g["C"] <- function(A,B) {
-    C = A + B
-  }
+  g <- setup("test")
   g <- saveGraph(g)
   expect_error(rmNode(g, "A"))
   g <- rmNode(g, "C")
   expect_true(!"C" %in% names(g))
-
+  elimina("test")
 })
 
-elimina("test")
 test_that("Posso cancellare serie ricorsivamente, DB", {
-  g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
-  g["C"] <- function(A,B) {
-    C = A + B
-  }
+  g <- setup("test")
   g <- saveGraph(g)
   g <- rmNode(g, "A", TRUE)
   expect_true(!"A" %in% names(g))
   expect_true(!"C" %in% names(g))
   expect_true("B" %in% names(g))
- 
+  elimina("test")
 })
 
-elimina("test")

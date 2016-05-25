@@ -37,6 +37,43 @@ setMethod(
     .Object
   })
 
+.getSQLbyKey <- function(x, .key, ...) {
+  if(! .key %in% names(x@sqlContainer)) {
+    stop(.key, " not in query repository")
+  }
+
+  ## retrieve sql
+  sql <- x@sqlContainer[[.key]]
+
+  ## handle param list
+  params <- list(...)
+
+  for(name in names(params)) {
+    paramKey <- paste0("--", name, "--")
+    value <- params[[name]]
+    if(is.null(value)) {
+      value <- ""
+    }
+    quotedValue <- gsub("'", "''", value)
+    sql <- gsub(paramKey, quotedValue, sql)
+  }
+
+  ## check if any params is left behind
+
+  idx <- str_locate_all(sql, "--[A-Z|a-z|0-9]*--")[[1]]
+  if(length(idx) > 0) {
+    for(irow in 1:nrow(idx)) {
+      start <- idx[irow, 1]
+      end <- idx[irow, 2]
+      param <- substring(sql, first=start, last=end)
+      warning(param, " has not been set")
+    }
+    stop("params for query ", .key, " of type ", x@type, " have not been set")
+  }
+
+  sql
+}
+
 #' Factory di query (stringhe) SQL.
 #'
 #' Ritorna le query SQL cosi' come storicizzate nell'SQLHelper. Sostituisce
@@ -56,7 +93,7 @@ setMethod(
 #' @return un character array contenente la query SQL
 #' @export
 #' @exportMethod getSQLbyKey
-
+2
 setGeneric(
   "getSQLbyKey",
   function(x, .key, ...) {
@@ -67,36 +104,6 @@ setMethod(
   "getSQLbyKey",
   signature("SQLHelper"),
   function(x, .key, ...) {
-    if(! .key %in% names(x@sqlContainer)) {
-      stop(.key, " not in query repository")
-    }
-
-    ## retrieve sql
-    sql <- x@sqlContainer[[.key]]
-
-    ## handle param list
-    params <- list(...)
-
-    for(name in names(params)) {
-      paramKey <- paste0("--", name, "--")
-      value <- params[[name]]
-      quotedValue <- gsub("'", "''", value)
-      sql <- gsub(paramKey, quotedValue, sql)
-    }
-
-    ## check if any params is left behind
-
-    idx <- str_locate_all(sql, "--[A-Z|a-z|0-9]*--")[[1]]
-    if(length(idx) > 0) {
-      for(irow in 1:nrow(idx)) {
-        start <- idx[irow, 1]
-        end <- idx[irow, 2]
-        param <- substring(sql, first=start, last=end)
-        warning(param, " has not been set")
-      }
-      stop("params for query ", .key, " of type ", x@type, " have not been set")
-    }
-    
-    sql
+    .getSQLbyKey(x, .key, ...)
   }
 )

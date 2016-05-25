@@ -40,11 +40,7 @@
   params <- as.data.frame(list(nuovo=nuovo, vecchio=vecchio))
   tryCatch({
     dbBegin(con)
-    #sqlUpdateDati <- paste0("update dati_", tag," set name = '", nuovo,
-    #                        "' where name = '", vecchio,"'")
-    #sqlUpdateFormula <- paste0("update formule_", tag, " set name = '", nuovo,
-    #                           "' where name = '", vecchio,"'")
-    
+
     dbGetQuery(con, getSQLbyKey(
       helper, "RENAME_DATI",
       tag=tag,

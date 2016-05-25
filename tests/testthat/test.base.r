@@ -371,4 +371,4 @@ test_that("Posso subsettare con il $ (dollaro)", {
   
 })
 
-elimina("test")
+for(tag in rilasci("test")$tag) elimina(tag)

@@ -119,10 +119,14 @@ dbSettings <- function(flush=FALSE) {
     }
     
     settings <- ini_parse(
-      file.path(system.file(package="GrafoDB"), "ini/sql.ini"))
+      file.path(system.file(package="GrafoDB"), "ini/GrafoDB.ini"))
     options(dbSettings=settings)
   }
   settings
+}
+
+getenv <- function() {
+  Sys.getenv("GRAFODB_ENV", "prod")
 }
 
 #' @importFrom stringr str_split str_trim
@@ -130,7 +134,7 @@ dbSettings <- function(flush=FALSE) {
 initdb <- function(con) {
   settings <- dbSettings()
   
-  env <- getOption("GrafoDB.env", settings$Environments$name)   
+  env <- getenv()
   settings <- settings[[paste0("ConnectionInfo_", env)]]
   
   schemaFileName <- paste0("schema-", settings$driver, ".sql")
@@ -140,7 +144,7 @@ initdb <- function(con) {
   statements <- str_split(sql, ";")[[1]]
   
   tryCatch({
-    dbGetQuery(con, "BEGIN")
+    dbBegin(con)
     for(stm in statements) {
       stm <- str_trim(as.character(stm))
       
@@ -149,7 +153,6 @@ initdb <- function(con) {
       }
     }
     dbCommit(con)
-    message("DB init complete")
   }, error=function(cond) {
     dbRollback(con)
     stop(cond)
@@ -171,19 +174,19 @@ initdb <- function(con) {
 .buildConnection <- function(userid=whoami(), password=flypwd()) {
   settings <- dbSettings()
   
-  env <- getOption("GrafoDB.env", settings$Environments$name)
+  env <- getenv()
   
   settings <- settings[[paste0("ConnectionInfo_", env)]]  
   drv <- dbDriver(settings$driver)
   
   options(SQLHelperType=settings$driver)
-  message(getOption("SQLHelperType"))
+  
   if(settings$driver == "SQLite") {
     con <- dbConnect(drv, dbname=settings$dbname)
     if(settings$dbname == ":memory:") {
       initdb(con)
     }
-    options(pgConnect=con)
+   #  options(pgConnect=con)
     return(con)
   } 
 
@@ -236,7 +239,7 @@ initdb <- function(con) {
 #' @importFrom DBI dbGetInfo
 #' @export
 
-pgConnect <- function(env="prod", userid=NULL, password=NULL, con=NULL) {
+pgConnect <- function(userid=NULL, password=NULL, con=NULL) {
 
   if(!is.null(con)) {
     return(con)

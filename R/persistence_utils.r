@@ -13,16 +13,22 @@
 loadTable <- function(tableName, tag, con=NULL) {
   conWasNull <- is.null(con)
   con <- pgConnect(con=con)
-  if(conWasNull) {
+  if(is.null(con)) {
     on.exit(dbDisconnect(con))
   }
-  fullTableName <- paste0(tableName, '_', tag)
+  fullTableName <- if(class(con) != "SQLiteConnection") {
+    paste0(tableName, '_', tag)
+  } else {
+    tableName
+  }
   df <- if(dbExistsTable(con, fullTableName)) {
     dbReadTable(con, fullTableName)
   } else {
-    stop()
+    stop(fullTableName, " non esiste")
   }
 
+  df <- df[df$tag == tag, ]
+  
   unique(df)
 }
 
@@ -55,12 +61,11 @@ loadFormule <- function(tag, con=NULL) tryCatch({
     tag=character(),
     formula=character(),
     autore=character())
-})
+o})
 
 loadGrafi <- function(con=NULL) {
-  conWasNull <- is.null(con)
-  con <- pgConnect(con=con)
-  if(conWasNull) {
+  con <- pgConnect(con)
+  if(is.null(con)) {
     on.exit(dbDisconnect(con))
   }
   dbReadTable(con, 'grafi')
@@ -68,9 +73,8 @@ loadGrafi <- function(con=NULL) {
 
 
 createNewGrafo <- function(x, tag, con=NULL) {
-  conWasNull <- is.null(con)
   con <- pgConnect(con=con)
-  if(conWasNull) {
+  if(is.null(con)) {
     on.exit(dbDisconnect(con))
   }
 
@@ -81,6 +85,7 @@ createNewGrafo <- function(x, tag, con=NULL) {
   helper <- x@helper
   sql <- getSQLbyKey(helper, "CREATE_NEW_GRAFO", tag=tag,
                      commento=commento, autore=autore)
+  
   dbGetQuery(con, sql)
   x
 }

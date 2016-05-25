@@ -1,4 +1,4 @@
-.updateFunctions <- function(x, con, tag=x@tag) {
+.updateFunctions <- function(x, con, tag=x@tag, msg="") {
   if(interactive()) cat("Update Functions...")
   ## passo la connessione perche' devono avere la stessa transazione
   ## non usare controllo di transazione qui
@@ -25,8 +25,8 @@
       cbind(formula, autore, name, tag)
     }
 
-    if(dbExistsTable(con, paste0("formule_", tag))) {
-      foreach(row = iter(formule, 'row')) %do% {
+    #if(dbExistsTable(con, paste0("formule_", tag))) {
+      foreach(row = iter(formule, 'row'), .errorhandling='pass') %do% {
         formularow <- row[,1]
         namerow <- row[,3]
        
@@ -35,11 +35,12 @@
           tag=tag,
           autore=autore,
           formula=formularow,
-          name=namerow))
+          name=namerow,
+          msg=msg))
       }
-    }
-
-
+    #}
+    
+    
     foreach(name = iter(names.updated)) %do% {
       formula <- expr(x, name, echo=FALSE)
       dbGetQuery(con, getSQLbyKey(
@@ -47,7 +48,8 @@
         formula=formula,
         autore=autore,
         name=name,
-        tag=tag))
+        tag=tag,
+        msg=msg))
     }
   }
   removeFromRedis(x, x@touched)

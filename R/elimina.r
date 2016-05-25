@@ -41,9 +41,9 @@ elimina <- function(tag) {
            getSQLbyKey(helper, "DROP_TABLE", tab=table))
        }
      }
+     dbCommit(con)
   }, error = function(err) {
     dbRollback(con)
     stop(err)
   })
-  dbCommit(con)
 }
