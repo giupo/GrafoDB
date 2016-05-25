@@ -61,7 +61,7 @@ loadFormule <- function(tag, con=NULL) tryCatch({
     tag=character(),
     formula=character(),
     autore=character())
-o})
+})
 
 loadGrafi <- function(con=NULL) {
   con <- pgConnect(con)

@@ -27,9 +27,10 @@
     }
 
     # FIXME: questo dovrebbe essere fatto sempre
-    #if(dbExistsTable(con, paste0("dati_", tag))) {
+    if(dbExistsTable(con, paste0("dati_", tag)) ||
+         class(con) == "SQLiteConnection") {
     
-      foreach(row = iter(dati, 'row'), .errorhandling='pass') %do% {
+      foreach(row = iter(dati, 'row')) %do% {
         name <- row$name
         anno <- row$anno
         periodo <- row$periodo
@@ -49,7 +50,7 @@
 
         dbGetQuery(con, sql1)
       }
-    #}
+    }
     
     foreach(row = iter(dati, 'row')) %do% {
       name <- row$name

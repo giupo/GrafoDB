@@ -25,8 +25,9 @@
       cbind(formula, autore, name, tag)
     }
 
-    #if(dbExistsTable(con, paste0("formule_", tag))) {
-      foreach(row = iter(formule, 'row'), .errorhandling='pass') %do% {
+    if(dbExistsTable(con, paste0("formule_", tag)) ||
+         class(con) == "SQLiteConnection") {
+      foreach(row = iter(formule, 'row')) %do% {
         formularow <- row[,1]
         namerow <- row[,3]
        
@@ -38,7 +39,7 @@
           name=namerow,
           msg=msg))
       }
-    #}
+    }
     
     
     foreach(name = iter(names.updated)) %do% {
