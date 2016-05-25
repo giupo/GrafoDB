@@ -1,6 +1,7 @@
 context("Cancellazione serie")
 
 setup <- function(tag) {
+  options(SQLHelperType="SQLite")
   g <- GrafoDB(tag)
   g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
   g["C"] <- function(A, B) {

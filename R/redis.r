@@ -8,9 +8,9 @@ removeFromRedis <- function(x, nomi) {
   tag <- x@tag
   settings <- dbSettings()
   tryCatch({
-    redisConnect(
+    suppressWarnings(redisConnect(
       host = settings$Redis$host,
-      port = as.integer(settings$Redis$port))
+      port = as.integer(settings$Redis$port)))
     
     for(name in nomi) {
       key <- redisMakeKey(name, tag, 'data')
@@ -26,8 +26,8 @@ sendCopyMetadati <- function(sourceTag, destTag) {
   msg = paste(sourceTag, destTag, sep="|")
   settings <- dbSettings()
   tryCatch({
-    redisConnect(host = settings$Redis$host,
-                 port = as.integer(settings$Redis$port))
+      suppressWarnings(redisConnect(host = settings$Redis$host,
+                 port = as.integer(settings$Redis$port)))
     redisLPush('grafo-copymetadati', charToRaw(msg))
     redisClose()
   })
