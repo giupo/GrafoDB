@@ -57,4 +57,4 @@ deps-dist:
 deps-jsoncpp:
 	cd ext/jsoncpp && mkdir -p build
 	cd ext/jsoncpp/build && cmake ..
-	cd ext/jsoncpp/build && make -j `nproc`
+	cd ext/jsoncpp/build && make jsoncpp_lib_static

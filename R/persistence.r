@@ -75,7 +75,6 @@
 #' @usage .createGraph(g, tag)
 #' @importFrom foreach foreach %do%
 #' @importFrom rutils whoami
-#' @importFrom RPostgreSQL2 dbBegin
 #' @importFrom DBI dbSendQuery dbRollback
 
 .createGraph <- function(x, tag, con, ...) {
