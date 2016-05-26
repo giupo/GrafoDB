@@ -14,20 +14,20 @@ test_that("Salvare la medesima serie da due sessioni diverse crea un conflitto",
   g <- setMeta(g, "A", "key", "value")
   g <- setMeta(g, "B", "key", "value")
   g <- setMeta(g, "C", "key", "value1")
-  saveGraph(g, "test1")
+  saveGraph(g, "test1", msg="test")
 
   g1 <- GrafoDB("test1")
   old_timestamp <- g1@timestamp
   g2 <- GrafoDB("test1")
   g1["A"] <- newA1 <- TSERIES(rep(1,10), START=c(1990,1), FREQ=4)
 
-  g1 <- saveGraph(g1)
+  g1 <- saveGraph(g1, msg="test")
 
   expect_true(g1@timestamp > old_timestamp)
   expect_true(all(g1[["A"]] == newA1))
   
   g2["A"] <- newA2 <- TSERIES(rep(0,10), START=c(1990,1), FREQ=4)
-  expect_warning(saveGraph(g2), "Ci sono conflitti")
+  expect_warning(saveGraph(g2, msg="test"), "Ci sono conflitti")
   expect_true(hasConflicts(g1))
   expect_true(hasConflicts(g2))
 
@@ -51,7 +51,7 @@ test_that("Salvare lo stesso grafo con interventi su serie distinte non crea con
   g <- setMeta(g, "A", "key", "value")
   g <- setMeta(g, "B", "key", "value")
   g <- setMeta(g, "C", "key", "value1")
-  saveGraph(g, "test1")
+  saveGraph(g, "test1", msg="test")
 
   g1 <- GrafoDB("test1")
   g2 <- GrafoDB("test1")
@@ -59,8 +59,8 @@ test_that("Salvare lo stesso grafo con interventi su serie distinte non crea con
   newB <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
   g1["A"] <- newA
   g2["B"] <- newB
-  saveGraph(g1, "test1")
-  saveGraph(g2, "test1")
+  saveGraph(g1, "test1", msg="test")
+  saveGraph(g2, "test1", msg="test")
 
   g <- GrafoDB("test1")
   expect_true(all(g[["A"]] == newA))
@@ -78,7 +78,7 @@ test_that("Salvare lo stesso grafo con formula aggiunta", {
     C = A + B    
   }
 
-  saveGraph(g, "test1")
+  saveGraph(g, "test1", msg="test")
   g1 <- GrafoDB("test1")
   g2 <- GrafoDB("test1")
 
@@ -90,8 +90,8 @@ test_that("Salvare lo stesso grafo con formula aggiunta", {
     E = A - C
   }
 
-  saveGraph(g1)
-  saveGraph(g2)
+  saveGraph(g1, msg="test")
+  saveGraph(g2, msg="test")
   
   g <- GrafoDB("test1")
 
@@ -110,7 +110,7 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   g["C"] <- function(A,B) {
     C = A + B    
   }
-  saveGraph(g, "test1")
+  saveGraph(g, "test1", msg="test")
   
   g1 <- GrafoDB("test1")
   g2 <- GrafoDB("test1")
@@ -123,13 +123,13 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
     D = A - C
   }
 
-  g1 <- saveGraph(g1)
+  g1 <- saveGraph(g1, msg="test")
   Sys.sleep(1)
   ## in seguito alla non necessita' di dare saveGraph(g1), che per usabilita' e' stato aggiunto
   ## il side-effect di cambiare g1 nel env del parent.frame, il seguente warning non uscira' mai
   ## expect_warning(saveGraph(g2), "Ci sono conflitti sugli archi")
   
-  expect_warning(saveGraph(g2), "Ci sono conflitti")
+  expect_warning(saveGraph(g2, msg="test"), "Ci sono conflitti")
 
   g <- GrafoDB("test1")
   expect_true(hasConflicts(g))  
@@ -149,7 +149,7 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
     D = 2 * C
   }
   
-  g <- saveGraph(g, "test1")
+  g <- saveGraph(g, "test1", msg="test")
   
   g1 <- GrafoDB("test1")
   g2 <- GrafoDB("test1")
