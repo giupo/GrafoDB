@@ -33,9 +33,10 @@ setMethod(
     .Object@sqlContainer <- ini_parse(
       file.path(system.file(package="GrafoDB", mustWork=T),
                 "ini/sql.ini"))[[.Object@type]]
-    
+
     .Object
   })
+
 
 .getSQLbyKey <- function(x, .key, ...) {
   if(! .key %in% names(x@sqlContainer)) {

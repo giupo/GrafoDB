@@ -122,8 +122,12 @@ dbSettings <- function(flush=FALSE) {
       file.path(system.file(package="GrafoDB"), "ini/GrafoDB.ini"))
     options(dbSettings=settings)
   }
+  env <- getenv()
+  options(SQLHelperType=settings[[paste0("ConnectionInfo_", env)]]$driver)
+  
   settings
 }
+
 
 getenv <- function() {
   Sys.getenv("GRAFODB_ENV", "prod")
@@ -178,8 +182,6 @@ initdb <- function(con) {
   
   settings <- settings[[paste0("ConnectionInfo_", env)]]  
   drv <- dbDriver(settings$driver)
-  
-  options(SQLHelperType=settings$driver)
   
   if(settings$driver == "SQLite") {
     con <- dbConnect(drv, dbname=settings$dbname)

@@ -1,4 +1,5 @@
 context("Basic Operations")
+dbSettings(T)
 
 test_that("Posso istanziare un GrafoDB", {
   g <- GrafoDB("test")
