@@ -47,7 +47,10 @@
     removeFromRedis(x, x@touched)
     dbCommit(con)
   }, error=function(err) {
-    dbRollback(con)
+      tryCatch(dbRollback(con),
+               error = function(err2) {
+                   stop(err2, "Root: ", err)
+               })
     stop(err)
   })
   x

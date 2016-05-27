@@ -15,6 +15,7 @@ setup <- function(tag) {
   g
 }
 
+
 test_that("Salvare una serie non crea un conflitto", {
   g <- setup("test")
   saveGraph(g, "test1", msg="test")
@@ -25,7 +26,7 @@ test_that("Salvare una serie non crea un conflitto", {
   expect_equal(g1@timestamp, g2@timestamp)
   
   g1["A"] <- newA1 <- TSERIES(rep(1,10), START=c(1990,1), FREQ=4)
-  Sys.sleep(.5)
+  #Sys.sleep(.5)
   g1 <- saveGraph(g1, msg="test")
 
   expect_true(g1@timestamp != g2@timestamp)
@@ -46,7 +47,7 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
   g1["A"] <- newA1 <- TSERIES(rep(0,10), START=c(1990,1), FREQ=4)
   g2["A"] <- newA2 <- TSERIES(rep(1,10), START=c(1990,1), FREQ=4)
   saveGraph(g1, msg="test")
-  Sys.sleep(2)
+  # Sys.sleep(2)
   expect_warning(saveGraph(g2, msg="test"), "Ci sono conflitti")
 
   ## sia g1 che g2, in quanto "test1" devono riportare dei conflitti
@@ -127,7 +128,7 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   }
 
   g1 <- saveGraph(g1, msg="test")
-  Sys.sleep(.5)
+  # Sys.sleep(.5)
   ## in seguito alla non necessita' di dare saveGraph(g1), che per usabilita' e' stato aggiunto
   ## il side-effect di cambiare g1 nel env del parent.frame, il seguente warning non uscira' mai
   ## expect_warning(saveGraph(g2), "Ci sono conflitti sugli archi")
@@ -160,7 +161,7 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
     C = A*2
   }
   g1 <- saveGraph(g1)
-  Sys.sleep(1)
+  # Sys.sleep(1)
   expect_warning(saveGraph(g2))
   conflicts <- getConflicts(g1)
   lista_nomi <- as.character(conflicts$name)

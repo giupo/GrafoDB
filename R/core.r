@@ -20,6 +20,7 @@
 #' @exportMethod getMeta
 #' @export
 
+
 setGeneric(
   "getMeta",
   function(x, serie, metadato) {
