@@ -74,7 +74,8 @@
       from <- row$partenza
       to <- row$arrivo
       dbGetQuery(con, getSQLbyKey(
-        helper, "INSERT_ARCHI", tag=tag, from=from, to=to, autore=autore))
+        helper, "INSERT_ARCHI", tag=tag, from=from, to=to,
+        autore=autore, last_updated=R.utils::System$currentTimeMillis()))
     }
   }
   

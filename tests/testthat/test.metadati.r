@@ -1,6 +1,6 @@
-context("metadati")
+context("Metadati")
 
-
+dbSettings(TRUE)
 elimina("test")
 
 setup <- function(tag) {

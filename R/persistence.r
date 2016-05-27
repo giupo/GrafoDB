@@ -54,6 +54,7 @@
 }
 
 #' @include update_archi.r update_data.r update_functions.r
+#' @importFrom R.utils System
 
 .updateGraph <- function(x, tag=x@tag, con=NULL, msg="") {
   helper <- x@helper
@@ -62,7 +63,9 @@
   .updateData(x, con=con, tag=tag, msg=msg)
   .updateFunctions(x, con=con, tag=tag, msg=msg)
   .updateArchi(x, con=con, tag=tag)
-  dbGetQuery(con, getSQLbyKey(helper, "UPDATE_GRAFO_LAST_UPDATED", tag=tag)) 
+  dbGetQuery(con, getSQLbyKey(
+    helper, "UPDATE_GRAFO_LAST_UPDATED",
+    tag=tag, last_updated=R.utils::System$currentTimeMillis())) 
 }
 
 #' crea ex-novo un istanza di grafo nel databae
@@ -76,15 +79,20 @@
 #' @importFrom foreach foreach %do%
 #' @importFrom rutils whoami
 #' @importFrom DBI dbSendQuery dbRollback
+#' @importFrom R.utils System
 
 .createGraph <- function(x, tag, con, ...) {
   param_list <- list(...)
-  commento <- if(interactive()) {
-    readline(prompt="Inserisci un commento/nota per: ")
+  commento <- if ("msg" %in% names(param_list)) {
+    param_list[["msg"]]
   } else {
-    paste0("Rilascio per ", tag)
+     if(interactive()) {
+       readline(prompt="Inserisci un commento/nota per: ")
+     } else {
+       paste0("Rilascio per ", tag)
+     }
   }
-  
+    
   autore <- whoami()
   helper <- x@helper
   
@@ -105,7 +113,8 @@
         periodo=periodo,
         freq=freq,
         dati=dati,
-        autore=autore))
+        autore=autore,
+        last_updated=R.utils::System$currentTimeMillis()))
     }
   } else {
     stop("Non ci sono dati da salvare.")
@@ -122,7 +131,8 @@
         tag=tag,
         partenza=partenza,
         arrivo=arrivo,
-        autore=autore))
+        autore=autore,
+        last_updated=R.utils::System$currentTimeMillis()))
     }
   }
   
@@ -134,7 +144,8 @@
         tag=tag,
         name=name,
         formula=formula,
-        autore=autore)) 
+        autore=autore,
+        last_updated=R.utils::System$currentTimeMillis())) 
     }
   }
   
@@ -142,7 +153,8 @@
     helper, "INSERT_GRAFI", 
     tag=tag,
     commento=commento,
-    autore=autore))
+    autore=autore,
+    last_updated=R.utils::System$currentTimeMillis()))
 }
 
 

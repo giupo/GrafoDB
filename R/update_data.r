@@ -1,5 +1,5 @@
 #' @include redis.r conflicts.r
-
+#' @importFrom R.utils System
 .updateData <- function(x, con, tag=x@tag, msg="") {
   if(interactive()) cat("Update Data...")
   data <- x@data
@@ -46,7 +46,8 @@
           autore=autore,
           name=name,
           tag=tag,
-          msg=msg)
+          msg=msg,
+          last_updated=R.utils::System$currentTimeMillis())
 
         dbGetQuery(con, sql1)
       }
@@ -68,7 +69,8 @@
         autore=autore,
         name=name,
         tag=tag,
-        msg=msg)
+        msg=msg,
+        last_updated=R.utils::System$currentTimeMillis())
       dbGetQuery(con, sql2)
     }
   }

@@ -12,6 +12,7 @@
 #' @importFrom igraph graph.data.frame graph.empty vertex
 #' @importFrom stringr str_match
 #' @importFrom hash hash
+#' @importFrom R.utils System
 #' @include db.r persistence_utils.r
 
 .init <- function(.Object, tag="cf10") {
@@ -59,7 +60,7 @@
   dftag <- df[df$tag == tag,]
   if(nrow(dftag)) {
     ## il grafo esiste nel DB
-    .Object@timestamp <- as.POSIXct(dftag$last_updated)
+    .Object@timestamp <- dftag$last_updated
     if(interactive()) {
       message(dftag$comment)
     }

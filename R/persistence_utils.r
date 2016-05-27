@@ -72,6 +72,7 @@ loadGrafi <- function(con=NULL) {
 }
 
 
+#' @importFrom R.utils System
 createNewGrafo <- function(x, tag, con=NULL) {
   con <- pgConnect(con=con)
   if(is.null(con)) {
@@ -81,10 +82,11 @@ createNewGrafo <- function(x, tag, con=NULL) {
   commento <- paste0('Grafo per ', tag)
   autore <- whoami()
   # FIXME: Devo usare i timestamp di R o del DBMS?
-  x@timestamp <- Sys.time()
+  x@timestamp <- R.utils::System$currentTimeMillis()
   helper <- x@helper
   sql <- getSQLbyKey(helper, "CREATE_NEW_GRAFO", tag=tag,
-                     commento=commento, autore=autore)
+                     commento=commento, autore=autore,
+                     last_updated=R.utils::System$currentTimeMillis())
   
   dbGetQuery(con, sql)
   x

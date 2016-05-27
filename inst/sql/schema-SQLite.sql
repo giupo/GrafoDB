@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS archi (
     partenza character varying(256),
     arrivo character varying(256),
     tag character varying(256),
-    last_updated datetime,
+    last_updated integer,
     autore character varying(256) NOT NULL
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS conflitti (
     freq smallint,
     dati text,
     autore character varying(256) NOT NULL,
-    date datetime NOT NULL,
+    date integer NOT NULL,
     formula text
 );
 
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS dati (
     freq smallint,
     dati text,
     tag character varying(256) NOT NULL,
-    last_updated datetime  NOT NULL,
+    last_updated integer NOT NULL,
     autore character varying(256) NOT NULL,
     stato smallint DEFAULT 0 NOT NULL,
     notes text,
@@ -63,10 +63,10 @@ CREATE TABLE IF NOT EXISTS elaborazioni (
 
 CREATE TABLE IF NOT EXISTS formule (
     id integer primary key autoincrement,
-    name character varying(256),
-    tag character varying(256),
-    formula text,
-    last_updated datetime,
+    name character varying(256) NOT NULL,
+    tag character varying(256) NOT NULL,
+    formula text NOT NULL,
+    last_updated integer NOT NULL,
     autore character varying(256) NOT NULL,
     commenti text
 );
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS grafi (
     id integer primary key autoincrement,
     tag character varying(256) NOT NULL,
     commento text,
-    last_updated datetime NOT NULL,
+    last_updated integer NOT NULL,
     autore character varying(256) NOT NULL
 );
 
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS history (
     dati text NOT NULL,
     formula text,
     archi_entranti text,
-    last_updated datetime  NOT NULL,
+    last_updated integer NOT NULL,
     autore character varying(255) NOT NULL
 );
 
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS metadati (
     key character varying(256),
     value text,
     tag character varying(256),
-    last_updated datetime,
+    last_updated integer,
     autore character varying(256) NOT NULL
 );
 

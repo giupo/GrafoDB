@@ -187,7 +187,7 @@ GrafoDB <- setClass(
     data = "hash",
     functions = "hash",
     ordinal = "numeric",
-    timestamp = "POSIXct",
+    timestamp = "numeric",
     touched = "character",
     edges = "hash",
     dbdati = "data.frame",

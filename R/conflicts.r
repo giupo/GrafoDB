@@ -354,7 +354,8 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
         periodo=prd,
         freq=freq,
         dati=dati,
-        autore=autore))
+        autore=autore,
+        last_updated=R.utils::System$currentTimeMillis()))
     }, error = function(cond) {
       dbRollback(con)
       stop(cond)
@@ -383,7 +384,8 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
       formula=task,
       autore=autore,
       name=name,
-      tag=tag)
+      tag=tag,
+      last_updated=R.utils::System$currentTimeMillis())
     
     print(sql1)
     df <- dbGetQuery(con, sql1)
@@ -394,7 +396,8 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
       formula=task,
       autore=autore,
       name=name,
-      tag=tag)
+      tag=tag,
+      last_updated=R.utils::System$currentTimeMillis())
     
     print(sql2)
     df <- dbGetQuery(con, sql2)

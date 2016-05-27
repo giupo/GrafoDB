@@ -1,4 +1,5 @@
 #' @include redis.r sqlhelper.r
+#' @importFrom R.utils System
 .copyGraph <- function(from, to, con, ...) {
   param_list <- list(...)
   msg <- if('msg' %in% names(param_list)) {
@@ -25,6 +26,7 @@
   sendCopyMetadati(from, to)
   
   dbGetQuery(con, getSQLbyKey(
-    helper, "INSERT_GRAFI", tag=to, commento=commento, autore=autore
+    helper, "INSERT_GRAFI", tag=to, commento=commento, autore=autore,
+    last_updated=R.utils::System$currentTimeMillis()
   ))
 }

@@ -37,7 +37,8 @@
           autore=autore,
           formula=formularow,
           name=namerow,
-          msg=msg))
+          msg=msg,
+          last_updated=R.utils::System$currentTimeMillis()))
       }
     }
     
@@ -50,7 +51,8 @@
         autore=autore,
         name=name,
         tag=tag,
-        msg=msg))
+        msg=msg,
+        last_updated=R.utils::System$currentTimeMillis()))
     }
   }
   removeFromRedis(x, x@touched)

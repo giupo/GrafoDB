@@ -28,7 +28,8 @@ Imports:
     iterators,
     gdata,
     XML,
-    rredis
+    rredis,
+    R.utils
 Suggests:
     testthat
 LinkingTo: Rcpp
