@@ -193,9 +193,7 @@ GrafoDB <- setClass(
     edges = "hash",
     dbdati = "data.frame",
     dbformule = "data.frame",
-    helper = "SQLHelper")
-  # contains = "DBDataset"
-)
+    helper = "SQLHelper"))
 
 #' costruttore per la classe GrafoDB
 #'
@@ -222,14 +220,14 @@ setMethod(
 
 setGeneric(
   "navigate",
-  function(object, nodes=NULL, order=1L, mode='out', plot=FALSE) { 
+  function(object, nodes=NULL, order=1L, mode="out", plot=FALSE) {
     standardGeneric("navigate")
   })
 
 setMethod(
   "navigate",
   signature("GrafoDB", "ANY", "ANY", "ANY", "ANY"),
-  function(object, nodes=NULL, order=1L, mode='out', plot=FALSE) {    
+  function(object, nodes=NULL, order=1L, mode="out", plot=FALSE) {
     .navigate(object, nodes=nodes, order=order, mode=mode, plot=plot)
   })
 
@@ -246,11 +244,11 @@ setMethod(
     if(length(data)) {
       msg <- paste0(msg, ", ", length(data), " data changes")
     }
-    
+
     if(length(functions)) {
       msg <- paste0(msg, ", ", length(functions), " function changes")
     }
-    
+
     message(msg)
   })
 
@@ -324,7 +322,7 @@ setMethod(
           stop(nome, ": ", err, " ", class(e1), ",", class(e2))
         })
     }
-    
+
     names(data) <- common
     result@data <- hash(data)
     result
@@ -431,7 +429,7 @@ setMethod(
 setMethod(
   "describe",
   signature("GrafoDB", "ANY", "ANY", "ANY", "ANY"),
-  function(object, nodes=NULL, order=1L, mode='out', plot=FALSE) {
+  function(object, nodes=NULL, order=1L, mode="out", plot=FALSE) {
     navigate(object, nodes, order, mode, plot)
   })
 
@@ -717,6 +715,7 @@ setMethod(
   function (x)  {
     .leaves(x)
   })
+
 
 #' @importFrom stringr str_split
 setMethod(
