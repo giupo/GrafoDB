@@ -56,6 +56,6 @@
     }
   }
   removeFromRedis(x, x@touched)
-  # doneWithCluster()
+  
   if(interactive()) cat("Done.\n")
 }

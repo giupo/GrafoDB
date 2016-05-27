@@ -2,7 +2,8 @@ Package: GrafoDB
 Title: What the package does (one line)
 Version: 1.7.0
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
-Description: Adds DB backend to Grafo
+Description: Complete rewrite of the grafo package: Adds DB backend to Grafo,
+    async operations via Redis and support for microservices authentication
 Depends:
     R (>= 3.0.3),
     grafo,
@@ -29,7 +30,9 @@ Imports:
     gdata,
     XML,
     rredis,
-    R.utils
+    R.utils,
+    doMC,
+    RSQLite
 Suggests:
     testthat
 LinkingTo: Rcpp

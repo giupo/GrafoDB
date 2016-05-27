@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
 library(testthat)
+Sys.setenv(GRAFODB_ENV="test")
+options(SQLHelperType="SQLite")
 
 #' Test reporter: summary of errors in jUnit XML format.
 #'

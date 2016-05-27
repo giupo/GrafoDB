@@ -296,7 +296,6 @@ setMethod(
 
 #' Esegue la differenza tra due grafi
 #'
-#' @importFrom rutils Cluster
 #' @importFrom doMC registerDoMC
 #' @importFrom foreach foreach %dopar%
 #' @importFrom iterators iter

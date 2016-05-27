@@ -219,25 +219,10 @@
     updateProgressBar(pb, i, "Starting...")
   }  
   
-  # cl <- initCluster()
+  
   registerDoMC(detectCores())
   is.multi.process <- TRUE # !is.null(cl) && !debug 
   
-#  if(is.multi.process) {
-#    if(wasWorking()) {
-#      stopCluster(cl)
-#      cl <- initCluster()
-#    } else {
-#      clusterStartWorking()
-#    }
-#    clusterExport(
-#      cl, ".evaluateSingle",
-#      envir=environment())
-#    if(is.interactive) updateProgressBar(pb, i, "Cluster OK")
-#  } else {
-#    if(is.interactive) updateProgressBar(pb, i, "No Cluster")
-#  }
-
   if(is.interactive) updateProgressBar(pb, i, "Starting...")
   
   sources_id <- V(network)[degree(network, mode="in") == 0]
@@ -262,27 +247,16 @@
     sources <- setdiff(sources, sprimitive)
     
     if(length(sources)) {
-      if(!is.multi.process) {
-        evaluated <- foreach(name=sources, .combine=c) %do% {
-          i <- i + 1
-          if(is.interactive) {
-            updateProgressBar(pb, i, name)
-          }
-          proxy(name, object)
-        }
-      } else {
         evaluated <- foreach(name=sources, .combine=c) %dopar% {
-          proxy(name, object)
+            proxy(name, object)
         }
         i <- i + length(sources)
         if(is.interactive) {
-          updateProgressBar(pb, i, last(sources))
+            updateProgressBar(pb, i, last(sources))
         }
-      }
+     
       
       names(evaluated) <- sources
-    
-      ## evaluated <- Filter(function(x) length(x) != 0, evaluated)
     
       if(length(evaluated) == 1) {
         data[[sources]] <- evaluated[[sources]]

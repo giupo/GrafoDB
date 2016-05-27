@@ -244,12 +244,13 @@ getOuterDataNames <- function(x, con=NULL) {
   if(conWasNull) {
     on.exit(dbDisconnect(con))
   }
-  
+  autore <- whoami()
   tag <- x@tag
   timestamp <- x@timestamp
   helper <- x@helper
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_OUTER_DATA_NAMES", tag=tag, last_updated=timestamp))
+    helper, "GET_OUTER_DATA_NAMES", tag=tag, last_updated=timestamp,
+    autore=autore))
   as.character(df$name)
 }
 
@@ -259,13 +260,15 @@ getOuterFormulaNames <- function(x, con=NULL) {
   if(conWasNull) {
     on.exit(dbDisconnect(con))
   }
-  
+
+  autore <- whoami()
   tag <- x@tag
   timestamp <- x@timestamp
   helper <- x@helper
 
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_OUTER_FORMULA_NAMES", tag=tag, last_updated=timestamp))
+    helper, "GET_OUTER_FORMULA_NAMES", tag=tag, last_updated=timestamp,
+    autore=autore))
   as.character(df$name)
 }
 
