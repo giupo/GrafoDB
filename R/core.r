@@ -239,8 +239,9 @@ setMethod(
     functions <- object@functions
     tag <- object@tag
     num <- length(names(object))
+    timestamp <- object@timestamp
     msg <- paste0("GrafoDB [",tag,"] with ", num, " series, ",
-                  as.character(object@timestamp))
+                  as.character(as.POSIXct(timestamp/1000, origin="1970/01/01")))
     if(length(data)) {
       msg <- paste0(msg, ", ", length(data), " data changes")
     }
