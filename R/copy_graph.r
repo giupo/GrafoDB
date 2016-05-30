@@ -27,6 +27,5 @@
   
   dbGetQuery(con, getSQLbyKey(
     helper, "INSERT_GRAFI", tag=to, commento=commento, autore=autore,
-    last_updated=R.utils::System$currentTimeMillis()
-  ))
+    last_updated=round(R.utils::System$currentTimeMillis())))
 }

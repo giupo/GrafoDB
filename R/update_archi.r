@@ -27,7 +27,7 @@
     ## cerco archi aggiunti di recente.
     dbGetQuery(con, getSQLbyKey(
       helper, "ARCHI_TAG_LAST_UPDATED",
-      tag=tag, last_updated=as.numeric(timestamp)))
+      tag=tag, last_updated=round(as.numeric(timestamp))))
   } else {
     data.frame(partenza=character(0), arrivo=character(0))
   }
@@ -75,7 +75,7 @@
       to <- row$arrivo
       dbGetQuery(con, getSQLbyKey(
         helper, "INSERT_ARCHI", tag=tag, from=from, to=to,
-        autore=autore, last_updated=R.utils::System$currentTimeMillis()))
+        autore=autore, last_updated=round(R.utils::System$currentTimeMillis())))
     }
   }
   

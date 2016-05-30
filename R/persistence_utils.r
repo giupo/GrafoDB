@@ -86,7 +86,7 @@ createNewGrafo <- function(x, tag, con=NULL) {
   helper <- x@helper
   sql <- getSQLbyKey(helper, "CREATE_NEW_GRAFO", tag=tag,
                      commento=commento, autore=autore,
-                     last_updated=R.utils::System$currentTimeMillis())
+                     last_updated=round(R.utils::System$currentTimeMillis()))
   
   dbGetQuery(con, sql)
   x

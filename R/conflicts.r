@@ -233,7 +233,7 @@ getChangedSeries <- function(x, con=NULL) {
   helper <- x@helper
   timestamp <- x@timestamp
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_CHANGED_SERIES", tag=tag, last_updated=timestamp))
+    helper, "GET_CHANGED_SERIES", tag=tag, last_updated=round(timestamp)))
   nomi <- as.character(df$name)
   unique(nomi)
 }
@@ -249,7 +249,7 @@ getOuterDataNames <- function(x, con=NULL) {
   timestamp <- x@timestamp
   helper <- x@helper
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_OUTER_DATA_NAMES", tag=tag, last_updated=timestamp,
+    helper, "GET_OUTER_DATA_NAMES", tag=tag, last_updated=round(timestamp),
     autore=autore))
   as.character(df$name)
 }
@@ -267,7 +267,7 @@ getOuterFormulaNames <- function(x, con=NULL) {
   helper <- x@helper
 
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_OUTER_FORMULA_NAMES", tag=tag, last_updated=timestamp,
+    helper, "GET_OUTER_FORMULA_NAMES", tag=tag, last_updated=round(timestamp),
     autore=autore))
   as.character(df$name)
 }
@@ -358,7 +358,7 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
         freq=freq,
         dati=dati,
         autore=autore,
-        last_updated=R.utils::System$currentTimeMillis()))
+        last_updated=round(R.utils::System$currentTimeMillis())))
     }, error = function(cond) {
       dbRollback(con)
       stop(cond)
@@ -388,7 +388,7 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
       autore=autore,
       name=name,
       tag=tag,
-      last_updated=R.utils::System$currentTimeMillis())
+      last_updated=round(R.utils::System$currentTimeMillis()))
     
     print(sql1)
     df <- dbGetQuery(con, sql1)
@@ -400,7 +400,7 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
       autore=autore,
       name=name,
       tag=tag,
-      last_updated=R.utils::System$currentTimeMillis())
+      last_updated=round(R.utils::System$currentTimeMillis()))
     
     print(sql2)
     df <- dbGetQuery(con, sql2)

@@ -38,7 +38,7 @@
           formula=formularow,
           name=namerow,
           msg=msg,
-          last_updated=R.utils::System$currentTimeMillis()))
+          last_updated=round(R.utils::System$currentTimeMillis())))
       }
     }
     
@@ -52,7 +52,7 @@
         name=name,
         tag=tag,
         msg=msg,
-        last_updated=R.utils::System$currentTimeMillis()))
+        last_updated=round(R.utils::System$currentTimeMillis())))
     }
   }
   removeFromRedis(x, x@touched)

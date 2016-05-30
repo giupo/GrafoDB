@@ -68,7 +68,7 @@
   .updateArchi(x, con=con, tag=tag)
   dbGetQuery(con, getSQLbyKey(
     helper, "UPDATE_GRAFO_LAST_UPDATED",
-    tag=tag, last_updated=R.utils::System$currentTimeMillis())) 
+    tag=tag, last_updated=round(R.utils::System$currentTimeMillis())))
 }
 
 #' crea ex-novo un istanza di grafo nel databae
@@ -117,7 +117,7 @@
         freq=freq,
         dati=dati,
         autore=autore,
-        last_updated=R.utils::System$currentTimeMillis()))
+        last_updated=round(R.utils::System$currentTimeMillis())))
     }
   } else {
     stop("Non ci sono dati da salvare.")
@@ -135,7 +135,7 @@
         partenza=partenza,
         arrivo=arrivo,
         autore=autore,
-        last_updated=R.utils::System$currentTimeMillis()))
+        last_updated=round(R.utils::System$currentTimeMillis())))
     }
   }
   
@@ -148,7 +148,7 @@
         name=name,
         formula=formula,
         autore=autore,
-        last_updated=R.utils::System$currentTimeMillis())) 
+        last_updated=round(R.utils::System$currentTimeMillis())))
     }
   }
   
@@ -157,7 +157,7 @@
     tag=tag,
     commento=commento,
     autore=autore,
-    last_updated=R.utils::System$currentTimeMillis()))
+    last_updated=round(R.utils::System$currentTimeMillis())))
 }
 
 
