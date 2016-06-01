@@ -21,12 +21,15 @@ loadTable <- function(tableName, tag, con=NULL) {
   } else {
     tableName
   }
+  
   df <- if(dbExistsTable(con, fullTableName)) {
+    ## FIXME: not really smart to load the whole table in memory when you need just a tag
     dbReadTable(con, fullTableName)
   } else {
     stop(fullTableName, " non esiste")
   }
 
+  # filter out in case of sqlite
   df <- df[df$tag == tag, ]
   
   unique(df)
@@ -73,22 +76,31 @@ loadGrafi <- function(con=NULL) {
 
 
 #' @importFrom R.utils System
-createNewGrafo <- function(x, tag, con=NULL) {
-  con <- pgConnect(con=con)
+createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per', tag)) {
+  autore <- whoami()
+  # FIXME: Devo usare i timestamp di R o del DBMS?
+  x@timestamp <- round(R.utils::System$currentTimeMillis())
+  helper <- x@helper
+  sql <- getSQLbyKey(
+    helper, "CREATE_NEW_GRAFO", tag=tag,
+    commento=msg, autore=autore,
+    last_updated=x@timestamp)
+  
   if(is.null(con)) {
     on.exit(dbDisconnect(con))
   }
-
-  commento <- paste0('Grafo per ', tag)
-  autore <- whoami()
-  # FIXME: Devo usare i timestamp di R o del DBMS?
-  x@timestamp <- R.utils::System$currentTimeMillis()
-  helper <- x@helper
-  sql <- getSQLbyKey(helper, "CREATE_NEW_GRAFO", tag=tag,
-                     commento=commento, autore=autore,
-                     last_updated=round(R.utils::System$currentTimeMillis()))
+  con <- pgConnect(con=con)
   
-  dbGetQuery(con, sql)
+  tryCatch({
+    dbBegin(con)
+    dbGetQuery(con, sql)
+    dbCommit(con)
+  }, error = function(cond) {
+    tryCatch(dbRollback(con), error= function(cx) {
+      stop(cx, ", Root: ", cond)
+    })
+    stop(cond)
+  })
   x
 }
 

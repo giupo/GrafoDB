@@ -233,7 +233,8 @@ getChangedSeries <- function(x, con=NULL) {
   helper <- x@helper
   timestamp <- x@timestamp
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_CHANGED_SERIES", tag=tag, last_updated=round(timestamp)))
+    helper, "GET_CHANGED_SERIES", tag=tag,
+    last_updated=timestamp))
   nomi <- as.character(df$name)
   unique(nomi)
 }
@@ -249,7 +250,7 @@ getOuterDataNames <- function(x, con=NULL) {
   timestamp <- x@timestamp
   helper <- x@helper
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_OUTER_DATA_NAMES", tag=tag, last_updated=round(timestamp),
+    helper, "GET_OUTER_DATA_NAMES", tag=tag, last_updated=timestamp,
     autore=autore))
   as.character(df$name)
 }
@@ -267,7 +268,7 @@ getOuterFormulaNames <- function(x, con=NULL) {
   helper <- x@helper
 
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_OUTER_FORMULA_NAMES", tag=tag, last_updated=round(timestamp),
+    helper, "GET_OUTER_FORMULA_NAMES", tag=tag, last_updated=timestamp,
     autore=autore))
   as.character(df$name)
 }
@@ -339,6 +340,7 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
   tag <- x@tag
   autore <- whoami()
   helper <- x@helper
+  timestamp <- round(R.utils::System$currentTimeMillis())
   dati <- foreach(name = iter(nomi), .combine=rbind) %do% {
 
     tt <- x[[name]]
@@ -358,14 +360,14 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
         freq=freq,
         dati=dati,
         autore=autore,
-        last_updated=round(R.utils::System$currentTimeMillis())))
+        last_updated=timestamp))
     }, error = function(cond) {
-      dbRollback(con)
       stop(cond)
     })
   }
-  warning("Ci sono conflitti sui dati per le serie: ",
-          paste(nomi, collapse=", "))
+  warning(
+    "Ci sono conflitti sui dati per le serie: ",
+    paste(nomi, collapse=", "))
 }
 
 creaConflittoFormule <- function(x, nomi, con=NULL) {
@@ -379,6 +381,7 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
   autore <- whoami()
   tag <- x@tag
   helper <- x@helper
+  timestamp <- round(R.utils::System$currentTimeMillis())
   foreach (name = iter(nomi)) %do% {
     task <- expr(x, name, echo=FALSE)
     
@@ -388,7 +391,7 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
       autore=autore,
       name=name,
       tag=tag,
-      last_updated=round(R.utils::System$currentTimeMillis()))
+      last_updated=timestamp)
     
     print(sql1)
     df <- dbGetQuery(con, sql1)
@@ -400,15 +403,11 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
       autore=autore,
       name=name,
       tag=tag,
-      last_updated=round(R.utils::System$currentTimeMillis()))
-    
-    print(sql2)
-    df <- dbGetQuery(con, sql2)
-    print(df)
+      last_updated=timestamp)
+    dbGetQuery(con, sql2)
   }
 
   warning(
     "Ci sono conflitti sulle formule per le serie: ",
     paste(nomi, collapse=", "))
-
 }
