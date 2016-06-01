@@ -60,7 +60,7 @@
   dftag <- df[df$tag == tag,]
   if(nrow(dftag)) {
     ## il grafo esiste nel DB
-    .Object@timestamp <- dftag$last_updated
+    .Object@timestamp <- as.numeric(dftag$last_updated)
     if(interactive()) {
       message(dftag$comment)
     }

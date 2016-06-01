@@ -76,7 +76,7 @@ loadGrafi <- function(con=NULL) {
 
 
 #' @importFrom R.utils System
-createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per', tag)) {
+createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
   autore <- whoami()
   # FIXME: Devo usare i timestamp di R o del DBMS?
   x@timestamp <- round(R.utils::System$currentTimeMillis())

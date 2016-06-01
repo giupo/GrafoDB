@@ -24,7 +24,7 @@ test_that("Salvare una serie non crea un conflitto", {
   g2 <- GrafoDB("test1")
 
   expect_equal(g1@timestamp, g2@timestamp)
-  
+
   g1["A"] <- newA1 <- TSERIES(rep(1,10), START=c(1990,1), FREQ=4)
   #Sys.sleep(.5)
   g1 <- saveGraph(g1, msg="test")
