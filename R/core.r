@@ -245,7 +245,6 @@ setMethod(
     if(length(data)) {
       msg <- paste0(msg, ", ", length(data), " data changes")
     }
-
     if(length(functions)) {
       msg <- paste0(msg, ", ", length(functions), " function changes")
     }
