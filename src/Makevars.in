@@ -1,8 +1,8 @@
 ## Use the R_HOME indirection to support installations of multiple R version
 
-ext=@builddir@/../ext
-PKG_CPPFLAGS= -I$(ext)/include
-PKG_LIBS= $(ext)/libs/libjsoncpp.a
+#ext=@builddir@/../ext
+#PKG_CPPFLAGS= -I$(ext)/include
+#PKG_LIBS= $(ext)/libs/libjsoncpp.a
 
 ## As an alternative, one can also add this code in a file 'configure'
 ##

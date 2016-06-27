@@ -9,7 +9,7 @@
 #include <pwd.h>
 #include <unistd.h>
 #include <Rcpp.h>
-#include <json/json.h>
+#include "json/json.h"
 #include <algorithm>
 #include "utils.hpp"
 #include <boost/algorithm/string/replace.hpp>
