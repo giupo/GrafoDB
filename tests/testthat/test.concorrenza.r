@@ -170,3 +170,37 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
 })
 
 for(tag in rilasci("test")$tag) elimina(tag)
+
+test_that("Modificare serie che contribuiscono a creare la stessa serie mantiene coerenza", {
+  g <- setup("test")
+  saveGraph(g)
+
+  A <- TSERIES(c(1,1,1,1), START=c(1990,1), FREQ=4)
+  B <- TSERIES(c(2,2,2,2), START=c(1990,1), FREQ=4)
+  g["A"] <- A
+  g["B"] <- B
+
+  saveGraph(g)
+
+  g1 <- GrafoDB("test")
+  g2 <- GrafoDB("test")
+
+  
+  A2 <- TSERIES(c(2,2,2,2), START=c(1990,1), FREQ=4)
+  g2["A"] <- A2
+  saveGraph(g2)
+  
+  expect_equal(first(g2[["C"]]), 3)
+  expect_true(!first(g2[["C"]]) == 3)
+  expect_equal(first(g2[["C"]]), 4)
+
+  B3 <- TSERIES(c(3,3,3,3), START=c(1990,1), FREQ=4)
+  g1["B"] <- B3
+
+  expect_equal(first(g1[["C"]]), 5)
+  expect_true(!first(g1[["C"]]) == 4)
+
+  
+})
+
+for(tag in rilasci("test")$tag) elimina(tag)
