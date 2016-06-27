@@ -13,7 +13,7 @@ source("lib_mgt.r")
 
 load_all()
 
-for(tag in rilasci("test")$tag) elimina(tag)
+#for(tag in rilasci("test")$tag) elimina(tag)
 
 .praise <- c(
   "You rock!",
@@ -26,28 +26,25 @@ for(tag in rilasci("test")$tag) elimina(tag)
 )
 
 
-GrowlReporter <- setRefClass(
-  "GrowlReporter", contains = "Reporter",
-  fields = list(
-    "failures" = "list",
-    "failed_count" = "integer",
-    "passed_count" = "integer",
-    "success_icon" = "character",
-    "failed_icon" = "character",
-    "show_praise" = "logical"),
-  
-  methods = list(
-    initialize = function(...) {
-      failures <<- list()
-      passed_count <<- 0L
-      failed_count <<- 0L
-      success_icon <<- "http://jetpackweb.com/blog/wp-content/uploads/2009/09/pass.png"
-      failed_icon <<- "http://jetpackweb.com/blog/wp-content/uploads/2009/09/fail.png"
-      
-      show_praise <<- TRUE
-      callSuper(...)
-    },
-
+# GrowlReporter <- setRefClass(
+GrowlReporter <- R6::R6Class(
+  "GrowlReporter",
+  inherit = Reporter,
+  #fields = list(
+   # "failures" = "list",
+   # "failed_count" = "integer",
+   # "passed_count" = "integer",
+   # "success_icon" = "character",
+   # "failed_icon" = "character",
+    #"show_praise"  "logical"),
+  public = list(
+    failures = list(),
+    passed_count = 0L,
+    failed_count = 0L,
+    success_icon = "http://jetpackweb.com/blog/wp-content/uploads/2009/09/pass.png",
+    failed_icon = "http://jetpackweb.com/blog/wp-content/uploads/2009/09/fail.png",
+    show_praise=  TRUE,
+    
     add_result = function(result) {
       if (result$passed) {
         passed_count <<- passed_count + 1L
@@ -94,23 +91,23 @@ GrowlReporter <- setRefClass(
         icon <- failed_icon
         report_text <- paste0(report_text, ", ", failed_count, " failed tests")
       }
-           
+      
       if(failed_count == 0 && passed_count > 10 && show_praise) {
         report_text <- paste0(report_text, ", ", sample(.praise, 1))
       }
-
-      .self$clean()
+      
+      self$clean()
       growl(report_text, icon)
     },
-
+    
     clean = function() {
-      failed_count <<- 0L
-      passed_count <<- 0L
-      failures <<- list()
+      self$failed_count = 0L
+      self$passed_count = 0L
+      self$failures = list()
     }
   )
 )
 
-reporters <- MultiReporter()
-reporters$reporters <- list(SummaryReporter(), GrowlReporter())
-auto_test("R", "tests/testthat/", reporter=reporters)
+#reporters <- MultiReporter$new(SummaryReporter$new(), GrowlReporter$new())
+#reporters$reporters <- list(SummaryReporter(), GrowlReporter())
+auto_test("R", "tests/testthat/") #, reporter=reporters)

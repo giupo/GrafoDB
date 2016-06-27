@@ -10,15 +10,15 @@
 
   ## this is a patch due limitations of R language and
   ## deeeeep limitations of my patience
-  if(length(nomi_padri) > 100) {
-    padri <- list()
-    sliced <- slice(nomi_padri, n=100)
-    foreach(sliced_names = sliced) %do% {
-      padri[sliced_names] <- graph[[sliced_names]]
-    }
-    names(padri) <- nomi_padri
-    padri
-  } else if ( length(nomi_padri) > 1 ) {
+  #if(length(nomi_padri) > 100) {
+   # padri <- list()
+    #sliced <- slice(nomi_padri, n=100)
+    # foreach(nomi=iter(nomi_padri)) %do% {
+  # padri[[sliced_names]] <- graph[[sliced_names]]
+    # }
+  # names(padri) <- nomi_padri
+  #  padri
+  if ( length(nomi_padri) > 1 ) {
     padri <- graph[[nomi_padri]]
   } else if ( length(nomi_padri) == 1 ) {
     padri <- list()

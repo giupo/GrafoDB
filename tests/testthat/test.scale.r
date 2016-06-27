@@ -19,7 +19,6 @@ proxytest <- function(numero) {
   ser(g, "B")  
   elimina("test")
 }
-
 test_that("A single series can have > 100 deps", {
   proxytest(101)
 })

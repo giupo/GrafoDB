@@ -393,10 +393,8 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
       tag=tag,
       last_updated=timestamp)
     
-    print(sql1)
     df <- dbGetQuery(con, sql1)
-    print(df)
-    
+
     sql2 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE2",
       formula=task,
