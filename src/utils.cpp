@@ -11,7 +11,7 @@
 #include <Rcpp.h>
 #include "json/json.h"
 #include <algorithm>
-#include "utils.hpp"
+#include "utils.h"
 #include <boost/algorithm/string/replace.hpp>
 
 using namespace std;

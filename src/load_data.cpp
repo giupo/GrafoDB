@@ -4,7 +4,7 @@
 #include <string>
 #include <sstream>
 
-#include "utils.hpp"
+#include "utils.h"
 
 using namespace Rcpp;
 using namespace std;
