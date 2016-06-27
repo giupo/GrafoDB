@@ -3,6 +3,7 @@
   nrow(getConflicts(x, name=name, con=con)) > 0
 }
 
+
 #' @importFrom DBI dbGetQuery
 #' @importFrom RPostgreSQL dbGetQuery
 #' @include db.r 

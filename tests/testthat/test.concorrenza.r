@@ -128,7 +128,7 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   }
 
   g1 <- saveGraph(g1, msg="test")
-  # Sys.sleep(.5)
+  Sys.sleep(.2)
   ## in seguito alla non necessita' di dare saveGraph(g1), che per usabilita' e' stato aggiunto
   ## il side-effect di cambiare g1 nel env del parent.frame, il seguente warning non uscira' mai
   ## expect_warning(saveGraph(g2), "Ci sono conflitti sugli archi")
