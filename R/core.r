@@ -724,3 +724,12 @@ setMethod(
   function(x, name) {
     x[[unlist(str_split(name, " "))]]
   })
+
+setReplaceMethod(
+  '$', c( x="GrafoDB", value="ANY"),
+  function(x, name, value) {
+    nameObject <- deparse(substitute(x))
+    x <- .subsetting(x, name, value)
+    assign(nameObject, x, envir=parent.frame())
+    invisible(x)
+  })
