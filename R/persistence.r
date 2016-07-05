@@ -9,6 +9,7 @@
 
 # FIXME: #31849
 # https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
+
 .saveGraph <- function(x, tag = x@tag, ...) {
 
   con <- pgConnect()

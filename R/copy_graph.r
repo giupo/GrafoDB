@@ -11,7 +11,10 @@
 
   autore <- whoami()
   params <- cbind(to, autore, from)
-  
+
+  ## copia archi
+  dbGetQuery(con, getSQLbyKey(helper, "COPY_DATI", to=to, from=from))
+
   ## copia archi
   dbGetQuery(con, getSQLbyKey(helper, "COPY_ARCHI", to=to, from=from))
   
