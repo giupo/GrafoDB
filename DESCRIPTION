@@ -48,13 +48,13 @@ Collate:
     'copy_graph.r'
     'persistence.r'
     'functions.r'
-    'rename.r'
-    'metadati.r'
     'ser.r'
+    'rename.r'
+    'navigate.r'
+    'metadati.r'
+    'lookup.r'
     'expr.r'
     'evaluate.r'
-    'lookup.r'
-    'navigate.r'
     'core.r'
     'conflicts.r'
     'edita.r'
@@ -64,5 +64,4 @@ Collate:
     'old_grafo_impl.r'
     'rmNode.r'
     'subsetting.r'
-SystemRequirements: libjsoncpp
 RoxygenNote: 5.0.1
