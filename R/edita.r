@@ -22,7 +22,7 @@
       stop("la serie ", name, " e' una serie primitiva")
     }
   }
-  
+  old_deps <- deps
   old_task <- task
   if(name %in% keys(x@edges)) {
     deps <- x@edges[[name]]
@@ -35,23 +35,32 @@
   txtsrc <- paste(readLines(file), collapse="\n")
   edited <- .declutter_function(txtsrc)
   
-  if(str_trim(edited) == str_trim(old_task)) {
-    return(invisible(x))
-  }
+  #if(str_trim(edited) == str_trim(old_task)) {
+  #  return(invisible(x))
+  #}
   
-  x@functions[name] <- edited
   params <- list(...)
   tryCatch({
     f <- eval(parse(text=txtsrc))
     dep <- names(as.list(formals(f)))
+    if(str_trim(edited) == str_trim(old_task) &&
+         identical(sort(dep), sort(old_deps))) {
+      ## non sono cambiati formula e archi, non faccio niente
+      
+      return(invisible(x))
+    }
+    
+    x@functions[name] <- edited
+
     if(!is.null(dep)) {
       x@edges[[name]] <- dep
     }
-    x[name] = f
+
+    x[name] <- f
+    invisible(x)
   }, error = function(cond) {
     ## la risetto per poterla editare
     x@functions[name] <- edited
     stop(cond)
   })
-  invisible(x)
 }

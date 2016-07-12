@@ -372,4 +372,5 @@ test_that("Posso subsettare con il $ (dollaro)", {
   
 })
 
+
 for(tag in rilasci("test")$tag) elimina(tag)
