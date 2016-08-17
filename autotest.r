@@ -7,7 +7,6 @@ library(rcf)
 library(DBI)
 library(RSQLite)
 library(RPostgreSQL)
-library(RPostgreSQL2)
 library(doMC)
 source("lib_mgt.r")
 
