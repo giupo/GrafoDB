@@ -4,3 +4,5 @@
 .bumpversion.cfg
 src/Makevars$
 Makefile
+^packrat/
+^\.Rprofile$
