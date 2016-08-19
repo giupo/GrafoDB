@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <json/json.h>
+#include "json/json.h"
 #include <Rcpp.h>
 
 using namespace std;
