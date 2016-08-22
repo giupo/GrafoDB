@@ -343,6 +343,11 @@ Source: CRAN
 Version: 1.0.0
 Hash: 77da8f1df873a4b91e5c4a68fe2fb1b6
 
+Package: rJava
+Source: CRAN
+Version: 0.9-8
+Hash: 3e8627a2a5bd45c9bad6112acfc231d9
+
 Package: rcf
 Source: source
 Version: 1.7.17
@@ -455,6 +460,18 @@ Package: withr
 Source: CRAN
 Version: 1.0.2
 Hash: 774eb7be9087cdc24b53b74e5359cfac
+
+Package: xlsx
+Source: CRAN
+Version: 0.5.7
+Hash: 6acda2cf5190bf93d0b24c5a40b564cf
+Requires: rJava, xlsxjars
+
+Package: xlsxjars
+Source: CRAN
+Version: 0.6.1
+Hash: 3902149dad80bcb14fcd88d8c7fd7f3b
+Requires: rJava
 
 Package: xtable
 Source: CRAN
