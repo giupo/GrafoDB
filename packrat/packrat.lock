@@ -13,12 +13,6 @@ Source: CRAN
 Version: 0.5
 Hash: b4baa1938fb20e76519e8aa253fe60a6
 
-Package: DT
-Source: CRAN
-Version: 0.2
-Hash: 36b032203797956fedad5a25055016a9
-Requires: htmltools, htmlwidgets, magrittr
-
 Package: NMF
 Source: CRAN
 Version: 0.20.6
@@ -81,25 +75,17 @@ Hash: 42460e37a21dc9e3f1f47c7d8d210592
 Requires: DBI
 
 Package: RPostgreSQL2
-Source: github
+Source: source
 Version: 0.1.4
-Hash: 1eaeef9d4e4e287647dc0067e1fa58cc
+Hash: c8265c2e1f5aa875ee360e472462e69e
 Requires: RPostgreSQL
-GithubRepo: RPostgreSQL2
-GithubUsername: giupo
-GithubRef: master
-GithubSha1: ecd2a87f729094cc47d71ee588fdd88dcea95dfa
+SourcePath: ~/projects/RPostgreSQL2
 
 Package: RSQLite
 Source: CRAN
 Version: 1.0.0
 Hash: 3df52a54766f420d257debad962146c0
 Requires: DBI
-
-Package: RUnit
-Source: CRAN
-Version: 0.4.31
-Hash: 62eb28673740eb6984f134cb2c179c55
 
 Package: Rcpp
 Source: CRAN
@@ -148,13 +134,6 @@ Package: curl
 Source: CRAN
 Version: 1.2
 Hash: 11de7924273ee61a95c7a157a572bc8a
-
-Package: devtools
-Source: CRAN
-Version: 1.12.0
-Hash: bbad95109ae75cbb14099281cda43af2
-Requires: digest, git2r, httr, jsonlite, memoise, rstudioapi, whisker,
-    withr
 
 Package: dichromat
 Source: CRAN
@@ -207,11 +186,6 @@ Version: 2.1.0
 Hash: 50e297b0191179c39c7dcae0eff72b51
 Requires: digest, gtable, plyr, reshape2, scales
 
-Package: git2r
-Source: CRAN
-Version: 0.15.0
-Hash: 92d5a9f3cba5e146b92a76dabbc29fbb
-
 Package: grafo
 Source: source
 Version: 1.3.12
@@ -240,11 +214,6 @@ Source: CRAN
 Version: 2.2.6
 Hash: 4ee63151031d09c6f24a9179fe83e634
 
-Package: highlight
-Source: CRAN
-Version: 0.4.7
-Hash: 00c573b277467419291d2c67cd560571
-
 Package: highr
 Source: CRAN
 Version: 0.6
@@ -255,12 +224,6 @@ Source: CRAN
 Version: 0.3.5
 Hash: f81546c00234653ca3a7dcd0b7e1a757
 Requires: Rcpp, digest
-
-Package: htmlwidgets
-Source: CRAN
-Version: 0.7
-Hash: f60506850a2d752dff69fc2a31c5a339
-Requires: htmltools, jsonlite, yaml
 
 Package: httpuv
 Source: CRAN
@@ -279,11 +242,6 @@ Source: CRAN
 Version: 1.0.1
 Hash: 26ac36402e881905359daabfd9ba4057
 Requires: NMF, irlba, magrittr
-
-Package: inline
-Source: CRAN
-Version: 0.3.14
-Hash: d2e10c068b7b3cc450bd630e69f89ce9
 
 Package: irlba
 Source: CRAN
@@ -368,11 +326,6 @@ GithubUsername: rstudio
 GithubRef: master
 GithubSha1: d2a3e316c640cd57094d3f7cf5ad6d26aa69077a
 
-Package: pkgKitten
-Source: CRAN
-Version: 0.1.3
-Hash: ef9f6ec935985d90b6a4aabd048050e8
-
 Package: pkgmaker
 Source: CRAN
 Version: 0.22
@@ -389,16 +342,6 @@ Package: praise
 Source: CRAN
 Version: 1.0.0
 Hash: 77da8f1df873a4b91e5c4a68fe2fb1b6
-
-Package: rJava
-Source: CRAN
-Version: 0.9-8
-Hash: 3e8627a2a5bd45c9bad6112acfc231d9
-
-Package: rbenchmark
-Source: CRAN
-Version: 1.0.0
-Hash: 47b30ba84d5c1c8939b3882541c5885b
 
 Package: rcf
 Source: source
@@ -508,27 +451,10 @@ Version: 1.0.2
 Hash: 88d5291104227f9dc2e7c7c1d0eb6c74
 Requires: R6, crayon, digest, magrittr, praise
 
-Package: whisker
-Source: CRAN
-Version: 0.3-2
-Hash: 803d662762e532705c2c066a82d066e7
-
 Package: withr
 Source: CRAN
 Version: 1.0.2
 Hash: 774eb7be9087cdc24b53b74e5359cfac
-
-Package: xlsx
-Source: CRAN
-Version: 0.5.7
-Hash: 6acda2cf5190bf93d0b24c5a40b564cf
-Requires: rJava, xlsxjars
-
-Package: xlsxjars
-Source: CRAN
-Version: 0.6.1
-Hash: 3902149dad80bcb14fcd88d8c7fd7f3b
-Requires: rJava
 
 Package: xtable
 Source: CRAN
