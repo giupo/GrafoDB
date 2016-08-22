@@ -17,6 +17,7 @@ removeFromRedis <- function(x, nomi) {
       suppressWarnings(redisDelete(key))
     }
     redisClose()
+  }, error=function(cond) {
   })
 }
 
@@ -30,6 +31,7 @@ sendCopyMetadati <- function(sourceTag, destTag) {
                  port = as.integer(settings$Redis$port)))
     redisLPush('grafo-copymetadati', charToRaw(msg))
     redisClose()
-  })
+  }, error=function(cond) {
+     
+  })     
 }
-

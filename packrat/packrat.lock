@@ -13,6 +13,12 @@ Source: CRAN
 Version: 0.5
 Hash: b4baa1938fb20e76519e8aa253fe60a6
 
+Package: DT
+Source: CRAN
+Version: 0.2
+Hash: 36b032203797956fedad5a25055016a9
+Requires: htmltools, htmlwidgets, magrittr
+
 Package: NMF
 Source: CRAN
 Version: 0.20.6
@@ -170,7 +176,7 @@ Package: doParallel
 Source: CRAN
 Version: 1.0.10
 Hash: df91a7abfa938c06ad87b9a2b9269adb
-Requires: iterators, foreach
+Requires: foreach, iterators
 
 Package: evaluate
 Source: CRAN
@@ -210,7 +216,7 @@ Package: grafo
 Source: source
 Version: 1.3.12
 Hash: 4cb7b8d1935215497d33b5e49ea39ab8
-Requires: bimets, rprogressbar, R2HTML, igraph, rstudioapi, shiny,
+Requires: bimets, R2HTML, igraph, rprogressbar, rstudioapi, shiny,
     shinyAce, xts
 SourcePath: ~/projects/grafo
 
@@ -249,6 +255,12 @@ Source: CRAN
 Version: 0.3.5
 Hash: f81546c00234653ca3a7dcd0b7e1a757
 Requires: Rcpp, digest
+
+Package: htmlwidgets
+Source: CRAN
+Version: 0.7
+Hash: f60506850a2d752dff69fc2a31c5a339
+Requires: htmltools, jsonlite, yaml
 
 Package: httpuv
 Source: CRAN
@@ -392,9 +404,9 @@ Package: rcf
 Source: source
 Version: 1.7.17
 Hash: a5842ef64a308498ed11070f166658ad
-Requires: bimets, rprogressbar, rutils, BH, DBI, RCurl, RJSONIO, RODBC,
-    RPostgreSQL, RSQLite, Rcpp, XML, digest, doMC, doParallel, foreach,
-    gdata, hash, igraph, iterators, knitr, mondate, plyr, stringr,
+Requires: bimets, BH, DBI, RCurl, RJSONIO, RODBC, RPostgreSQL, RSQLite,
+    Rcpp, XML, digest, doMC, doParallel, foreach, gdata, hash, igraph,
+    iterators, knitr, mondate, plyr, rprogressbar, rutils, stringr,
     tempdisagg, xts, zoo
 SourcePath: ~/projects/rcf
 
@@ -450,7 +462,7 @@ Package: rutils
 Source: github
 Version: 0.2.3
 Hash: c61d54d5b0923e510165ec366fd3be07
-Requires: XML, foreach, doParallel, testthat
+Requires: XML, doParallel, foreach, testthat
 GithubRepo: rutils
 GithubUsername: giupo
 GithubRef: master
@@ -494,7 +506,7 @@ Package: testthat
 Source: CRAN
 Version: 1.0.2
 Hash: 88d5291104227f9dc2e7c7c1d0eb6c74
-Requires: R6, digest, magrittr, praise, crayon
+Requires: R6, crayon, digest, magrittr, praise
 
 Package: whisker
 Source: CRAN
