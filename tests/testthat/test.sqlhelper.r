@@ -76,13 +76,13 @@ test_that("I can have params to be substitued into sql", {
 
 test_that("SQLHelper can handle quoted values", {
   helper <- SQLHelper(type="SQLite")
-  sql <- getSQLbyKey(helper, "SELECT_TEST3", tabella="A", name="d'odio")
-  expect_equal(sql, "select * from A where name='d''odio'")
+  sql <- getSQLbyKey(helper, "SELECT_TEST3", tabella = "A", name= "d'aglio")
+  expect_equal(sql, "select * from A where name='d''aglio'")
 })
 
 test_that("SQLHelper can handle multiple quoted values", {
   helper <- SQLHelper(type="SQLite")
-  sql <- getSQLbyKey(helper, "SELECT_TEST3", tabella="A", name="d'odio e d'amore")
+  sql <- getSQLbyKey(helper, "SELECT_TEST3", tabella = "A", name = "d'odio e d'amore")
   expect_equal(sql, "select * from A where name='d''odio e d''amore'")
 })
 

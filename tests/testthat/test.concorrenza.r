@@ -83,7 +83,7 @@ test_that("Salvare lo stesso grafo con interventi su serie distinte non crea con
   expect_true(all(g[["B"]] == newB))
 })
 
-for(tag in rilasci("test")$tag) elimina(tag)
+for (tag in rilasci("test")$tag) elimina(tag)
 
 test_that("Salvare lo stesso grafo con formula aggiunta", {
   g <- setup("test")
@@ -110,7 +110,7 @@ test_that("Salvare lo stesso grafo con formula aggiunta", {
   expect_true(!hasConflicts(g))
 })
 
-for(tag in rilasci("test")$tag) elimina(tag)
+for (tag in rilasci("test")$tag) elimina(tag)
 
 test_that("Salvare lo stesso grafo con formula in conflitto", {
   g <- setup("test")
@@ -120,11 +120,11 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   g2 <- GrafoDB("test1")
 
   g1["D"] <- function(A, C) {
-    D = A * C
+    D <- A * C
   }
 
   g2["D"] <- function(A, C) {
-    D = A - C
+    D <- A - C
   }
 
   g1 <- saveGraph(g1, msg="test")
@@ -139,7 +139,7 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   expect_true(hasConflicts(g))  
 })
 
-for(tag in rilasci("test")$tag) elimina(tag)
+for (tag in rilasci("test")$tag) elimina(tag)
 
 test_that("Tra i conflitti viene segnalata solo le serie modificate, non le serie figlie", {
   g <- setup("test")
@@ -171,3 +171,50 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
 
 for(tag in rilasci("test")$tag) elimina(tag)
 
+test_that(paste("Cambiamenti nel grafo in due sessioni diverse:",
+                "differenti dati vengono incluse al salvataggio"), {
+    g <- GrafoDB("test")
+    g["A"] <- 1
+    g["B"] <- 2
+    g["C"] <- function(A, B) {
+        C <- A + B + 1
+    }
+
+    g["D"] <- function(C) {
+        D <- C
+    }
+
+    expect_equal(g[["C"]] , g[["D"]])
+
+    saveGraph(g)
+
+    g1 <- GrafoDB("test")
+    g2 <- GrafoDB("test")
+
+    ## let's see if the graph are roughly the same
+    expect_equal(names(g1), names(g2))
+    for(name in names(g1)) {
+        expect_equal(g1[[name]], g2[[name]])
+    }
+
+    expect_identical(get.edgelist(g1@network), get.edgelist(g2@network))
+    ## ok, they are identical
+
+    ## not let's change C in g1 and save it
+    g1["C"] = function(A, B) {
+        C <- A + B
+    }
+
+    g1 <- saveGraph(g1)
+
+    expect_true(g1[["C"]] != g2[["C"]])
+    expect_true(g1[["D"]] != g2[["D"]])
+    expect_true(expr(g1, "C") != expr(g2, "C"))
+
+    saveGraph(g2)
+    expect_equal(g1[["C"]], g2[["C"]])
+    expect_equal(g1[["D"]], g2[["D"]])
+    expect_equal(expr(g1, "C"), expr(g2, "C"))  
+})
+
+elimina("test")
