@@ -31,8 +31,10 @@
     ## Se e' elementare cmq la carico (e' nato prima l'uovo o la gallina?)
     ## e la metto nei nomi_padri
     nomi_padri <- name
-    tt <- tryCatch({
-      graph[[name]]
+      tt <- tryCatch({
+      ## sopprimo il warning perche' e' normale che non ci sia la serie elementare
+      ## se la valuto per la prima volta  
+      suppressWarnings(graph[[name]])
     }, error=function(cond) {
       NA
     })

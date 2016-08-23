@@ -88,7 +88,7 @@ test_that("SQLHelper can handle multiple quoted values", {
 
 test_that("SQLHelper raises an error if params are not set", {
   helper <- SQLHelper(type="SQLite")
-  expect_error(
+  expect_warning(expect_error(
     getSQLbyKey(helper, "SELECT_TEST3"),
-    "params for query SELECT_TEST3 of type SQLite have not been set")
+    "params for query SELECT_TEST3 of type SQLite have not been set"))
 })

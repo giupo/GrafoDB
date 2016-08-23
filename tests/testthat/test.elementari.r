@@ -9,7 +9,6 @@ setup <- function() {
   g
 }
 
-
 test_that("posso avere serie con funzione senza padri", {
   g <- setup()
   expect_true("B" %in% names(g))
