@@ -50,16 +50,3 @@ autotest:
 so:
 	Rscript --vanilla -e 'devtools::compile_dll()'
 
-# deps: deps-jsoncpp deps-dist
-
-
-#deps-dist:
-#	mkdir -p ext/include
-#	mkdir -p ext/libs
-#	cp -R ext/jsoncpp/include/json ext/include/
-#	cp  ext/jsoncpp/build/src/lib_json/libjsoncpp.a ext/libs
-
-#deps-jsoncpp:
-#	cd ext/jsoncpp && mkdir -p build
-#	cd ext/jsoncpp/build && cmake ..
-#	cd ext/jsoncpp/build && make jsoncpp_lib_static
