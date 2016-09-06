@@ -171,7 +171,6 @@ setGeneric(
 #' @slot touched serie modificate in area di lavoro
 #' @exportClass GrafoDB
 #' @include sqlhelper.r
-#' @importFrom rcf DBDataset
 #' @export GrafoDB
 #' @examples \dontrun{
 #'    g = GrafoDB("cf10") # istanzia il grafo chiamato 'cf10'
@@ -392,14 +391,27 @@ setMethod(
 #' v_start <- "ZERIQ"
 #' g <- evaluate(g, v_start) # lo valuta solo a partire da ZERIQ
 #' }
-#' @importFrom grafo evaluate
 #' @include evaluate.r
+#' @exportMethod evaluate
+
+
+setGeneric(
+  "evaluate",
+  function(object, v_start=NULL, deep=F, ...) {
+    standardGeneric("evaluate")
+  })
 
 setMethod(
   "evaluate",
   signature("GrafoDB", "ANY", "ANY"),
   function(object, v_start=NULL, deep=F, ...) {
     .evaluate(object, v_start, deep, ...)
+  })
+
+setGeneric(
+  "isRoot",
+  function(x, name) {
+    standardGeneric("isRoot")
   })
 
 setMethod(
@@ -409,6 +421,11 @@ setMethod(
     .isRoot(x, name)
   })
 
+setGeneric(
+  "isLeaf",
+  function(x, name) {
+    standardGeneric("isLeaf")
+  })
 
 setMethod(
   "isLeaf",
@@ -423,37 +440,64 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage describe(graph, nodes, order, mode, plot)
 #' @seealso `grafo::describe`
-#' @importFrom grafo describe
-#' @export
+#' @exportMethod describe
+
+setGeneric(
+  "describe",
+  function(object, nodes=NULL, order=1L, mode="out", plot=FALSE) {
+    standardGeneric("describe")
+  })
 
 setMethod(
   "describe",
   signature("GrafoDB", "ANY", "ANY", "ANY", "ANY"),
-  function(object, nodes=NULL, order=1L, mode="out", plot=FALSE) {
+  function(object, nodes = NULL, order = 1L, mode = "out", plot = FALSE) {
     navigate(object, nodes, order, mode, plot)
+  })
+
+#' @exportMethod upgrf
+
+setGeneric(
+  "upgrf",
+  function(x, name, livello = .Machine$integer.max) {
+    standardGeneric("upgrf")
   })
 
 setMethod(
   "upgrf",
   signature("GrafoDB", "character", "ANY"),
   function(x, name, livello=.Machine$integer.max) {
-    navigate(x, name, order=livello, mode="in")
+    navigate(x, name, order = livello, mode = "in")
+  })
+
+#' @exportMethod downgrf
+
+setGeneric(
+  "downgrf",
+  function(x, name, livello=.Machine$integer.max) {
+    standardGeneric("downgrf")
   })
 
 setMethod(
   "downgrf",
   signature("GrafoDB", "character", "ANY"),
   function(x, name, livello=.Machine$integer.max) {
-    navigate(x, name, order=livello, mode="out")
+    navigate(x, name, order = livello, mode = "out")
   })
 
-#' @importFrom grafo getMetadata
 #' @include metadati.r
+#' @exportMethod getMetadata
+
+setGeneric(
+  "getMetadata",
+  function(object, tsName, full = FALSE) {
+    standardGeneric("getMetadata")
+  })
 
 setMethod(
   "getMetadata",
   signature("GrafoDB", "character", "ANY"),
-  function(object, tsName, full=FALSE) {
+  function(object, tsName, full = FALSE) {
     .getMetadata(object, tsName)
   })
 
@@ -629,15 +673,6 @@ setMethod(
       NULL
     }
     .values(x, key=key)
-  })
-
-#' @include metadati.r
-
-setMethod(
-  "deleteMeta",
-  signature("GrafoDB", "character", "character", "character"),
-  function (object, tsName, attrName, attrValue)  {
-    .deleteMeta(object, tsName, attrName, attrValue)
   })
 
 #' Rinomina una serie del grafo
