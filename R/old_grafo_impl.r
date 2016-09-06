@@ -8,7 +8,13 @@
 #' @usage isNode(graph, tsName)
 #' @seealso `grafo::isNode`
 #' @include core.r
-#' @importFrom grafo isNode
+#' @exportMethod isNode
+
+setGeneric(
+  "isNode",
+  function(graph, tsName) {
+    standardGeneric("isNode")
+  })
 
 setMethod(
   "isNode",
@@ -23,7 +29,13 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage isPrimitive(graph, tsName)
 #' @seealso `grafo::isPrimitive`
-#' @importFrom grafo isPrimitive
+#' @exportMethod isPrimitive
+
+setGeneric(
+  "isPrimitive",
+  function(graph, tsName) {
+    standardGeneric("isPrimitive")
+  })
 
 setMethod(
   "isPrimitive",
@@ -38,7 +50,13 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage isAggregate(graph, tsName)
 #' @seealso `grafo::isAggregate`
-#' @importFrom grafo isAggregate
+#' @exportMethod isAggregate
+
+setGeneric(
+  "isAggregate",
+  function(graph, tsName) {
+    standardGeneric("isAggregate")
+  })
 
 setMethod(
   "isAggregate",
@@ -55,7 +73,13 @@ setMethod(
 #' @seealso `grafo::isElementary`
 #' @note `GrafoDB` non prevede l'utilizzo di serie "elementari" come il `grafo`
 #'       Quindi per compliance ritorna sempre `FALSE`, ma il metodo non ha senso
-#' @importFrom grafo isElementary
+#' @exportMethod isElementary
+
+setGeneric(
+  "isElementary",
+  function(graph, tsName) {
+    standardGeneric("isElementary")
+  })
 
 setMethod(
   "isElementary",
@@ -70,7 +94,13 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage listAggregates(graph)
 #' @seealso `grafo::listAggregates`
-#' @importFrom grafo listAggregates
+#' @exportMethod listAggregates
+
+setGeneric(
+  "listAggregates",
+  function(graph) {
+    standardGeneric("listAggregates")
+  })
 
 setMethod(
   "listAggregates",
@@ -89,7 +119,13 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage listElementaries(graph)
 #' @seealso `grafo::listElementaries`
-#' @importFrom grafo listElementaries
+#' @exportMethod listElementaries
+
+setGeneric(
+  "listElementaries",
+  function(graph) {
+    standardGeneric("listElementaries")
+  })
 
 setMethod(
   "listElementaries",
@@ -108,7 +144,13 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage listPrimitives(graph)
 #' @seealso `grafo::listPrimitives`
-#' @importFrom grafo listPrimitives
+#' @exportMethod listPrimitives
+
+setGeneric(
+  "listPrimitives",
+  function(graph) {
+      standardGeneric("listPrimitives")
+  })
 
 setMethod(
   "listPrimitives",
@@ -126,7 +168,13 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage listNodes(graph)
 #' @seealso `grafo::listNodes`
-#' @importFrom grafo listNodes
+#' @exportMethod listNodes
+
+setGeneric(
+  "listNodes",
+  function(graph) {
+    standardGeneric("listNodes")
+  })
 
 setMethod(
   "listNodes",
@@ -151,7 +199,13 @@ setMethod(
 #' @param ... Parametri aggiuntivi alla `saveGraph`
 #' @note R sometimes sucks.
 #' @include persistence.r
-#' @importFrom grafo saveGraph
+#' @exportMethod saveGraph
+
+setGeneric(
+  "saveGraph",
+  function(object, path=object@tag, ...) {
+    standardGeneric("saveGraph")
+  })
 
 setMethod(
   "saveGraph",
@@ -166,29 +220,11 @@ setMethod(
     object
   })
 
-#' implementazione di showInternalChanges di `package::grafo`
-#'
-#' @name showInternalChanges
-#' @title Funzioni del package `grafo`
-#' @usage showInternalChanges(graph)
-#' @seealso `grafo::showInternalChanges`
-#' @importFrom grafo showInternalChanges
-
-setMethod(
-  "showInternalChanges",
-  signature("GrafoDB"),
-  function(object) {
-    data <- graph@data
-    functions <- graph@functions
+setGeneric(
+  "deleteMeta",
+  function(object, tsName, attrName, attrValue) {
+    standardGeneric("deleteMeta")
   })
-
-#' implementazione di listNodes di `package::grafo`
-#'
-#' @name deleteMeta
-#' @title Funzioni del package `grafo`
-#' @usage deleteMeta(graph, tsName, attrName, attrValue)
-#' @seealso `grafo::deleteMeta`
-#' @importFrom grafo deleteMeta
 
 setMethod(
   "deleteMeta",
@@ -222,7 +258,13 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage getDependencies(graph, tsName)
 #' @seealso `grafo::getDependencies`
-#' @importFrom grafo getDependencies
+#' @exportMethod getDependencies
+
+setGeneric(
+  "getDependencies",
+  function(object, tsName) {
+    standardGeneric("getDependencies")
+  })
 
 setMethod(
   "getDependencies",
@@ -245,7 +287,13 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage getTask(graph, tsName)
 #' @seealso `grafo::getTask`
-#' @importFrom grafo getTask
+#' @exportMethod getTask
+
+setGeneric(
+  "getTask",
+  function(object, tsName) {
+    standardGeneric("getTask")
+  })
 
 setMethod(
   "getTask",
@@ -260,8 +308,13 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage getData(graph, tsNames)
 #' @seealso `grafo::getData`
-#' @importFrom grafo getData
+#' @exportMethod getData
 
+setGeneric(
+  "getData",
+  function(graph, tsNames) {
+    standardGeneric("getData")
+  })
 
 setMethod(
   "getData",
@@ -276,8 +329,14 @@ setMethod(
 #' @title Funzioni del package `grafo`
 #' @usage searchNode(graph, tsNames)
 #' @seealso `grafo::searchNode`
-#' @importFrom grafo searchNode
+#' @exportMethod searchNode
 #' @export
+
+setGeneric(
+  "searchNode",
+  function(graph, attrName, attrValue) {
+    standardGeneric("searchNode")
+  })
 
 setMethod(
   "searchNode",
@@ -304,9 +363,14 @@ setMethod(
 #'
 #' searchNode(g, "FONTE", "CODICE_FONTE") # deve tornare il nome "A"
 #' }
-#' @importFrom grafo setMeta
+#' @exportMethod setMeta
 #' @include metadati.r
 
+setGeneric(
+  "setMeta",
+  function(object, tsName, attrName, value) {
+    standardGeneric("setMeta")
+  })
 
 setMethod(
   "setMeta",
@@ -334,8 +398,14 @@ setMethod(
 #' @return il grafo modificato
 #' @exportMethod rmNode
 #' @include functions.r
-#' @importFrom grafo rmNode
+#' @exportMethod rmNode
 #' @export 
+
+setGeneric(
+  "rmNode",
+  function(graph, tsName, recursive=FALSE) {
+    standardGeneric("rmNode")
+  })
 
 setMethod(
   "rmNode",
