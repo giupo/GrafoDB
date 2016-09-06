@@ -72,13 +72,13 @@ setupdb <- function(overwrite=FALSE) {
   config[["port"]] <- port
   config[["dbname"]] <- dbname
   
-  if(username != "") {
+  if (username != "") {
     config[["username"]] <- username
   }
-  if(password != "") {
+  if (password != "") {
     config[["password"]] <- username
   }
-  buffer = c("[ConnectionInfo]")
+  buffer <- c("[ConnectionInfo]")
   for(nameitem in names(config)) {
     buffer <- c(buffer, paste0(nameitem, "=", config[[nameitem]]))
   }
