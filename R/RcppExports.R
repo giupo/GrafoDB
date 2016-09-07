@@ -10,7 +10,7 @@
 #' @param df data.frame con le serie storiche 
 #' @return a List
 #' @export
-# @import Rcpp
+#' @import Rcpp
 #' @useDynLib GrafoDB
 convert_data_frame <- function(dataframe0) {
     .Call('GrafoDB_convert_data_frame', PACKAGE = 'GrafoDB', dataframe0)

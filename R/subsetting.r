@@ -5,7 +5,7 @@
 NULL
 
 
-#' @importFrom rcf as.dataset
+#' @importFrom rdataset as.dataset
 
 setMethod(
   "[",
@@ -47,7 +47,7 @@ setMethod(
 #' @rdname subsetting_internal
 #' @include functions.r core.r
 #' @importFrom igraph V E is.dag vertex topological.sort edge
-#' @importFrom rcf is.dataset
+#' @importFrom rdataset is.dataset
 #' @importFrom hash del
 
 .subsetting <- function(x, i, value) {

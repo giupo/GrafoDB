@@ -2,8 +2,8 @@
   ## that's the dumbest thing in my life, inverting arguments.
   if(!debug) {
     ret <- .evaluateSingle(name, x)
-    if(!is.bimets(ret)) {
-      stop(name, " non e' un oggetto bimets")
+    if(!is.ts(ret)) {
+      stop(name, " non e' un oggetto ts")
     }
     ret
   } else {

@@ -6,8 +6,6 @@ Description: Complete rewrite of the grafo package: Adds DB backend to Grafo,
     async operations via Redis and support for microservices authentication
 Depends:
     R (>= 3.0.3),
-    rcf,
-    bimets
 License: BSD_2_clause + file LICENSE
 LazyData: true
 Imports:
@@ -30,7 +28,8 @@ Imports:
     rredis,
     R.utils,
     doMC,
-    RSQLite
+    RSQLite,
+    rdataset
 Suggests:
     testthat,
     Rcpp,
@@ -66,3 +65,7 @@ Collate:
     'rmNode.r'
     'subsetting.r'
 RoxygenNote: 5.0.1
+Remotes:
+    github::giupo/rutils,
+    github::giupo/rprogressbar,
+    github::giupo/rdataset
