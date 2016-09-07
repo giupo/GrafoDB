@@ -94,25 +94,26 @@ is.grafodb <- function(x) {
   inherits(x, "GrafoDB")
 }
 
-#' converte una timeseries `BIMETS`
+#' converte una timeseries `ts`
 #' o un generico scalare in un data.frame.
 #' funzione utilizzata per convertire il dato in una forma accettabile dal DB
 #'
 #' @name to.data.frame
 #' @usage to.data.frame(x)
-#' @param x una timeseries `BIMETS` o uno scalare
+#' @param x una timeseries `ts` o uno scalare
 #' @param name nome da dare alla timeseries
 #' @return una rappresentazione a data.frame della serie `x`
 #' @note funzione interna
 #' @rdname todataframe
+#' @importFrom stats start frequency
 
 to.data.frame <- function(x, name=NULL) {
   ## questa funzione converte a dataframe la timeseries,
   ## utile per l'inserimento nel DB
-  if(is.bimets(x)) {
-    anno <- TSINFO(x, MODE="STARTY")
-    prd  <- TSINFO(x, MODE="STARTP")
-    freq <- TSINFO(x, MODE="FREQ")
+  if(is.ts(x)) {
+    anno <- stats::start(x)[[1]]
+    prd  <- stats::start(x)[[2]]
+    freq <- frequency(x)
   } else {
     anno <- 0
     prd <- 0
@@ -131,13 +132,12 @@ to.data.frame <- function(x, name=NULL) {
   }
 }
 
-#' converte un dataframe (caricato dal Database) in una timeseries `BIMETS`
+#' converte un dataframe (caricato dal Database) in una timeseries `ts`
 #'
 #' @name from.data.frame
 #' @usage from.data.frame(df)
 #' @param df data.frame compilato dal database
 #' @importFrom RJSONIO fromJSON
-#' @importFrom bimets TSERIES
 #' @note i dati dal db sono memorizzati come stringhe JSON
 #' @rdname fromdataframe
 
@@ -159,10 +159,10 @@ from.data.frame <- function(df) {
     if(any(params == 0)) {
       ret[[name]] <- fromJSON(as.character(row$dati), nullValue=NA)
     } else {
-      dati <- TSERIES(
+      dati <- ts(
         fromJSON(as.character(row$dati), nullValue=NA),
-        START=c(anno, periodo),
-        FREQ=freq)
+        start=c(anno, periodo),
+        freq=freq)
       ret[[name]] <- dati
     }
   }
@@ -284,7 +284,6 @@ from.data.frame <- function(df) {
 #' @param tag id del grafo (default su `cf10`)
 #' @return una serie o una lista di serie
 #' @importFrom rutils whoami flypwd
-#' @importFrom bimets is.bimets
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom iterators iter
 #' @importFrom doMC registerDoMC
@@ -295,16 +294,14 @@ getdb <- function(x, name, tag="cf10") {
   dbdati <- x@dbdati
   df <- dbdati[dbdati$name %in% name, ]
   dati <- if(length(name) > 1000) {
-    registerDoMC(detectCores())
     foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
       convert_data_frame(row)
-      # from.data.frame(row)
     }
   } else {
     convert_data_frame(df)
   }
   
-  if(length(dati)==1 && is.bimets(dati[[1]])) {
+  if(length(dati)==1 && is.ts(dati[[1]])) {
     dati[[1]]
   } else {
     dati
@@ -341,7 +338,7 @@ getdb <- function(x, name, tag="cf10") {
       tag <- paste0(tag, "p", x@ordinal)
     }
     ret <- getdb(x, da.caricare.db, tag)
-    if(is.bimets(ret)) {
+    if(ts(ret)) {
       ret1 <- list()
       ret1[[da.caricare.db]] <- ret
       ret1

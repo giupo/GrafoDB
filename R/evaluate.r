@@ -182,27 +182,15 @@
   
   
   if(!is.null(v_start)) {
-    ## le voglio valutare tutte
-    ## if(!tag %in% c(PRELOAD_TAG, "biss", "pne", "dbcong")) {
-    #sources_id <- V(network)[degree(network, mode="in") == 0]
-    #nomi_sources <- V(network)[sources_id]$name
-    #sources <- getdb(nomi_sources, tag)
-    #if(length(sources) > 0) {
-    #  if(is.bimets(sources)) {
-    #    data[preload_V_start] <- sources
-    #  } else {
-    #    data[names(sources)] <- sources
-    #  }
-    #  ## fonti gia' valutate, le tolgo
-    #  network <- delete.vertices(network, sources_id)
-    #}
-  #} else {
     v_start <- as.character(v_start)
     network <- induced.subgraph(
       network,
-      V(network)[unlist(
-        neighborhood(network, order=.Machine$integer.max,
-                     nodes=v_start, mode="out"))])
+      V(network)[
+        unlist(
+          neighborhood(
+            network, order=.Machine$integer.max,
+            nodes=v_start, mode="out")
+        )])
   }
   
   ## se il network e' vuoto dopo l'eliminazione delle sorgenti,

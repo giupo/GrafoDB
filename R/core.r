@@ -192,7 +192,8 @@ GrafoDB <- setClass(
     edges = "hash",
     dbdati = "data.frame",
     dbformule = "data.frame",
-    helper = "SQLHelper"))
+    helper = "SQLHelper"),
+  contains = "Dataset")
 
 #' costruttore per la classe GrafoDB
 #'
