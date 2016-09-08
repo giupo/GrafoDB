@@ -230,7 +230,7 @@ test_that("I can cast a GrafoDB to a Dataset", {
 elimina("test")
 
 test_that("Posso passare non timeseries", {
-  if(suppressWarnings(require(tis))) {
+  if(!suppressWarnings(require(tis))) {
     skip("tis::mergeSeries is necessary for this test")
   }
   g <- GrafoDB("test")
@@ -246,7 +246,7 @@ test_that("Posso passare non timeseries", {
 elimina("test")
 
 test_that("posso salvare non timeseries", {
-  if(suppressWarnings(require(tis))) {
+  if(!suppressWarnings(require(tis))) {
     skip("tis::mergeSeries is necessary for this test")
   }
   g <- GrafoDB("test")
@@ -286,7 +286,7 @@ test_that("posso memorizzare stringhe", {
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
-    C = A + B
+    C <- A + B
   }
   g["archivio"] = "cippalippa"
   saveGraph(g)

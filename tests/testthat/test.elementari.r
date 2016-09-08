@@ -22,15 +22,15 @@ test_that("posso avere serie con funzione senza padri", {
 
 test_that("posso usare un elementare a patto che esistano i dati nel db",{
   g <- setup()
-  g@data[["C"]] <- ts(c(1,2,3), start=c(1990,1), freq=4)
+  g@data[["C"]] <- ts(c(1,2,3), start = c(1990, 1), freq = 4)
   g["C"] <- function() {
-    C[[1990,4]] <- 4
+    C[3] <- 4
   }
   # expect_equal(length(g) , 3)
-  expect_equal(g[["C"]][[1990,4]], 4)
+  expect_equal(g[["C"]][3], 4)
   expect_error({
     g["NONESISTO"] <- function() {
-      NONESISTO[[1990,4]] <- 4
+      NONESISTO[1] <- 4
     }
   }, "Error in NONESISTO")
   elimina(g)

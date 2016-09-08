@@ -8,16 +8,6 @@
     return(graph[[name]])
   }
 
-  ## this is a patch due limitations of R language and
-  ## deeeeep limitations of my patience
-  #if(length(nomi_padri) > 100) {
-   # padri <- list()
-    #sliced <- slice(nomi_padri, n=100)
-    # foreach(nomi=iter(nomi_padri)) %do% {
-  # padri[[sliced_names]] <- graph[[sliced_names]]
-    # }
-  # names(padri) <- nomi_padri
-  #  padri
   if ( length(nomi_padri) > 1 ) {
     padri <- graph[[nomi_padri]]
   } else if ( length(nomi_padri) == 1 ) {
@@ -35,7 +25,7 @@
       ## sopprimo il warning perche' e' normale che non ci sia la serie elementare
       ## se la valuto per la prima volta  
       suppressWarnings(graph[[name]])
-    }, error=function(cond) {
+    }, error = function(cond) {
       NA
     })
     padri[[name]] <- tt
@@ -52,77 +42,6 @@
   })           
 }
 
-.evaluateSingle3 <- function(name, graph) {
-  tsformula <- .expr(graph, name, echo=FALSE)
-  nomi_padri <- upgrf(graph, name, livello=1)
-  if(length(nomi_padri) == 0) {
-    return(graph[[name]])
-  }
-  if(length(nomi_padri) > 100) {
-    padri <- list()
-    sliced <- slice(nomi_padri, n=100)
-    foreach(sliced_names = sliced) %do% {
-      padri[sliced_names] <- graph[[sliced_names]]
-    }
-    names(padri) <- nomi_padri
-    padri
-  } else {
-    padri <- graph[[nomi_padri]]
-  }
-  
-  if(length(nomi_padri) == 1) {
-    ## boxing
-    ppp <- list()
-    ppp[[nomi_padri]] <- padri
-    padri <- ppp
-  }
-
-  attach(padri)
-  on.exit(detach(padri))
-  cmd <- .clutter_function(tsformula, name)
-  tryCatch({
-    eval(parse(text=cmd))
-    proxy()
-  }, error = function(err) {
-    stop(name, ": ", err)
-  })           
-}
-
-.evaluateSingle2 <- function(name, graph) {
-  tsformula <- .expr(graph, name, echo=FALSE)
-  nomi_padri <- upgrf(graph, name, livello=1)
-  if(length(nomi_padri) == 0) {
-    return(graph[[name]])
-  }
-  if(length(nomi_padri) > 100) {
-    padri <- list()
-    sliced <- slice(nomi_padri, n=100)
-    foreach(sliced_names = sliced) %do% {
-      padri[sliced_names] <- graph[[sliced_names]]
-    }
-    names(padri) <- nomi_padri
-    padri
-  } else {
-    padri <- graph[[nomi_padri]]
-  }
-  
-  if(length(nomi_padri) == 1) {
-    ## boxing
-    ppp <- list()
-    ppp[[nomi_padri]] <- padri
-    padri <- ppp
-  }
-  env <- as.environment(padri)
-  env$graph <- graph
-  cmd <- .clutter_function(tsformula, name)
-  tryCatch({
-    eval(parse(text=cmd))
-    attach(env)
-    do.call(proxy, list())
-  }, error = function(err) {
-    stop(name, ": ", err)
-  })           
-}
 
 #' Valuta un singolo oggetto del grafo identificato da `name`
 #'
@@ -242,7 +161,7 @@
         }
         i <- i + length(sources)
         if(is.interactive) {
-            updateProgressBar(pb, i, last(sources))
+            updateProgressBar(pb, i, tail(sources, n=1))
         }
      
       

@@ -338,7 +338,7 @@ getdb <- function(x, name, tag="cf10") {
       tag <- paste0(tag, "p", x@ordinal)
     }
     ret <- getdb(x, da.caricare.db, tag)
-    if(ts(ret)) {
+    if(is.ts(ret)) {
       ret1 <- list()
       ret1[[da.caricare.db]] <- ret
       ret1
