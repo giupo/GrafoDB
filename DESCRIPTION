@@ -34,7 +34,9 @@ Suggests:
     testthat,
     Rcpp,
     roxygen2,
-    covr
+    covr,
+    zoo,
+    tis
 LinkingTo: Rcpp
 Collate:
     'RcppExports.R'

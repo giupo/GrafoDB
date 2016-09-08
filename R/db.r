@@ -19,9 +19,9 @@ setupdb <- function(overwrite=FALSE) {
   if(driver == "") {
     driver <- "PostgreSQL"
   }
-  host <- str_trim(readline(prompt="Host Address (default: 'osi2-virt-001'): "))
+  host <- str_trim(readline(prompt="Host Address (default: 'localhost'): "))
   if(host == "") {
-    host <- "osi2-virt-001"
+    host <- "localhost"
   }
 
   port <- str_trim(readline(prompt="Listening Port (default: '5432'): "))

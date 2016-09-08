@@ -24,7 +24,7 @@ test_that("conversione da data.frame a bimets", {
   expect_true(is.list(tt))
 
   tt <- tt[["TEST"]]
-  expect_true(is.bimets(tt))
+  expect_true(is.ts(tt))
   expect_equal(TSINFO(tt, MODE="STARTY"), 1990)
   expect_equal(TSINFO(tt, MODE="STARTP"), 1)
   expect_equal(TSINFO(tt, MODE="FREQ"), 1)
@@ -35,7 +35,7 @@ test_that("conversione da data.frame a bimets", {
 
   expect_true(is.list(tt))
   tt <- tt[["TEST"]]
-  expect_true(is.bimets(tt))
+  expect_true(is.ts(tt))
   expect_equal(TSINFO(tt, MODE="STARTY"), 1990)
   expect_equal(TSINFO(tt, MODE="STARTP"), 1)
   expect_equal(TSINFO(tt, MODE="FREQ"), 12)
@@ -44,7 +44,7 @@ test_that("conversione da data.frame a bimets", {
   tt <- from.data.frame(df)
   expect_true(is.list(tt))
   tt <- tt[["TEST"]]
-  expect_true(is.bimets(tt))
+  expect_true(is.ts(tt))
   expect_equal(TSINFO(tt, MODE="STARTY"), 1990)
   expect_equal(TSINFO(tt, MODE="STARTP"), 1)
   expect_equal(TSINFO(tt, MODE="FREQ"), 4)
@@ -55,7 +55,7 @@ test_that("valori null passati a from.data.frame vengono convertiti in NA", {
   tt <- from.data.frame(df)
   expect_true(is.list(tt))
   tt <- tt[["TEST"]]
-  expect_true(is.bimets(tt))
+  expect_true(is.ts(tt))
   expect_true(is.na(last(tt)))
   expect_true(is.na(first(tt)))
 })

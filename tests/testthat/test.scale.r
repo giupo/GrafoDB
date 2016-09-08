@@ -14,7 +14,7 @@ proxytest <- function(numero) {
   g <- evaluate(g, "B")
   expect_true("B" %in% names(g))
   expected <- g[["B"]]
-  expect_true(is.bimets(expected))  
+  expect_true(is.ts(expected))  
   expect_equal(expected[1], numero)
   ser(g, "B")  
   elimina("test")

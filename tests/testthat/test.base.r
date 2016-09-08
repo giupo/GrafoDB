@@ -19,7 +19,7 @@ test_that("Posso impostare una timeseries con nome nel GrafoDB", {
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   expect_true("A" %in% names(g))
-  expect_true(is.bimets(g[["A"]]))
+  expect_true(is.ts(g[["A"]]))
 })
 
 elimina("test")
@@ -30,11 +30,11 @@ test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
   g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["C"] <- ts(runif(10), start=c(1990,1), freq=4)
   expect_true("A" %in% names(g))
-  expect_true(is.bimets(g[["A"]]))
+  expect_true(is.ts(g[["A"]]))
   expect_true("B" %in% names(g))
-  expect_true(is.bimets(g[["B"]]))
+  expect_true(is.ts(g[["B"]]))
   expect_true("C" %in% names(g))
-  expect_true(is.bimets(g[["C"]]))
+  expect_true(is.ts(g[["C"]]))
 
   expect_true(all(g[["A"]] != g[["B"]]))
   expect_true(all(g[["A"]] != g[["C"]]))
@@ -67,7 +67,6 @@ test_that("Posso cercare le serie con metadati", {
   g <- setMeta(g, "B", "key", "value")
   g <- setMeta(g, "C", "key", "value1")
 
-  
   res <- lookup(g, "key", "value")
   expect_equal(length(res), 2)
 
@@ -171,7 +170,7 @@ test_that("posso rimuovere archi", {
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A) {
-    C=A
+    C <- A
   }
   expect_true("A" %in% upgrf(g, "C"))
   expect_true(!"B" %in% upgrf(g, "C"))
@@ -221,7 +220,7 @@ test_that("I can cast a GrafoDB to a Dataset", {
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A) {
-    C=A
+    C <- A
   }
   d <- as.dataset(g)
   expect_true(is.dataset(d))
@@ -231,12 +230,15 @@ test_that("I can cast a GrafoDB to a Dataset", {
 elimina("test")
 
 test_that("Posso passare non timeseries", {
+  if(suppressWarnings(require(tis))) {
+    skip("tis::mergeSeries is necessary for this test")
+  }
   g <- GrafoDB("test")
-  g["A"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
-  g["B"] <- ts(c(1,1,1), start=c(1990,1), freq=4)
-  g["periodo"] <- c(1990,2)
+  g["A"] <- ts(c(0,0,0), start = c(1990, 1), freq = 4)
+  g["B"] <- ts(c(1,1,1), start = c(1990, 1), freq = 4)
+  g["periodo"] <- c(1990, 2)
   g["C"] <- function(A,B, periodo) {
-    C=TSJOIN(A,B, JPRD=periodo)
+    C <- mergeSeries(A, window(B, start = periodo))
   }
   expect_equal(g[["periodo"]], c(1990,2))
 })
@@ -244,12 +246,15 @@ test_that("Posso passare non timeseries", {
 elimina("test")
 
 test_that("posso salvare non timeseries", {
+  if(suppressWarnings(require(tis))) {
+    skip("tis::mergeSeries is necessary for this test")
+  }
   g <- GrafoDB("test")
   g["A"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["B"] <- ts(c(1,1,1), start=c(1990,1), freq=4)
   g["periodo"] <- c(1990,2)
   g["C"] <- function(A,B, periodo) {
-    C=TSJOIN(A,B, JPRD=periodo)
+    C <- mergeSeries(A, window(B, start=periodo))
   }
   g <- saveGraph(g)
   expect_equal(g[["periodo"]], c(1990,2))

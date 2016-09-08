@@ -7,6 +7,9 @@ library(DBI)
 library(RSQLite)
 library(RPostgreSQL)
 library(doMC)
+library(zoo)
+library(tis)
+
 source("lib_mgt.r")
 
 load_all()
