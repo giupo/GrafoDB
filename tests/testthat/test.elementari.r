@@ -20,7 +20,7 @@ test_that("posso avere serie con funzione senza padri", {
 })
 
 
-test_that("posso usare un elementare a patto che esistano i dati nel db",{
+test_that("posso creare una serie elementare, che esista o meno nel DB",{
   g <- setup()
   g@data[["C"]] <- ts(c(1,2,3), start = c(1990, 1), freq = 4)
   g["C"] <- function() {
@@ -28,10 +28,11 @@ test_that("posso usare un elementare a patto che esistano i dati nel db",{
   }
   # expect_equal(length(g) , 3)
   expect_equal(g[["C"]][3], 4)
-  expect_error({
-    g["NONESISTO"] <- function() {
-      NONESISTO[1] <- 4
-    }
-  }, "Error in NONESISTO")
+  expect_equal({
+      g["NONESISTO"] <- function() {
+          NONESISTO <- ts(c(1,2,3))
+      }
+      g[["NONESISTO"]][1]
+  }, 1)
   elimina(g)
 })
