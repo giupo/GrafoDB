@@ -157,7 +157,7 @@ setMethod(
         colnames(nuova) <- c("name", "anno", "periodo", "freq", "dati")
         nuova <- from.data.frame(nuova)[[name]]
         
-        differenza <- if(TSINFO(nuova, MODE="FREQ") == TSINFO(current, MODE="FREQ")){
+        differenza <- if(frequency(nuova) == frequency(current)) {
           nuova - current
         } else {
           NA
