@@ -1,13 +1,13 @@
 context("Funzioni per la persistenza")
 
 g <- GrafoDB("test")
-g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
+g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
 g["C"] <- function(A,B) {
   C = A + B    
 }
 
-g["D"] <- TSERIES(c(NA,1,NA), START=c(1990,1), FREQ=4)
+g["D"] <- ts(c(NA,1,NA), start=c(1990,1), freq=4)
 
 g <- saveGraph(g)
 
@@ -36,8 +36,8 @@ for(tag in rilasci("test")$tag) elimina(tag)
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
-  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(1:10, START=c(1990,1), FREQ=4)
+  g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
+  g["B"] <- ts(1:10, start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }

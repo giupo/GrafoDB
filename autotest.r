@@ -3,7 +3,6 @@
 library(testthat)
 library(devtools)
 library(methods)
-library(rcf)
 library(DBI)
 library(RSQLite)
 library(RPostgreSQL)

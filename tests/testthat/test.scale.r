@@ -1,6 +1,6 @@
 context("Scalability tests")
 
-tt <- TSERIES(c(1,1,1,1,1), START=c(1990,1), FREQ=4)
+tt <- ts(c(1,1,1,1,1), start=c(1990,1), freq=4)
 
 proxytest <- function(numero) {
   g <- GrafoDB("test")

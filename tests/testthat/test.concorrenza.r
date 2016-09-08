@@ -7,8 +7,8 @@ elimina("test1")
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
-  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
+  g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["C"] <- function(A, B) {
     C = A + B
   }
@@ -25,7 +25,7 @@ test_that("Salvare una serie non crea un conflitto", {
 
   expect_equal(g1@timestamp, g2@timestamp)
 
-  g1["A"] <- newA1 <- TSERIES(rep(1,10), START=c(1990,1), FREQ=4)
+  g1["A"] <- newA1 <- ts(rep(1,10), start=c(1990,1), freq=4)
   #Sys.sleep(.5)
   g1 <- saveGraph(g1, msg="test")
 
@@ -44,8 +44,8 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
   
   expect_equal(g1@timestamp, g2@timestamp)
   
-  g1["A"] <- newA1 <- TSERIES(rep(0,10), START=c(1990,1), FREQ=4)
-  g2["A"] <- newA2 <- TSERIES(rep(1,10), START=c(1990,1), FREQ=4)
+  g1["A"] <- newA1 <- ts(rep(0,10), start=c(1990,1), freq=4)
+  g2["A"] <- newA2 <- ts(rep(1,10), start=c(1990,1), freq=4)
   saveGraph(g1, msg="test")
   # Sys.sleep(2)
   expect_warning(saveGraph(g2, msg="test"), "Ci sono conflitti")
@@ -69,8 +69,8 @@ test_that("Salvare lo stesso grafo con interventi su serie distinte non crea con
   g1 <- GrafoDB("test1")
   g2 <- GrafoDB("test1")
 
-  newA <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  newB <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  newA <- ts(runif(10), start=c(1990,1), freq=4)
+  newB <- ts(runif(10), start=c(1990,1), freq=4)
 
   g1["A"] <- newA
   g2["B"] <- newB

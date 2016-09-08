@@ -17,7 +17,7 @@ elimina("test")
 
 test_that("Posso impostare una timeseries con nome nel GrafoDB", {
   g <- GrafoDB("test")
-  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   expect_true("A" %in% names(g))
   expect_true(is.bimets(g[["A"]]))
 })
@@ -26,9 +26,9 @@ elimina("test")
 
 test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
   g <- GrafoDB("test")
-  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["C"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
+  g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
+  g["C"] <- ts(runif(10), start=c(1990,1), freq=4)
   expect_true("A" %in% names(g))
   expect_true(is.bimets(g[["A"]]))
   expect_true("B" %in% names(g))
@@ -45,8 +45,8 @@ elimina("test")
 
 test_that("Posso usare delle formule per definire le serie", {
   g <- GrafoDB("test")
-  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
+  g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B    
 
@@ -57,8 +57,8 @@ elimina("test")
 
 test_that("Posso cercare le serie con metadati", {
   g <- GrafoDB("test")
-  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
+  g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B    
   }
@@ -78,8 +78,8 @@ elimina("test")
 
 test_that("Posso salvare il grafo sul database", {
   g <- GrafoDB("test")
-  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
+  g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B    
   }
@@ -105,8 +105,8 @@ elimina("test")
 
 test_that("subset with datasets", {
   g <- GrafoDB("test")
-  g["A"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(runif(10), START=c(1990,1), FREQ=4)
+  g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
+  g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B    
   }
@@ -118,8 +118,8 @@ test_that("subset with datasets", {
   expect_true(all(c("A", "B", "C") %in% names(g)))  
   
   ds <- Dataset()
-  ds["A"] <- TSERIES(c(-1,-2,-3), START=c(1990,1), FREQ=4)
-  ds["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  ds["A"] <- ts(c(-1,-2,-3), start=c(1990,1), freq=4)
+  ds["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
 
   g[names(ds)] <- ds
 
@@ -145,14 +145,14 @@ elimina("test")
 
 test_that("Cascade subsetting works", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   expect_true("A" %in% names(g))
   expect_true("B" %in% names(g))
 })
 
 test_that("Saving preserves network and nodes", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -169,7 +169,7 @@ elimina("test")
 
 test_that("posso rimuovere archi", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A) {
     C=A
   }
@@ -219,7 +219,7 @@ elimina("test")
 
 test_that("I can cast a GrafoDB to a Dataset", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A) {
     C=A
   }
@@ -232,8 +232,8 @@ elimina("test")
 
 test_that("Posso passare non timeseries", {
   g <- GrafoDB("test")
-  g["A"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(c(1,1,1), START=c(1990,1), FREQ=4)
+  g["A"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["B"] <- ts(c(1,1,1), start=c(1990,1), freq=4)
   g["periodo"] <- c(1990,2)
   g["C"] <- function(A,B, periodo) {
     C=TSJOIN(A,B, JPRD=periodo)
@@ -245,8 +245,8 @@ elimina("test")
 
 test_that("posso salvare non timeseries", {
   g <- GrafoDB("test")
-  g["A"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
-  g["B"] <- TSERIES(c(1,1,1), START=c(1990,1), FREQ=4)
+  g["A"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["B"] <- ts(c(1,1,1), start=c(1990,1), freq=4)
   g["periodo"] <- c(1990,2)
   g["C"] <- function(A,B, periodo) {
     C=TSJOIN(A,B, JPRD=periodo)
@@ -261,7 +261,7 @@ elimina("test")
 
 #test_that("posso copiare un grafo da tag a tag", {
 #  g <- GrafoDB("test")
-#  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+#  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
 #  g["C"] <- function(A,B) {
 #    C = A + B
 #  }
@@ -279,7 +279,7 @@ elimina("test1")
 
 test_that("posso memorizzare stringhe", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -294,7 +294,7 @@ elimina("test")
 
 test_that("isLeaf torna true per serie foglia", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -305,7 +305,7 @@ elimina("test")
 
 test_that("isLeaf torna false per una serie non foglia", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -317,7 +317,7 @@ elimina("test")
 
 test_that("isRoot torna false per serie foglia", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -328,7 +328,7 @@ elimina("test")
 
 test_that("isRoot torna true per una serie non foglia", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -340,7 +340,7 @@ elimina("test")
 
 test_that("Posso editare una serie esistente aggiungendo una dipendenza esistente", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -358,7 +358,7 @@ elimina("test")
 
 test_that("Posso subsettare con il $ (dollaro)", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }

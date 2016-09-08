@@ -2,7 +2,7 @@ context("Rename serie")
 
 test_that("I can rename a series before saving it", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -24,7 +24,7 @@ elimina("test")
 
 test_that("I cannot rename a series being modified", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   expect_error(rename(g, "A", "A1"))
   g["C"] <- function(A,B) {
     C = A + B
@@ -40,7 +40,7 @@ elimina("test")
 
 test_that("I cannot rename a series into an existing series", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -53,7 +53,7 @@ elimina("test")
 
 test_that("I cannot rename a non existing series", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- TSERIES(c(0,0,0), START=c(1990,1), FREQ=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
