@@ -33,6 +33,7 @@ Imports:
     Rcpp,
     BH
 Suggests:
+    devtools,
     testthat,
     roxygen2,
     covr,
