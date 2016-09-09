@@ -5,6 +5,7 @@
 src/Makevars$
 Makefile
 ^packrat/
+packrat
 ^\.Rprofile$
 coverage.html
 lib
