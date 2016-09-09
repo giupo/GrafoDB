@@ -1,8 +1,3 @@
-#### -- Packrat Autoloader (version 0.4.7-26) -- ####
-tryCatch(
-    source("packrat/init.R"), error = function(cond) {
-       message(cond)
-})
-Sys.setenv(GRAFODB_ENV="test")
-require(devtools)
+#### -- Packrat Autoloader (version 0.4.8-1) -- ####
+source("packrat/init.R")
 #### -- End Packrat Autoloader -- ####
