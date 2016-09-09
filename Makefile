@@ -19,10 +19,10 @@ check: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 	R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 build: $(PKG_NAME)_$(PKG_VERSION).tar.gz
-	R CMD INSTALL --build $(PKG_NAME)_$(PKG_VERSION).tar.gz
+	R --vanilla CMD INSTALL --build $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 install: $(PKG_NAME)_$(PKG_VERSION).tar.gz
-	R CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz
+	R --vanilla CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 NAMESPACE: $(R_FILES) $(SRC_FILES)
 	Rscript -e "library(roxygen2);roxygenize('.')"
@@ -50,3 +50,5 @@ autotest:
 so:
 	Rscript --vanilla -e 'devtools::compile_dll()'
 
+coverage:
+	Rscript -e 'library(covr); cov=package_coverage(path=".", line_exclusions=file.path("packrat",  list.files(path="packrat", recursive=TRUE))); report(cov, file="coverage.html")'

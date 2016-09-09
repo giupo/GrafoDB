@@ -30,3 +30,5 @@ autom4te.cache
 src/Makevars
 
 TAGS
+lib
+coverage.html
