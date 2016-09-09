@@ -34,6 +34,7 @@ Imports:
     BH
 Suggests:
     devtools,
+    rstudioapi,
     testthat,
     roxygen2,
     covr,
