@@ -29,10 +29,10 @@ Imports:
     R.utils,
     doMC,
     RSQLite,
-    rdataset
+    rdataset,
+    Rcpp
 Suggests:
     testthat,
-    Rcpp,
     roxygen2,
     covr,
     zoo,
