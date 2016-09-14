@@ -300,6 +300,7 @@ setMethod(
 #' @importFrom foreach foreach %dopar%
 #' @importFrom iterators iter
 #' @importFrom parallel detectCores
+# TODO: test me!!!
 
 setMethod(
   "-",
