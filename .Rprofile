@@ -3,5 +3,6 @@ tryCatch({
   source("packrat/init.R")
 }, error = function(cond) {
   
-}) 
+})
+require(devtools)
 #### -- End Packrat Autoloader -- ####

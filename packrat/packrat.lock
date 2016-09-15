@@ -10,8 +10,8 @@ Hash: be2967bcff307e561d9ba17faf03205c
 
 Package: DBI
 Source: CRAN
-Version: 0.5
-Hash: b4baa1938fb20e76519e8aa253fe60a6
+Version: 0.5-1
+Hash: 375869004db963f9915f2b8a49b4a718
 
 Package: NMF
 Source: CRAN
