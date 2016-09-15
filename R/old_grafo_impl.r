@@ -220,6 +220,16 @@ setMethod(
     object
   })
 
+#' Removes an attribute
+#' 
+#' @name deleteMeta
+#' @usage deleteMeta(object, tsName, attrName, attrValue)
+#' @param object graph instance
+#' @param tsName name of the timeseries
+#' @param attrName name of the attribute
+#' @param attrValue value of the attributes
+#' @export
+
 setGeneric(
   "deleteMeta",
   function(object, tsName, attrName, attrValue) {
