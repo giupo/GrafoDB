@@ -33,8 +33,8 @@ Requires: R.methodsS3
 
 Package: R.utils
 Source: CRAN
-Version: 2.2.0
-Hash: dfc0bc71c7d72797636bfada613e0027
+Version: 2.4.0
+Hash: f153bd90030ac0e0549aba0ba190bff1
 Requires: R.methodsS3, R.oo
 
 Package: R6
@@ -137,8 +137,8 @@ Requires: iterators
 
 Package: formatR
 Source: CRAN
-Version: 1.2.1
-Hash: 54c730c712edd6087972ecf99bf87c55
+Version: 1.4
+Hash: b2a47a2b91737978cf50ba95825a9cd1
 
 Package: gdata
 Source: CRAN

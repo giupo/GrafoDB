@@ -178,8 +178,6 @@ setGeneric(
 #'    g = GrafoDB("cf10p2") # istanzia il grafo cf10 con provvisorio p2;
 #'                          # in questo caso ordinal e' 2
 #' }
-#' @import rdataset
-#' @import igraph
 
 GrafoDB <- setClass(
   "GrafoDB",
