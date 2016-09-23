@@ -512,5 +512,11 @@ rilasci <- function(filtro=NULL) {
     getSQLbyKey(helper, "TUTTI_RILASCI_FILTERED", filtro=filtro)
   }
  
-  dbGetQuery(con, sql)
+  data <- dbGetQuery(con, sql)
+  nomicol <- colnames(data)
+  time_col <- as.POSIXct(data$last_updated/1000, origin=as.Date("1970-01-01"))
+  data <- cbind(data, time_col)
+  nomicol <- c(nomicol, "date")
+  colnames(data) <- nomicol
+  data
 }
