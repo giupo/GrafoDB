@@ -16,6 +16,8 @@ elimina <- function(tag) {
 
   if(is.grafodb(tag)) {
     tag <- tag@tag
+  } else {
+    tag <- tolower(tag)
   }
 
   incancellabili <- c("cf10")

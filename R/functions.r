@@ -18,6 +18,8 @@
 .init <- function(.Object, tag="cf10") {
   if(is.null(tag)) {
     tag <- "cf10"
+  } else {
+    tag <- tolower(tag)
   }
   
   .Object@edges <- hash()
@@ -513,10 +515,14 @@ rilasci <- function(filtro=NULL) {
   }
  
   data <- dbGetQuery(con, sql)
+  
   nomicol <- colnames(data)
-  time_col <- as.POSIXct(data$last_updated/1000, origin=as.Date("1970-01-01"))
-  data <- cbind(data, time_col)
-  nomicol <- c(nomicol, "date")
-  colnames(data) <- nomicol
+  if(nrow(data) > 1) {
+    time_col <- as.POSIXct(as.numeric(data$last_updated)/1000,
+                           origin=as.Date("1970-01-01"))
+    data <- cbind(data, time_col)
+    nomicol <- c(nomicol, "date")
+    colnames(data) <- nomicol
+  }
   data
 }
