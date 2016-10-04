@@ -518,8 +518,10 @@ rilasci <- function(filtro=NULL) {
   
   nomicol <- colnames(data)
   if(nrow(data) > 1) {
-    time_col <- as.POSIXct(as.numeric(data$last_updated)/1000,
-                           origin=as.Date("1970-01-01"))
+    time_col <- as.POSIXct(
+      as.numeric(data$last_updated)/1000,
+      origin=as.Date("1970-01-01"))
+
     data <- cbind(data, time_col)
     nomicol <- c(nomicol, "date")
     colnames(data) <- nomicol
