@@ -17,8 +17,6 @@
   
   names.with.conflicts <- intersect(x@touched, as.character(df$name))
   names.updated <- setdiff(keys(data), names.with.conflicts)
-  
-  registerDoMC(detectCores())
 
   if(length(names.updated)) { 
     dati <- foreach (name = iter(names.updated), .combine=rbind) %dopar% {

@@ -294,10 +294,8 @@ setMethod(
 
 #' Esegue la differenza tra due grafi
 #'
-#' @importFrom doMC registerDoMC
 #' @importFrom foreach foreach %dopar%
 #' @importFrom iterators iter
-#' @importFrom parallel detectCores
 # TODO: test me!!!
 
 setMethod(
@@ -314,7 +312,6 @@ setMethod(
       })
     }
     result <- Dataset()
-    registerDoMC(detectCores())
     data <- foreach(name=iter(common), multicombine=TRUE, .combine=c) %dopar% {
       ret <- list()
       ret[[name]] <- tryCatch(

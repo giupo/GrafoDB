@@ -70,9 +70,7 @@
 #' @return il grafo con i dati correttamente valutato
 #' @importFrom igraph V induced.subgraph neighborhood delete.vertices degree
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
-#' @importFrom foreach foreach %do% %dopar%
-#' @importFrom doMC registerDoMC
-#' @importFrom parallel detectCores
+#' @importFrom foreach foreach %dopar%
 #' @importFrom hash keys
 #' @rdname evaluate-internal
 
@@ -127,10 +125,6 @@
     pb <- ProgressBar(min=0, max=total)
     updateProgressBar(pb, i, "Starting...")
   }  
-  
-  
-  registerDoMC(detectCores())
-  is.multi.process <- TRUE # !is.null(cl) && !debug 
   
   if(is.interactive) updateProgressBar(pb, i, "Starting...")
   

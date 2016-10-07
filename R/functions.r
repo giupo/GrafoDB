@@ -288,8 +288,6 @@ from.data.frame <- function(df) {
 #' @importFrom rutils whoami flypwd
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom iterators iter
-#' @importFrom doMC registerDoMC
-#' @importFrom parallel detectCores
 #' @export
 
 getdb <- function(x, name, tag="cf10") {

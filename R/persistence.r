@@ -48,10 +48,11 @@
     removeFromRedis(x, x@touched)
     dbCommit(con)
   }, error=function(err) {
-      tryCatch(dbRollback(con),
-               error = function(err2) {
-                   stop(err2, "Root: ", err)
-               })
+    tryCatch({  
+      dbRollback(con)
+    }, error = function(err2) {
+      stop(err2, "Root: ", err)
+    })
     stop(err)
   })
   x

@@ -16,7 +16,6 @@
   }
 
   names.with.conflicts <- intersect(x@touched, as.character(df$name))
-  registerDoMC(detectCores())
   
   names.updated <- setdiff(keys(x@functions), names.with.conflicts)
   if(length(names.updated)) {
