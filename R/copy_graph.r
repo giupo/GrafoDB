@@ -9,7 +9,11 @@
   }
   helper <- SQLHelper()
 
-  autore <- whoami()
+  autore <- if('autore' %in% names(param_list)) {
+    param_list[["autore"]]
+  } else {
+    whoami()
+  }
   params <- cbind(to, autore, from)
 
   ## copia archi

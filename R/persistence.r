@@ -69,7 +69,9 @@
   .updateArchi(x, con=con, tag=tag)
   dbGetQuery(con, getSQLbyKey(
     helper, "UPDATE_GRAFO_LAST_UPDATED",
-    tag=tag, last_updated=round(R.utils::System$currentTimeMillis())))
+    autore=whoami(),
+    tag=tag,
+    last_updated=round(R.utils::System$currentTimeMillis())))
 }
 
 #' crea ex-novo un istanza di grafo nel databae
@@ -187,7 +189,6 @@ countRolling <- function(x, con) {
   if(nrow(df) == 0) {
     0
   } else {
-    # FIXME: questa e' merda pura.
     numeri <- as.numeric(gsub("p", "", gsub(tag, "", df[, 1])))
     max(numeri, na.rm=TRUE) 
   }
@@ -231,12 +232,13 @@ nextRollingNameFor <- function(x, con) {
 doHistory <- function(x, con) {
   notOk <- TRUE
   tries <- 3
-  
+  ril <- rilasci(x@tag)
+  autore <- ril[ril$tag == x@tag, ]$autore
   while(tries > 0) {    
     tries <- tryCatch({
       dest <- nextRollingNameFor(x, con)
       if(interactive()) message("Salvo il grafo ", x@tag, " in ", dest)
-      .copyGraph(x@tag, dest, con=con)
+      .copyGraph(x@tag, dest, con=con, autore=autore)
       if(interactive()) message("salvataggio ", dest, " completo")
       0
     }, error=function(cond) {
