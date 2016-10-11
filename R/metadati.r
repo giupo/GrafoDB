@@ -1,6 +1,6 @@
 #' @importFrom DBI dbGetQuery
 #' @importFrom RPostgreSQL dbGetQuery
-#' @include db.r
+#' @include db.r tickets.r
 
 .getMeta <- function(x, serie, metadato) {
   con <- pgConnect()
@@ -9,7 +9,15 @@
   tag <- x@tag
   df <- dbGetQuery(con, getSQLbyKey(
     helper, "GET_META", tag=tag, name=serie, key=metadato))
-  
+
+  tickets_url <- get_tickets_urls_for_name(x, serie)
+  if(!is.null(tickets) && length(tickets) > 0) {
+    warning("La serie ", serie, "ha tickets aperti")
+    for(url in tickets_url) {
+      message(url)
+      df <- rbind(df, data.frame(name=serie, key="TICKET", value=url))
+    }
+  }
   if(nrow(df)) {
     as.character(df[,1])
   } else {
