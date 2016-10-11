@@ -31,7 +31,8 @@ Imports:
     RSQLite,
     rdataset,
     Rcpp,
-    BH
+    BH,
+    RCurl
 Suggests:
     devtools,
     rstudioapi,
@@ -54,6 +55,7 @@ Collate:
     'persistence.r'
     'functions.r'
     'rename.r'
+    'tickets.r'
     'metadati.r'
     'ser.r'
     'expr.r'
@@ -70,7 +72,6 @@ Collate:
     'rmNode.r'
     'subsetting.r'
 RoxygenNote: 5.0.1
-Remotes:
-    github::giupo/rutils,
+Remotes: github::giupo/rutils,
     github::giupo/rprogressbar,
     github::giupo/rdataset

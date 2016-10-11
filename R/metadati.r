@@ -10,14 +10,6 @@
   df <- dbGetQuery(con, getSQLbyKey(
     helper, "GET_META", tag=tag, name=serie, key=metadato))
 
-  tickets_url <- get_tickets_urls_for_name(x, serie)
-  if(!is.null(tickets) && length(tickets) > 0) {
-    warning("La serie ", serie, "ha tickets aperti")
-    for(url in tickets_url) {
-      message(url)
-      df <- rbind(df, data.frame(name=serie, key="TICKET", value=url))
-    }
-  }
   if(nrow(df)) {
     as.character(df[,1])
   } else {
@@ -44,7 +36,20 @@
   tag <- x@tag
   helper <- x@helper
   sql <-  getSQLbyKey(helper, "GET_METADATA", tag=tag, name=name)
-  dbGetQuery(con, sql)
+  df <- dbGetQuery(con, sql)
+  tickets <- get_tickets_urls_for_name(x, name)
+  if(!is.null(tickets) && length(tickets) > 0) {
+    for(url in tickets) {
+      id <- basename(url)
+      tick <- ticket(id)
+      status <- tick[[4]][["status"]]
+      if (status != "closed") {
+        warning(url, ": la serie ", name, " ha un ticket aperto")
+        df <- rbind(df, data.frame(name=name, key="TICKET", value=url))
+      }
+    }
+  }
+  df
 }
 
 #' ritorna le chiavi di un metadato

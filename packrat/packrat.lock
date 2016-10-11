@@ -47,6 +47,12 @@ Source: CRAN
 Version: 1.1-2
 Hash: c0d56cd15034f395874c870141870c25
 
+Package: RCurl
+Source: CRAN
+Version: 1.95-4.8
+Hash: 79c7d5a8684e44e0e3426d3093aa7d90
+Requires: bitops
+
 Package: RJSONIO
 Source: CRAN
 Version: 1.3-0
@@ -73,6 +79,11 @@ Package: XML
 Source: CRAN
 Version: 3.98-1.4
 Hash: 9f8bc34c3c3d2967c7d25f8945216ffa
+
+Package: bitops
+Source: CRAN
+Version: 1.0-6
+Hash: 67d0775189fd0041d95abca618c5c07e
 
 Package: brew
 Source: CRAN
