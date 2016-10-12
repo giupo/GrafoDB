@@ -13,6 +13,12 @@ get_tickets_urls_for_name <- function(g, name) {
 
 
 #' ritorna i tickets aperti nel track
+#'
+#' @name ticket
+#' @usage ticket(num)
+#' @param num id del ticket
+#' @return una rappresentazione a ticket (alla meglio di R)
+#' @export
 
 ticket <- function(num) {
   settings <- dbSettings()

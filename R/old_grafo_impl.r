@@ -240,25 +240,7 @@ setMethod(
   "deleteMeta",
   signature("GrafoDB", "character", "character", "ANY"),
   function(object, tsName, attrName, attrValue) {
-    con <- pgConnect()
-    on.exit(dbDisconnect(con))
-    tag <- object@tag
-    helper <- object@helper
-    tryCatch({
-      dbBegin(con)
-      
-      sql <- getSQLbyKey(
-        helper, "DELETE_META_TAG_NAME_KEY_VALUE",
-        tag=tag, name=name, key=attrName, value=attrValue)
-      
-      dbGetQuery(con, sql)
-      dbCommit(con)
-    }, error = function(err) {
-      dbRollback(con)
-      stop(err)
-    })
-    
-    invisible(object)
+    .deleteMeta(object, tsName, attrName, attrValue)
   })
 
 

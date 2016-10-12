@@ -121,15 +121,22 @@
   on.exit(dbDisconnect(con))
   tag <- x@tag
   helper <- x@helper
-  
-  dbGetQuery(con, getSQLbyKey(
-    helper, "DELETE_META_TAG_NAME_KEY_VALUE",
-    tag=tag,
-    name=name,
-    key=key,
-    value=value))
 
-  invisible(NULL)
+  dbBegin(con)
+  tryCatch({
+    dbGetQuery(con, getSQLbyKey(
+      helper, "DELETE_META_TAG_NAME_KEY_VALUE",
+      tag=tag,
+      name=name,
+      key=key,
+      value=value))
+    dbCommit(con)
+  }, error = function(cond) {
+    dbRollback(con)
+    stop(cond)
+  })
+  
+  invisible(x)
 }
 
 #' @importFrom rutils whoami
