@@ -12,6 +12,7 @@
 #' @include db.r functions.r
 #' @importFrom DBI dbGetQuery
 #' @importFrom RPostgreSQL dbGetQuery
+#' @importFrom igraph get.vertex.attribute set.vertex.attribute
 
 .rename <- function(x, vecchio, nuovo) {
   if(isNode(x, nuovo)) {

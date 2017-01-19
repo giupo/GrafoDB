@@ -172,6 +172,7 @@ setGeneric(
 #' @exportClass GrafoDB
 #' @include sqlhelper.r
 #' @export GrafoDB
+#' @importFrom rdataset Dataset
 #' @examples \dontrun{
 #'    g = GrafoDB("cf10") # istanzia il grafo chiamato 'cf10'
 #'                        # in questo caso ordinal e' 0
@@ -626,7 +627,6 @@ setMethod(
   function (x, serie, metadato){
     .getMeta(x, serie, metadato)
   })
-
 
 setMethod(
   "getMeta",

@@ -472,6 +472,7 @@ getdb <- function(x, name, tag="cf10") {
 #' @usage tsdiff()
 #' @param a timeseries
 #' @param b timeseries
+#' @importFrom zoo index
 #' @return `TRUE` if `a`!=`b`, `FALSE` otherwise
 #' @export
 

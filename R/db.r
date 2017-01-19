@@ -122,6 +122,7 @@ dbSettings <- function(flush=FALSE) {
       file.path(system.file(package="GrafoDB"), "ini/GrafoDB.ini"))
     options(dbSettings=settings)
   }
+    
   env <- getenv()
   options(SQLHelperType=settings[[paste0("ConnectionInfo_", env)]]$driver)
   

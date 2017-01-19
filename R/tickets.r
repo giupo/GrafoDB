@@ -12,18 +12,18 @@ get_tickets_urls_for_name <- function(g, name) {
 }
 
 
-#' ritorna i tickets aperti nel track
+#' ritorna i tickets aperti nel trac
 #'
 #' @name ticket
 #' @usage ticket(num)
-#' @param num id del ticket
+#' @param id id del ticket
 #' @return una rappresentazione a ticket (alla meglio di R)
 #' @export
 
-ticket <- function(num) {
+ticket <- function(id) {
   settings <- dbSettings()
   base_url <- paste0(settings$WebApp$base_url, "/tickets/get")
-  url <- paste0(base_url, "/", num)
+  url <- paste0(base_url, "/", id)
   res <- getURL(url, .opts=list(ssl.verifypeer=F))
   fromJSON(res)
 }

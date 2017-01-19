@@ -104,6 +104,7 @@ elimina("test")
 
 test_that("subset with datasets", {
   g <- GrafoDB("test")
+  require(rdataset)
   g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {

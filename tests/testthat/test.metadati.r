@@ -18,27 +18,39 @@ setup <- function(tag) {
 
 test_that("posso caricare tutti i metadati del grafo", {
   g <- setup("test")
-  meta <- getMeta(g)
-  expect_true(is.data.frame(meta))
-  expect_equal(nrow(meta), 3)  
+  tryCatch({
+    meta <- getMeta(g)
+    expect_true(is.data.frame(meta))
+    expect_equal(nrow(meta), 3)
+  }, error=function(cond) {
+    skip("No TRAC connection")
+  })
 })
 
 elimina("test")
 
 test_that("posso ottenere i metadati per una serie", {
   g <- setup("test")
-  m <- getMeta(g, "A")
-  expect_true(is.data.frame(m))
-  expect_equal(nrow(m), 2)
+  tryCatch({
+    m <- getMeta(g, "A")
+    expect_true(is.data.frame(m))
+    expect_equal(nrow(m), 2)
+  }, error=function(cond) {
+    skip("No TRAC connection")
+  })
 })
 
 elimina("test")
 
 test_that("posso ottenere i valori di un metadato per singola serie", {
   g <- setup("test")
-  v <- getMeta(g, "A", "KEY")
-  expect_true(is.character(v))
-  expect_true(all(c("VALUE1", "VALUE2") %in% v ))
+  tryCatch({
+    v <- getMeta(g, "A", "KEY")
+    expect_true(is.character(v))
+    expect_true(all(c("VALUE1", "VALUE2") %in% v ))
+  }, error=function(cond){
+    skip("No Trac connection")
+  })
 })
 
 elimina("test")

@@ -56,6 +56,7 @@ test_that("valori null passati a from.data.frame vengono convertiti in NA", {
   expect_true(is.list(tt))
   tt <- tt[["TEST"]]
   expect_true(is.ts(tt))
+  require(xts)
   expect_true(is.na(last(tt)))
   expect_true(is.na(first(tt)))
 })
