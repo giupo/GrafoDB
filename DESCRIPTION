@@ -42,7 +42,9 @@ Suggests:
     zoo,
     tis,
     DT,
-    shiny
+    shiny,
+    shinyAce,
+    sourcetools
 LinkingTo: Rcpp, BH
 Collate:
     'RcppExports.R'
