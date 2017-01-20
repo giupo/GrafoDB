@@ -40,7 +40,9 @@ Suggests:
     roxygen2,
     covr,
     zoo,
-    tis
+    tis,
+    DT,
+    shiny
 LinkingTo: Rcpp, BH
 Collate:
     'RcppExports.R'
