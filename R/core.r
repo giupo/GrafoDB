@@ -180,6 +180,8 @@ setGeneric(
 #'                          # in questo caso ordinal e' 2
 #' }
 
+setOldClass("igraph")
+
 GrafoDB <- setClass(
   "GrafoDB",
   representation(
