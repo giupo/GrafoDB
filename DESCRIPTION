@@ -32,7 +32,8 @@ Imports:
     rdataset,
     Rcpp,
     BH,
-    RCurl
+    RCurl,
+    zoo
 Suggests:
     devtools,
     rstudioapi,
