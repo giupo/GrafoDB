@@ -254,8 +254,13 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL) {
     .buildConnection(userid, password)
   } else {
     tryCatch({
-      dbGetInfo(con)
-      con
+      ## dbGetInfo(con) e' deprecato. faccio il check su "grafi"
+      grafi <- dbGetQuery(con, "select * from grafi");
+      if (!is.data.frame(grafi)) {
+        .buildConnection(userid, password)
+      } else {
+        con
+      }
     }, error = function(err) {
       .buildConnection(userid, password)
     })
