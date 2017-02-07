@@ -4,6 +4,9 @@ language: R
 sudo: true
 cache: packages
 
+env:
+  - GRAFODB_ENV=test
+
 r_github_packages:
   - jimhester/covr
   - rstudio/packrat

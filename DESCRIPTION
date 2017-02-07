@@ -40,7 +40,6 @@ Suggests:
     testthat,
     roxygen2,
     covr,
-    zoo,
     tis,
     DT,
     shiny,
