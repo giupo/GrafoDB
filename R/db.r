@@ -239,7 +239,7 @@ initdb <- function(con) {
 #' @usage pgConnect()
 #' @return a Connection to Postgresql
 #' @note this stores the connection into options and retrieves it back
-#' @importFrom DBI dbGetInfo
+#' @importFrom DBI dbGetQuery
 #' @export
 
 pgConnect <- function(userid=NULL, password=NULL, con=NULL) {
