@@ -10,8 +10,6 @@ env:
 r_github_packages:
   - jimhester/covr
   - rstudio/packrat
-  # hope this helps fix this nonsense on Travis
-  - rstudio/rstudioapi
 
 before_install:
   - sudo apt-get -qq update
