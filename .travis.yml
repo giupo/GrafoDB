@@ -21,6 +21,8 @@ env:
 
 r:
   - release
+# this has to be removed as soon as possible (I know it will last forever :( )  
+warnings_are_errors: false
 
 repos:
   CRAN: http://cran.rstudio.com
