@@ -1,6 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 \.tar.gz$
+^autotest.r$
+^CONTRIBUTING.rst$
 .bumpversion.cfg
 src/Makevars$
 Makefile
