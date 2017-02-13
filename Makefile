@@ -15,6 +15,7 @@ tarball: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
 	R CMD build .
 
+
 check: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 	R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
@@ -25,10 +26,10 @@ install: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 	R --vanilla CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 NAMESPACE: $(R_FILES) $(SRC_FILES)
-	Rscript -e "library(roxygen2);roxygenize('.')"
+	Rscript -e "require(methods); devtools::document()"
 
 DOCS: 
-	Rscript -e "devtools::document()"
+	Rscript -e "require(methods); devtools::document()"
 
 clean:
 	-rm -f $(PKG_NAME)_*.tar.gz
