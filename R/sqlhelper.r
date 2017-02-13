@@ -16,7 +16,8 @@
 #' @export SQLHelper
 #' @exportClass SQLHelper
 #' @importFrom rutils ini_parse
-#' @importFrom stringr str_locate_all 
+#' @importFrom stringr str_locate_all
+#' @importFrom methods representation
 
 SQLHelper <- setClass(
   "SQLHelper",

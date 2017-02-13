@@ -19,4 +19,3 @@ La funzione dato il tag, mostra la history di un `GrafoDB`
 Ovvero tutte le release che hanno sovrascritto la release principale
 Quella senza p
 }
-

@@ -3,6 +3,7 @@
 \docType{methods}
 \name{hasConflicts}
 \alias{hasConflicts}
+\alias{hasConflicts}
 \title{Ritorna `TRUE` se il grafo ha conflitti}
 \usage{
 hasConflicts(x)
@@ -46,4 +47,3 @@ hasConflicts(g, SERIE_CON_CONFLITTO) # TRUE
 hasConflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
 }
 }
-

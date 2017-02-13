@@ -15,4 +15,3 @@ GrafoDB contenuto nel file `path`
 \description{
 Legge un GrafoDB dal filesystem in formato binario
 }
-

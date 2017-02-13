@@ -29,4 +29,3 @@ lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie
                                      # che hanno TAVOLA_DI_OUTPUT=BRI
 }
 }
-

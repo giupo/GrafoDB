@@ -17,4 +17,3 @@ Factory di connessioni al database Postgresql
 \note{
 Funzione interna
 }
-

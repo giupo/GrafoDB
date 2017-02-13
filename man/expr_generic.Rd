@@ -27,4 +27,3 @@ g <- GrafoDB(...)
 expr(g, "TETSZ0AC") # ritorna list(TETSZ0AC = "TETSZ0AC = ASTSZ0AC...")
 }
 }
-

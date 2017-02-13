@@ -15,4 +15,3 @@ fixConflicts(x)
 E' appannaggio dell'utente riusolvere i conflitti nella sua sessione e provvedere
 a salvate un Grafo consistente.
 }
-

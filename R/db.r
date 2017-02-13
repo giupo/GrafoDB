@@ -299,6 +299,7 @@ dbDisconnect <- function(con) {
   
 # Adds implementation of DBI::dbBegin for RPostgreSQL
 #' @importFrom DBI dbBegin
+#' @importFrom methods signature setGeneric setMethod
 
 tryCatch(
   setMethod("dbBegin", signature("PostgreSQLConnection"), .dbBeginPG),

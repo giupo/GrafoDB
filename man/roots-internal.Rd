@@ -15,4 +15,3 @@ la lista delle radici del grafo
 \description{
 Ritona tutti i nodi del grafo le che non hanno archi entranti
 }
-

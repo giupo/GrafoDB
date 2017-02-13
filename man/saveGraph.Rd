@@ -25,4 +25,3 @@ R sometimes sucks.
 \seealso{
 .saveGraph
 }
-

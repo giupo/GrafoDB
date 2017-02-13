@@ -17,4 +17,3 @@ lista di valori per metadato
 \description{
 Ritorna i valori dei metadati (o per singolo metadato)
 }
-

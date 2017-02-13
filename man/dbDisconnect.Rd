@@ -12,4 +12,3 @@ dbDisconnect(con)
 \description{
 overrides dbDisconnect to do nothings in case pgConnect is active in options
 }
-

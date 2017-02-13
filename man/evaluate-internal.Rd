@@ -13,4 +13,3 @@ il grafo con i dati correttamente valutato
 \description{
 Questa funzione valuta i nodi del grafo in parallelo
 }
-

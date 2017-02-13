@@ -3,6 +3,7 @@
 \docType{methods}
 \name{ser}
 \alias{ser}
+\alias{ser}
 \title{Valuta una singola serie del grafo e ritorna il risultato}
 \usage{
 ser(x, name)
@@ -32,4 +33,3 @@ Valuta una singola serie del grafo e ritorna il risultato
 
 Valuta una singola serie del grafo e ritorna il risultato
 }
-

@@ -24,4 +24,3 @@ Predicato; Ritorna `TRUE` se `x` e' un istanza di `GrafoDB`, altrimenti ritorna
   is.grafodb(x) # questo e' FALSE
 }
 }
-

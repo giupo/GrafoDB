@@ -20,4 +20,3 @@ Questa funzione va utilizzata nell'initialize S4 dell'oggetto `GrafoDB`
 \note{
 e' stata scorporata dall'initialize S4 per finalita' di debug
 }
-

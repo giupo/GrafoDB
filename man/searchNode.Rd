@@ -12,4 +12,3 @@ implementazione di searchNode di `package::grafo`
 \seealso{
 `grafo::searchNode`
 }
-

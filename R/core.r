@@ -18,6 +18,7 @@
 #'                                  ## 'TAVOLA_DI_OUTPUT' per 'TETSZ0AC'
 #' }
 #' @exportMethod getMeta
+#' @importFrom methods setGeneric
 #' @export
 
 
@@ -44,6 +45,7 @@ setGeneric(
 #' }
 #' @rdname lookup_generic
 #' @include lookup.r
+#' @importFrom methods setGeneric
 #' @export
 
 setGeneric(
@@ -106,6 +108,7 @@ setGeneric(
 #' @param x istanza di GrafoDB
 #' @param name vettore di nomi di serie
 #' @return `TRUE` se `name` sono serie senza archi uscenti
+#' @importFrom methods setGeneric
 #' @export
 
 setGeneric(
@@ -124,6 +127,7 @@ setGeneric(
 #' @param x un istanza di GrafoDB
 #' @param name array di nomi di serie
 #' @param livello numero di livelli (ordine) da considerare (di default, tutti)
+#' @importFrom methods setGeneric
 #' @return nomi di serie
 #' @export
 
@@ -144,6 +148,7 @@ setGeneric(
 #' @param x un istanza di GrafoDB
 #' @param name array di nomi di serie
 #' @param livello numero di livelli (ordine) da considerare (di default, tutti)
+#' @importFrom methods setGeneric
 #' @return nomi di serie
 #' @export
 
@@ -173,6 +178,7 @@ setGeneric(
 #' @include sqlhelper.r
 #' @export GrafoDB
 #' @importFrom rdataset Dataset
+#' @importFrom methods setGeneric setOldClass setClass setReplaceMethod new loadMethod
 #' @examples \dontrun{
 #'    g = GrafoDB("cf10") # istanzia il grafo chiamato 'cf10'
 #'                        # in questo caso ordinal e' 0
@@ -203,6 +209,7 @@ GrafoDB <- setClass(
 #' @name initialize
 #' @rdname GraphDB_initialize
 #' @aliases GrafoDB-initialize
+#' @importFrom methods setMethod
 
 setMethod(
   "initialize",

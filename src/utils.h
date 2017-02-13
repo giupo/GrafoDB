@@ -11,10 +11,6 @@
 using namespace std;
 using namespace Rcpp;
 
-string quote(string s);
-vector<string> quote(vector<string> v);
-string join(vector<string> v, char j);
-string whoami();
 Json::Value parseJSON(string json);
 NumericVector asNumericVector(Json::Value root);
 CharacterVector asCharacterVector(Json::Value root);

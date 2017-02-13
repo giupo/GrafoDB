@@ -22,4 +22,3 @@ Valuta un singolo oggetto del grafo identificato da `name`
 la scelta di evaluateSingle ricade su .evaluateSingle1, le altre due
       implementazioni NON SUPPORTANO LE SERIE ELEMENTARI
 }
-

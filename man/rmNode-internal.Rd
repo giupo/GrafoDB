@@ -26,4 +26,3 @@ Metodo interno
 \seealso{
 rmNode
 }
-

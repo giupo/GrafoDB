@@ -15,4 +15,3 @@ converte un dataframe (caricato dal Database) in una timeseries `ts`
 \note{
 i dati dal db sono memorizzati come stringhe JSON
 }
-

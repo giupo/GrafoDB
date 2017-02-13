@@ -18,4 +18,3 @@ isLeaf(x, name)
 Ritorna `TRUE` se le serie date nel parametro `name` non hanno serie
 uscienti
 }
-

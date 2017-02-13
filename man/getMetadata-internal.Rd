@@ -17,4 +17,3 @@ data.frame contenente i metadati della serie
 \description{
 Ritorna i metadati della serie `name` in `x`
 }
-

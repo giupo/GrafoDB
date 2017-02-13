@@ -3,6 +3,7 @@
 \docType{methods}
 \name{edita}
 \alias{edita}
+\alias{edita}
 \title{Edita un la formula di una serie storica.}
 \usage{
 edita(x, name)
@@ -28,4 +29,3 @@ Edita un la formula di una serie storica.
 
 Edita un la formula di una serie storica.
 }
-
