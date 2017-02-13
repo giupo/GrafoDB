@@ -17,46 +17,50 @@ setup <- function(tag) {
 }
 
 test_that("posso caricare tutti i metadati del grafo", {
-  g <- setup("test")
-  tryCatch({
-    meta <- getMeta(g)
-    expect_true(is.data.frame(meta))
-    expect_equal(nrow(meta), 3)
-  }, error=function(cond) {
-    skip("No TRAC connection")
+  on.exit({
+    elimina("test")
   })
+  g <- setup("test")
+  with_mock(
+    'RCurl::getURL' = function(...) "{}", {
+      meta <- getMeta(g)
+      expect_true(is.data.frame(meta))
+      expect_equal(nrow(meta), 3)
+    })
 })
-
-elimina("test")
 
 test_that("posso ottenere i metadati per una serie", {
-  g <- setup("test")
-  tryCatch({
-    m <- getMeta(g, "A")
-    expect_true(is.data.frame(m))
-    expect_equal(nrow(m), 2)
-  }, error=function(cond) {
-    skip("No TRAC connection")
+   on.exit({
+    elimina("test")
   })
+  g <- setup("test")
+  with_mock(
+    'RCurl::getURL' = function(...) "{}", {
+      m <- getMeta(g, "A")
+      expect_true(is.data.frame(m))
+      expect_equal(nrow(m), 2)
+    })
 })
-
-elimina("test")
 
 test_that("posso ottenere i valori di un metadato per singola serie", {
-  g <- setup("test")
-  tryCatch({
-    v <- getMeta(g, "A", "KEY")
-    expect_true(is.character(v))
-    expect_true(all(c("VALUE1", "VALUE2") %in% v ))
-  }, error=function(cond){
-    skip("No Trac connection")
+   on.exit({
+    elimina("test")
   })
+  g <- setup("test")
+  with_mock(
+    'RCurl::getURL' = function(...) "{}", {
+      v <- getMeta(g, "A", "KEY")
+      expect_true(is.character(v))
+      expect_true(all(c("VALUE1", "VALUE2") %in% v ))
+    })
 })
 
-elimina("test")
-
 test_that("Posso cercare i numeri direttamente nel grafo", {
+  on.exit({
+    elimina("test")
+  })
   g <- setup("test")
+  
   ret <- lookup(g, 2)
   expect_true("C" %in% ret)
   expect_true(! "A" %in% ret)
@@ -65,5 +69,3 @@ test_that("Posso cercare i numeri direttamente nel grafo", {
   expect_true("B" %in% ret)
   expect_true(! "C" %in% ret)
 })
-
-for(tag in rilasci("test")$tag) elimina(tag)
