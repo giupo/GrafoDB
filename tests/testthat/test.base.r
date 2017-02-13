@@ -504,3 +504,24 @@ test_that("I can't subtract container with different types of objects", {
   
   expect_error(diff <- g - g1, "Different object classes")
 })
+
+test_that("expr returns a list of formulas with multiple names", {
+  for(tag in rilasci("test")$tag) elimina(tag)
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- 0
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+
+  g["D"] <- function(A, C) {
+    D <- A + C
+  }
+
+  expect_is(expr(g, c("C", "D")), "list")
+  ll <- expr(g, c("C", "D"))
+  expect_true(all(names(ll) %in% c("C", "D")))
+})

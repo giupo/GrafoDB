@@ -36,15 +36,14 @@
   } else if(nrow(formule) == 1) {
     task <- as.character(formule$formula)
     if(interactive() && echo) {
-      tidy_source(text=task, indent= 2)
+      tidy_source(text=task, indent = 2) # nocov
     }
     task
   } else {
     nomi <- formule$name
-    ret <- vector(length(nomi), mode="list")
+    ret <- vector(length(nomi), mode = "list")
     for(i in seq_along(nomi)) {
       name <- nomi[[i]]
-      message(name)
       ret[i] <- as.character(formule[formule$name == name,]$formula)
     }
     names(ret) <- nomi
