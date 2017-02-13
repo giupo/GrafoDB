@@ -51,4 +51,7 @@ so:
 	Rscript --vanilla -e 'devtools::compile_dll()'
 
 coverage:
-	Rscript -e 'library(covr); cov=package_coverage(path=".", line_exclusions=file.path("packrat",  list.files(path="packrat", recursive=TRUE))); report(cov, file="coverage.html")'
+	Rscript -e 'covr::package_coverage(path=".", line_exclusions=file.path("packrat",  list.files(path="packrat", recursive=TRUE)))'
+
+codecov:
+	Rscript -e 'covr::codecov(path=".", line_exclusions=file.path("packrat",  list.files(path="packrat", recursive=TRUE)))'
