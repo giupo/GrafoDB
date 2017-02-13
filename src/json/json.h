@@ -1984,18 +1984,20 @@ JSON_API std::ostream& operator<<(std::ostream&, const Value& root);
  *  cause an abort() or seg-fault, so these macros are used only
  *  for pre-condition violations and internal logic errors.
  */
-#if JSON_USE_EXCEPTION
 
+#include <stdexcept>
+#if JSON_USE_EXCEPTION
 // @todo <= add detail about condition in exception
-# define JSON_ASSERT(condition)                                                \
+# define JSON_ASSERT(condition)						\
   {if (!(condition)) {Json::throwLogicError( "assert json failed" );}}
 
-# define JSON_FAIL_MESSAGE(message)                                            \
-  {                                                                            \
-    std::ostringstream oss; oss << message;                                    \
-    Json::throwLogicError(oss.str());                                          \
-    /* abort(); */							\
-  }
+# define JSON_FAIL_MESSAGE(message)					\
+  {									\
+    std::ostringstream oss; oss << message;				\
+    Json::throwLogicError(oss.str());					\
+    throw new std::invalid_argument(message);				\
+      /* abort(); */							\
+      }
 
 #else // JSON_USE_EXCEPTION
 
@@ -2003,19 +2005,20 @@ JSON_API std::ostream& operator<<(std::ostream&, const Value& root);
 
 // The call to assert() will show the failure message in debug builds. In
 // release builds we abort, for a core-dump or debugger.
-# define JSON_FAIL_MESSAGE(message)                                            \
-  {                                                                            \
-    std::ostringstream oss; oss << message;                                    \
-    assert(false && oss.str().c_str());                                        \
-    /* abort(); */								\
+# define JSON_FAIL_MESSAGE(message)					\
+  {									\
+    std::ostringstream oss; oss << message;				\
+    assert(false && oss.str().c_str());					\
+    throw new std::invalid_argument(message);				\
+    /* abort(); */							\
   }
 
 
 #endif
 
-#define JSON_ASSERT_MESSAGE(condition, message)                                \
-  if (!(condition)) {                                                          \
-    JSON_FAIL_MESSAGE(message);                                                \
+#define JSON_ASSERT_MESSAGE(condition, message)				\
+  if (!(condition)) {							\
+    JSON_FAIL_MESSAGE(message);						\
   }
 
 #endif // CPPTL_JSON_ASSERTIONS_H_INCLUDED

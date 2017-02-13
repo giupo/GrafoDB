@@ -9,7 +9,7 @@
 #' @importFrom stringr str_trim
 #' @export
 
-setupdb <- function(overwrite=FALSE) {
+setupdb <- function(overwrite=FALSE) { # nocov start
 
   fileName <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
   if((!overwrite) && file.exists(fileName)) {
@@ -87,7 +87,7 @@ setupdb <- function(overwrite=FALSE) {
   fileName <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
   dir.create(dirname(fileName), showWarnings=FALSE, mode="0700")
   write(buffer, file=fileName, append=FALSE)
-}
+} # nocov end
 
 #' Reads db connections settings
 #'

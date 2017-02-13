@@ -55,7 +55,7 @@ so:
 	Rscript --vanilla -e 'devtools::compile_dll()'
 
 coverage:
-	Rscript -e 'covr::package_coverage(path=".", line_exclusions=c(list.files(path="packrat", recursive=T, all.names=T), "src/jsoncpp.cpp", "src/json/json.h"))'
+	Rscript -e 'covr::package_coverage(path=".", line_exclusions=c(list.files(path="packrat", recursive=T, full.names=T), "src/jsoncpp.cpp", "src/json/json.h"))'
 
 codecov:
-	Rscript -e 'covr::codecov(path=".", line_exclusions=c(list.files(path="packrat", recursive=T, all.names=T), "src/jsoncpp.cpp", "src/json/json.h"))'
+	Rscript -e 'covr::codecov(path=".", line_exclusions=c(list.files(path="packrat", recursive=T, full.names=T), "src/jsoncpp.cpp", "src/json/json.h"))'

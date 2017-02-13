@@ -70,7 +70,6 @@ Collate:
     'conflicts.r'
     'edita.r'
     'elimina.r'
-    'history.r'
     'life_cycle.r'
     'old_grafo_impl.r'
     'rmNode.r'

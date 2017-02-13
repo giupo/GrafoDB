@@ -12,10 +12,6 @@
 \item{i}{un character}
 
 \item{value}{valore settato}
-
-\item{j}{un'altro character o `missing`}
-
-\item{...}{ellipsis dio solo sa a cosa servono}
 }
 \description{
 implementazione per GrafoDB del subsetting '[<-'
