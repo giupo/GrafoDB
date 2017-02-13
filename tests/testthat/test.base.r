@@ -502,5 +502,5 @@ test_that("I can't subtract container with different types of objects", {
     C <- A + B
   }
   
-  expect_error(diff <- g - g1)
+  expect_error(diff <- g - g1, "Different object classes")
 })

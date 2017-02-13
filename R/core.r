@@ -312,6 +312,11 @@ setMethod(
   "-",
   c("GrafoDB", "GrafoDB"),
   function(e1, e2) {
+
+    is.scalar <- function(e) {
+      is.numeric(e) & length(e) == 1 & !is.ts(e)
+    }
+    
     nomi1 <- names(e1)
     nomi2 <- names(e2)
     common <- intersect(nomi1, nomi2)
@@ -324,11 +329,21 @@ setMethod(
 
     result <- Dataset()
     data <- foreach(name=iter(common), .combine=append) %dopar% {
+      
       ret <- list()
-      ret[[name]] <- tryCatch(
+      ret[[name]] <- tryCatch({
         e11 <- e1[[name]]
         e22 <- e2[[name]]
-        e11 - e22,
+        
+        stopifnot(is.numeric(e11))
+        stopifnot(is.numeric(e22))
+        
+        if(is.scalar(e11) && is.ts(e22) ||
+             is.ts(e11) && is.scalar(e22)) {
+          stop("Different object classes")
+        }
+        e11 - e22
+      },
         error = function(err) {
           stop(name, ": ", err, " ", class(e11), ",", class(e22))
         })
