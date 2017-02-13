@@ -20,10 +20,8 @@ setMethod(
 
 setMethod(
   "[[",
-  c("GrafoDB", "character"), function(x, i) {
-    if(length(i) == 0) {
-      return(list())
-    }
+  c("GrafoDB", "character", "missing"),
+  function(x, i, j, ...) {
     .getdata(x,i)
   })
 
@@ -33,8 +31,6 @@ setMethod(
 #' @usage .subsetting(x, i, j, ..., value)
 #' @param x istanza di `GrafoDB`
 #' @param i un character
-#' @param j un'altro character o `missing`
-#' @param ... ellipsis dio solo sa a cosa servono
 #' @param value valore settato
 #' @note funzione interna
 #' @rdname subsetting_internal

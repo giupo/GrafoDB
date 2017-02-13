@@ -2,29 +2,38 @@ context("Basic Operations")
 dbSettings(TRUE)
 
 test_that("Posso istanziare un GrafoDB", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   expect_true(is.grafodb(g))
 })
 
-elimina("test")
 
 test_that("Posso istanziare un GrafoDB con un tag", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   expect_true(is.grafodb(g))
 })
 
-elimina("test")
 
 test_that("Posso impostare una timeseries con nome nel GrafoDB", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   expect_true("A" %in% names(g))
   expect_true(is.ts(g[["A"]]))
 })
 
-elimina("test")
 
 test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
@@ -41,9 +50,11 @@ test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
   expect_true(all(g[["B"]] != g[["C"]]))
 })
 
-elimina("test")
 
 test_that("Posso usare delle formule per definire le serie", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
@@ -53,9 +64,11 @@ test_that("Posso usare delle formule per definire le serie", {
   }
 })
 
-elimina("test")
 
 test_that("Posso cercare le serie con metadati", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
@@ -73,9 +86,11 @@ test_that("Posso cercare le serie con metadati", {
   expect_true(all(c("A", "B") %in% res))
 })
 
-elimina("test")
 
 test_that("Posso salvare il grafo sul database", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
@@ -90,19 +105,21 @@ test_that("Posso salvare il grafo sul database", {
   g1 <- saveGraph(g, "test1")
 
   expect_true(all(c("A", "B", "C") %in% names(g1)))
-  elimina("test")
-  elimina("test1")
 })
 
 test_that("names su un grafo vuoto torna un array vuoto", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   expect_equal(length(names(g)), 0)
-  elimina("test")
 })
 
-elimina("test")
 
 test_that("subset with datasets", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   require(rdataset)
   g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
@@ -125,13 +142,13 @@ test_that("subset with datasets", {
 
   expect_equal(g[["A"]], ds[["A"]])
   expect_equal(g[["B"]], ds[["B"]])
-  elimina("test")
 })
 
 
-elimina("test")
-
 test_that("a tag with 'p' returns the tag with the ordinal", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   expect_equal(g@ordinal, 0)
   expect_equal(g@tag, "test")
@@ -141,9 +158,11 @@ test_that("a tag with 'p' returns the tag with the ordinal", {
   expect_equal(g@tag, "testp1")
 })
 
-elimina("test")
 
 test_that("Cascade subsetting works", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   expect_true("A" %in% names(g))
@@ -151,6 +170,9 @@ test_that("Cascade subsetting works", {
 })
 
 test_that("Saving preserves network and nodes", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
@@ -165,9 +187,10 @@ test_that("Saving preserves network and nodes", {
   expect_true("B" %in% upgrf(g, "C", livello=1))
 })
 
-elimina("test")
-
 test_that("posso rimuovere archi", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A) {
@@ -201,9 +224,10 @@ test_that("posso rimuovere archi", {
   expect_equal(length(upgrf(g, "C")), 1)
 })
 
-elimina("test")
-
 test_that("I can cast a empty GrafoDB to a Dataset", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   d <- as.dataset(g)
   expect_true(is.dataset(d))
@@ -215,9 +239,10 @@ test_that("I can cast a empty GrafoDB to a Dataset", {
   }
 })
 
-elimina("test")
-
 test_that("I can cast a GrafoDB to a Dataset", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A) {
@@ -228,9 +253,10 @@ test_that("I can cast a GrafoDB to a Dataset", {
   expect_true(all(c("A", "B", "C") %in% names(d)))
 }) 
 
-elimina("test")
-
 test_that("Posso passare non timeseries", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   if(!suppressWarnings(require(tis))) {
     skip("tis::mergeSeries is necessary for this test")
   }
@@ -244,9 +270,10 @@ test_that("Posso passare non timeseries", {
   expect_equal(g[["periodo"]], c(1990,2))
 })
 
-elimina("test")
-
 test_that("posso salvare non timeseries", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   if(!suppressWarnings(require(tis))) {
     skip("tis::mergeSeries is necessary for this test")
   }
@@ -261,29 +288,10 @@ test_that("posso salvare non timeseries", {
   expect_equal(g[["periodo"]], c(1990,2))
 })
 
-elimina("test")
-
-# Questo test non e' piu' valido per il salvataggio asincrono dei metadati
-
-#test_that("posso copiare un grafo da tag a tag", {
-#  g <- GrafoDB("test")
-#  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
-#  g["C"] <- function(A,B) {
-#    C = A + B
-#  }
-#  setMeta(g, "A", "KEY", "VALUE")
-#  g = saveGraph(g)
-#  saveGraph(g, "test1")
-#  g1 = GrafoDB("test1")
-#  expect_true(all(names(g) %in% names(g1)))
-#  expect_equal(searchNode(g, "KEY", "VALUE"), "A")
-#  expect_equal(searchNode(g1, "KEY", "VALUE"), "A")
-#})
-
-elimina("test")
-elimina("test1")
-
 test_that("posso memorizzare stringhe", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
@@ -296,9 +304,10 @@ test_that("posso memorizzare stringhe", {
   expect_equal(g1[["archivio"]], "cippalippa")
 })
 
-elimina("test")
-
 test_that("isLeaf torna true per serie foglia", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
@@ -307,9 +316,10 @@ test_that("isLeaf torna true per serie foglia", {
   expect_true(isLeaf(g, "C"))
 })
 
-elimina("test")
-
 test_that("isLeaf torna false per una serie non foglia", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
@@ -319,9 +329,11 @@ test_that("isLeaf torna false per una serie non foglia", {
   expect_true(!isLeaf(g, "B"))
 })
 
-elimina("test")
 
 test_that("isRoot torna false per serie foglia", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
@@ -330,9 +342,11 @@ test_that("isRoot torna false per serie foglia", {
   expect_true(!isRoot(g, "C"))
 })
 
-elimina("test")
 
 test_that("isRoot torna true per una serie non foglia", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
@@ -342,9 +356,11 @@ test_that("isRoot torna true per una serie non foglia", {
   expect_true(isRoot(g, "B"))
 })
 
-elimina("test")
 
 test_that("Posso editare una serie esistente aggiungendo una dipendenza esistente", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
@@ -360,9 +376,11 @@ test_that("Posso editare una serie esistente aggiungendo una dipendenza esistent
   }
 })
 
-elimina("test")
 
 test_that("Posso subsettare con il $ (dollaro)", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
   g["C"] <- function(A,B) {
@@ -375,7 +393,6 @@ test_that("Posso subsettare con il $ (dollaro)", {
   expect_equal(g$D, g[["D"]])
   expect_equal(g$A, g[["A"]])
   expect_equal(g$C, g[["C"]])
-  
 })
 
 
@@ -395,8 +412,5 @@ test_that("Posso subsettare una singola serie come Dataset", {
 
   expect_true(is.dataset(g["A"]))
   expect_equal(names(g["A"]), "A")
-  expect_equal(g[["A"]], g["A"][["A"]])
-  
+  expect_equal(g[["A"]], g["A"][["A"]])  
 })
-
-for(tag in rilasci("test")$tag) elimina(tag)
