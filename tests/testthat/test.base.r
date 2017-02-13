@@ -379,4 +379,24 @@ test_that("Posso subsettare con il $ (dollaro)", {
 })
 
 
+test_that("Posso subsettare una singola serie come Dataset", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["C"] <- function(A,B) {
+    C = A + B
+  }
+  
+  g["D"] <- function(A, C) {
+    D = A + C
+  }
+
+  expect_true(is.dataset(g["A"]))
+  expect_equal(names(g["A"]), "A")
+  expect_equal(g[["A"]], g["A"][["A"]])
+  
+})
+
 for(tag in rilasci("test")$tag) elimina(tag)

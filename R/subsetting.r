@@ -1,10 +1,3 @@
-## Questo file contiene tutte le funzioni per effettuare operazioni di subsetting
-## sul 'GrafoDB
-
-#' @include functions.r
-NULL
-
-
 #' @importFrom rdataset as.dataset
 
 setMethod(
