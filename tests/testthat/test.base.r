@@ -50,7 +50,6 @@ test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
   expect_true(all(g[["B"]] != g[["C"]]))
 })
 
-
 test_that("Posso usare delle formule per definire le serie", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
@@ -58,10 +57,10 @@ test_that("Posso usare delle formule per definire le serie", {
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
-  g["C"] <- function(A,B) {
-    C = A + B    
-
+  g["C"] <- function(A, B) {
+    C = A + B 
   }
+  expect_equal(g[["A"]] + g[["B"]], g[["C"]])
 })
 
 
@@ -413,4 +412,17 @@ test_that("Posso subsettare una singola serie come Dataset", {
   expect_true(is.dataset(g["A"]))
   expect_equal(names(g["A"]), "A")
   expect_equal(g[["A"]], g["A"][["A"]])  
+})
+
+test_that("I get an error if I try to subset a series with missing deps", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  expect_error({
+    g["C"] <- function(A,B,D) {
+      C = A + B
+    }
+  }, "Missing dependencies D")
 })

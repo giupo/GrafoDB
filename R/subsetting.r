@@ -52,9 +52,9 @@ setMethod(
   } else {
       if(!is.dataset(value) && length(E(network)) > 0) {
         if(packageVersion("igraph") >= '1.1.0') {
-            network - E(network)[.to(name)]
+            network - E(network)[.to(name)]  # nocov
         } else {
-            network - E(network)[to(name)]
+            network - E(network)[to(name)]   # nocov
         }
     } else {
       network
