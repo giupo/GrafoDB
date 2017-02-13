@@ -1994,7 +1994,7 @@ JSON_API std::ostream& operator<<(std::ostream&, const Value& root);
   {                                                                            \
     std::ostringstream oss; oss << message;                                    \
     Json::throwLogicError(oss.str());                                          \
-    abort();                                                                   \
+    /* abort(); */							\
   }
 
 #else // JSON_USE_EXCEPTION
@@ -2007,7 +2007,7 @@ JSON_API std::ostream& operator<<(std::ostream&, const Value& root);
   {                                                                            \
     std::ostringstream oss; oss << message;                                    \
     assert(false && oss.str().c_str());                                        \
-    abort();                                                                   \
+    /* abort(); */								\
   }
 
 

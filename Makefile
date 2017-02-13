@@ -44,7 +44,7 @@ list:
 	@echo $(SRC_FILES)
 
 test:
-	Rscript -e 'devtools::test()'
+	Rscript -e 'require(methods); devtools::test()'
 
 autotest:
 	Rscript autotest.r
