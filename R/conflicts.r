@@ -4,22 +4,6 @@
 }
 
 
-#' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
-#' @include db.r 
-
-.showConflicts <- function(x) {
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-  tag <- x@tag
-  df <- dbGetQuery(getSQLbyKey(helper, "SHOW_CONFLICTS", tag=tag))
-  for(name in df$name) {
-    dfserie <- df[df$name == name,]
-    originale <- x[[name]]
-    sul.db <- from.data.frame(dfserie)
-  }
-}
-
 .removeConflicts <- function(x, name=NULL) {
   tag <- x@tag
   helper <- x@helper
