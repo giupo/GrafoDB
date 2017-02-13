@@ -426,3 +426,81 @@ test_that("I get an error if I try to subset a series with missing deps", {
     }
   }, "Missing dependencies D")
 })
+
+test_that("isRoot returns true if node is a root", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4) 
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+  expect_true(isRoot(g, "A"))
+  expect_true(isRoot(g, "B"))
+  expect_false(isRoot(g, "C"))
+  expect_true(isLeaf(g, "C"))
+  expect_false(isLeaf(g, "A"))
+  expect_false(isLeaf(g, "B"))
+})
+
+test_that("show produces output", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4) 
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+  expect_message(show(g))
+})
+
+test_that("I can subtract two GrafoDB", {
+  for(tag in rilasci("test")$tag) elimina(tag)
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4) 
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+
+  g1 <- GrafoDB("test1")
+  g1["A"] <- g1["B"] <- ts(c(1,1,1), start=c(1990,1), freq=4) 
+  g1["C"] <- function(A, B) {
+    C <- A + B
+  }
+
+
+  expect_silent(diff <- g1 - g)
+  expect_is(diff, "Dataset")
+  expect_true(all(names(diff) %in% c("A", "B", "C")))
+  for(name in names(diff)) {
+    expect_equal(diff[[name]], g1[[name]] - g[[name]])
+  }
+})
+
+for(tag in rilasci("test")$tag) elimina(tag)
+
+test_that("I can't subtract container with different types of objects", {
+  for(tag in rilasci("test")$tag) elimina(tag)
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- 0
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+
+  g1 <- GrafoDB("test1")
+  g1["A"] <- g1["B"] <- ts(c(1,1,1), start=c(1990,1), freq=4) 
+  g1["C"] <- function(A, B) {
+    C <- A + B
+  }
+  
+  expect_error(diff <- g - g1)
+})

@@ -315,22 +315,26 @@ setMethod(
     nomi1 <- names(e1)
     nomi2 <- names(e2)
     common <- intersect(nomi1, nomi2)
-    not_common <- setdiff(nomi1, nomi2)
+    not_common <- setdiff(union(nomi1, nomi2), common)
     if(length(not_common) > 0) {
       lapply(not_common, function(name) {
-        warning(paste0(name, " not common, excluded from diff"))
+        warning(paste0(name, " not common, excluded from difference"))
       })
     }
+
     result <- Dataset()
-    data <- foreach(name=iter(common), multicombine=TRUE, .combine=c) %dopar% {
+    data <- foreach(name=iter(common), .combine=append) %dopar% {
       ret <- list()
       ret[[name]] <- tryCatch(
-        e1[[nome]] - e2[[nome]],
+        e11 <- e1[[name]]
+        e22 <- e2[[name]]
+        e11 - e22,
         error = function(err) {
-          stop(nome, ": ", err, " ", class(e1), ",", class(e2))
+          stop(name, ": ", err, " ", class(e11), ",", class(e22))
         })
+      ret
     }
-
+    
     names(data) <- common
     result@data <- hash(data)
     result
