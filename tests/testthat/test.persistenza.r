@@ -22,6 +22,9 @@ test_that("Posso salvare e ricaricare da un file", {
 test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   ## il problema qui e' che quando serializzo python giustamente
   ## usa 'NaN' per i missing. mentre C++/R preferiscono 'null'
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   dbGetQuery(con, "update dati set dati=replace(dati, 'null', 'NaN') where tag='test'")
@@ -31,8 +34,6 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   expect_true( any( is.na(g[["D"]] )))
   expect_true( length(g[["D"]])>0 )
 })
-
-for(tag in rilasci("test")$tag) elimina(tag)
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
@@ -50,6 +51,9 @@ setup <- function(tag) {
 }
 
 test_that("I can save a graph over another existing graph", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
   tagA <- "test2"
   tagB <- "test3"
   ga <- setup(tagA)
@@ -64,5 +68,4 @@ test_that("I can save a graph over another existing graph", {
   expect_true(all(g$B == gb$B))
 })
 
-for(tag in rilasci("test")$tag) elimina(tag)
-
+elimina("test")

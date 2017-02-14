@@ -114,3 +114,12 @@ test_that("setMeta su una serie inesistente produce un errore", {
   g <- setup("test")
   expect_error(setMeta(g, "NONESISTO", "KEY", "VALUE1"))
 })
+
+context("Metadati [internal functions]")
+
+test_that(".lookupFormula works as expected", {
+  g <- setup("test")
+  on.exit(elimina("test"))
+  expect_equal(length(.lookup_formula(g, "*")), 1)
+  expect_equal(.lookup_formula(g, "*"), "C")
+})
