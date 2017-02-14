@@ -80,7 +80,7 @@ test_that("Load* yields an empy dataframe in case of error", {
   ## I don't like this at all.
 
   with_mock(
-    loadTable = function(...) stop("my error") , {
+    'GrafoDB:::loadTable' = function(...) stop("my error") , {
       x <- loadDati("nonsense")
       expect_is(x, "data.frame")
       expect_equal(nrow(x), 0)
