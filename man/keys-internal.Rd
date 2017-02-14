@@ -2,7 +2,7 @@
 % Please edit documentation in R/metadati.r
 \name{.keys}
 \alias{.keys}
-\title{ritorna le chiavi di un metadato}
+\title{Ritorna le chiavi dei metadati}
 \usage{
 .keys(x)
 }
@@ -13,5 +13,5 @@
 ritorna un dataframe con le chiavi dei metadati
 }
 \description{
-ritorna le chiavi di un metadato
+Ritorna le chiavi dei metadati
 }

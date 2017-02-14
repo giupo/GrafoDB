@@ -52,7 +52,7 @@
   df
 }
 
-#' ritorna le chiavi di un metadato
+#' Ritorna le chiavi dei metadati
 #'
 #' @name .keys
 #' @usage .keys(x)
@@ -67,7 +67,6 @@
 .keys <- function(x) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  
   tag <- x@tag
   helper <- x@helper
   sql <- getSQLbyKey(helper, "KEYS_METADATA", tag=tag)

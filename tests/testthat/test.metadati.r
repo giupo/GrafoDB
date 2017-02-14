@@ -14,6 +14,7 @@ setup <- function(tag) {
   setMeta(g, "A", "KEY", "VALUE1")
   setMeta(g, "A", "KEY", "VALUE2")
   setMeta(g, "B", "KEY", "VALUE1")
+  g
 }
 
 test_that("posso caricare tutti i metadati del grafo", {
@@ -122,4 +123,25 @@ test_that(".lookupFormula works as expected", {
   on.exit(elimina("test"))
   expect_equal(length(.lookup_formula(g, "*")), 1)
   expect_equal(.lookup_formula(g, "*"), "C")
+})
+
+test_that(".keys returns keys of metadata", {
+  g <- setup("test")
+  on.exit(elimina("test"))
+  x <- GrafoDB:::.keys(g)
+  expect_is(x, "data.frame")
+  expect_equal(x$key, "KEY")
+})
+
+test_that(".values returns values of all metadata, or per key basis", {
+  g <- setup("test")
+  on.exit(elimina("test"))
+
+  v <- GrafoDB:::.values(g)
+  expect_is(v, "character")
+  expect_equal(v, c("VALUE1", "VALUE2"))
+
+  v <- GrafoDB:::.values(g, key="KEY")
+  expect_is(v, "character")
+  expect_equal(v, c("VALUE1", "VALUE2"))
 })
