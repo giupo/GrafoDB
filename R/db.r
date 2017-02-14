@@ -46,19 +46,21 @@ setupdb <- function(overwrite=FALSE) { # nocov start
     }
     getPass()
   } else {
-    getPass <- function(){  
-      require(tcltk);  
-      wnd<-tktoplevel()
-      tclVar("")->passVar;  
-      #Label  
+    getPass <- function() {  
+      if(!requireNamespace(tcltk, quietly=TRUE)) {
+        stop("can't find tcl/tk")
+      }
+      wnd <- tktoplevel()
+      tclVar("") -> passVar
+      # Label  
       tkgrid(tklabel(wnd,text="Enter password:"))
-      #Password box  
+      # Password box  
       tkgrid(tkentry(wnd, textvariable=passVar,show="*")->passBox)
-      #Hitting return will also submit password  
+      # Hitting return will also submit password  
       tkbind(passBox,"<Return>",function() tkdestroy(wnd))
-      #OK button  
+      # OK button  
       tkgrid(tkbutton(wnd,text="OK",command=function() tkdestroy(wnd)))
-      #Wait for user to click OK  
+      # Wait for user to click OK  
       tkwait.window(wnd)
       tclvalue(passVar)
     }

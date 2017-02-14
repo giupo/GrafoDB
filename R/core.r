@@ -177,7 +177,7 @@ setGeneric(
 #' @exportClass GrafoDB
 #' @include sqlhelper.r
 #' @export GrafoDB
-#' @importFrom rdataset Dataset
+#' @importClassesFrom rdataset Dataset
 #' @importFrom methods setGeneric setOldClass setClass setReplaceMethod new loadMethod
 #' @examples \dontrun{
 #'    g = GrafoDB("cf10") # istanzia il grafo chiamato 'cf10'

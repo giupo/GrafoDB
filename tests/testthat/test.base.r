@@ -525,3 +525,94 @@ test_that("expr returns a list of formulas with multiple names", {
   ll <- expr(g, c("C", "D"))
   expect_true(all(names(ll) %in% c("C", "D")))
 })
+
+test_that("ser fails if returned object is not a timeseries", {
+  for(tag in rilasci("test")$tag) elimina(tag)
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- 0
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+  
+  g["D"] <- function(A, C) {
+    D <- A + C
+  }
+  expect_error(ser(g, "C"), "non e' un oggetto ts")
+})
+
+test_that("ser in debug fails if series has no formula", {
+  for(tag in rilasci("test")$tag) elimina(tag)
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- 0
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+  
+  expect_error(ser(g, "A", debug=TRUE), "non e' una serie con formula")
+})
+
+test_that("ser in debug fails if name doesn't exist", {
+  for(tag in rilasci("test")$tag) elimina(tag)
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- 0
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+  
+  expect_error(ser(g, "NONESISTO", debug=TRUE), "non e' una serie del grafo")
+})
+
+test_that("ser in debug executes the formula", {
+  for(tag in rilasci("test")$tag) elimina(tag)
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- 0
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+
+  with_mock(
+    'base::debug' = function(...) {}, {
+      expect_equal(ser(g, "C", debug=TRUE), g[["C"]])
+    })
+})
+
+test_that("tickets call the correct url", {
+  with_mock(
+    'RCurl::getURL' = function(url, ...) {
+      settings <- dbSettings()
+      expect_equal(url, paste0(settings$WebApp$base_url, "/tickets/get/1"))
+      "[]"
+    }, {
+      x <- ticket(1)
+      expect_is(x, "AsIs")
+      expect_equal(length(x), 0)
+    })
+})
+
+test_that("an empty graph returns no names", {
+  for(tag in rilasci("test")$tag) elimina(tag)
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  
+  g <- GrafoDB("test")
+
+  expect_is(names(g), "character")
+  expect_equal(names(g), character(0))
+})
