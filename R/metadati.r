@@ -101,7 +101,7 @@
   } else {
     getSQLbyKey(helper, "VALUES_METADATA_KEY", tag=tag, key=key)
   }
-  
+
   df <- dbGetQuery(con, sql)
   as.character(df[,1])
 }
