@@ -17,19 +17,20 @@ loadTable <- function(tableName, tag, con=NULL) {
     on.exit(dbDisconnect(con))
   }
   fullTableName <- if(class(con) != "SQLiteConnection") {
-    paste0(tableName, '_', tag)
+    paste0(tableName, '_', tag) # nocov # e' valido solo su Postgres con table partition
   } else {
     tableName
   }
   
   df <- if(dbExistsTable(con, fullTableName)) {
     ## FIXME: not really smart to load the whole table in memory when you need just a tag
+    ## BUT it's only valid for test environments running SQLite.
     dbReadTable(con, fullTableName)
   } else {
     stop(fullTableName, " non esiste")
   }
 
-  # filter out in case of sqlite
+  # filter out in case of RSQLite
   df <- df[df$tag == tag, ]
   
   unique(df)
@@ -122,8 +123,8 @@ need_resync <- function(x) {
   helper <- x@helper
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  
-  df <- dbGetQuery(getSQLbyKey(
+  tag <- x@tag
+  df <- dbGetQuery(con, getSQLbyKey(
     helper, "NEED_RESYNC", tag=tag,
     last_updated=as.character(timeStamp)))
   

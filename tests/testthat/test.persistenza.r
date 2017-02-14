@@ -69,3 +69,42 @@ test_that("I can save a graph over another existing graph", {
 })
 
 elimina("test")
+
+context("Funzioni per la persistenza [internal functions]")
+
+test_that("loadTable stops if tableName doesn't exists", {
+  expect_error(loadTable("nonesisto", "nonesisto"))
+})
+
+test_that("Load* yields an empy dataframe in case of error", {
+  ## I don't like this at all.
+
+  with_mock(
+    loadTable = function(...) stop("my error") , {
+      x <- loadDati("nonsense")
+      expect_is(x, "data.frame")
+      expect_equal(nrow(x), 0)
+
+      x <- loadArchi("nonesisto")
+      expect_is(x, "data.frame")
+      expect_equal(nrow(x), 0)
+
+      x <- loadFormule("nonesisto")
+      expect_is(x, "data.frame")
+      expect_equal(nrow(x), 0)
+    })
+})
+
+test_that("need_resync returns true if GrafoNeeds a resync", {
+  g <- setup("test")
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+
+  Sys.sleep(.2)
+  g2 <- GrafoDB("test")
+  g2["A"] <- ts(runif(10), start=c(1990,1), freq=4)
+  saveGraph(g2)
+
+  expect_true(need_resync(g))
+})
