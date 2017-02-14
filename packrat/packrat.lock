@@ -331,14 +331,14 @@ Hash: 3e8627a2a5bd45c9bad6112acfc231d9
 
 Package: rdataset
 Source: github
-Version: 0.2.16
-Hash: 59578773c05e4c5eee09f95283c8aa2b
+Version: 0.2.17
+Hash: 6d5479dbb0ea302c8e8a58dd444776e9
 Requires: RJSONIO, Rcpp, foreach, hash, iterators, rprogressbar,
     rutils, stringr, tis, xlsx, xts
 GithubRepo: rdataset
 GithubUsername: giupo
 GithubRef: master
-GithubSha1: 5fa736519d79ce28bac1343bb4a0941d0148a839
+GithubSha1: f94696a41719d20e263f6d83f6dba475cc6ebf5d
 
 Package: registry
 Source: CRAN
