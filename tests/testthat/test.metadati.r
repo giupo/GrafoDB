@@ -69,3 +69,48 @@ test_that("Posso cercare i numeri direttamente nel grafo", {
   expect_true("B" %in% ret)
   expect_true(! "C" %in% ret)
 })
+
+test_that("Posso cancellare Metadati", {
+  on.exit({
+    elimina("test")
+  })
+  g <- setup("test")
+  deleteMeta(g, "A", "KEY", "VALUE1")
+  with_mock(
+    'RCurl::getURL' = function(...) "{}", {
+      v <- getMeta(g, "A", "KEY")
+      expect_true(is.character(v))
+      expect_true(all(c("VALUE2") %in% v ))
+    })
+})
+
+test_that("Ottengo un errore se accade un errore sul DB nella cancellazione di  Metadati", {
+  on.exit({
+    elimina("test")
+  })
+  g <- setup("test")
+  with_mock(
+    getSQLbyKey = function(...) stop("error"), {
+      expect_error(getMeta(g, "A", "KEY"), "error")
+    })
+})
+
+test_that("setMeta has a warning each time you set an already existing meta", {
+  on.exit({
+    elimina("test")
+  })
+  g <- setup("test")
+  with_mock(
+    # hack to regenerate the warning
+    'base::warning' = function(...) stop(...), {
+      expect_error(setMeta(g, "A", "KEY", "VALUE1"))
+    })
+})
+
+test_that("setMeta su una serie inesistente produce un errore", {
+  on.exit({
+    elimina("test")
+  })
+  g <- setup("test")
+  expect_error(setMeta(g, "NONESISTO", "KEY", "VALUE1"))
+})
