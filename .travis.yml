@@ -36,7 +36,7 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 after_success:
-  - Rscript -e 'packrat::restore()'
+  - make restore_packrat
   - make test
   - make codecov
   

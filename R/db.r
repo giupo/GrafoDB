@@ -195,7 +195,7 @@ initdb <- function(con) {
     return(con)
   } 
 
-  drv <- dbDriver(settings$driver)
+  drv <- dbDriver(settings$driver) #nocov start
   con <- tryCatch(
     dbConnect(drv, host=settings$host, dbname=settings$dbname),
     error = function(cond) {
@@ -230,7 +230,7 @@ initdb <- function(con) {
               host=settings$host, dbname=settings$dbname)
   } else {
     con
-  }
+  } # nocov end # can't check this code without production environment
 }
 
 
@@ -259,12 +259,12 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL) {
       ## dbGetInfo(con) e' deprecato. faccio il check su "grafi"
       grafi <- dbGetQuery(con, "select * from grafi");
       if (!is.data.frame(grafi)) {
-        .buildConnection(userid, password)
+        .buildConnection(userid, password) # nocov
       } else {
         con
       }
     }, error = function(err) {
-      .buildConnection(userid, password)
+      .buildConnection(userid, password) # nocov
     })
   }
   
@@ -281,17 +281,19 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL) {
 
 dbDisconnect <- function(con) {
   if(is.null(getOption("pgConnect", NULL))) {
-    DBI::dbDisconnect(con)
+    DBI::dbDisconnect(con) # nocov
   } else {
     TRUE
   }
 }
 
 
+# nocov start
 .dbBeginPG <- function(conn) {
   dbGetQuery(conn, "START TRANSACTION")
   TRUE
 }
+# nocov end # can't check this code without production environment
 
 .dbBeginSQLite <- function(conn) {
   dbGetQuery(conn, "BEGIN")

@@ -59,3 +59,6 @@ coverage:
 
 codecov:
 	Rscript -e 'covr::codecov(path=".", line_exclusions=c(list.files(path="packrat", recursive=T, full.names=T), "src/jsoncpp.cpp", "src/json/json.h"))'
+
+restore_packrat:
+	Rscript -e 'packrat::restore()'
