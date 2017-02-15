@@ -89,5 +89,7 @@ test_that("searchNode returns a list of nodes matching search criteria", {
   g <- setup("test")
 
   expect_equal(searchNode(g, "KEYA", "VALUE"), lookup(g, "KEYA", "VALUE"))
+  expect_equal(searchNode(g, "KEYA", "VALUE"), c("A", "B"))
   expect_error(searchNode(g, "NONESISTO", "NONESISTO"))
+  expect_equal(lookup(g, "NONESISTO", "NONESISTO"), character(0))
 })
