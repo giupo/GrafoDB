@@ -1,5 +1,5 @@
 // nocov start
-
+//LCOV_EXCL_START
 /// Json-cpp amalgated header (http://jsoncpp.sourceforge.net/).
 /// It is intended to be used with #include "json/json.h"
 
@@ -2034,4 +2034,6 @@ JSON_API std::ostream& operator<<(std::ostream&, const Value& root);
 
 
 #endif //ifndef JSON_AMALGATED_H_INCLUDED
+
+// LCOV_EXCL_STOP
 // nocov end

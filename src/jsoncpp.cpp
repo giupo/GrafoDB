@@ -1,5 +1,5 @@
 //nocov start
-
+//LCOV_EXCL_START
 /// Json-cpp amalgated source (http://jsoncpp.sourceforge.net/).
 /// It is intended to be used with #include "json/json.h"
 
@@ -5077,4 +5077,6 @@ std::ostream& operator<<(std::ostream& sout, Value const& root) {
 // End of content of file: src/lib_json/json_writer.cpp
 // //////////////////////////////////////////////////////////////////////
 
+
+//LCOV_EXCL_STOP
 //nocov end
