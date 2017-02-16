@@ -9,6 +9,7 @@ library(RPostgreSQL)
 library(doMC)
 library(zoo)
 library(tis)
+library(mockery)
 
 source("lib_mgt.r")
 

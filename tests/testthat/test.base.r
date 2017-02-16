@@ -616,3 +616,29 @@ test_that("an empty graph returns no names", {
   expect_is(names(g), "character")
   expect_equal(names(g), character(0))
 })
+
+test_that("evaluate raises an error on unknown name series", {
+  on.exit(elimina("test"))
+  g <- GrafoDB("test")
+  expect_error(evaluate(g, "NONESISTO"))
+})
+
+test_that("I can evaluate multiple series on a single evaluate call", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- 0
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+
+  g["D"] <- function(C, B) {
+    D <- C - B
+  }
+
+  saveGraph(g) # to clean internal structures
+  g <- evaluate(g, c("D", "C")) # just for codecov
+  expect_equal(keys(g@functions), character(0))
+  expect_equal(keys(g@data), c("C","D"))
+})

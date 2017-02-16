@@ -44,7 +44,8 @@ Suggests:
     DT,
     shiny,
     shinyAce,
-    sourcetools
+    sourcetools,
+    mockery
 LinkingTo: Rcpp, BH
 Collate: 
     'RcppExports.R'

@@ -286,6 +286,16 @@ Source: CRAN
 Version: 0.5
 Hash: 463550cf44fb6f0a2359368f42eebe62
 
+Package: mockery
+Source: github
+Version: 0.3.0
+Hash: 8751fa744fc941e972b892b9fff6ba57
+Requires: testthat
+GithubRepo: mockery
+GithubUsername: n-s-f
+GithubRef: master
+GithubSha1: 6c9bf95fc2e70f3c1a7508c2f5de1cb659144cbd
+
 Package: munsell
 Source: CRAN
 Version: 0.4.3

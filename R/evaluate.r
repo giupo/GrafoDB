@@ -74,11 +74,11 @@
 #' @importFrom hash keys
 #' @rdname evaluate-internal
 
-.evaluate <- function(object, v_start=NULL, deep=T, ...) {
+.evaluate <- function(object, v_start=NULL, ...) {
   params <- list(...)
 
   debug <- if("debug" %in% names(params)) {
-    as.logical(params[["debug"]])
+    as.logical(params[["debug"]]) # nocov used only for debugging
   } else {
     FALSE
   }
@@ -116,17 +116,15 @@
     return(invisible(object))
   }
   
-  deep <- as.logical(deep)
-  
   total <- length(V(network))
   i <- 0
   is.interactive <- interactive()
-  if(is.interactive) {
+  if(is.interactive) { # nocov start
     pb <- ProgressBar(min=0, max=total)
     updateProgressBar(pb, i, "Starting...")
-  }  
+  } # nocov end
   
-  if(is.interactive) updateProgressBar(pb, i, "Starting...")
+  if(is.interactive) updateProgressBar(pb, i, "Starting...") # nocov
   
   sources_id <- V(network)[degree(network, mode="in") == 0]
   
@@ -155,7 +153,7 @@
         }
         i <- i + length(sources)
         if(is.interactive) {
-            updateProgressBar(pb, i, tail(sources, n=1))
+            updateProgressBar(pb, i, tail(sources, n=1)) # nocov
         }
      
       
