@@ -48,20 +48,23 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
   g2["A"] <- newA2 <- ts(rep(1,10), start=c(1990,1), freq=4)
   saveGraph(g1, msg="test")
   # Sys.sleep(2)
-  expect_warning(saveGraph(g2, msg="test"), "Ci sono conflitti")
-
-  ## sia g1 che g2, in quanto "test1" devono riportare dei conflitti
-  expect_true(hasConflicts(g1))
-  expect_true(hasConflicts(g2))
-
-  g <- GrafoDB("test")
+  with_mock(
+    'GrafoDB:::getOuterDataNames' = function(...) "A", {
+      expect_warning(saveGraph(g2, msg="test"), "Ci sono conflitti")
+      
+      ## sia g1 che g2, in quanto "test1" devono riportare dei conflitti
+      expect_true(hasConflicts(g1))
+      expect_true(hasConflicts(g2))
+      
+      g <- GrafoDB("test")
   
-  expect_true(all(g[["A"]] ==  newA1))
-  expect_true(!any(g[["A"]] ==  newA2))
-
-  conflicts <- getDataConflicts(g)
-  expect_is(conflicts, "list")
-  expect_equal(names(conflicts), "A")
+      expect_true(all(g[["A"]] ==  newA1))
+      expect_true(!any(g[["A"]] ==  newA2))
+      
+      conflicts <- getDataConflicts(g)
+      expect_is(conflicts, "list")
+      expect_equal(names(conflicts), "A")
+    })
 })
 
 for(tag in rilasci("test")$tag) elimina(tag)
@@ -143,11 +146,12 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   ## in seguito alla non necessita' di dare saveGraph(g1), che per usabilita' e' stato aggiunto
   ## il side-effect di cambiare g1 nel env del parent.frame, il seguente warning non uscira' mai
   ## expect_warning(saveGraph(g2), "Ci sono conflitti sugli archi")
-  
-  expect_warning(saveGraph(g2, msg="test"), "Ci sono conflitti")
-
-  g <- GrafoDB("test")
-  expect_true(hasConflicts(g))  
+  with_mock(
+    'GrafoDB:::getOuterFormulaNames' = function(...) "D", {
+      expect_warning(saveGraph(g2, msg="test"), "Ci sono conflitti")
+      g <- GrafoDB("test")
+      expect_true(hasConflicts(g))
+    })
 })
 
 for (tag in rilasci("test")$tag) elimina(tag)
@@ -176,19 +180,22 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
   }
   g1 <- saveGraph(g1)
   Sys.sleep(1)
-  expect_warning(saveGraph(g2))
-  conflicts <- getConflicts(g1)
-  lista_nomi <- as.character(conflicts$name)
-  expect_true("C" %in% lista_nomi)
-  expect_true(!"D" %in% lista_nomi)
-
-  expect_equal(getConflicts(g1, "C")$name, "C")
-  expect_equal(nrow(getConflicts(g1, "C")), 1)
-  conflict <- getFormulaConflicts(g)
-  expect_is(conflict, "data.frame")
-  conflictC <- getFormulaConflicts(g, "C")
-  expect_is(conflictC, "data.frame")
-  expect_equal(nrow(conflictC), 1)
+  with_mock(
+    'GrafoDB:::getOuterFormulaNames' = function(...) "C", {
+      expect_warning(saveGraph(g2))
+      conflicts <- getConflicts(g1)
+      lista_nomi <- as.character(conflicts$name)
+      expect_true("C" %in% lista_nomi)
+      expect_true(!"D" %in% lista_nomi)
+      
+      expect_equal(getConflicts(g1, "C")$name, "C")
+      expect_equal(nrow(getConflicts(g1, "C")), 1)
+      conflict <- getFormulaConflicts(g)
+      expect_is(conflict, "data.frame")
+      conflictC <- getFormulaConflicts(g, "C")
+      expect_is(conflictC, "data.frame")
+      expect_equal(nrow(conflictC), 1)
+    })
 })
 
 for(tag in rilasci("test")$tag) elimina(tag)
