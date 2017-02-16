@@ -58,6 +58,10 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
   
   expect_true(all(g[["A"]] ==  newA1))
   expect_true(!any(g[["A"]] ==  newA2))
+
+  conflicts <- getDataConflicts(g)
+  expect_is(conflicts, "list")
+  expect_equal(names(conflicts), "A")
 })
 
 for(tag in rilasci("test")$tag) elimina(tag)
@@ -180,7 +184,11 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
 
   expect_equal(getConflicts(g1, "C")$name, "C")
   expect_equal(nrow(getConflicts(g1, "C")), 1)
-  
+  conflict <- getFormulaConflicts(g)
+  expect_is(conflict, "data.frame")
+  conflictC <- getFormulaConflicts(g, "C")
+  expect_is(conflictC, "data.frame")
+  expect_equal(nrow(conflictC), 1)
 })
 
 for(tag in rilasci("test")$tag) elimina(tag)
