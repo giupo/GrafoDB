@@ -467,16 +467,18 @@ test_that("I can subtract two GrafoDB", {
     C <- A + B
   }
 
+  g["D"] <- 0
+  
   g1 <- GrafoDB("test1")
   g1["A"] <- g1["B"] <- ts(c(1,1,1), start=c(1990,1), freq=4) 
   g1["C"] <- function(A, B) {
     C <- A + B
   }
-
-
-  expect_silent(diff <- g1 - g)
+  
+  expect_warning(diff <- g1 - g)
   expect_is(diff, "Dataset")
   expect_true(all(names(diff) %in% c("A", "B", "C")))
+  expect_true(!"D" %in% names(diff))
   for(name in names(diff)) {
     expect_equal(diff[[name]], g1[[name]] - g[[name]])
   }

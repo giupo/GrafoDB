@@ -93,3 +93,13 @@ test_that("searchNode returns a list of nodes matching search criteria", {
   expect_error(searchNode(g, "NONESISTO", "NONESISTO"))
   expect_equal(lookup(g, "NONESISTO", "NONESISTO"), character(0))
 })
+
+test_that("describe is equal to navigate", {
+  on.exit({
+    elimina("test")
+  })
+  g <- setup("test")
+
+  expect_equal(describe(g, "A"), downgrf(g, "A"))
+  expect_equal(describe(g, "C", mode="in", order=1), upgrf(g, "C"))
+})
