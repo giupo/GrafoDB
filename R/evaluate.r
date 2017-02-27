@@ -145,31 +145,33 @@
         data[n] <- datip[[n]]
       }
     }
+
     sources <- setdiff(sources, sprimitive)
     
     if(length(sources)) {
-        evaluated <- foreach(name=sources, .combine=c) %dopar% {
-            proxy(name, object)
-        }
-        i <- i + length(sources)
-        if(is.interactive) {
-            updateProgressBar(pb, i, tail(sources, n=1)) # nocov
-        }
-     
+      evaluated <- foreach(name=sources, .combine=c) %dopar% {
+        proxy(name, object)
+      }
+      i <- i + length(sources)
+      if(is.interactive) {
+        updateProgressBar(pb, i, tail(sources, n=1)) # nocov
+      }
       
       names(evaluated) <- sources
-    
+      
       if(length(evaluated) == 1) {
         data[[sources]] <- evaluated[[sources]]
       } else {
         data[sources] <- evaluated
       }
     }
+
     network <- delete.vertices(network, sources_id)
     sources_id <- V(network)[degree(network, mode="in") == 0]
   }
 
   if(is.interactive) kill(pb)
   object@data <- data
+  object@touched <- sort(unique(c(object@touched, keys(data))))
   object
 }

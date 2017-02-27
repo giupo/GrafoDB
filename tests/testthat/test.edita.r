@@ -41,8 +41,19 @@ test_that("I can edit a function", {
       expect_error(edita(g, "C"))
       expect_equal(g@functions[["C"]], "C = A /// B")
     })
+})
 
-  expect_error(edita(g, "A"), "primitiva")
+test_that("I can edit a root, making it a formula", {
+  on.exit(elimina("test"))
+  g <- setup("test")
+  with_mock(
+    'utils::file.edit' = function(file, title) {
+      write("function()\n{ A = 1 }", file=file)
+    }, {
+      expect_equal(deps(g, "A"), c())
+      edita(g, "A")
+      expect_equal(g@functions[["A"]], "A = 1")
+    })
 })
 
 test_that("nothing changes if I don't modify a formula", {

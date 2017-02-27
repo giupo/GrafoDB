@@ -17,11 +17,14 @@
     }
   } else {
     deps <- getDependencies(x, name)
-    task <- expr(x, name, echo=F)
+    task <- expr(x, name, echo=FALSE)
     if(is.null(task)) {
-      stop("la serie ", name, " e' una serie primitiva")
+      warning("la serie ", name, " e' una serie primitiva")
+      task <- new_task
     }
+    
   }
+
   old_deps <- deps
   old_task <- task
   if(name %in% keys(x@edges)) {
@@ -34,10 +37,6 @@
   file.edit(file, title=name)
   txtsrc <- paste(readLines(file), collapse="\n")
   edited <- .declutter_function(txtsrc)
-  
-  #if(str_trim(edited) == str_trim(old_task)) {
-  #  return(invisible(x))
-  #}
   
   params <- list(...)
   tryCatch({
