@@ -25,7 +25,6 @@ Classe per accedere ai dati immagazzinati in PostgreSQL del Grafo CF
 
 \item{\code{touched}}{serie modificate in area di lavoro}
 }}
-
 \examples{
 \dontrun{
    g = GrafoDB("cf10") # istanzia il grafo chiamato 'cf10'
@@ -34,3 +33,4 @@ Classe per accedere ai dati immagazzinati in PostgreSQL del Grafo CF
                          # in questo caso ordinal e' 2
 }
 }
+

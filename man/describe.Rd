@@ -12,3 +12,4 @@ implementazione di describe di `package::grafo`
 \seealso{
 `grafo::describe`
 }
+

@@ -48,12 +48,12 @@ test_that("I can edit a root, making it a formula", {
   g <- setup("test")
   with_mock(
     'utils::file.edit' = function(file, title) {
-      write("function()\n{ A = 1 }", file=file)
-    }, {
-      expect_equal(deps(g, "A"), c())
-      edita(g, "A")
-      expect_equal(g@functions[["A"]], "A = 1")
-    })
+    write("function()\n{ A = 1 }", file=file)
+  }, {
+    expect_equal(deps(g, "A"), c())
+    edita(g, "A")
+    expect_equal(g@functions[["A"]], "A = 1")
+  })
 })
 
 test_that("nothing changes if I don't modify a formula", {
@@ -61,9 +61,21 @@ test_that("nothing changes if I don't modify a formula", {
   g <- setup("test")
   with_mock(
     'utils::file.edit' = function(file, title) {
-      write("function(A, B)\n{ C = (A + 1) * (B + 2) }", file=file)
+    write("function(A, B)\n{ C = (A + 1) * (B + 2) }", file=file)
+  }, {
+    edita(g, "C")
+    expect_true(!"C" %in% keys(g@functions))
+  })
+})
+
+test_that("If I edit a root, and I do nothing, still keep the node as root and nothing changes", {
+  on.exit(elimina("test"))
+  g <- setup("test")
+  with_mock(
+    'utils::file.edit' = function(file, title) {
+    write("function() { A = ... # work it\n}", file=file)
     }, {
-      edita(g, "C")
-      expect_true(!"C" %in% keys(g@functions))
+      expect_error(edita(g, "A"))
+      expect_true(!"A" %in% keys(g@functions))
     })
 })

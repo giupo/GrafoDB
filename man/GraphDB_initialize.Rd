@@ -2,8 +2,8 @@
 % Please edit documentation in R/core.r
 \docType{methods}
 \name{initialize}
-\alias{initialize}
 \alias{GrafoDB-initialize}
+\alias{initialize}
 \title{costruttore per la classe GrafoDB}
 \usage{
 \S4method{initialize}{GrafoDB}(.Object, tag = "cf10")
@@ -11,3 +11,4 @@
 \description{
 costruttore per la classe GrafoDB
 }
+

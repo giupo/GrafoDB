@@ -24,3 +24,4 @@ Il metodo si occupa di sostiture '--tab--' e '--value--' secondo i valori
 passati come argomento: Es: `getSQLbyKey(helper, KEYQUERY, tab="A", value="B")`
 risultera' in `select * from A where param='B'`
 }
+

@@ -17,3 +17,4 @@ trying to behave like a connection pool
 \note{
 this stores the connection into options and retrieves it back
 }
+

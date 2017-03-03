@@ -12,3 +12,4 @@ implementazione di isAggregate di `package::grafo`
 \seealso{
 `grafo::isAggregate`
 }
+

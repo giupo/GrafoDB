@@ -12,3 +12,4 @@ implementazione di isNode di `package::grafo`
 \seealso{
 `grafo::isNode`
 }
+

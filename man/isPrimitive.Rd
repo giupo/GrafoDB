@@ -12,3 +12,4 @@ implementazione di isPrimitive di `package::grafo`
 \seealso{
 `grafo::isPrimitive`
 }
+

@@ -19,3 +19,4 @@ lista di nomi che matchano la condizione `key==valy`
 \description{
 Ricerca nei metadati del grafo
 }
+

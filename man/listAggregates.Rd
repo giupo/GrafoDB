@@ -12,3 +12,4 @@ implementazione di listAggregates di `package::grafo`
 \seealso{
 `grafo::listAggregates`
 }
+

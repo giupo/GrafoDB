@@ -14,3 +14,4 @@
 \description{
 Ritorna (o mostra su console, stdout) le formule delle serie `nomi`
 }
+

@@ -24,3 +24,4 @@ funzione utilizzata per convertire il dato in una forma accettabile dal DB
 \note{
 funzione interna
 }
+

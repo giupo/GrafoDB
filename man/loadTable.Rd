@@ -20,3 +20,4 @@ Legge tutta la tabella dei dati per un determinato tag
 \note{
 funzione interna
 }
+

@@ -18,3 +18,4 @@ un character array di nomi, NULL se la serie non ha dipendenze
 Ritorna come array di caratteri i nomi delle serie su cui la serie specificata
 dal parametro `name` dipende
 }
+

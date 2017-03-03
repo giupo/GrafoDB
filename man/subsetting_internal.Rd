@@ -19,3 +19,4 @@ implementazione per GrafoDB del subsetting '[<-'
 \note{
 funzione interna
 }
+

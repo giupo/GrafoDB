@@ -16,3 +16,4 @@ implementazione di isElementary di `package::grafo`
 \seealso{
 `grafo::isElementary`
 }
+

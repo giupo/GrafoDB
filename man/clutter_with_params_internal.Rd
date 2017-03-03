@@ -19,3 +19,4 @@ Ritorna una una funzione `is.character(ret) == TRUE`
 \description{
 I parametri della funzione ritornata sono le dipendenze della serie
 }
+

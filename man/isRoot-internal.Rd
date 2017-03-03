@@ -20,3 +20,4 @@ vector di `logical` (stessa lunghezza di `i`) con i risultati
 Ritorna un array di `logical` uno per ogni elemento in `i`: `TRUE`
 se l'i-esimo elemento e' una radice (non ha archi uscenti), altrimenti `FALSE`
 }
+

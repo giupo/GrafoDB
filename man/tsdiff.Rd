@@ -21,3 +21,4 @@ It's a predicate, returns `TRUE` if:
 \item index(a) != index(b)
 }
 }
+

@@ -14,3 +14,4 @@ saveBinary(x, path)
 \description{
 Salva un istanza di grafo sul file system
 }
+

@@ -15,3 +15,4 @@ la lista delle foglie del grafo
 \description{
 Ritona tutti i nodi del grafo le che non hanno archi uscenti
 }
+

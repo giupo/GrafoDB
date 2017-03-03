@@ -20,3 +20,4 @@ Trova le serie che sono cambiate nel database
 \note{
 funzione interna
 }
+

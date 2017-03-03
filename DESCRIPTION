@@ -75,7 +75,7 @@ Collate:
     'old_grafo_impl.r'
     'rmNode.r'
     'subsetting.r'
-RoxygenNote: 6.0.1
+RoxygenNote: 5.0.1
 Remotes: github::giupo/rutils,
     github::giupo/rprogressbar,
     github::giupo/rdataset

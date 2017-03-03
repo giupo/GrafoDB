@@ -27,3 +27,4 @@ questa e' una funzione interna del grafo invocata da `updateGraph`
 \seealso{
 saveGraph updateGraph
 }
+
