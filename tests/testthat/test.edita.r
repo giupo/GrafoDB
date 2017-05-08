@@ -34,6 +34,8 @@ test_that("I can edit a function", {
       expect_equal(g@functions[["D"]], "D = A - B")
       expect_true("D" %in% V(g@network)$name)
     })
+
+  
   with_mock(
     'utils::file.edit' = function(file, title) {
       write("function(A, B)\n{ C = A /// B }", file=file)

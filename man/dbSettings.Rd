@@ -7,7 +7,7 @@
 dbSettings()
 }
 \arguments{
-\item{flush}{if `TRUE` removes any option recored in the current
+\item{flush}{if `TRUE` removes any option saved in the current
 session and reloads the settings}
 }
 \value{
