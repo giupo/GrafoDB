@@ -99,7 +99,7 @@ setupdb <- function(overwrite=FALSE) { # nocov start
 #'
 #' @name dbSettings
 #' @usage dbSettings()
-#' @param flush if `TRUE` removes any option recored in the current
+#' @param flush if `TRUE` removes any option saved in the current
 #'              session and reloads the settings
 #' @return a list containing the infos used to connect via DBI/RPostgreSQL
 #' @importFrom rutils ini_parse
