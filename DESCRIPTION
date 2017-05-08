@@ -69,6 +69,7 @@ Collate:
     'navigate.r'
     'core.r'
     'conflicts.r'
+    'diff.r'
     'edita.r'
     'elimina.r'
     'life_cycle.r'
