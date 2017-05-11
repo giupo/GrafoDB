@@ -20,18 +20,14 @@ Imports:
     rprogressbar,
     stats,
     RPostgreSQL,
-    doParallel,
     foreach,
     iterators,
     gdata,
-    XML,
     rredis,
     R.utils,
-    doMC,
     RSQLite,
     rdataset,
     Rcpp,
-    BH,
     RCurl,
     zoo
 Suggests:
