@@ -35,9 +35,10 @@
 #' @name .saveGraph
 #' @usage .saveGraph(x, tag)
 #' @usage .saveGraph(x)
-#' @include conflicts.r copy_graph.r
+#' @include conflicts.r copy_graph.r checkDAG.r persistence_utils.r
 #' @rdname saveGraph-internal
 #' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
+#' @importFrom igraph graph.union
 
 # FIXME: 31849
 
@@ -67,18 +68,22 @@
       # trova serie che necessitano il resync
       name_to_sync <- getChangedSeries(x, con=con)
       # trova serie con conflitti
-      name_in_conflicts <- setdiff(name_to_sync, union(keys(x@functions), keys(x@data)))
+      name_in_conflicts <- intersect(name_to_sync, union(keys(x@functions), keys(x@data)))
       clean_names <- setdiff(name_to_sync, name_in_conflicts)
       # clean_names contiene le serie che possono essere ricaricate dal db e rivalutate
       # senza problemi
+      # aggiungo gli archi del DB al presente grafo
+      network <- x@network
+      archi <- loadArchi(tag, con=con)
+      archi <- archi[, c("partenza", "arrivo")]
+      dbnetwork <- graph.data.frame(as.data.frame(archi), directed=TRUE)
+      network <- graph.union(network, dbnetwork, byname=TRUE)
+      checkDAG(network)
+      x@network <- network
       x <- evaluate(x, clean_names)
-      # questa riga crea i conflitti se presenti
-      #if (length(name_in_conflicts) > 0) {
-      #  message("... and we have some conflicts")
-      #  checkConflicts(x, con=con)
-      #}
     }
     checkConflicts(x, con=con)    
+
     if(.tagExists(tag, con=con)) {
       # sto aggiornando il grafo tag
       .updateGraph(x, con=con, msg=msg)
@@ -95,6 +100,7 @@
         }
       }
     }
+    
     removeFromRedis(x, x@touched)
     dbCommit(con)
   }, error=function(err) {

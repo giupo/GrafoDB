@@ -34,7 +34,7 @@ setMethod(
 #' @param value valore settato
 #' @note funzione interna
 #' @rdname subsetting_internal
-#' @include functions.r core.r
+#' @include functions.r core.r checkDAG.r
 #' @importFrom igraph V E is.dag vertex topological.sort edge
 #' @importFrom rdataset is.dataset
 #' @importFrom hash del
@@ -82,14 +82,7 @@ setMethod(
       suppressWarnings(del(name, x@edges))
     }
     
-    if (!is.dag(network)) {
-      wrongsort <- try(topological.sort(network), silent=TRUE)
-      network_seq <- V(network)
-      cycles_seq <- network_seq[setdiff(
-        network_seq, network_seq[wrongsort])]
-      cycles_vertex <- cycles_seq$name
-      stop("Cycles found: ", paste(unlist(cycles_vertex), collapse=", "))
-    }
+    checkDAG(network)
 
     x@functions[[name]] <- .declutter_function(value)
     x@network <- network
