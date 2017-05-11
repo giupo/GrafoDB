@@ -2,6 +2,7 @@
 #' @importFrom igraph get.edgelist graph.union graph.data.frame is.dag topological.sort
 #' @importFrom stringr str_split
 #' @importFrom rutils whoami
+#' @include checkDAG.r
 
 .updateArchi <- function(x, con, tag=x@tag) {
   if(interactive()) cat("Update Archi...")
