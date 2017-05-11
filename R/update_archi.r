@@ -40,15 +40,7 @@
     if(any(keys(functions) %in% df$arrivo)) {
       warning("Ci sono conflitti sugli archi, continuo su dati e formule")    
     }
-    
-    if(!is.dag(network_aux)) {
-      wrongsort <- try(topological.sort(network), silent=TRUE)
-      network_seq <- V(network)
-      cycles_seq <- network_seq[setdiff(
-        network_seq, network_seq[wrongsort])]
-      cycles_vertex <- cycles_seq$name
-      stop("Cycles found: ", paste(unlist(cycles_vertex), collapse=", "))
-    }
+    checkDAG(network_aux)    
   }
   
   if(length(da.inserire)) {
