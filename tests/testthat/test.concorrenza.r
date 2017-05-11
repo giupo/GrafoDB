@@ -276,3 +276,30 @@ test_that("fixConflicts removes conflicts", {
   fixConflicts(g1)
   saveGraph(g2)
 })
+
+test_that("resync gets called when two sessions updates a Graph", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  g <- GrafoDB("test")
+  g["A"] = 1
+  g["B"] = 0
+  g["C"] <- function(A, B) {
+    C <- A + B
+  }
+  saveGraph(g)
+
+  g1 <- GrafoDB("test")
+  g2 <- GrafoDB("test")
+
+  g1["A"] <- 0
+  expect_equal(g1[["C"]], 0)
+  expect_equal(g2[["C"]], 1)
+  saveGraph(g1)
+  Sys.sleep(.01)
+  expect_message(saveGraph(g2), "Resync started")
+  expect_equal(g2[["C"]],  0)
+})
+
+
+

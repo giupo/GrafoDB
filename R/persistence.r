@@ -1,14 +1,45 @@
 
-#' funzione per salvare un grafo
+#' Funzione per salvare un grafo
 #'
+#' La funzione controlla la presenza di eventuali conflitti e necessita'
+#' di risincronizzare i dati del DB con quelli presenti nel Grafo.
+#'
+#' \itemize{
+#'   \item{"1"}{
+#'      Identificare le serie aggregate (solo formule) - primitive (solo dati)
+#'      cambiate, escludendo eventuali conflitti}
+#'   \item{"2"}{Caricarle nel grafo}
+#'   \item{"3"}{Rieseguirle}
+#'   \item{"4"}{Risalvare il grafo}
+#' }
+#'
+#' La funzione controlla se esistono conflitti nel seguente modo:
+#' \itemize{
+#'   \item{"dati"}{
+#'        Se esistono serie primitive nel DB e nel grafo
+#'        in sessione che sono state aggiornate in
+#'        contemporanea}
+#'   \item{"formule"}{
+#'        Se esistono formule nel DB e nel grafo in
+#'        sessione aggiornati in contemporanea}
+#' }
+#'
+#' Qualora uno dei due casi si verificasse il grafo va in "conflitto",
+#' vengono salvate sia le proprie modifiche che le modifiche fatte da
+#' altri e si attende la risoluzione del conflitto attraverso i metodi
+#' `fixConflict`. La soluzione dei conflitti non e' un atto di fede:
+#' occorre incontrarsi e decidere quale "formula" o quale versione dei dati
+#' sia da preferire.
+#'
+#' @seealso saveGraph
 #' @name .saveGraph
 #' @usage .saveGraph(x, tag)
 #' @usage .saveGraph(x)
 #' @include conflicts.r copy_graph.r
 #' @rdname saveGraph-internal
+#' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
 
-# FIXME: #31849
-# https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
+# FIXME: 31849
 
 .saveGraph <- function(x, tag = x@tag, ...) {
 
@@ -28,7 +59,26 @@
     if(hasConflicts(x, con=con)) {
       stop("Il grafo ", tag, " ha conflitti, risolverli prima di salvare")
     }
-    checkConflicts(x, con=con)
+
+    if (need_resync(x)) {
+      message("Resync started")
+      # risincronizzo i dati del db con la copia nel grafo
+      x <- resync(x, con=con)
+      # trova serie che necessitano il resync
+      name_to_sync <- getChangedSeries(x, con=con)
+      # trova serie con conflitti
+      name_in_conflicts <- setdiff(name_to_sync, union(keys(x@functions), keys(x@data)))
+      clean_names <- setdiff(name_to_sync, name_in_conflicts)
+      # clean_names contiene le serie che possono essere ricaricate dal db e rivalutate
+      # senza problemi
+      x <- evaluate(x, clean_names)
+      # questa riga crea i conflitti se presenti
+      #if (length(name_in_conflicts) > 0) {
+      #  message("... and we have some conflicts")
+      #  checkConflicts(x, con=con)
+      #}
+    }
+    checkConflicts(x, con=con)    
     if(.tagExists(tag, con=con)) {
       # sto aggiornando il grafo tag
       .updateGraph(x, con=con, msg=msg)
@@ -181,7 +231,7 @@ countRolling <- function(x, con) {
   } else if(is.character(x)){
     x
   } else {
-    stop("I dunno what to do here")
+    stop("I dunno what to do herez")
   }
   
   sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
