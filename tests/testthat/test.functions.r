@@ -57,3 +57,14 @@ test_that(".decluter_functions preserves commnets", {
   f <- .declutter_function(f)
   expect_equal(f, "# comment here\nA")
 })
+
+test_that("checkDAG raises an exception with a cycle in network", {
+  g <- graph.empty(directed=TRUE)
+  g <- g + vertex("A")
+  g <- g + vertex("B")
+  g <- g + edge("A", "B")
+  expect_error(checkDAG(g), NA)
+  g <- g + edge("B", "A")
+  expect_error(checkDAG(g))
+})
+
