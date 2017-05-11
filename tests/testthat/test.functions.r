@@ -65,6 +65,6 @@ test_that("checkDAG raises an exception with a cycle in network", {
   g <- g + edge("A", "B")
   expect_error(checkDAG(g), NA)
   g <- g + edge("B", "A")
-  expect_error(checkDAG(g))
+  expect_error(checkDAG(g), "Cycles found")
 })
 
