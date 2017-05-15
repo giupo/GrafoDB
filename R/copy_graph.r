@@ -24,9 +24,12 @@
   
   ## copia formule
   dbGetQuery(con, getSQLbyKey(helper, "COPY_FORMULE", to=to, from=from))
+
+  ## copio metadati
+  dbGetQuery(con, getSQLbyKey(helper, "COPY_METADATI", to=to, from=from))
   
   ## copia asincrona metadati 
-  sendCopyMetadati(from, to)
+  ## sendCopyMetadati(from, to)
   
   dbGetQuery(con, getSQLbyKey(
     helper, "INSERT_GRAFI", tag=to, commento=commento, autore=autore,
