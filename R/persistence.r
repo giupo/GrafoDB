@@ -254,7 +254,7 @@ countRolling <- function(x, con) {
     }
   } else {
     ## se SQLite:
-    getMaxP(helper, tag, con)
+    getMaxP(helper, tag, con) + 1
   }
 }
 

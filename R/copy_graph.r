@@ -30,7 +30,6 @@
   
   ## copia asincrona metadati 
   ## sendCopyMetadati(from, to)
-  
   dbGetQuery(con, getSQLbyKey(
     helper, "INSERT_GRAFI", tag=to, commento=commento, autore=autore,
     last_updated=round(R.utils::System$currentTimeMillis())))
