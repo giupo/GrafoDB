@@ -93,13 +93,13 @@
   commento <- if ("msg" %in% names(param_list)) {
     param_list[["msg"]]
   } else {
-     if(interactive()) {
-       readline(prompt="Inserisci un commento/nota per: ")
-     } else {
-       paste0("Rilascio per ", tag)
-     }
+    if(interactive()) {
+      readline(prompt="Inserisci un commento/nota per: ")
+    } else {
+      paste0("Rilascio per ", tag)
+    }
   }
-    
+  
   autore <- whoami()
   helper <- x@helper
   
@@ -200,6 +200,7 @@ countRolling <- function(x, con) {
     ## se SQLite:
     getMaxP(helper, tag, con)
   }
+}
 
 getMaxP <- function(helper, tag, con) {
   df <- dbGetQuery(con, getSQLbyKey(helper, "COUNT_ROLLING", tag=tag))
