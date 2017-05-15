@@ -239,6 +239,10 @@ countRolling <- function(x, con) {
   } else {
     stop("I dunno what to do herez")
   }
+
+  ## se ho la sequence la uso;
+
+  ## altrimenti vengo qui, la creo ed aggiorno il suo valore trovato su grafi
   
   sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
   helper <- x@helper
