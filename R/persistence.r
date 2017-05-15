@@ -183,16 +183,29 @@ countRolling <- function(x, con) {
   } else {
     stop("I dunno what to do here")
   }
+
   
-  sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
-  helper <- x@helper
-  df <- dbGetQuery(con, getSQLbyKey(helper, "COUNT_ROLLING", tag=tag))
-  if(nrow(df) == 0) {
-    0
+  # controlla che grafi_`tag`_ordinal_seq esista.
+  # se esiste, prende il prossimo `p` dalla sequence;
+  # se non esiste, esegue il blocco qui sotto, crea la sequence e aggiorna il valore
+
+
+  nome_seq <- paste0("grafi_", tag, "_ordinal_seq")
+  sql <- paste0("select * from pg_class where relkind = 'S' and relname ='",nome_seq,"'");
+  if(nrow(dbGetQuery(con, sql)) > 1) {
+    df <- dbGetQuery(con, paste0("select nextval('",nome_seq,"')"))
+    return(as.numeric(df[[1]]))
   } else {
-    numeri <- as.numeric(gsub("p", "", gsub(tag, "", df[, 1])))
-    max(numeri, na.rm=TRUE) 
-  }
+    sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
+    helper <- x@helper
+    df <- dbGetQuery(con, getSQLbyKey(helper, "COUNT_ROLLING", tag=tag))
+    if(nrow(df) == 0) {
+      0
+    } else {
+      numeri <- suppressWarnings(as.numeric(gsub("p", "", gsub(tag, "", df[, 1]))))
+      max(numeri, na.rm=TRUE) 
+    }
+    
 }
 
 
