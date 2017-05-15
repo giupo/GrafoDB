@@ -95,13 +95,14 @@
         if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
           .createGraph(x, tag, con=con, msg=msg)
         } else {
-          .copyGraph(x@tag, tag, con=con, msg=msg)
+          .copyGraph(x@tag, tag, con=con, msg=msg, helper=x@helper)
           .updateGraph(x, tag, con=con, msg=msg)
         }
       }
     }
     
     removeFromRedis(x, x@touched)
+    
     dbCommit(con)
   }, error=function(err) {
     tryCatch({  
@@ -120,7 +121,7 @@
 .updateGraph <- function(x, tag=x@tag, con=NULL, msg="") {
   helper <- x@helper
   ## supporto per history
-  doHistory(x, con=con)
+  doHistory(x, tag=tag, con=con)
   .updateData(x, con=con, tag=tag, msg=msg)
   .updateFunctions(x, con=con, tag=tag, msg=msg)
   .updateArchi(x, con=con, tag=tag)
@@ -252,6 +253,7 @@ countRolling <- function(x, con) {
       dbGetQuery(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
       countRolling(x, con)
     }
+    
   } else {
     ## se SQLite:
     getMaxP(helper, tag, con) + 1
@@ -303,26 +305,16 @@ nextRollingNameFor <- function(x, con) {
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom rutils slice
 
-doHistory <- function(x, con) {
+doHistory <- function(x, tag, con) {
   notOk <- TRUE
   tries <- 3
-  ril <- rilasci(x@tag)
+  ril <- rilasci(tag)
   autore <- ril[ril$tag == x@tag, ]$autore
-  while(tries > 0) {    
-    tries <- tryCatch({
-      dest <- nextRollingNameFor(x, con)
-      if(interactive()) message("Salvo il grafo ", x@tag, " in ", dest)
-      .copyGraph(x@tag, dest, con=con, autore=autore)
-      if(interactive()) message("salvataggio ", dest, " completo")
-      0
-    }, error=function(cond) {
-      warning(cond)
-      if (interactive()) message("Ritento il salvataggio...")
-      if((tries - 1) == 0) {
-        stop(cond)
-      }
-    })
-  }  
+  dest <- nextRollingNameFor(x, con)
+  if(interactive()) message("Salvo il grafo ", x@tag, " in ", dest)
+  .copyGraph(x@tag, dest, con=con, autore=autore, helper=x@helper)
+  if(interactive()) message("salvataggio ", dest, " completo")
+  0
 }
 
 #' Salva un istanza di grafo sul file system

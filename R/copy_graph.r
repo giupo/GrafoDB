@@ -7,13 +7,19 @@
   } else {
     paste0("Rilascio per ", to)
   }
-  helper <- SQLHelper()
+  
+  helper <- if("helper" %in% names(param_list)) {
+    param_list[["helper"]]
+  } else {
+    SQLHelper()
+  }
 
   autore <- if('autore' %in% names(param_list)) {
     param_list[["autore"]]
   } else {
     whoami()
   }
+  
   params <- cbind(to, autore, from)
 
   ## copia archi
