@@ -140,7 +140,7 @@
     prim_non_in_data <- setdiff(sprimitive, keys(data))
     prim_non_in_data <- setdiff(prim_non_in_data, keys(functions))
     if(length(prim_non_in_data)) {
-      datip <- g[prim_non_in_data]
+      datip <- object[prim_non_in_data]
       for(n in names(datip)) {
         data[n] <- datip[[n]]
       }

@@ -115,6 +115,7 @@ resync <- function(x, con=NULL) {
   tag <- x@tag
   x@dbdati <- loadDati(tag, con=con)
   x@dbformule <- loadFormule(tag, con=con)
+  ## e gli archi :?? :)
   x
 }
 

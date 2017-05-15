@@ -85,7 +85,19 @@ test_that("Posso cancellare Metadati", {
     })
 })
 
-test_that("Ottengo un errore se accade un errore sul DB nella cancellazione di  Metadati", {
+test_that("If I get an erro with DB, deleteMeta fails", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+
+  g <- setup("test")
+  with_mock(
+    'DBI::dbCommit' = function(...) stop("error test"), {
+      expect_error(deleteMeta(g, "A", "KEY", "VALUE1"), "error test")
+    })
+})
+
+test_that("Ottengo un errore se accade un errore sul DB nella lettura di Metadati", {
   on.exit({
     elimina("test")
   })
@@ -94,6 +106,12 @@ test_that("Ottengo un errore se accade un errore sul DB nella cancellazione di  
     getSQLbyKey = function(...) stop("error"), {
       expect_error(getMeta(g, "A", "KEY"), "error")
     })
+})
+
+test_that("I get nothing if there are no metadata values for a key", {
+  on.exit(elimina("test"))
+  g <- setup("test")
+  expect_equal(length(getMeta(g, "A", "NONESISTO")), 0)
 })
 
 test_that("setMeta has a warning each time you set an already existing meta", {

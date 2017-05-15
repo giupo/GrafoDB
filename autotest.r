@@ -10,6 +10,7 @@ library(doMC)
 library(zoo)
 library(tis)
 library(mockery)
+library(igraph)
 
 source("lib_mgt.r")
 

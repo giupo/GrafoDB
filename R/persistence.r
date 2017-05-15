@@ -1,14 +1,46 @@
 
-#' funzione per salvare un grafo
+#' Funzione per salvare un grafo
 #'
+#' La funzione controlla la presenza di eventuali conflitti e necessita'
+#' di risincronizzare i dati del DB con quelli presenti nel Grafo.
+#'
+#' \itemize{
+#'   \item{"1"}{
+#'      Identificare le serie aggregate (solo formule) - primitive (solo dati)
+#'      cambiate, escludendo eventuali conflitti}
+#'   \item{"2"}{Caricarle nel grafo}
+#'   \item{"3"}{Rieseguirle}
+#'   \item{"4"}{Risalvare il grafo}
+#' }
+#'
+#' La funzione controlla se esistono conflitti nel seguente modo:
+#' \itemize{
+#'   \item{"dati"}{
+#'        Se esistono serie primitive nel DB e nel grafo
+#'        in sessione che sono state aggiornate in
+#'        contemporanea}
+#'   \item{"formule"}{
+#'        Se esistono formule nel DB e nel grafo in
+#'        sessione aggiornati in contemporanea}
+#' }
+#'
+#' Qualora uno dei due casi si verificasse il grafo va in "conflitto",
+#' vengono salvate sia le proprie modifiche che le modifiche fatte da
+#' altri e si attende la risoluzione del conflitto attraverso i metodi
+#' `fixConflict`. La soluzione dei conflitti non e' un atto di fede:
+#' occorre incontrarsi e decidere quale "formula" o quale versione dei dati
+#' sia da preferire.
+#'
+#' @seealso saveGraph
 #' @name .saveGraph
 #' @usage .saveGraph(x, tag)
 #' @usage .saveGraph(x)
-#' @include conflicts.r copy_graph.r
+#' @include conflicts.r copy_graph.r checkDAG.r persistence_utils.r
 #' @rdname saveGraph-internal
+#' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
+#' @importFrom igraph graph.union
 
-# FIXME: #31849
-# https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
+# FIXME: 31849
 
 .saveGraph <- function(x, tag = x@tag, ...) {
 
@@ -28,7 +60,30 @@
     if(hasConflicts(x, con=con)) {
       stop("Il grafo ", tag, " ha conflitti, risolverli prima di salvare")
     }
-    checkConflicts(x, con=con)
+
+    if (need_resync(x)) {
+      message("Resync started")
+      # risincronizzo i dati del db con la copia nel grafo
+      x <- resync(x, con=con)
+      # trova serie che necessitano il resync
+      name_to_sync <- getChangedSeries(x, con=con)
+      # trova serie con conflitti
+      name_in_conflicts <- intersect(name_to_sync, union(keys(x@functions), keys(x@data)))
+      clean_names <- setdiff(name_to_sync, name_in_conflicts)
+      # clean_names contiene le serie che possono essere ricaricate dal db e rivalutate
+      # senza problemi
+      # aggiungo gli archi del DB al presente grafo
+      network <- x@network
+      archi <- loadArchi(tag, con=con)
+      archi <- archi[, c("partenza", "arrivo")]
+      dbnetwork <- graph.data.frame(as.data.frame(archi), directed=TRUE)
+      network <- graph.union(network, dbnetwork, byname=TRUE)
+      checkDAG(network)
+      x@network <- network
+      x <- evaluate(x, clean_names)
+    }
+    checkConflicts(x, con=con)    
+
     if(.tagExists(tag, con=con)) {
       # sto aggiornando il grafo tag
       .updateGraph(x, con=con, msg=msg)
@@ -40,12 +95,14 @@
         if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
           .createGraph(x, tag, con=con, msg=msg)
         } else {
-          .copyGraph(x@tag, tag, con=con, msg=msg)
+          .copyGraph(x@tag, tag, con=con, msg=msg, helper=x@helper)
           .updateGraph(x, tag, con=con, msg=msg)
         }
       }
     }
+    
     removeFromRedis(x, x@touched)
+    
     dbCommit(con)
   }, error=function(err) {
     tryCatch({  
@@ -64,7 +121,7 @@
 .updateGraph <- function(x, tag=x@tag, con=NULL, msg="") {
   helper <- x@helper
   ## supporto per history
-  doHistory(x, con=con)
+  doHistory(x, tag=tag, con=con)
   .updateData(x, con=con, tag=tag, msg=msg)
   .updateFunctions(x, con=con, tag=tag, msg=msg)
   .updateArchi(x, con=con, tag=tag)
@@ -196,9 +253,10 @@ countRolling <- function(x, con) {
       dbGetQuery(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
       countRolling(x, con)
     }
+    
   } else {
     ## se SQLite:
-    getMaxP(helper, tag, con)
+    getMaxP(helper, tag, con) + 1
   }
 }
 
@@ -213,7 +271,6 @@ getMaxP <- function(helper, tag, con) {
 }
   
 
-
 #' Costruice il progressivo per il grafo `x`
 #'
 #' @name nextRollingNameFor
@@ -221,7 +278,7 @@ getMaxP <- function(helper, tag, con) {
 
 nextRollingNameFor <- function(x, con) {
   tag <- x@tag
-  p <- countRolling(x, con) + 1
+  p <- countRolling(x, con) 
   paste0(tag, 'p', p)
 }
 
@@ -248,26 +305,16 @@ nextRollingNameFor <- function(x, con) {
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom rutils slice
 
-doHistory <- function(x, con) {
+doHistory <- function(x, tag, con) {
   notOk <- TRUE
   tries <- 3
-  ril <- rilasci(x@tag)
+  ril <- rilasci(tag)
   autore <- ril[ril$tag == x@tag, ]$autore
-  while(tries > 0) {    
-    tries <- tryCatch({
-      dest <- nextRollingNameFor(x, con)
-      if(interactive()) message("Salvo il grafo ", x@tag, " in ", dest)
-      .copyGraph(x@tag, dest, con=con, autore=autore)
-      if(interactive()) message("salvataggio ", dest, " completo")
-      0
-    }, error=function(cond) {
-      warning(cond)
-      if (interactive()) message("Ritento il salvataggio...")
-      if((tries - 1) == 0) {
-        stop(cond)
-      }
-    })
-  }  
+  dest <- nextRollingNameFor(x, con)
+  if(interactive()) message("Salvo il grafo ", x@tag, " in ", dest)
+  .copyGraph(x@tag, dest, con=con, autore=autore, helper=x@helper)
+  if(interactive()) message("salvataggio ", dest, " completo")
+  0
 }
 
 #' Salva un istanza di grafo sul file system

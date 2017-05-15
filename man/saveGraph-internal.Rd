@@ -2,11 +2,46 @@
 % Please edit documentation in R/persistence.r
 \name{.saveGraph}
 \alias{.saveGraph}
-\title{funzione per salvare un grafo}
+\title{Funzione per salvare un grafo}
 \usage{
 .saveGraph(x, tag)
 }
 \description{
-funzione per salvare un grafo
+La funzione controlla la presenza di eventuali conflitti e necessita'
+di risincronizzare i dati del DB con quelli presenti nel Grafo.
+}
+\details{
+\itemize{
+  \item{"1"}{
+     Identificare le serie aggregate (solo formule) - primitive (solo dati)
+     cambiate, escludendo eventuali conflitti}
+  \item{"2"}{Caricarle nel grafo}
+  \item{"3"}{Rieseguirle}
+  \item{"4"}{Risalvare il grafo}
+}
+
+La funzione controlla se esistono conflitti nel seguente modo:
+\itemize{
+  \item{"dati"}{
+       Se esistono serie primitive nel DB e nel grafo
+       in sessione che sono state aggiornate in
+       contemporanea}
+  \item{"formule"}{
+       Se esistono formule nel DB e nel grafo in
+       sessione aggiornati in contemporanea}
+}
+
+Qualora uno dei due casi si verificasse il grafo va in "conflitto",
+vengono salvate sia le proprie modifiche che le modifiche fatte da
+altri e si attende la risoluzione del conflitto attraverso i metodi
+`fixConflict`. La soluzione dei conflitti non e' un atto di fede:
+occorre incontrarsi e decidere quale "formula" o quale versione dei dati
+sia da preferire.
+}
+\note{
+\url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
+}
+\seealso{
+saveGraph
 }
 

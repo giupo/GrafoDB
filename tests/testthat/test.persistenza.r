@@ -100,11 +100,12 @@ test_that("need_resync returns true if GrafoNeeds a resync", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })
+  
+  saveGraph(g)
 
-  Sys.sleep(.2)
+  g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
   g2["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   saveGraph(g2)
-
-  expect_true(need_resync(g))
+  expect_true(need_resync(g1))
 })

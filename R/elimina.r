@@ -37,14 +37,12 @@ elimina <- function(tag) {
      
      for(table in tables) {
        if(dbExistsTable(con, table)) {
-         dbGetQuery(
-           con,
-           getSQLbyKey(helper, "DROP_TABLE", tab=table))
+         dbGetQuery(con, getSQLbyKey(helper, "DROP_TABLE", tab=table)) # nocov
        }
      }
      
      for(table in orig_tables) {
-         dbGetQuery(con, paste0("delete from ", table, " where tag='", tag, "'"))
+       dbGetQuery(con, paste0("delete from ", table, " where tag='", tag, "'"))
      }
      dbCommit(con)
   }, error = function(err) {
