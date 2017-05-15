@@ -192,17 +192,17 @@ countRolling <- function(x, con) {
       df <- dbGetQuery(con, getSQLbyKey(helper, "NEXT_VAL", seq=nome_seq))
       as.numeric(df[[1]])
     } else {
-      val <- getMaxP(helper, tag) + 1
+      val <- getMaxP(helper, tag, con) + 1
       dbGetQuery(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
       countRolling(x, con)
     }
   } else {
     ## se SQLite:
-    getMaxP(helper, tag)
+    getMaxP(helper, tag, con)
   }
 }
 
-getMaxP <- function(helper, tag) {
+getMaxP <- function(helper, tag, con) {
   df <- dbGetQuery(con, getSQLbyKey(helper, "COUNT_ROLLING", tag=tag))
   if(nrow(df) == 0) {
     0
