@@ -232,29 +232,42 @@
 #' @include db.r
 
 countRolling <- function(x, con) {
-  tag <- if(is.grafodb(x)) {
-    x@tag 
-  } else if(is.character(x)){
-    x
-  } else {
-    stop("I dunno what to do herez")
-  }
+  stopifnot(is.grafodb(x))
+  tag <- x@tag
+ 
+  # controlla che grafi_`tag`_ordinal_seq esista.
+  # se esiste, prende il prossimo `p` dalla sequence;
+  # se non esiste, esegue il blocco qui sotto, crea la sequence e aggiorna il valore
 
-  ## se ho la sequence la uso;
-
-  ## altrimenti vengo qui, la creo ed aggiorno il suo valore trovato su grafi
-  
-  sql <- paste0("select tag from grafi where tag like '", tag, "p%'")
   helper <- x@helper
+  if (helper@type == "PostgreSQL") {
+    ## se PostgreSQL:
+    nome_seq <- paste0("grafi_", tag, "_ordinal_seq")
+    
+    if(nrow(dbGetQuery(con, getSQLbyKey(helper, "EXISTS_SEQ", seq=nome_seq))) > 0) {
+      df <- dbGetQuery(con, getSQLbyKey(helper, "NEXT_VAL", seq=nome_seq))
+      as.numeric(df[[1]])
+    } else {
+      val <- getMaxP(helper, tag, con) + 1
+      dbGetQuery(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
+      countRolling(x, con)
+    }
+  } else {
+    ## se SQLite:
+    getMaxP(helper, tag, con)
+  }
+}
+
+getMaxP <- function(helper, tag, con) {
   df <- dbGetQuery(con, getSQLbyKey(helper, "COUNT_ROLLING", tag=tag))
   if(nrow(df) == 0) {
     0
   } else {
-    numeri <- as.numeric(gsub("p", "", gsub(tag, "", df[, 1])))
-    max(numeri, na.rm=TRUE) 
+    numeri <- suppressWarnings(as.numeric(gsub("p", "", gsub(tag, "", df[, 1]))))
+    max(numeri, na.rm=TRUE)
   }
 }
-
+  
 
 #' Costruice il progressivo per il grafo `x`
 #'
@@ -263,7 +276,7 @@ countRolling <- function(x, con) {
 
 nextRollingNameFor <- function(x, con) {
   tag <- x@tag
-  p <- countRolling(x, con) + 1
+  p <- countRolling(x, con) 
   paste0(tag, 'p', p)
 }
 
