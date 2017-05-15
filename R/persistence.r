@@ -310,6 +310,11 @@ doHistory <- function(x, tag, con) {
   tries <- 3
   ril <- rilasci(tag)
   autore <- ril[ril$tag == x@tag, ]$autore
+
+  if(length(autore) == 0) {
+    autore <- whoami()
+  }
+  
   dest <- nextRollingNameFor(x, con)
   if(interactive()) message("Salvo il grafo ", x@tag, " in ", dest)
   .copyGraph(x@tag, dest, con=con, autore=autore, helper=x@helper)
