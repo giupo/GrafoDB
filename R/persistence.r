@@ -150,13 +150,13 @@
   commento <- if ("msg" %in% names(param_list)) {
     param_list[["msg"]]
   } else {
-     if(interactive()) {
-       readline(prompt="Inserisci un commento/nota per: ")
-     } else {
-       paste0("Rilascio per ", tag)
-     }
+    if(interactive()) {
+      readline(prompt="Inserisci un commento/nota per: ")
+    } else {
+      paste0("Rilascio per ", tag)
+    }
   }
-    
+  
   autore <- whoami()
   helper <- x@helper
   
@@ -306,10 +306,12 @@ nextRollingNameFor <- function(x, con) {
 #' @importFrom rutils slice
 
 doHistory <- function(x, tag, con) {
-  notOk <- TRUE
-  tries <- 3
   ril <- rilasci(tag)
   autore <- ril[ril$tag == x@tag, ]$autore
+  if(length(autore) == 0) {
+    autore <- whoami()
+  }
+  
   dest <- nextRollingNameFor(x, con)
   if(interactive()) message("Salvo il grafo ", x@tag, " in ", dest)
   .copyGraph(x@tag, dest, con=con, autore=autore, helper=x@helper)
@@ -328,7 +330,6 @@ doHistory <- function(x, tag, con) {
 saveBinary <- function(x, path) {
   con <- file(path, "wb")
   on.exit(close(con))
-  
   ret <- serialize(x, con, ascii = TRUE)
   invisible(ret)
 }
