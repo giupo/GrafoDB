@@ -186,6 +186,24 @@ test_that("Saving preserves network and nodes", {
   expect_true("B" %in% upgrf(g, "C", livello=1))
 })
 
+test_that("navigate without arguments returns a downgrf", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+
+  g <- GrafoDB("test")
+  g["A"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["C"] <- function(A, B) {
+    C = A + B
+  }
+
+  x <- navigate(g)
+  expect_true(!is.null(x))
+  expect_equal(x[3], "C")
+  expect_equal(names(g), x)
+})
+
 test_that("posso rimuovere archi", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
