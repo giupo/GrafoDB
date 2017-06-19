@@ -306,11 +306,8 @@ nextRollingNameFor <- function(x, con) {
 #' @importFrom rutils slice
 
 doHistory <- function(x, tag, con) {
-  notOk <- TRUE
-  tries <- 3
   ril <- rilasci(tag)
   autore <- ril[ril$tag == x@tag, ]$autore
-
   if(length(autore) == 0) {
     autore <- whoami()
   }
@@ -333,7 +330,6 @@ doHistory <- function(x, tag, con) {
 saveBinary <- function(x, path) {
   con <- file(path, "wb")
   on.exit(close(con))
-  
   ret <- serialize(x, con, ascii = TRUE)
   invisible(ret)
 }
