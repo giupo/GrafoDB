@@ -38,9 +38,9 @@
 #' @include conflicts.r copy_graph.r checkDAG.r persistence_utils.r
 #' @rdname saveGraph-internal
 #' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
-#' @importFrom igraph graph.union
-
-# FIXME: 31849
+#' @importFrom igraph graph.union graph.data.frame
+#' 
+# FIXME: https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 
 .saveGraph <- function(x, tag = x@tag, ...) {
 
@@ -85,17 +85,33 @@
     checkConflicts(x, con=con)    
 
     if(.tagExists(tag, con=con)) {
+      # se esiste il tag sul DB
       # sto aggiornando il grafo tag
+      if(x@tag != tag) {
+        # faccio l'history del tag di destinazione
+        doHistory(x, tag, con)
+        # lo cancello
+        .elimina(tag, con, x@helper)
+        # copio il grafo in sessione col grafo attuale
+        .copyGraph(x@tag, tag, con=con, mesg=msg, helper=x@helper)
+      }
+      # aggiorno eventuali cambiamenti in sessione
       .updateGraph(x, con=con, msg=msg)
     } else {
       if (x@tag == tag) {
+        # se non esiste il tag sul DB
         # sto creando un nuovo grafo
         .createGraph(x, tag, con=con, msg=msg)  
       } else {
+        # se i tag sono differenti
         if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
+          # non ho dati, creo grafo
           .createGraph(x, tag, con=con, msg=msg)
         } else {
+          # ho dati, quindi copio il grafo dalla fonte alla
+          # destinazione sul DB e...
           .copyGraph(x@tag, tag, con=con, msg=msg, helper=x@helper)
+          # Aggiorno eventuali cambiamenti in sessione
           .updateGraph(x, tag, con=con, msg=msg)
         }
       }
