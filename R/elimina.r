@@ -1,3 +1,19 @@
+
+.elimina <- function(tag, con, helper) {
+  dbGetQuery(con, getSQLbyKey(helper, "DELETE_GRAFI", tag=tag))
+  dbGetQuery(con, getSQLbyKey(helper, "DELETE_CONFLITTI", tag=tag))
+  orig_tables <- c("archi", "dati", "metadati", "formule", "history")
+  tables <- paste(orig_tables, tag, sep="_")
+  for(table in tables) {
+    if(dbExistsTable(con, table)) {
+      dbGetQuery(con, getSQLbyKey(helper, "DROP_TABLE", tab=table)) # nocov      
+    }
+  }
+  for(table in orig_tables) {
+    dbGetQuery(con, paste0("delete from ", table, " where tag='", tag, "'"))
+  }
+}
+
 #' Elimina un edizione del grafo
 #'
 #' Cancella dal database un edizione del grafo partendo dal suo `tag`
@@ -27,24 +43,9 @@ elimina <- function(tag) {
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tryCatch({
-     dbBegin(con)
-     
-     dbGetQuery(con, getSQLbyKey(helper, "DELETE_GRAFI", tag=tag))
-     dbGetQuery(con, getSQLbyKey(helper, "DELETE_CONFLITTI", tag=tag))
-     
-     orig_tables <- c("archi", "dati", "metadati", "formule", "history")
-     tables <- paste(orig_tables, tag, sep="_")
-     
-     for(table in tables) {
-       if(dbExistsTable(con, table)) {
-         dbGetQuery(con, getSQLbyKey(helper, "DROP_TABLE", tab=table)) # nocov
-       }
-     }
-     
-     for(table in orig_tables) {
-       dbGetQuery(con, paste0("delete from ", table, " where tag='", tag, "'"))
-     }
-     dbCommit(con)
+    dbBegin(con)
+    .elimina(tag, con, helper)
+    dbCommit(con)
   }, error = function(err) {
     dbRollback(con)
     stop(err)
