@@ -301,7 +301,7 @@ checkConflicts <- function(x, con=NULL) {
       formula.db <- formule.db[formule.db$name == name,]$formula
       if(formula.db != functions[[name]]) {
         ## crea conflitto su formule per name
-        creaConflittoFormule(x, name, con=con)
+        creaConflittoFormule(x, name, formula.db, con=con)
       }
     }
   }
@@ -355,7 +355,7 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
     paste(nomi, collapse=", "))
 }
 
-creaConflittoFormule <- function(x, nomi, con=NULL) {
+creaConflittoFormule <- function(x, nomi, formula.db, con=NULL) {
   
   conWasNull <- is.null(con)
   con <- pgConnect(con=con)
@@ -368,11 +368,11 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
   helper <- x@helper
   timestamp <- round(R.utils::System$currentTimeMillis())
   foreach (name = iter(nomi)) %do% {
-    task <- expr(x, name, echo=FALSE)
+    # task <- expr(x, name, echo=FALSE)
     
     sql1 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE1",
-      formula=task,
+      formula=formula.db,
       autore=autore,
       name=name,
       tag=tag,
@@ -382,7 +382,7 @@ creaConflittoFormule <- function(x, nomi, con=NULL) {
 
     sql2 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE2",
-      formula=task,
+      formula=formula.db,
       autore=autore,
       name=name,
       tag=tag,
