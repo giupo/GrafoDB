@@ -69,6 +69,7 @@ Collate:
     'diff.r'
     'edita.r'
     'elimina.r'
+    'formule.r'
     'life_cycle.r'
     'old_grafo_impl.r'
     'rmNode.r'
