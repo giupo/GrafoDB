@@ -28,6 +28,8 @@ diff.GrafoDB <- function(x, ...) {
                                     new = x@tag,
                                     old = y@tag))
 
-  colnames(df) <- c("name", x@tag, y@tag)
+  if(nrow(df)) {
+    colnames(df) <- c("name", x@tag, y@tag)
+  }
   df
 }
