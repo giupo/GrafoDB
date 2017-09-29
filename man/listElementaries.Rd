@@ -12,4 +12,3 @@ implementazione di listElementaries di `package::grafo`
 \seealso{
 `grafo::listElementaries`
 }
-

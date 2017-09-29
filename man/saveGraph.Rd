@@ -60,4 +60,3 @@ R sucks sometimes. \url{https://osiride-public.utenze.bankit.it/group/894smf/tra
 \seealso{
 .saveGraph
 }
-

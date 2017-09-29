@@ -12,4 +12,3 @@ implementazione di listNodes di `package::grafo`
 \seealso{
 `grafo::listNodes`
 }
-

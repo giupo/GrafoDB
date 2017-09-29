@@ -22,4 +22,3 @@ g <- setMeta(g, "A", "FONTE", "CODICE_FONTE")
 searchNode(g, "FONTE", "CODICE_FONTE") # deve tornare il nome "A"
 }
 }
-

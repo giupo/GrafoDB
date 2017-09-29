@@ -19,4 +19,3 @@ nomi di serie
 \description{
 ritorna i nomi delle serie che sono generate dalle serie date in `name`
 }
-

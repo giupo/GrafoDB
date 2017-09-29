@@ -21,4 +21,3 @@ Ritorna la lista dei rilasci presenti nel database
    rilasci("cf") # ritorna tutti i rilasci con contenenti cf nel tag
 }
 }
-

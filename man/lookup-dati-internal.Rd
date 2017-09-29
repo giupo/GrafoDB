@@ -17,4 +17,3 @@ lista di nomi che matchano `key` nella formula
 \description{
 Ricerca nelle formule del grafo
 }
-

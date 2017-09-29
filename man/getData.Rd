@@ -12,4 +12,3 @@ implementazione di getData di `package::grafo`
 \seealso{
 `grafo::getData`
 }
-

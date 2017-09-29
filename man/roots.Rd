@@ -15,4 +15,3 @@ la lista di nomi delle radici del grafo
 \description{
 Ritorna le radici del grafo
 }
-

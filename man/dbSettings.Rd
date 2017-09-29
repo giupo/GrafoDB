@@ -18,4 +18,3 @@ Tryes :
   - `$HOME/.GrafoDB/GrafoDB.ini` file
   - Internal settings.
 }
-

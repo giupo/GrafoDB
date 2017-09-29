@@ -15,4 +15,3 @@ una rappresentazione a ticket (alla meglio di R)
 \description{
 ritorna i tickets aperti nel trac
 }
-

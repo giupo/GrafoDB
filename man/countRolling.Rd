@@ -17,4 +17,3 @@ un intero ad indicare il numero di versioni rolling salvate sul DB
 \description{
 conta le versioni rolling del grafo con tag `tag`
 }
-

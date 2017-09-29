@@ -19,4 +19,3 @@ grafo modificato
 \description{
 L'operazione lavora direttamente sui dati in modo persistente.
 }
-

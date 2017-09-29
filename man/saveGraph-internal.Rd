@@ -44,4 +44,3 @@ sia da preferire.
 \seealso{
 saveGraph
 }
-

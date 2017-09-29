@@ -12,4 +12,3 @@ elimina(tag)
 \description{
 Cancella dal database un edizione del grafo partendo dal suo `tag`
 }
-

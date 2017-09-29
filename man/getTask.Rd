@@ -12,4 +12,3 @@ implementazione di getTask di `package::grafo`
 \seealso{
 `grafo::getTask`
 }
-

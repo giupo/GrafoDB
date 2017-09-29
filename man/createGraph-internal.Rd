@@ -16,4 +16,3 @@
 \description{
 crea ex-novo un istanza di grafo nel databae
 }
-

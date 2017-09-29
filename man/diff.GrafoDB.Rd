@@ -9,4 +9,3 @@
 \description{
 Returns diffs as data and formulas
 }
-

@@ -17,4 +17,3 @@ a timeseries with unique formulas and `tag` edition
 \description{
 This programs shows all the editions of a particular formula
 }
-

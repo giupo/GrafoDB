@@ -24,4 +24,3 @@ ma non ancora reso persistenti
 \note{
 se i e' un singolo nome e non esiste nel DB, la funzione termina con errore
 }
-

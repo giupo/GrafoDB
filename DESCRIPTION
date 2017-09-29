@@ -43,7 +43,7 @@ Suggests:
     sourcetools,
     mockery
 LinkingTo: Rcpp, BH
-Collate:
+Collate: 
     'RcppExports.R'
     'checkDAG.r'
     'db.r'
@@ -57,13 +57,13 @@ Collate:
     'persistence.r'
     'functions.r'
     'rename.r'
+    'ser.r'
     'tickets.r'
     'metadati.r'
-    'ser.r'
     'expr.r'
     'evaluate.r'
-    'lookup.r'
     'navigate.r'
+    'lookup.r'
     'core.r'
     'conflicts.r'
     'diff.r'
@@ -74,7 +74,7 @@ Collate:
     'old_grafo_impl.r'
     'rmNode.r'
     'subsetting.r'
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Remotes: github::giupo/rutils,
     github::giupo/rprogressbar,
     github::giupo/rdataset

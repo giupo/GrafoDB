@@ -179,7 +179,6 @@ test_that("I get additional TICKET metadata from issue tracker", {
     expect_equal(id, 2)
     "[1,2,3,{'status':'open'}]"
   }) 
-  df <- getMetadata(g, "A") # qui si solleva un warning
-  
+  df <- getMetadata(g, "A") # qui si solleva un warning  
  # expect_true("TICKET" %in% df$key)
 })

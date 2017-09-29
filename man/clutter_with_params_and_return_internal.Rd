@@ -23,4 +23,3 @@ I parametri della funzione ritornata sono le dipendenze della serie,
 ed aggiunge il nome della funzione al termine per dichiarare il
 dato ritornato
 }
-

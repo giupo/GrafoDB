@@ -23,4 +23,3 @@ gli argomenti devono essere definiti prima nella ambiente per la corretta esecuz
 \note{
 funzione interna
 }
-

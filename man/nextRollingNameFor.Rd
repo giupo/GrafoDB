@@ -9,4 +9,3 @@ nextRollingNameFor(x)
 \description{
 Costruice il progressivo per il grafo `x`
 }
-

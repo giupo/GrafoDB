@@ -23,4 +23,3 @@ editabili e accedendo alle singole query con delle chiavi.
 
 Le query vengono inizializzate in un file .ini
 }
-
