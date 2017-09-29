@@ -36,12 +36,10 @@ elimina <- function(tag) {
     tag <- tolower(tag)
   }
 
-  incancellabili <- c("cf10")
-  if(tag %in% incancellabili) stop("Non cancellero' mai ", tag)
-
   helper <- SQLHelper()
   con <- pgConnect()
   on.exit(dbDisconnect(con))
+
   tryCatch({
     dbBegin(con)
     .elimina(tag, con, helper)
