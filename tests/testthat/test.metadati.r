@@ -180,6 +180,6 @@ test_that("I get additional TICKET metadata from issue tracker", {
     "[1,2,3,{'status':'open'}]"
   }) 
   df <- getMetadata(g, "A") # qui si solleva un warning
-
+  
  # expect_true("TICKET" %in% df$key)
 })
