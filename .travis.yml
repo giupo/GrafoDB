@@ -16,6 +16,11 @@ addons:
        - libxml2-dev
        - tk8.5
 
+notifications:
+  slack:
+    rooms:
+      - cf0:tjcxGLnksq3MlvPvcPauQ7XO#general
+
 env:
   - GRAFODB_ENV=test
 
