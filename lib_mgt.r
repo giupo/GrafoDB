@@ -2,6 +2,7 @@ is_win = .Platform$OS.type == "windows"
 if(is_win) setInternet2()
 .repos = "http://cran.mirror.garr.it/mirrors/CRAN/"
 
+
 if(!require(devtools)) {
   Sys.setenv(http_proxy=Sys.getenv("http_proxy"))
   Sys.setenv(https_proxy=Sys.getenv("https_proxy"))
