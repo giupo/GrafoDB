@@ -662,3 +662,39 @@ test_that("I can evaluate multiple series on a single evaluate call", {
   expect_equal(keys(g@functions), character(0))
   expect_equal(keys(g@data), c("C","D"))
 })
+
+test_that("Se imposto una serie per formula senza definirla ho un errore", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- 0
+  expect_error({
+    g["E"] <- function(A, B) {
+      D = A + B
+    }
+  })
+})
+
+test_that("Posso usare funzioni complesse nelle formule", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+    unloadNamespace("tempdisagg")
+  })
+
+  if(!require("tempdisagg")) {
+    skip("Tempdisagg not installed")
+  }
+  
+  g <- GrafoDB("test")
+  g["A"] <- g["B"] <- ts(runif(100), start=c(1995,1), frequency=4)
+  expect_error({g["C"] <- function(A, B) {
+    if(!is.function(td)) {
+      fail("td not found")
+    }
+    C <- A + B
+  }}, NA) # this means expect no error
+
+  expect_is(g[["C"]], "ts")
+})

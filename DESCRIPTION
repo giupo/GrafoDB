@@ -41,7 +41,8 @@ Suggests:
     shiny,
     shinyAce,
     sourcetools,
-    mockery
+    mockery,
+    tempdisagg
 LinkingTo: Rcpp, BH
 Collate: 
     'RcppExports.R'

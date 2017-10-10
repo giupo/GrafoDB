@@ -34,9 +34,20 @@
   
   ## cmd <- .clutter_function(tsformula, name)
   cmd <- .clutter_with_params_and_return(tsformula, name, nomi_padri)
-  tryCatch({    
+  tryCatch({
+    env <- as.environment(padri)
+    # defines the proxy
     eval(parse(text=cmd))
-    do.call(proxy, padri)    
+    # executes the call
+    env$proxy <- proxy
+    env[[name]] <- do.call("proxy", padri, envir=env)
+    # lookup the name in the env
+    ret <- get(name, envir=env)
+    if (is.call(ret) || is.function(ret)) {
+      stop("evaluated as a function: check your function definition")
+    }
+    ret
+    
   }, error = function(err) {
     stop(name, ": ", err)
   })           
@@ -97,7 +108,6 @@
   ## preload primitive
   primitive <- listPrimitives(object)
   
-  
   if(!is.null(v_start)) {
     v_start <- as.character(v_start)
     network <- induced.subgraph(
@@ -156,7 +166,7 @@
       if(is.interactive) {
         updateProgressBar(pb, i, tail(sources, n=1)) # nocov
       }
-      
+
       names(evaluated) <- sources
       
       if(length(evaluated) == 1) {
