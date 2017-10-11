@@ -1,16 +1,16 @@
 
 .elimina <- function(tag, con, helper) {
-  dbGetQuery(con, getSQLbyKey(helper, "DELETE_GRAFI", tag=tag))
-  dbGetQuery(con, getSQLbyKey(helper, "DELETE_CONFLITTI", tag=tag))
+  dbExecute(con, getSQLbyKey(helper, "DELETE_GRAFI", tag=tag))
+  dbExecute(con, getSQLbyKey(helper, "DELETE_CONFLITTI", tag=tag))
   orig_tables <- c("archi", "dati", "metadati", "formule", "history")
   tables <- paste(orig_tables, tag, sep="_")
   for(table in tables) {
     if(dbExistsTable(con, table)) {
-      dbGetQuery(con, getSQLbyKey(helper, "DROP_TABLE", tab=table)) # nocov      
+      dbExecute(con, getSQLbyKey(helper, "DROP_TABLE", tab=table)) # nocov      
     }
   }
   for(table in orig_tables) {
-    dbGetQuery(con, paste0("delete from ", table, " where tag='", tag, "'"))
+    dbExecute(con, paste0("delete from ", table, " where tag='", tag, "'"))
   }
 }
 
@@ -22,7 +22,7 @@
 #' @usage elimina(tag)
 #' @param tag `tag` che distingue in modo univoco il grafo ed i suoi dati
 #' @export
-#' @importFrom RPostgreSQL dbGetQuery
+#' @importFrom RPostgreSQL dbGetQuery dbExecute
 #' @importFrom DBI dbSendQuery dbBegin dbCommit dbRollback dbExistsTable
 #' @include functions.r
 #' @include db.r

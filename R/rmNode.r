@@ -36,7 +36,7 @@
     
     ## eliminare i dati
     for(name in da.eliminare) {
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "DELETE_DATI_TAG_NAME", tag=tag, name=name))
     }
     
@@ -47,21 +47,21 @@
     network <- network - vertex(da.eliminare)
     ## eliminare le formule
     for(name in da.eliminare) {
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "DELETE_FORMULE_TAG_NAME", tag=tag, name=name))
     }
     
     suppressWarnings(del(da.eliminare, graph@functions))
     ## eliminare gli archi
     for(name in da.eliminare) {
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "DELETE_ARCHI_TAG_PA", tag=tag, partenza=name, arrivo=name))
       
     }
     
     ## eliminare i metadati
     for(name in da.eliminare) {
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "DELETE_META_TAG_NAME", tag=tag, name=name))
     }
 

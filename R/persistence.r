@@ -141,7 +141,7 @@
   .updateData(x, con=con, tag=tag, msg=msg)
   .updateFunctions(x, con=con, tag=tag, msg=msg)
   .updateArchi(x, con=con, tag=tag)
-  dbGetQuery(con, getSQLbyKey(
+  dbExecute(con, getSQLbyKey(
     helper, "UPDATE_GRAFO_LAST_UPDATED",
     autore=whoami(),
     tag=tag,
@@ -185,7 +185,7 @@
       freq <- df$freq
       dati <- df$dati
       
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "INSERT_DATI",
         tag=tag,
         name=name,
@@ -206,7 +206,7 @@
     foreach(row = iter(archi, 'row')) %do% {
       partenza <- row[,1]
       arrivo <- row[,2]
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "INSERT_ARCO",
         tag=tag,
         partenza=partenza,
@@ -219,7 +219,7 @@
   foreach(name = iter(names(x)), .combine=rbind) %do% {
     formula <- expr(x, name, echo=FALSE)
     if(!is.null(formula)) {
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "INSERT_FORMULA",
         tag=tag,
         name=name,
@@ -229,7 +229,7 @@
     }
   }
   
-  dbGetQuery(con, getSQLbyKey(
+  dbExecute(con, getSQLbyKey(
     helper, "INSERT_GRAFI", 
     tag=tag,
     commento=commento,
@@ -266,7 +266,7 @@ countRolling <- function(x, con) {
       as.numeric(df[[1]])
     } else {
       val <- getMaxP(helper, tag, con) + 1
-      dbGetQuery(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
+      dbExecute(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
       countRolling(x, con)
     }
     

@@ -156,7 +156,7 @@ initdb <- function(con) {
       stm <- str_trim(as.character(stm))
       
       if(nchar(stm) > 0) {
-        dbGetQuery(con, stm)
+        dbExecute(con, stm)
       }
     }
     dbCommit(con)
@@ -290,13 +290,13 @@ dbDisconnect <- function(con) {
 
 # nocov start
 .dbBeginPG <- function(conn) {
-  dbGetQuery(conn, "START TRANSACTION")
+  dbExecute(conn, "START TRANSACTION")
   TRUE
 }
 # nocov end # can't check this code without production environment
 
 .dbBeginSQLite <- function(conn) {
-  dbGetQuery(conn, "BEGIN")
+  dbExecute(conn, "BEGIN")
   TRUE
 }
 

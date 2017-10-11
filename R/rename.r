@@ -10,7 +10,7 @@
 #' @param nuovo nome nuovo da sostituire
 #' @return grafo modificato
 #' @include db.r functions.r
-#' @importFrom DBI dbGetQuery
+#' @importFrom DBI dbGetQuery dbExecute
 #' @importFrom RPostgreSQL dbGetQuery
 #' @importFrom igraph get.vertex.attribute set.vertex.attribute
 
@@ -42,20 +42,20 @@
   tryCatch({
     dbBegin(con)
 
-    dbGetQuery(con, getSQLbyKey(
+    dbExecute(con, getSQLbyKey(
       helper, "RENAME_DATI",
       tag=tag,
       nuovo=nuovo,
       vecchio=vecchio))
     
-    dbGetQuery(con, getSQLbyKey(
+    dbExecute(con, getSQLbyKey(
       helper, "RENAME_FORMULE",
       tag=tag,
       nuovo=nuovo,
       vecchio=vecchio))
     
     for(figlia in figlie) {
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "RENAME_FORMULA",
         tag=tag,
         vecchio=vecchio,
@@ -63,20 +63,20 @@
         figlia=figlia))
     }
 
-    dbGetQuery(con, getSQLbyKey(
+    dbExecute(con, getSQLbyKey(
       helper, "RENAME_ARCHI_PARTENZA",
       nuovo=nuovo,
       vecchio=vecchio,
       tag=tag))
 
-    dbGetQuery(con, getSQLbyKey(
+    dbExecute(con, getSQLbyKey(
       helper, "RENAME_ARCHI_ARRIVO",
       nuovo=nuovo,
       vecchio=vecchio,
       tag=tag))
     
     if(dbExistsTable(con, paste0("metadati_",tag))) {
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "RENAME_METADATI",
         nuovo=nuovo,
         vecchio=vecchio,

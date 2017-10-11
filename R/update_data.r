@@ -47,7 +47,7 @@
           msg=msg,
           last_updated=R.utils::System$currentTimeMillis())
 
-        dbGetQuery(con, sql1)
+        dbExecute(con, sql1)
       }
     }
     
@@ -69,7 +69,7 @@
         tag=tag,
         msg=msg,
         last_updated=R.utils::System$currentTimeMillis())
-      dbGetQuery(con, sql2)
+      dbExecute(con, sql2)
     }
   }
   

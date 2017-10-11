@@ -1,5 +1,6 @@
 #' @include redis.r sqlhelper.r
 #' @importFrom R.utils System
+#' @importFrom DBI dbExecute
 .copyGraph <- function(from, to, con, ...) {
   param_list <- list(...)
   commento <- if('msg' %in% names(param_list)) {
@@ -23,20 +24,20 @@
   params <- cbind(to, autore, from)
 
   ## copia archi
-  dbGetQuery(con, getSQLbyKey(helper, "COPY_DATI", to=to, from=from))
+  dbExecute(con, getSQLbyKey(helper, "COPY_DATI", to=to, from=from))
 
   ## copia archi
-  dbGetQuery(con, getSQLbyKey(helper, "COPY_ARCHI", to=to, from=from))
+  dbExecute(con, getSQLbyKey(helper, "COPY_ARCHI", to=to, from=from))
   
   ## copia formule
-  dbGetQuery(con, getSQLbyKey(helper, "COPY_FORMULE", to=to, from=from))
+  dbExecute(con, getSQLbyKey(helper, "COPY_FORMULE", to=to, from=from))
 
   ## copio metadati
-  dbGetQuery(con, getSQLbyKey(helper, "COPY_METADATI", to=to, from=from))
+  dbExecute(con, getSQLbyKey(helper, "COPY_METADATI", to=to, from=from))
   
   ## copia asincrona metadati 
   ## sendCopyMetadati(from, to)
-  dbGetQuery(con, getSQLbyKey(
+  dbExecute(con, getSQLbyKey(
     helper, "INSERT_GRAFI", tag=to, commento=commento, autore=autore,
     last_updated=round(R.utils::System$currentTimeMillis())))
 }

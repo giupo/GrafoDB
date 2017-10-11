@@ -66,7 +66,7 @@
     foreach(row=iter(df, by='row')) %do% {
       from <- row$partenza
       to <- row$arrivo
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "INSERT_ARCHI", tag=tag, from=from, to=to,
         autore=autore, last_updated=round(R.utils::System$currentTimeMillis())))
     }

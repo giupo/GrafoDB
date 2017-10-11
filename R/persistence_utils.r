@@ -94,7 +94,7 @@ createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
   
   tryCatch({
     dbBegin(con)
-    dbGetQuery(con, sql)
+    dbExecute(con, sql)
     dbCommit(con)
   }, error = function(cond) {
     tryCatch(dbRollback(con), error= function(cx) {

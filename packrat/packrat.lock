@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.8.1
-RVersion: 3.4.2
+RVersion: 3.3.3
 Repos: CRAN=https://cran.stat.unipd.it
 
 Package: BH
@@ -62,7 +62,7 @@ Package: RSQLite
 Source: CRAN
 Version: 2.0
 Hash: aa34cc0830f6223f6b1c419c31650000
-Requires: BH, DBI, Rcpp, pkgconfig, plogr, bit64, memoise, blob
+Requires: BH, DBI, Rcpp, bit64, blob, memoise, pkgconfig, plogr
 
 Package: Rcpp
 Source: CRAN
@@ -227,7 +227,7 @@ Requires: irlba, magrittr, pkgconfig
 Package: irlba
 Source: CRAN
 Version: 2.2.1
-Hash: 35437a4fd43dbefef9d8b1fd457b3a5f
+Hash: 129c56a5ab6def05c411673cabe04054
 
 Package: iterators
 Source: CRAN
@@ -389,6 +389,11 @@ Source: CRAN
 Version: 1.2.0
 Hash: 25a86d7f410513ebb7c0bc6a5e16bdc3
 Requires: magrittr, stringi
+
+Package: tempdisagg
+Source: CRAN
+Version: 0.25.0
+Hash: 1f0adaf3eda9d42aeb4a51f10dbbdf39
 
 Package: testthat
 Source: CRAN

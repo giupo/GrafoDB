@@ -27,7 +27,9 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   })
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  dbGetQuery(con, "update dati set dati=replace(dati, 'null', 'NaN') where tag='test'")
+  dbExecute(
+	con,
+	"update dati set dati=replace(dati, 'null', 'NaN') where tag='test'")
 
   saveGraph(g)
   g1 <- GrafoDB("test")

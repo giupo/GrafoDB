@@ -17,7 +17,7 @@
   on.exit(dbDisconnect(con))
   tryCatch({
     dbBegin(con)
-    dbGetQuery(con, getSQLbyKey(helper, key, tag=tag, name=name))
+    dbExecute(con, getSQLbyKey(helper, key, tag=tag, name=name))
     dbCommit(con)
   }, error = function(err) {
     dbRollback(con)
@@ -336,7 +336,7 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
     dati <- df$dati
   
     tryCatch({
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "CREA_CONFLITTO_DATI",
         tag=tag,
         name=name,
@@ -378,7 +378,7 @@ creaConflittoFormule <- function(x, nomi, formula.db, con=NULL) {
       tag=tag,
       last_updated=timestamp)
     
-    df <- dbGetQuery(con, sql1)
+    dbExecute(con, sql1)
 
     sql2 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE2",
@@ -387,7 +387,7 @@ creaConflittoFormule <- function(x, nomi, formula.db, con=NULL) {
       name=name,
       tag=tag,
       last_updated=timestamp)
-    dbGetQuery(con, sql2)
+    dbExecute(con, sql2)
   }
 
   warning(

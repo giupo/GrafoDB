@@ -131,7 +131,7 @@
 
   dbBegin(con)
   tryCatch({
-    dbGetQuery(con, getSQLbyKey(
+    dbExecute(con, getSQLbyKey(
       helper, "DELETE_META_TAG_NAME_KEY_VALUE",
       tag=tag,
       name=name,
@@ -177,7 +177,7 @@
       value=value,
       autore=autore)
     
-    dbGetQuery(con, sql)
+    dbExecute(con, sql)
   }
   x
 }

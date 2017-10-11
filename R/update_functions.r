@@ -30,7 +30,7 @@
         formularow <- row[,1]
         namerow <- row[,3]
        
-        dbGetQuery(con, getSQLbyKey(
+        dbExecute(con, getSQLbyKey(
           helper, "UPDATE_FORMULE",
           tag=tag,
           autore=autore,
@@ -44,7 +44,7 @@
     
     foreach(name = iter(names.updated)) %do% {
       formula <- expr(x, name, echo=FALSE)
-      dbGetQuery(con, getSQLbyKey(
+      dbExecute(con, getSQLbyKey(
         helper, "UPSERT_FORMULE",
         formula=formula,
         autore=autore,
