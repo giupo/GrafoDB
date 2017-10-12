@@ -308,28 +308,3 @@ dbDisconnect <- function(con) {
   TRUE
 }
 
-  
-# Adds implementation of DBI::dbBegin for RPostgreSQL
-#' @importFrom DBI dbBegin
-#' @importFrom methods signature setGeneric setMethod
-
-tryCatch(
-  setMethod("dbBegin", signature("PostgreSQLConnection"), .dbBeginPG),
-  error=function(err) {
-    setGeneric("dbBegin", function(conn) {
-      standardGeneric("dbBegin")
-    })
-    setMethod("dbBegin", signature("PostgreSQLConnection"), .dbBeginPG)
-  })
-
-tryCatch(
-  setMethod("dbBegin", signature("SQLiteConnection"), .dbBeginSQLite),
-  error=function(err) { # pass, non servono su Jenkins
-    setGeneric("dbBegin", function(conn) {
-      standardGeneric("dbBegin")
-    })
-    setMethod("dbBegin", signature("SQLiteConnection"), .dbBeginSQLite)
-  })
-
-
-
