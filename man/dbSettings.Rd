@@ -11,7 +11,7 @@ dbSettings()
 session and reloads the settings}
 }
 \value{
-a list containing the infos used to connect via DBI/RPostgreSQL
+a list containing the infos used to connect via DBI
 }
 \description{
 Tryes :

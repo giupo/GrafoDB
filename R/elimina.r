@@ -22,8 +22,7 @@
 #' @usage elimina(tag)
 #' @param tag `tag` che distingue in modo univoco il grafo ed i suoi dati
 #' @export
-#' @importFrom RPostgreSQL dbGetQuery dbExecute
-#' @importFrom DBI dbSendQuery dbBegin dbCommit dbRollback dbExistsTable
+#' @importFrom DBI dbSendQuery dbBegin dbCommit dbRollback dbExistsTable dbExecute
 #' @include functions.r
 #' @include db.r
 #' @include sqlhelper.r

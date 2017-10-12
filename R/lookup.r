@@ -9,7 +9,6 @@
 #' @return lista di nomi che matchano la condizione `key==valy`
 #' @include db.r
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 
 .lookup <- function(x, key, value) {
   tag <- x@tag
@@ -37,7 +36,6 @@
 #' @return lista di nomi che hanno `key` nella formula
 #' @include db.r
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 
 .lookup_formula <- function(x, key) {
   tag <- x@tag
@@ -63,7 +61,6 @@
 #' @return lista di nomi che matchano `key` nella formula
 #' @include db.r
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 
 .lookup_dati <- function(x, key) {
   tag <- x@tag

@@ -101,7 +101,7 @@ setupdb <- function(overwrite=FALSE) { # nocov start
 #' @usage dbSettings()
 #' @param flush if `TRUE` removes any option saved in the current
 #'              session and reloads the settings
-#' @return a list containing the infos used to connect via DBI/RPostgreSQL
+#' @return a list containing the infos used to connect via DBI
 #' @importFrom rutils ini_parse
 #' @export
 
@@ -175,8 +175,6 @@ initdb <- function(con) {
 #' @param password password utente (defaults to flypwd)
 #' @importFrom rutils whoami flypwd
 #' @importFrom DBI dbDriver dbConnect
-#' @import RSQLite
-#' @import RPostgreSQL
 
 .buildConnection <- function(userid=whoami(), password=flypwd()) {
   settings <- dbSettings()
@@ -187,6 +185,11 @@ initdb <- function(con) {
   drv <- dbDriver(settings$driver)
   
   if(settings$driver == "SQLite") {
+
+    if (! requireNamespace("RSQLite", quietly = TRUE)) {
+      stop("Please install RSQLite: install.packages('RSQLite')")
+    }
+    
     con <- dbConnect(drv, dbname=settings$dbname)
     if(settings$dbname == ":memory:") {
       initdb(con)
@@ -195,6 +198,10 @@ initdb <- function(con) {
     return(con)
   } 
 
+  if (! requireNamespace("RPostgreSQL", quietly = TRUE)) {
+    stop("Please install RPostgreSQL: install.packages('RPostgreSQL')")
+  }
+  
   drv <- dbDriver(settings$driver) #nocov start
   con <- tryCatch(
     dbConnect(drv, host=settings$host, dbname=settings$dbname),
@@ -276,7 +283,6 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL) {
 #'
 #' @name dbDisconnect
 #' @param con connection to be closed
-#' @importFrom RPostgreSQL dbDisconnect
 #' @export
 
 dbDisconnect <- function(con) {
@@ -289,6 +295,7 @@ dbDisconnect <- function(con) {
 
 
 # nocov start
+#' @importFrom DBI dbExecute
 .dbBeginPG <- function(conn) {
   dbExecute(conn, "START TRANSACTION")
   TRUE

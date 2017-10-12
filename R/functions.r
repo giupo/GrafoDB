@@ -371,7 +371,6 @@ getdb <- function(x, name, tag="cf10") {
 }
 
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 #' @include db.r 
   
 .tagExists <- function(tag, con=NULL) {

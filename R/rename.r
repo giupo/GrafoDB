@@ -11,7 +11,6 @@
 #' @return grafo modificato
 #' @include db.r functions.r
 #' @importFrom DBI dbGetQuery dbExecute
-#' @importFrom RPostgreSQL dbGetQuery
 #' @importFrom igraph get.vertex.attribute set.vertex.attribute
 
 .rename <- function(x, vecchio, nuovo) {

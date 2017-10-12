@@ -1,5 +1,4 @@
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 #' @include db.r tickets.r
 
 .getMeta <- function(x, serie, metadato) {
@@ -27,7 +26,6 @@
 #' @param name nome della serie storica
 #' @return data.frame contenente i metadati della serie
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 #' @include db.r
 
 .getMetadata <- function(x, name) {
@@ -69,7 +67,6 @@
 #' @rdname keys-internal
 #' @include db.r
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 
 .keys <- function(x) {
   con <- pgConnect()
@@ -92,7 +89,6 @@
 #' @return lista di valori per metadato
 #' @include db.r
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 
 .values <- function(x, key=NULL) {
   con <- pgConnect()
@@ -121,7 +117,6 @@
 #' @rdname deleteMeta-internal
 #' @include db.r
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 
 .deleteMeta <- function(x, name, key, value) {
   con <- pgConnect()
@@ -149,7 +144,6 @@
 #' @importFrom rutils whoami
 #' @include db.r sqlhelper.r
 #' @importFrom DBI dbGetQuery
-#' @importFrom RPostgreSQL dbGetQuery
 
 .setMeta <- function(x, name, key, value) {
   nomiobj <- names(x)
