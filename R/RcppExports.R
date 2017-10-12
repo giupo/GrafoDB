@@ -13,6 +13,6 @@
 #' @import Rcpp
 #' @useDynLib GrafoDB
 convert_data_frame <- function(dataframe0) {
-    .Call('_GrafoDB_convert_data_frame', PACKAGE = 'GrafoDB', dataframe0)
+    .Call('GrafoDB_convert_data_frame', PACKAGE = 'GrafoDB', dataframe0)
 }
 
