@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+sessionInfo()
+
 library(testthat)
 library(devtools)
 library(methods)

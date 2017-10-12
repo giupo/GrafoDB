@@ -182,14 +182,13 @@ initdb <- function(con) {
   env <- getenv()
   
   settings <- settings[[paste0("ConnectionInfo_", env)]]  
-  drv <- dbDriver(settings$driver)
   
   if(settings$driver == "SQLite") {
-
     if (! requireNamespace("RSQLite", quietly = TRUE)) {
       stop("Please install RSQLite: install.packages('RSQLite')")
     }
-    
+    require(RSQLite)
+    drv <- RSQLite::dbDriver(settings$driver)
     con <- dbConnect(drv, dbname=settings$dbname)
     if(settings$dbname == ":memory:") {
       initdb(con)
@@ -200,6 +199,8 @@ initdb <- function(con) {
 
   if (! requireNamespace("RPostgreSQL", quietly = TRUE)) {
     stop("Please install RPostgreSQL: install.packages('RPostgreSQL')")
+  } else {
+    require(RPostgreSQL)
   }
   
   drv <- dbDriver(settings$driver) #nocov start

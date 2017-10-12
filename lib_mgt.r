@@ -19,7 +19,7 @@ dep <- unique(dep)
 .required_pkgs <- dep[which(dep != "")]
 
 for (pkg in .required_pkgs) {
-    if(pkg != "rcf" && pkg != "R (>= 3.1.0)" && pkg != "Rcpp (>= 0.11.1)" &&
+    if(pkg != "rcf" && pkg != "R (>= 3.2.3)" && pkg != "Rcpp (>= 0.11.1)" &&
        pkg != "R.utils") {
     tryCatch({
       library(pkg, character.only=TRUE)
