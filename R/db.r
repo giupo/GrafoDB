@@ -307,4 +307,3 @@ dbDisconnect <- function(con) {
   dbExecute(conn, "BEGIN")
   TRUE
 }
-

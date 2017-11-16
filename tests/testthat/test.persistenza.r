@@ -111,3 +111,13 @@ test_that("need_resync returns true if GrafoNeeds a resync", {
   saveGraph(g2)
   expect_true(need_resync(g1))
 })
+
+test_that("I cannot save a p-graph", {
+  g <- setup("test")
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+
+  saveGraph(g)
+  
+})

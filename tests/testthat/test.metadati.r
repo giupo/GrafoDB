@@ -1,9 +1,11 @@
 context("Metadati")
 
-dbSettings(TRUE)
-elimina("test")
+# print(dbSettings(TRUE))
+# elimina("test")
 
 setup <- function(tag) {
+  dbSettings(TRUE)
+  print(Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=1)
   g["C"] <- function(A, B) {
@@ -178,7 +180,7 @@ test_that("I get additional TICKET metadata from issue tracker", {
   stub(.getMetadata, 'ticket', function(id) {
     expect_equal(id, 2)
     "[1,2,3,{'status':'open'}]"
-  }) 
-  df <- getMetadata(g, "A") # qui si solleva un warning  
- # expect_true("TICKET" %in% df$key)
+    df <- getMetadata(g, "A") # qui si solleva un warning
+    expect_true("TICKET" %in% df$key)
+  })
 })
