@@ -39,10 +39,13 @@
 #' @rdname saveGraph-internal
 #' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
 #' @importFrom igraph graph.union graph.data.frame
-#' 
+#' @importFrom futile.logger flog.trace flog.info flog.debug flog.warn flog.error flog.fatal
+
 # FIXME: https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 
 .saveGraph <- function(x, tag = x@tag, ...) {
+  ln <- "GrafoDB.persistence"
+  flog.trace(".saveGraph started", name=ln)
 
   con <- pgConnect()
   on.exit(dbDisconnect(con))
@@ -55,13 +58,18 @@
     ""
   }
 
+  flog.debug("Message used for saving: %s", msg, name=ln)
+  
   tryCatch({
+    flog.trace("beginning transaction")
     dbBegin(con)
+    
     if(hasConflicts(x, con=con)) {
       stop("Il grafo ", tag, " ha conflitti, risolverli prima di salvare")
     }
 
     if (need_resync(x)) {
+      flog.trace("Resync started", name=ln)
       message("Resync started")
       # risincronizzo i dati del db con la copia nel grafo
       x <- resync(x, con=con)
@@ -82,6 +90,7 @@
       x@network <- network
       x <- evaluate(x, clean_names)
     }
+    
     checkConflicts(x, con=con)    
 
     if(.tagExists(tag, con=con)) {
@@ -116,8 +125,9 @@
         }
       }
     }
-    
+    flog.trace("Contacting Redis cache...", name=ln)
     removeFromRedis(x, x@touched)
+    flog.trace("Redis interaction completed.", name=ln)
     
     dbCommit(con)
   }, error=function(err) {
