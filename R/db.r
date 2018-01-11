@@ -114,7 +114,7 @@ dbSettings <- function(flush=FALSE) {
   settings <- getOption("dbSettings", NULL)
   if(is.null(settings)) {
     home_ini_file <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
-    if(file.exists(home_ini_file)) {
+xco    if(file.exists(home_ini_file)) {
       home_settings <- ini_parse(home_ini_file)
       options(dbSettings=home_settings)
       return(home_settings)
@@ -136,16 +136,37 @@ getenv <- function() {
   Sys.getenv("GRAFODB_ENV", "prod")
 }
 
+
+#' Ritorna il nome del file contenente lo schema dei dati in base all' `env`
+#'
+#' `env` ottenuto con `getenv` e' la variabile d'ambiente GRAFODB_ENV, di
+#' default settata a `prod`. Negli ambienti di produzione e' necessario cambiarla
+#' a `test` e modificare accordingly la configurazione
+#'
+#' @name schemaFileFromEnv
+#' @param env ambiente di riferimento (di default e' `getenv`)
+#' @return percorso al file contenente lo schema dei dati
+#' @note attualmente esistono solo due schemi, per SQLite (tipicamente `test`)
+#'       e PostgreSQL (`prod`)
+
+schemaFileFromEnv <- function(env = getenv()) {
+  settings <- dbSettings()
+  settings <- settings[[paste0("ConnectionInfo_", env)]]
+  schemaFileName <- paste0("schema-", settings$driver, ".sql")
+  file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
+}
+
 #' @importFrom stringr str_split str_trim
+#' @importFrom futile.logger flog.debug flog.error flog 
 
 initdb <- function(con) {
-  settings <- dbSettings()
-  
+  loggerName <- "GrafoDB::initdb"
+
   env <- getenv()
-  settings <- settings[[paste0("ConnectionInfo_", env)]]
-  
-  schemaFileName <- paste0("schema-", settings$driver, ".sql")
-  file <- file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
+
+  flog.debug("Current env is '%s'", env, name=loggerName)
+
+  file <- schemaFileFromEnv(env)
   sql <- paste(readLines(file), collapse="\n")
 
   statements <- str_split(sql, ";")[[1]]

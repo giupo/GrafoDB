@@ -12,6 +12,6 @@ test_that("dbSettings can return custom home made ini settings", {
 
 test_that("init_db can handle an error", {
   skip_if_not(require(mockery), "mockery required")
-  stub(initdb, 'stringr::str_trim', function(...) stop("my error"))
+  stub(initdb, 'str_trim', function(...) stop("my error"))
   expect_error(initdb(pgConnect()), "my error")
 })

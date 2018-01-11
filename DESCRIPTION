@@ -27,7 +27,8 @@ Imports:
     rdataset,
     Rcpp,
     RCurl,
-    zoo
+    zoo,
+    futile.logger
 Suggests:
     devtools,
     rstudioapi,

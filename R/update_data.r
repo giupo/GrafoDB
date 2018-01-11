@@ -1,7 +1,11 @@
 #' @include redis.r conflicts.r
 #' @importFrom R.utils System
+#' @importFrom futile.logger flog.info
 .updateData <- function(x, con, tag=x@tag, msg="") {
-  if(interactive()) cat("Update Data...")
+  loggerName <- "GrafoDB::updateData"
+
+  if(interactive()) flog.info("Update Data ...", name=loggerName)
+
   data <- x@data
   helper <- x@helper
   autore <- whoami()
@@ -73,5 +77,5 @@
     }
   }
   
-  if (interactive()) cat("Done.\n")
+  if (interactive()) flog.info("Update Data done.", name=loggerName)
 }
