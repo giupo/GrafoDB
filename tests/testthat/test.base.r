@@ -595,6 +595,7 @@ test_that("ser in debug fails if name doesn't exist", {
 })
 
 test_that("ser in debug executes the formula", {
+  skip_if_not(require(mockery), "mockery required")
   for(tag in rilasci("test")$tag) elimina(tag)
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
@@ -606,10 +607,8 @@ test_that("ser in debug executes the formula", {
     C <- A + B
   }
 
-  with_mock(
-    'base::debug' = function(...) {}, {
-      expect_equal(ser(g, "C", debug=TRUE), g[["C"]])
-    })
+  stub(.ser, 'base::debug', function(...) {})
+  expect_equal(ser(g, "C", debug=TRUE), g[["C"]])
 })
 
 test_that("tickets call the correct url", {
