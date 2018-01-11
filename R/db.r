@@ -157,7 +157,7 @@ schemaFileFromEnv <- function(env = getenv()) {
 }
 
 #' @importFrom stringr str_split str_trim
-#' @importFrom futile.logger flog.debug flog.error flog 
+#' @importFrom futile.logger flog.debug flog.error flog.info flog.warn
 
 initdb <- function(con) {
   loggerName <- "GrafoDB::initdb"
