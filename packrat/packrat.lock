@@ -111,6 +111,12 @@ Source: CRAN
 Version: 1.0-6
 Hash: 931f9972deae0f205e1c78a51f33149b
 
+Package: cli
+Source: CRAN
+Version: 1.0.0
+Hash: f4239f89feb7ddc65821e4514e9734ae
+Requires: assertthat, crayon
+
 Package: commonmark
 Source: CRAN
 Version: 1.4
@@ -227,7 +233,7 @@ Requires: irlba, magrittr, pkgconfig
 Package: irlba
 Source: CRAN
 Version: 2.2.1
-Hash: b356ce7870360689fd2442e0183bf065
+Hash: 88cd8bb6199acfa4090da5109af88884
 
 Package: iterators
 Source: CRAN
@@ -397,9 +403,9 @@ Hash: 1f0adaf3eda9d42aeb4a51f10dbbdf39
 
 Package: testthat
 Source: CRAN
-Version: 1.0.2
-Hash: 88d5291104227f9dc2e7c7c1d0eb6c74
-Requires: R6, crayon, digest, magrittr, praise
+Version: 2.0.0
+Hash: 537114b476376c5773bf3c557f5bbd19
+Requires: R6, cli, crayon, digest, magrittr, praise, rlang, withr
 
 Package: tibble
 Source: CRAN
