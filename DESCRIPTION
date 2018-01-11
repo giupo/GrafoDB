@@ -44,7 +44,7 @@ Suggests:
     RPostgreSQL,
     RSQLite
 LinkingTo: Rcpp, BH
-Collate: 
+Collate:
     'RcppExports.R'
     'checkDAG.r'
     'db.r'
@@ -58,13 +58,13 @@ Collate:
     'persistence.r'
     'functions.r'
     'rename.r'
-    'ser.r'
     'tickets.r'
     'metadati.r'
+    'ser.r'
     'expr.r'
     'evaluate.r'
-    'navigate.r'
     'lookup.r'
+    'navigate.r'
     'core.r'
     'conflicts.r'
     'diff.r'
