@@ -1,7 +1,7 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.8.1
 RVersion: 3.2.3
-Repos: CRAN=https://cran.stat.unipd.it
+Repos: CRAN=http://cran.rstudio.com
 
 Package: BH
 Source: CRAN
