@@ -698,3 +698,27 @@ test_that("Posso usare funzioni complesse nelle formule", {
 
   expect_is(g[["C"]], "ts")
 })
+
+test_that("Posso valutare funzioni passate come stringhe", {
+  g <- GrafoDB("test")
+  on.exit({
+    elimina("test")
+  })
+
+  g["A"] <- 1
+  g["B"] <- "function(A) { B = A}"
+
+  expect_equal(g[["B"]], g[["A"]])
+})
+
+test_that("Posso valutare funzioni passate come stringhe", {
+  g <- GrafoDB("test")
+  on.exit({
+    elimina("test")
+  })
+
+  g["A"] <- 1
+  g["B"] <- "function() { B = 2}"
+
+  expect_equal(g[["B"]], 2)
+})

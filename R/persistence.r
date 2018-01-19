@@ -43,7 +43,10 @@
 # FIXME: https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 
 .saveGraph <- function(x, tag = x@tag, ...) {
-  loggerName <- "GrafoDB::saveGraph"
+
+  ln <- "GrafoDB.persistence.saveGraph"
+  flog.trace(".saveGraph started", name=ln)
+
   con <- pgConnect()
   on.exit(dbDisconnect(con))
 
