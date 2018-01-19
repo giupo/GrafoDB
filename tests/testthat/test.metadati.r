@@ -2,6 +2,7 @@ context("Metadati")
 
 setup <- function(tag) {
   dbSettings(TRUE)
+  flog.debug("Nome dell'env dall'env: %s", Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
 
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=1)

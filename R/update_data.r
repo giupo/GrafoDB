@@ -2,9 +2,9 @@
 #' @importFrom R.utils System
 #' @importFrom futile.logger flog.info
 .updateData <- function(x, con, tag=x@tag, msg="") {
-  loggerName <- "GrafoDB::updateData"
+  ln <- "GrafoDB::updateData"
 
-  if(interactive()) flog.info("Update Data ...", name=loggerName)
+  if(interactive()) flog.info("Update Data ...", name=ln)
 
   data <- x@data
   helper <- x@helper
@@ -77,5 +77,5 @@
     }
   }
   
-  if (interactive()) flog.info("Update Data done.", name=loggerName)
+  if (interactive()) flog.info("Update Data done.", name=ln)
 }

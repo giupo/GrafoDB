@@ -1,8 +1,8 @@
 #' @importFrom futile.logger flog.info
 
 .updateFunctions <- function(x, con, tag=x@tag, msg="") {
-  loggerName <- "GrafoDB::updateFunctions"
-  if(interactive()) flog.info("Update Functions ...", name=loggerName)
+  ln <- "GrafoDB::updateFunctions"
+  if(interactive()) flog.info("Update Functions ...", name=ln)
 
   ## passo la connessione perche' devono avere la stessa transazione
   ## non usare controllo di transazione qui
@@ -60,5 +60,5 @@
   }
   removeFromRedis(x, x@touched)
   
-  if(interactive()) flog.info("Update Functions done.", name=loggerName)
+  if(interactive()) flog.info("Update Functions done.", name=ln)
 }

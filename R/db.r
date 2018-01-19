@@ -103,25 +103,35 @@ setupdb <- function(overwrite=FALSE) { # nocov start
 #'              session and reloads the settings
 #' @return a list containing the infos used to connect via DBI
 #' @importFrom rutils ini_parse
+#' @importFrom futile.logger flog.info flog.debug flog.trace
 #' @export
 
 dbSettings <- function(flush=FALSE) {
-  
+  ln <- "GrafoDB.db.r"
   if(flush) {
+    flog.trace("Flushing settings", name=ln)
     options(dbSettings=NULL)
   }
   
   settings <- getOption("dbSettings", NULL)
+  
   if(is.null(settings)) {
+    flog.trace("settings are null", name=ln)
     home_ini_file <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
+    flog.debug("Ini file: %s", home_ini_file, name=ln)
     if(file.exists(home_ini_file)) {
+      flog.debug("%s esiste! lo parso", home_ini_file)
       home_settings <- ini_parse(home_ini_file)
       options(dbSettings=home_settings)
+      flog.debug("settings: %s", home_settings, name=ln, capture=TRUE)
       return(home_settings)
     }
-    
-    settings <- ini_parse(
-      file.path(system.file(package="GrafoDB"), "ini/GrafoDB.ini"))
+
+    flog.debug("Reverting to system wide INI", name=ln)
+    filename <- file.path(system.file(package="GrafoDB"), "ini/GrafoDB.ini")
+    flog.debug("File path for system wide INI: %s%", filename, name=ln)
+    settings <- ini_parse(filename)
+    flog.debug("Settings: %s", settings, name=ln, capture=TRUE)
     options(dbSettings=settings)
   }
     
@@ -133,7 +143,10 @@ dbSettings <- function(flush=FALSE) {
 
 
 getenv <- function() {
-  Sys.getenv("GRAFODB_ENV", "prod")
+  ln <- "GrafoDB.db"
+  xx <- Sys.getenv("GRAFODB_ENV", "prod")
+  flog.debug("enviroment setting: %s", xx, name=ln)
+  xx
 }
 
 
@@ -150,22 +163,24 @@ getenv <- function() {
 #'       e PostgreSQL (`prod`)
 
 schemaFileFromEnv <- function(env = getenv()) {
+  ln <- "GrafoDB.db.schemaFileFromEnv"
   settings <- dbSettings()
   settings <- settings[[paste0("ConnectionInfo_", env)]]
   schemaFileName <- paste0("schema-", settings$driver, ".sql")
-  file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
+  flog.debug("Schema file name: %s", schemaFileName, name=ln)
+  
+  file <- file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
+  flog.debug("Schema filename full path: %s", file, name=ln)
+  file
 }
 
 #' @importFrom stringr str_split str_trim
 #' @importFrom futile.logger flog.debug flog.error flog.info flog.warn
 
 initdb <- function(con) {
-  loggerName <- "GrafoDB::initdb"
-
+  ln <- "GrafoDB::initdb"
   env <- getenv()
-
-  flog.debug("Current env is '%s'", env, name=loggerName)
-
+  flog.debug("Current env is '%s'", env, name=ln)
   file <- schemaFileFromEnv(env)
   sql <- paste(readLines(file), collapse="\n")
 
@@ -177,6 +192,7 @@ initdb <- function(con) {
       stm <- str_trim(as.character(stm))
       
       if(nchar(stm) > 0) {
+        flog.trace("%s", stm, name=ln)
         dbExecute(con, stm)
       }
     }
@@ -198,11 +214,14 @@ initdb <- function(con) {
 #' @importFrom DBI dbDriver dbConnect
 
 .buildConnection <- function(userid=whoami(), password=flypwd()) {
+  ln <- "GrafoDB.db"
   settings <- dbSettings()
   
   env <- getenv()
   
   settings <- settings[[paste0("ConnectionInfo_", env)]]  
+
+  flog.debug("Partial Settings: %s", settings)
   
   if(settings$driver == "SQLite") {
     if (! requireNamespace("RSQLite", quietly = TRUE)) {
@@ -242,7 +261,7 @@ initdb <- function(con) {
   }
   
   if(is.null(con)) {
-    message("no kerberos ticket, fallback to userid/pwd")
+    flog.warn("no kerberos ticket, fallback to userid/pwd", name=ln)
     userid <- if(is.null(userid)) {
       whoami()
     } else {
@@ -274,7 +293,8 @@ initdb <- function(con) {
 #' @export
 
 pgConnect <- function(userid=NULL, password=NULL, con=NULL) {
-
+  ln <- "GrafoDB.db"
+  flog.trace(msg="pgConnect", name=ln)
   if(!is.null(con)) {
     return(con)
   }
@@ -282,17 +302,20 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL) {
   con <- getOption("pgConnect", NULL)
   ## veriifico la connessione
   con <- if(is.null(con)) {
+    flog.debug("Con is null, building connection...", name=ln)
     .buildConnection(userid, password)
   } else {
     tryCatch({
       ## dbGetInfo(con) e' deprecato. faccio il check su "grafi"
       grafi <- dbGetQuery(con, "select * from grafi");
       if (!is.data.frame(grafi)) {
+        flog.warn("Grafi doesn't exists on DB, rebuilding connection...", name=ln)
         .buildConnection(userid, password) # nocov
       } else {
         con
       }
     }, error = function(err) {
+      flog.warn("Got an error in pgConnect, rebuilding connection...", name=ln)
       .buildConnection(userid, password) # nocov
     })
   }
@@ -308,9 +331,12 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL) {
 #' @export
 
 dbDisconnect <- function(con) {
+  ln <- "GrafoDB.db"
   if(is.null(getOption("pgConnect", NULL))) {
+    flog.trace("Connection was created outside GrafoDB, closing for real...", name=ln)
     DBI::dbDisconnect(con) # nocov
   } else {
+    flog.trace("Connection was created inside GrafoDB, fake closing", name=ln)
     TRUE
   }
 }
@@ -319,12 +345,16 @@ dbDisconnect <- function(con) {
 # nocov start
 #' @importFrom DBI dbExecute
 .dbBeginPG <- function(conn) {
+  ln <- "GrafoDB.db"
+  flog.trace("start transaction", name=ln)
   dbExecute(conn, "START TRANSACTION")
   TRUE
 }
 # nocov end # can't check this code without production environment
 
 .dbBeginSQLite <- function(conn) {
+  ln <- "GrafoDB.db"
+  flog.trace("start transaction", name=ln)
   dbExecute(conn, "BEGIN")
   TRUE
 }

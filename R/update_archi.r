@@ -6,9 +6,9 @@
 #' @include checkDAG.r
 
 .updateArchi <- function(x, con, tag=x@tag) {
-  loggerName <- "GrafoDB::updateArchi"
+  ln <- "GrafoDB::updateArchi"
   
-  if(interactive()) flog.info("Update Archi ...", name=loggerName)
+  if(interactive()) flog.info("Update Archi ...", name=ln)
 
   data <- x@data
   functions <- x@functions
@@ -75,5 +75,5 @@
     }
   }
   
-  if(interactive()) flog.info("Update Archi done.", name=loggerName)
+  if(interactive()) flog.info("Update Archi done.", name=ln)
 }
