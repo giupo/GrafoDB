@@ -66,7 +66,7 @@
     }
 
     if (need_resync(x)) {
-      flog.info("Resync started", name=loggerName)
+      flog.info("Resync started", name=ln)
       # risincronizzo i dati del db con la copia nel grafo
       x <- resync(x, con=con)
       # trova serie che necessitano il resync
