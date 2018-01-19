@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // convert_data_frame
 List convert_data_frame(SEXP dataframe0);
-RcppExport SEXP GrafoDB_convert_data_frame(SEXP dataframe0SEXP) {
+RcppExport SEXP _GrafoDB_convert_data_frame(SEXP dataframe0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -15,4 +15,14 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(convert_data_frame(dataframe0));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_GrafoDB_convert_data_frame", (DL_FUNC) &_GrafoDB_convert_data_frame, 1},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_GrafoDB(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

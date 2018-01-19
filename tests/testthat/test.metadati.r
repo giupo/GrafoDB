@@ -1,12 +1,10 @@
 context("Metadati")
 
-# print(dbSettings(TRUE))
-# elimina("test")
-
 setup <- function(tag) {
   dbSettings(TRUE)
   flog.debug("Nome dell'env dall'env: %s", Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
+
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=1)
   g["C"] <- function(A, B) {
     C = (A + 1) * (B + 2)
@@ -33,8 +31,8 @@ test_that("posso caricare tutti i metadati del grafo", {
 })
 
 test_that("posso ottenere i metadati per una serie", {
-   on.exit({
-    elimina("test")
+  on.exit({
+    elimina("test") 
   })
   g <- setup("test")
   with_mock(
@@ -100,14 +98,13 @@ test_that("If I get an erro with DB, deleteMeta fails", {
 })
 
 test_that("Ottengo un errore se accade un errore sul DB nella lettura di Metadati", {
+  skip_if_not(require(mockery), "mockery required")
   on.exit({
     elimina("test")
   })
   g <- setup("test")
-  with_mock(
-    getSQLbyKey = function(...) stop("error"), {
-      expect_error(getMeta(g, "A", "KEY"), "error")
-    })
+  stub(.getMeta, 'getSQLbyKey', function(...) stop("error"))
+  expect_error(.getMeta(g, "A", "KEY"), "error")
 })
 
 test_that("I get nothing if there are no metadata values for a key", {
@@ -117,15 +114,14 @@ test_that("I get nothing if there are no metadata values for a key", {
 })
 
 test_that("setMeta has a warning each time you set an already existing meta", {
+  skip_if_not(require(mockery), "mockery required")
   on.exit({
     elimina("test")
   })
   g <- setup("test")
-  with_mock(
-    # hack to regenerate the warning
-    'base::warning' = function(...) stop(...), {
-      expect_error(setMeta(g, "A", "KEY", "VALUE1"))
-    })
+  stub(.setMeta, 'warning', function(...) stop("dc"))
+
+  expect_error(.setMeta(g, "A", "KEY", "VALUE1"))
 })
 
 test_that("setMeta su una serie inesistente produce un errore", {
@@ -180,7 +176,7 @@ test_that("I get additional TICKET metadata from issue tracker", {
   stub(.getMetadata, 'ticket', function(id) {
     expect_equal(id, 2)
     "[1,2,3,{'status':'open'}]"
-    df <- getMetadata(g, "A") # qui si solleva un warning
+    df <- .getMetadata(g, "A") # qui si solleva un warning
     expect_true("TICKET" %in% df$key)
   })
 })

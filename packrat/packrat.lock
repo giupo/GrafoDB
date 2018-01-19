@@ -1,7 +1,7 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.8.1
 RVersion: 3.2.3
-Repos: CRAN=https://cran.stat.unipd.it
+Repos: CRAN=http://cran.rstudio.com
 
 Package: BH
 Source: CRAN
@@ -111,6 +111,12 @@ Source: CRAN
 Version: 1.0-6
 Hash: 931f9972deae0f205e1c78a51f33149b
 
+Package: cli
+Source: CRAN
+Version: 1.0.0
+Hash: f4239f89feb7ddc65821e4514e9734ae
+Requires: assertthat, crayon
+
 Package: commonmark
 Source: CRAN
 Version: 1.4
@@ -173,6 +179,17 @@ Source: CRAN
 Version: 1.5
 Hash: 258cf79a8dbeedf1c981cdb53837d2af
 
+Package: futile.logger
+Source: CRAN
+Version: 1.4.3
+Hash: d1cc6584b39f2c4cfbe377fd94cbdbaa
+Requires: futile.options, lambda.r
+
+Package: futile.options
+Source: CRAN
+Version: 1.0.0
+Hash: 4f24cbf581681c263186b9425f05ba3e
+
 Package: gdata
 Source: CRAN
 Version: 2.18.0
@@ -227,7 +244,7 @@ Requires: irlba, magrittr, pkgconfig
 Package: irlba
 Source: CRAN
 Version: 2.2.1
-Hash: b356ce7870360689fd2442e0183bf065
+Hash: 88cd8bb6199acfa4090da5109af88884
 
 Package: iterators
 Source: CRAN
@@ -238,6 +255,11 @@ Package: jsonlite
 Source: CRAN
 Version: 1.5
 Hash: 9c51936d8dd00b2f1d4fe9d10499694c
+
+Package: lambda.r
+Source: CRAN
+Version: 1.2
+Hash: a17af00010c92198f159cebf1467e111
 
 Package: lazyeval
 Source: CRAN
@@ -397,9 +419,9 @@ Hash: 1f0adaf3eda9d42aeb4a51f10dbbdf39
 
 Package: testthat
 Source: CRAN
-Version: 1.0.2
-Hash: 88d5291104227f9dc2e7c7c1d0eb6c74
-Requires: R6, crayon, digest, magrittr, praise
+Version: 2.0.0
+Hash: 537114b476376c5773bf3c557f5bbd19
+Requires: R6, cli, crayon, digest, magrittr, praise, rlang, withr
 
 Package: tibble
 Source: CRAN

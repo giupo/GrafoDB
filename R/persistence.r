@@ -40,16 +40,19 @@
 #' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
 #' @importFrom igraph graph.union graph.data.frame
 #' @importFrom futile.logger flog.trace flog.info flog.debug flog.warn flog.error flog.fatal
-
 # FIXME: https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 
 .saveGraph <- function(x, tag = x@tag, ...) {
   ln <- "GrafoDB.persistence"
   flog.trace(".saveGraph started", name=ln)
 
+  ln <- "GrafoDB.persistence.saveGraph"
+  flog.trace(".saveGraph started", name=ln)
+
   con <- pgConnect()
   on.exit(dbDisconnect(con))
 
+  
   param_list <- list(...)
 
   msg <- if('msg' %in% names(param_list)) {
@@ -69,8 +72,7 @@
     }
 
     if (need_resync(x)) {
-      flog.trace("Resync started", name=ln)
-      message("Resync started")
+      flog.info("Resync started", name=ln)
       # risincronizzo i dati del db con la copia nel grafo
       x <- resync(x, con=con)
       # trova serie che necessitano il resync

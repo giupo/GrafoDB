@@ -297,9 +297,9 @@ test_that("resync gets called when two sessions updates a Graph", {
   expect_equal(g2[["C"]], 1)
   saveGraph(g1)
   Sys.sleep(.01)
-  expect_message(saveGraph(g2), "Resync started")
+  require(mockery)
+  expect_true(need_resync(g2))
+  saveGraph(g2)
+  # expect_message(saveGraph(g2), "Resync started")
   expect_equal(g2[["C"]],  0)
 })
-
-
-

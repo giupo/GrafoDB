@@ -91,3 +91,12 @@ test_that("elimina handles exceptions", {
     })
 })
 
+test_that("schemaFileFromEnv returns a consistent file", {
+  expect_equal(getenv(), "test")
+  expect_true(is.list(dbSettings(TRUE)))
+  test_file <- schemaFileFromEnv("test")
+  prod_file <- schemaFileFromEnv("prod")
+
+  expect_equal(basename(test_file), "schema-SQLite.sql")
+  expect_equal(basename(prod_file), "schema-PostgreSQL.sql")
+})

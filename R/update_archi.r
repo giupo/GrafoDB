@@ -2,10 +2,13 @@
 #' @importFrom igraph get.edgelist graph.union graph.data.frame is.dag topological.sort
 #' @importFrom stringr str_split
 #' @importFrom rutils whoami
+#' @importFrom futile.logger flog.info
 #' @include checkDAG.r
 
 .updateArchi <- function(x, con, tag=x@tag) {
-  if(interactive()) cat("Update Archi...")
+  ln <- "GrafoDB::updateArchi"
+  
+  if(interactive()) flog.info("Update Archi ...", name=ln)
 
   data <- x@data
   functions <- x@functions
@@ -72,5 +75,5 @@
     }
   }
   
-  if(interactive()) cat("Done.\n")
+  if(interactive()) flog.info("Update Archi done.", name=ln)
 }
