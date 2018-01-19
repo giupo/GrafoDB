@@ -87,6 +87,8 @@ setMethod(
     x@functions[[name]] <- .declutter_function(value)
     x@network <- network
     x <- .evaluate(x, name)
+  } else if (is.character(value) && grepl("^function", value)) {
+    return(.subsetting(x, i, eval(parse(text=value))))
   } else {
     aggregate <- listAggregates(x)
     elementari <- listElementaries(x)

@@ -43,7 +43,10 @@
 # FIXME: https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 
 .saveGraph <- function(x, tag = x@tag, ...) {
-  loggerName <- "GrafoDB::saveGraph"
+
+  ln <- "GrafoDB.persistence.saveGraph"
+  flog.trace(".saveGraph started", name=ln)
+
   con <- pgConnect()
   on.exit(dbDisconnect(con))
 
@@ -63,7 +66,7 @@
     }
 
     if (need_resync(x)) {
-      flog.info("Resync started", name=loggerName)
+      flog.info("Resync started", name=ln)
       # risincronizzo i dati del db con la copia nel grafo
       x <- resync(x, con=con)
       # trova serie che necessitano il resync
