@@ -722,3 +722,15 @@ test_that("Posso valutare funzioni passate come stringhe", {
 
   expect_equal(g[["B"]], 2)
 })
+
+test_that("Posso valutare espressioni come stringhe con newlines", {
+
+  g <- GrafoDB("test")
+  on.exit({
+    elimina("test")
+  })
+
+  g["A"] <- 1
+  g["B"] <- "function(A) { C = 2\n B=C+A }"
+  expect_equal(g[["B"]], 3)
+})
