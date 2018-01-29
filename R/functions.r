@@ -16,6 +16,7 @@
 #' @include db.r persistence_utils.r
 
 .init <- function(.Object, tag="cf10") {
+  ln <- "GrafoDB.functions.init"
   if(is.null(tag)) {
     tag <- "cf10"
   } else {
@@ -32,9 +33,11 @@
   } else {
     0
   }
+
+  flog.debug("GRAFODB_ENV: %s", env, name=ln)
   .Object@tag <- tag
-  
   .Object@helper <- SQLHelper()
+
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   

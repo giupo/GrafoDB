@@ -107,7 +107,7 @@ setupdb <- function(overwrite=FALSE) { # nocov start
 #' @export
 
 dbSettings <- function(flush=FALSE) {
-  ln <- "GrafoDB.db.r"
+  ln <- "GrafoDB.db.dbSettings"
   if(flush) {
     flog.trace("Flushing settings", name=ln)
     options(dbSettings=NULL)
@@ -134,16 +134,19 @@ dbSettings <- function(flush=FALSE) {
     flog.debug("Settings: %s", settings, name=ln, capture=TRUE)
     options(dbSettings=settings)
   }
-    
-  env <- getenv()
-  options(SQLHelperType=settings[[paste0("ConnectionInfo_", env)]]$driver)
+  #SQLHelperType_ <- settings[[paste0("ConnectionInfo_", env)]]$driver
+
+  #flog.trace("SQLHelper type in dbSettings: %s", SQLHelperType_, name=ln)
+  #options(SQLHelperType=SQLHelperType_)
   
   settings
 }
 
 
+#' @export
+
 getenv <- function() {
-  ln <- "GrafoDB.db"
+  ln <- "GrafoDB.db.getenv"
   xx <- Sys.getenv("GRAFODB_ENV", "prod")
   flog.debug("enviroment setting: %s", xx, name=ln)
   xx
@@ -178,10 +181,10 @@ schemaFileFromEnv <- function(env = getenv()) {
 #' @importFrom futile.logger flog.debug flog.error flog.info flog.warn
 
 initdb <- function(con) {
-  ln <- "GrafoDB::initdb"
+  ln <- "GrafoDB.db.initdb"
   env <- getenv()
   flog.debug("Current env is '%s'", env, name=ln)
-  file <- schemaFileFromEnv(env)
+  file <- schemaFileFromEnv(env=env)
   sql <- paste(readLines(file), collapse="\n")
 
   statements <- str_split(sql, ";")[[1]]

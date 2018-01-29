@@ -76,6 +76,7 @@ Collate:
     'life_cycle.r'
     'logging.r'
     'old_grafo_impl.r'
+    'patch.r'
     'rmNode.r'
     'subsetting.r'
 RoxygenNote: 6.0.1
