@@ -6,6 +6,7 @@
 #' 
 #' @export
 #' @method diff GrafoDB
+#' @importFrom futile.logger flog.trace
 
 diff.GrafoDB <- function(x, ...) {
   y <- list(...)[[1]]
@@ -22,14 +23,13 @@ diff.GrafoDB <- function(x, ...) {
 
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-
-  df <- dbGetQuery(con, getSQLbyKey(helper,
-                                    "DIFF_FORMULE",
-                                    new = x@tag,
-                                    old = y@tag))
+  sql <- getSQLbyKey(helper, "DIFF_FORMULE", new=x@tag, old=y@tag)
+  flog.trace("Diff query: %s", sql, name='GrafoDB.diff')
+  df <- dbGetQuery(con, sql)
 
   if(nrow(df)) {
-    colnames(df) <- c("name", x@tag, y@tag)
+    colnames(df) <- c("name", x@tag, paste0(x@tag, "_last_updated"),
+                      y@tag, paste0(y@tag, "_last_updated"))
   }
   df
 }

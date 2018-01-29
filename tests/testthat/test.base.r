@@ -718,7 +718,7 @@ test_that("Posso valutare funzioni passate come stringhe", {
   })
 
   g["A"] <- 1
-  g["B"] <- "function() { B = 2}"
+  g["B"] <- "function() { B = 2 }"
 
   expect_equal(g[["B"]], 2)
 })

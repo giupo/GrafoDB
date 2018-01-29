@@ -16,6 +16,7 @@
 #' @export SQLHelper
 #' @exportClass SQLHelper
 #' @importFrom rutils ini_parse
+#' @importFrom futile.logger flog.error flog.trace flog.info
 #' @importFrom stringr str_locate_all
 #' @importFrom methods representation
 
@@ -26,26 +27,43 @@ SQLHelper <- setClass(
     type="character"
   ))
 
+
+
 setMethod(
   "initialize",
   signature("SQLHelper"),
-  function(.Object, path = NULL, type="PostgreSQL") {
-    .Object@type <- getOption("SQLHelperType", type)
-    .Object@sqlContainer <- ini_parse(
-      file.path(system.file(package="GrafoDB", mustWork=T),
-                "ini/sql.ini"))[[.Object@type]]
-
-    .Object
+  function(.Object, path=NULL, type=NULL) {
+    .initSQLHelper(.Object, path=path, type=type)
   })
+
+.initSQLHelper <- function(.Object, path = NULL, type=NULL) {
+  env <- getenv()
+  if (is.null(type)) {
+    type <- if(env == "test") {
+      "SQLite"
+    } else {
+      "PostgreSQL"
+    }
+  }
+  
+  .Object@type <- type
+  flog.trace("SQLHeleperType: %s", type, name="GrafoDB.sqlhelper" )
+  .Object@sqlContainer <- ini_parse(
+    file.path(system.file(package="GrafoDB", mustWork=T),
+              "ini/sql.ini"))[[.Object@type]]
+  
+  .Object
+}
 
 
 .getSQLbyKey <- function(x, .key, ...) {
-  if(! .key %in% names(x@sqlContainer)) {
+  sqlContainer <- x@sqlContainer
+  if(! .key %in% names(sqlContainer)) {
     stop(.key, " not in query repository")
   }
 
   ## retrieve sql
-  sql <- x@sqlContainer[[.key]]
+  sql <- sqlContainer[[.key]]
 
   ## handle param list
   params <- list(...)
@@ -73,6 +91,8 @@ setMethod(
     stop("params for query ", .key, " of type ", x@type, " have not been set")
   }
 
+
+  flog.trace("Query for key '%s' = %s", .key, sql, name='GrafoDB.sqlhelper')
   sql
 }
 
@@ -95,7 +115,7 @@ setMethod(
 #' @return un character array contenente la query SQL
 #' @export
 #' @exportMethod getSQLbyKey
-2
+
 setGeneric(
   "getSQLbyKey",
   function(x, .key, ...) {
