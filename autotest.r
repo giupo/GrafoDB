@@ -18,6 +18,6 @@ flog.info("GRAFODB_ENV:%s", Sys.getenv("GRAFODB_ENV"))
 invisible(flog.threshold(WARN, name='GrafoDB.sqlhelper'))
 invisible(flog.threshold(WARN, name='GrafoDB.db'))
 invisible(flog.threshold(WARN, name='GrafoDB.persistence.saveGraph'))
-invisible(flog.threshold(TRACE, name='GrafoDB.patch'))
+invisible(flog.threshold(WARN, name='GrafoDB.patch'))
 
 auto_test("R", "tests/testthat/")

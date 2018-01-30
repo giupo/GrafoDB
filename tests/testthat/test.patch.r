@@ -52,6 +52,7 @@ test_that("If no column from diff is specified, it gets the most recent", {
     elimina("primo")
     elimina("secondo")
   })
+
   expect_equal(getenv(), "test")
   saveGraph(g)
 
