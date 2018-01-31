@@ -49,6 +49,7 @@ patchByLastUpdated <- function(x, diff_) {
   x
 }
 
+
 patchByColumn <- function(x, diff_, column=NULL) {
   ln <- "GrafoDB.patch.patchByColumn"
   nomi <-  diff_$name
