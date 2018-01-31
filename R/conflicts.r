@@ -285,7 +285,7 @@ checkConflicts <- function(x, con=NULL) {
       for(name in unique(soloRoots)) {
         outerTs <- from.data.frame(dati.db[dati.db$name == name, ])[[name]]
         innerTs <- x[[name]]
-        if(any(outerTs != innerTs)) {
+        if(! identical(outerTs, innerTs)) {
           creaConflittoDati(x, name, con=con)
         }
       }
