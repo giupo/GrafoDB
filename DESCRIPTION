@@ -28,9 +28,9 @@ Imports:
     Rcpp,
     RCurl,
     zoo,
-    futile.logger
+    futile.logger,
+    crayon
 Suggests:
-    crayon,
     devtools,
     rstudioapi,
     testthat,
