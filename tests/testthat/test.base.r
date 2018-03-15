@@ -595,7 +595,7 @@ test_that("ser in debug fails if name doesn't exist", {
 })
 
 test_that("ser in debug executes the formula", {
-  skip("Can't figure out out to stub debug")
+  skip("Can't figure out how to stub debug")
   skip_if_not(require(mockery), "mockery required")
   for(tag in rilasci("test")$tag) elimina(tag)
   on.exit({

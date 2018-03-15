@@ -113,12 +113,16 @@
 #' @param x istanza di grafo
 #' @param name nome della serie da cui eliminare il metadato
 #' @param key nome del metadato
-#' @param value valore del metadato
+#' @param value valore del metadato (se non specificato, rimuove tutti i  metadati
+#'              con la chiave specificata)
 #' @rdname deleteMeta-internal
 #' @include db.r
 #' @importFrom DBI dbGetQuery
 
-.deleteMeta <- function(x, name, key, value) {
+.deleteMeta <- function(x, name, key, value=NULL) {
+  if(is.null(value)) {
+    return(.deleteMetaByKey(x, name, key))
+  }
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tag <- x@tag
@@ -140,6 +144,28 @@
   
   invisible(x)
 }
+
+.deleteMetaByKey <- function(x, name, key) {
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
+
+    tag <- x@tag
+    helper <- x@helper
+
+    dbBegin(con)
+    tryCatch({
+      dbExecute(con, getSQLbyKey(
+        helper, "DELETE_META_TAG_NAME_KEY",
+        tag=tag,
+        name=name,
+        key=key))
+      dbCommit(con)
+    }, error = function(cond) {
+      dbRollback(con)
+      stop(cond)
+    })
+}
+
 
 #' @importFrom rutils whoami
 #' @include db.r sqlhelper.r
