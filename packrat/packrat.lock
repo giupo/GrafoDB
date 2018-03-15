@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.8.1
-RVersion: 3.2.3
+RVersion: 3.4.3
 Repos: CRAN=http://cran.rstudio.com
 
 Package: BH
@@ -244,7 +244,7 @@ Requires: irlba, magrittr, pkgconfig
 Package: irlba
 Source: CRAN
 Version: 2.2.1
-Hash: 88cd8bb6199acfa4090da5109af88884
+Hash: c560875796842a08afe7fa782ceedaba
 
 Package: iterators
 Source: CRAN
@@ -350,12 +350,12 @@ Requires: R6, Rcpp, brew, commonmark, desc, digest, stringi, stringr,
 Package: rprogressbar
 Source: github
 Version: 0.1.6
-Hash: fbd740011e24436980dffb69847a99a4
+Hash: 66326bfc37b11d10c23b4a28d8ddf4a1
 Requires: rstudioapi
 GithubRepo: rprogressbar
 GithubUsername: giupo
 GithubRef: master
-GithubSha1: ccab5b0f27ca203d239c0aeca627445f4d34efea
+GithubSha1: c5506b748c3f953538c5b903fc85d32d8cd018cb
 
 Package: rprojroot
 Source: CRAN
