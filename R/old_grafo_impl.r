@@ -267,15 +267,15 @@ setMethod(
 
 setGeneric(
   "deleteMeta",
-  function(object, tsName, attrName, attrValue) {
+  function(object, tsName, attrName, attrValue=NULL) {
     standardGeneric("deleteMeta")
   })
 
 setMethod(
   "deleteMeta",
   signature("GrafoDB", "character", "character", "ANY"),
-  function(object, tsName, attrName, attrValue) {
-    .deleteMeta(object, tsName, attrName, attrValue)
+  function(object, tsName, attrName, attrValue=NULL) {
+    .deleteMeta(object, tsName, attrName, value=attrValue)
   })
 
 

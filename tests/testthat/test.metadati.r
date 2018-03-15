@@ -17,6 +17,7 @@ setup <- function(tag) {
   g
 }
 
+
 test_that("posso caricare tutti i metadati del grafo", {
   on.exit({
     elimina("test")
@@ -179,4 +180,19 @@ test_that("I get additional TICKET metadata from issue tracker", {
     df <- .getMetadata(g, "A") # qui si solleva un warning
     expect_true("TICKET" %in% df$key)
   })
+})
+
+test_that("I can remove all metadata with a single key entry", {
+    g <- setup("test")
+    on.exit({
+        for(tag in rilasci("test")$tag) elimina(tag)
+    })
+
+    
+    deleteMeta(g, "A", "KEY")
+    with_mock(
+      'RCurl::getURL' = function(...) "{}", {
+        v <- getMeta(g, "A")
+        expect_equal(nrow(v), 0)
+    })    
 })
