@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.8.1
-RVersion: 3.4.3
+RVersion: 3.4.4
 Repos: CRAN=http://cran.rstudio.com
 
 Package: BH
@@ -349,13 +349,13 @@ Requires: R6, Rcpp, brew, commonmark, desc, digest, stringi, stringr,
 
 Package: rprogressbar
 Source: github
-Version: 0.1.6
-Hash: 66326bfc37b11d10c23b4a28d8ddf4a1
+Version: 0.1.7
+Hash: fb50bc869ea48b7318afd1d7c6d61b27
 Requires: rstudioapi
 GithubRepo: rprogressbar
 GithubUsername: giupo
 GithubRef: master
-GithubSha1: c5506b748c3f953538c5b903fc85d32d8cd018cb
+GithubSha1: db7c8ffacb34705b488b185dacf05fb44a4d921c
 
 Package: rprojroot
 Source: CRAN
