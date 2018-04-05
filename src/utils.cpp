@@ -6,7 +6,6 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <pwd.h>
 #include <unistd.h>
 #include <Rcpp.h>
 #include "json/json.h"
