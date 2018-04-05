@@ -28,8 +28,10 @@ diff.GrafoDB <- function(x, ...) {
   df <- dbGetQuery(con, sql)
 
   if(nrow(df)) {
-    colnames(df) <- c("name", x@tag, paste0(x@tag, "_last_updated"),
-                      y@tag, paste0(y@tag, "_last_updated"))
+    colnames(df) <- c("name", x@tag, paste0(x@tag, "_autore"),
+                      paste0(x@tag, "_last_updated"),
+                      y@tag, paste0(y@tag, "_autore"),
+                      paste0(y@tag, "_last_updated"))
   }
   df
 }

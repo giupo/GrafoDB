@@ -28,14 +28,14 @@ patchByLastUpdated <- function(x, diff_) {
   nomi <- diff_$name
   for(nome in nomi) {
     flog.trace("Patching %s", nome, name=ln)
-    lastup1 <- as.numeric(diff_[diff_$name == nome, 3])
-    lastup2 <- as.numeric(diff_[diff_$name == nome, 5])
+    lastup1 <- as.numeric(diff_[diff_$name == nome, 4])
+    lastup2 <- as.numeric(diff_[diff_$name == nome, 7])
     new_formula <- if(lastup1 > lastup2) {
       flog.trace("nuova data (%s) > vecchia data (%s)", lastup1, lastup2, name=ln)
       as.character(diff_[diff_$name == nome, 2])
     } else if (lastup1 < lastup2) {
       flog.trace("nuova data (%s) < vecchia data (%s)", lastup1, lastup2, name=ln)
-      as.character(diff_[diff_$name == nome, 4])
+      as.character(diff_[diff_$name == nome, 5])
     } else {
       stop("don't know what to pick for ", nome,
            " while patching. Check your diff last_updated fields")
