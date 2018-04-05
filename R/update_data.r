@@ -9,7 +9,7 @@
   data <- x@data
   helper <- x@helper
   autore <- whoami()
-  
+
   df <- if(length(keys(data))) {
     dbGetQuery(con, getSQLbyKey(
       helper, "GET_CHANGED_DATA",
@@ -26,37 +26,49 @@
     dati <- foreach (name = iter(names.updated), .combine=rbind) %dopar% {
       df <- to.data.frame(data[[name]])
       cbind(df, name, tag) 
-    }
+    }  # this is quite fast, let's ignore the Progressbar here...
 
-    # FIXME: questo dovrebbe essere fatto sempre
-    if(dbExistsTable(con, paste0("dati_", tag)) ||
-         class(con) == "SQLiteConnection") {
-    
-      foreach(row = iter(dati, 'row')) %do% {
-        name <- row$name
-        anno <- row$anno
-        periodo <- row$periodo
-        freq <- row$freq
-        datirow <- row$dati
-        
-        sql1 <- getSQLbyKey(
-          helper, "UPDATE_DATI",
-          anno=anno,
-          periodo=periodo,
-          freq=freq,
-          dati=datirow,
-          autore=autore,
-          name=name,
-          tag=tag,
-          msg=msg,
-          last_updated=R.utils::System$currentTimeMillis())
-
-        dbExecute(con, sql1)
-      }
+    # non mi e' chiaro perche' facciamo sta doppia passata di update e upsert
+    if(interactive()) {
+      pb <- ProgressBar(min=1, max=length(names.updated))
     }
-    
+    count <- 1
     foreach(row = iter(dati, 'row')) %do% {
-      name <- row$name
+      name <- as.character(row$name)
+      if(interactive()) updateProgressBar(pb, count, name)
+      anno <- row$anno
+      periodo <- row$periodo
+      freq <- row$freq
+      datirow <- row$dati
+      
+      sql1 <- getSQLbyKey(
+        helper, "UPDATE_DATI",
+        anno=anno,
+        periodo=periodo,
+        freq=freq,
+        dati=datirow,
+        autore=autore,
+        name=name,
+        tag=tag,
+        msg=msg,
+        last_updated=R.utils::System$currentTimeMillis())
+      
+      rcExecute <- dbExecute(con, sql1)
+      count <- count + 1
+      ret <- list()
+      ret[[name]] <- rcExecute
+      ret
+    }
+    
+    if(interactive()) {
+      kill(pb)
+      pb <- ProgressBar(min=1, max=length(names.updated))
+    }
+    
+    count <- 1
+    foreach(row = iter(dati, 'row')) %do% {
+      name <- as.character(row$name)
+      if(interactive()) updateProgressBar(pb, count, name)
       anno <- row$anno
       periodo <- row$periodo
       freq <- row$freq
@@ -73,9 +85,20 @@
         tag=tag,
         msg=msg,
         last_updated=R.utils::System$currentTimeMillis())
-      dbExecute(con, sql2)
+      
+      rcExecute <- dbExecute(con, sql2)
+      count <- count + 1
+      ret <- list()
+      ret[[name]] <- rcExecute
+      ret
+    }
+
+    if (interactive()) {
+      kill(pb)
     }
   }
   
-  if (interactive()) flog.info("Update Data done.", name=ln)
+  if (interactive()) {
+    flog.info("Update Data done.", name=ln)
+  }
 }
