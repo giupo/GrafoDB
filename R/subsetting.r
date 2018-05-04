@@ -66,7 +66,7 @@ setMethod(
     dependencies <- names(as.list(formals(value)))
     
     if(length(dependencies) > 0) {
-
+      
     } else  {
       ## e' una serie elementare
     } 
