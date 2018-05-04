@@ -438,11 +438,11 @@ test_that("I get an error if I try to subset a series with missing deps", {
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
-  expect_error({
+  expect_warning({
     g["C"] <- function(A,B,D) {
       C = A + B
     }
-  }, "Missing dependencies D")
+  })
 })
 
 test_that("isRoot returns true if node is a root", {

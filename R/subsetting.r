@@ -63,19 +63,27 @@ setMethod(
 
   if (is.function(value)) {
     ## assert all dependencies
-    dependencies <- names(as.list(formals(value)))
     
-    if(length(dependencies) > 0) {
-      
+    declutted <- .declutter_function(value)
+    .dependencies <- names(as.list(formals(value)))
+    dependencies <- c()
+    if(length(.dependencies) > 0) {
+      for(dep in .dependencies) {
+        if(!grepl(dep, declutted)) {
+          warning(dep, " not in formula: ", declutted)
+        } else {
+          dependencies <- c(dependencies, dep)
+        }
+      }
     } else  {
       ## e' una serie elementare
     } 
-
+    
     if (!all(dependencies %in% all_names)) {
       miss <- setdiff(dependencies, all_names)
       stop("Missing dependencies ", paste(miss, collapse=", "))
     }
-
+    
     for(dep in dependencies) {
       network <- network + edge(dep, name)
     }
@@ -86,7 +94,7 @@ setMethod(
     
     checkDAG(network)
 
-    x@functions[[name]] <- .declutter_function(value)
+    x@functions[[name]] <- declutted
     x@network <- network
     x <- .evaluate(x, name)
   } else if (is.character(value) && grepl("^function", value)) {

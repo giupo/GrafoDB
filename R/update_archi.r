@@ -26,6 +26,7 @@
   in.memory <- paste(in.memory$partenza, in.memory$arrivo, sep=sep)
   
   da.inserire <- setdiff(in.memory, in.db)
+  da.eliminare <- setdiff(in.db, in.memory)
 
   df <- if(length(keys(data))) {
     ## cerco archi aggiunti di recente.
@@ -72,6 +73,33 @@
       dbExecute(con, getSQLbyKey(
         helper, "INSERT_ARCHI", tag=tag, from=from, to=to,
         autore=autore, last_updated=round(R.utils::System$currentTimeMillis())))
+    }
+  }
+
+  if(length(da.eliminare)) {
+    params <- if(length(da.eliminare) == 1) {
+      tokens <- str_split(da.eliminare, sep)[[1]]
+      df <- as.data.frame(
+        list(
+          partenza = tokens[[1]],
+          arrivo=tokens[[2]]),
+        stringsAsFactors = F)
+      names(df) <- c("partenza", "arrivo")
+      df
+    } else {
+      splitted <- unlist(str_split(da.eliminare, sep))
+      df <- as.data.frame(matrix(splitted, nrow=length(da.eliminare), byrow=T),
+                          stringsAsFactors = F)
+      names(df) <- c("partenza", "arrivo")
+      df
+    }
+    params <- c(tag, df, autore)
+    
+    foreach(row=iter(df, by='row')) %do% {
+      from <- row$partenza
+      to <- row$arrivo
+      dbExecute(con, getSQLbyKey(
+        helper, "DELETE_ARCHI", tag=tag, from=from, to=to))
     }
   }
   
