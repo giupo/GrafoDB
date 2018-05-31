@@ -49,10 +49,6 @@
   ln <- "GrafoDB.persistence.saveGraph"
   flog.trace(".saveGraph started", name=ln)
 
-  con <- pgConnect()
-  on.exit(dbDisconnect(con))
-
-  
   param_list <- list(...)
 
   msg <- if('msg' %in% names(param_list)) {
@@ -61,10 +57,21 @@
     ""
   }
 
+  con <- if('con' %in% names(param_list)) {
+    flog.debug('connection context provided', name=ln)
+    param_list[['con']]
+  }  else {
+    flog.debug('connection has to be created...', name=ln)
+    con_ <- pgConnect()
+    on.exit(dbDisconnect(con_))
+    flog.debug('connection created and set to be closed on.exit', name=ln)
+    con_
+  }
+  
   flog.debug("Message used for saving: %s", msg, name=ln)
   
   tryCatch({
-    flog.trace("beginning transaction")
+    flog.trace("beginning transaction", name=ln)
     dbBegin(con)
     
     if(hasConflicts(x, con=con)) {
@@ -98,7 +105,10 @@
     if(.tagExists(tag, con=con)) {
       # se esiste il tag sul DB
       # sto aggiornando il grafo tag
+      flog.trace("'%s' exists on DB, I'm updating it...", tag, name=ln)
       if(x@tag != tag) {
+        flog.trace("x@tag ('%s') != tag (%s), execute history, delete tag and recreate a copy of it",
+                   x@tag, tag, name=ln)
         # faccio l'history del tag di destinazione
         doHistory(x, tag, con)
         # lo cancello
@@ -107,22 +117,27 @@
         .copyGraph(x@tag, tag, con=con, mesg=msg, helper=x@helper)
       }
       # aggiorno eventuali cambiamenti in sessione
+      flog.trace("update eventual changes in session", name=ln)
       .updateGraph(x, con=con, msg=msg)
     } else {
       if (x@tag == tag) {
+        flog.trace('tag as param equals tag as slot: creating a new graph', name=ln)
         # se non esiste il tag sul DB
         # sto creando un nuovo grafo
         .createGraph(x, tag, con=con, msg=msg)  
       } else {
         # se i tag sono differenti
         if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
+          flog.trace('have no data, simply create an empty graph', name=ln)
           # non ho dati, creo grafo
           .createGraph(x, tag, con=con, msg=msg)
         } else {
           # ho dati, quindi copio il grafo dalla fonte alla
           # destinazione sul DB e...
+          flog.trace('have data, so copying graph... ', name=ln)
           .copyGraph(x@tag, tag, con=con, msg=msg, helper=x@helper)
           # Aggiorno eventuali cambiamenti in sessione
+          flog.trace('... and update eventual changes in session', name=ln)
           .updateGraph(x, tag, con=con, msg=msg)
         }
       }

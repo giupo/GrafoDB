@@ -216,7 +216,7 @@ initdb <- function(con) {
 #' @importFrom rutils whoami flypwd
 #' @importFrom DBI dbDriver dbConnect
 
-.buildConnection <- function(userid=whoami(), password=flypwd()) {
+.buildConnection <- function(userid=whoami(), password=flypwd(), ...) {
   ln <- "GrafoDB.db"
   settings <- dbSettings()
   
@@ -236,7 +236,6 @@ initdb <- function(con) {
     if(settings$dbname == ":memory:") {
       initdb(con)
     }
-   #  options(pgConnect=con)
     return(con)
   } 
 
@@ -295,56 +294,16 @@ initdb <- function(con) {
 #' @importFrom DBI dbGetQuery
 #' @export
 
-pgConnect <- function(userid=NULL, password=NULL, con=NULL) {
+pgConnect <- function(userid=NULL, password=NULL, con=NULL, ...) {
   ln <- "GrafoDB.db"
   flog.trace(msg="pgConnect", name=ln)
   if(!is.null(con)) {
     return(con)
   }
   
-  con <- getOption("pgConnect", NULL)
-  ## veriifico la connessione
-  con <- if(is.null(con)) {
-    flog.debug("Con is null, building connection...", name=ln)
-    .buildConnection(userid, password)
-  } else {
-    tryCatch({
-      ## dbGetInfo(con) e' deprecato. faccio il check su "grafi"
-      grafi <- dbGetQuery(con, "select * from grafi");
-      if (!is.data.frame(grafi)) {
-        flog.warn("Grafi doesn't exists on DB, rebuilding connection...", name=ln)
-        .buildConnection(userid, password) # nocov
-      } else {
-        con
-      }
-    }, error = function(err) {
-      flog.warn("Got an error in pgConnect, rebuilding connection...", name=ln)
-      .buildConnection(userid, password) # nocov
-    })
-  }
-  
-  options(pgConnect=con)
-  con
+  .buildConnection(userid=whoami(), password=flypwd(), ...)
 }
   
-#' overrides dbDisconnect to do nothings in case pgConnect is active in options
-#'
-#' @name dbDisconnect
-#' @param con connection to be closed
-#' @export
-
-dbDisconnect <- function(con) {
-  ln <- "GrafoDB.db"
-  if(is.null(getOption("pgConnect", NULL))) {
-    flog.trace("Connection was created outside GrafoDB, closing for real...", name=ln)
-    DBI::dbDisconnect(con) # nocov
-  } else {
-    flog.trace("Connection was created inside GrafoDB, fake closing", name=ln)
-    TRUE
-  }
-}
-
-
 # nocov start
 #' @importFrom DBI dbExecute
 .dbBeginPG <- function(conn) {
