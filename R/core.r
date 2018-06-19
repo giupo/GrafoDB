@@ -364,8 +364,13 @@ setMethod(
     network <- x@network
     nodes <- V(network)[topological.sort(network)]$name
     
-    all_names <- union(keys(data), if(is.null(dbdati$name)) character()
-                       else dbdati$name)
+    all_names <- union(
+      keys(data),
+      if(is.null(dbdati$name)) {
+        character()
+      } else {
+        dbdati$name
+      })
     all_names <- union(all_names, V(network)$name)
     
     remaining <- setdiff(all_names, nodes)

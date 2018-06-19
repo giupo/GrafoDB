@@ -377,10 +377,14 @@ getdb <- function(x, name, tag="cf10") {
 #' @include db.r 
   
 .tagExists <- function(tag, con=NULL) {
-  con <- pgConnect(con)
-  if(is.null(con)) {
+  con <- if(is.null(con)) {
+    con <- pgConnect()
     on.exit(dbDisconnect(con))
+    con
+  } else {
+    con
   }
+
   df <- dbGetQuery(
     con,
     paste0("select * from grafi where tag='", tag,"'"))

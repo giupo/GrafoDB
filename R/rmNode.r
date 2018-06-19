@@ -27,6 +27,7 @@
   
   con <- pgConnect()
   on.exit(dbDisconnect(con))
+
   tryCatch({  
     dbBegin(con)
     

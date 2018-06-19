@@ -69,8 +69,8 @@ test_that("Posso cercare le serie con metadati", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- ts(runif(10), start=c(1990,1), freq=4)
-  g["B"] <- ts(runif(10), start=c(1990,1), freq=4)
+  g["A"] <- ts(runif(10), start=c(1990, 1), frequency=4)
+  g["B"] <- ts(runif(10), start=c(1990, 1), frequency=4)
   g["C"] <- function(A,B) {
     C = A + B    
   }
@@ -81,7 +81,6 @@ test_that("Posso cercare le serie con metadati", {
 
   res <- lookup(g, "key", "value")
   expect_equal(length(res), 2)
-
   expect_true(all(c("A", "B") %in% res))
 })
 
@@ -338,7 +337,7 @@ test_that("isLeaf torna false per una serie non foglia", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -352,7 +351,7 @@ test_that("isRoot torna false per serie foglia", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -365,7 +364,7 @@ test_that("isRoot torna true per una serie non foglia", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -379,7 +378,7 @@ test_that("Posso editare una serie esistente aggiungendo una dipendenza esistent
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -399,7 +398,7 @@ test_that("Posso subsettare con il $ (dollaro)", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -418,7 +417,7 @@ test_that("Posso subsettare una singola serie come Dataset", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
   g["C"] <- function(A,B) {
     C = A + B
   }
@@ -437,7 +436,7 @@ test_that("I get an error if I try to subset a series with missing deps", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
   expect_warning({
     g["C"] <- function(A,B,D) {
       C = A + B
@@ -450,7 +449,7 @@ test_that("isRoot returns true if node is a root", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4) 
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4) 
   g["C"] <- function(A, B) {
     C <- A + B
   }
@@ -467,7 +466,7 @@ test_that("show produces output", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4) 
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4) 
   g["C"] <- function(A, B) {
     C <- A + B
   }
@@ -480,7 +479,7 @@ test_that("I can subtract two GrafoDB", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=4) 
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4) 
   g["C"] <- function(A, B) {
     C <- A + B
   }
@@ -488,7 +487,7 @@ test_that("I can subtract two GrafoDB", {
   g["D"] <- 0
   
   g1 <- GrafoDB("test1")
-  g1["A"] <- g1["B"] <- ts(c(1,1,1), start=c(1990,1), freq=4) 
+  g1["A"] <- g1["B"] <- ts(c(1,1,1), start=c(1990,1), frequency=4) 
   g1["C"] <- function(A, B) {
     C <- A + B
   }
@@ -517,7 +516,7 @@ test_that("I can't subtract container with different types of objects", {
   }
 
   g1 <- GrafoDB("test1")
-  g1["A"] <- g1["B"] <- ts(c(1,1,1), start=c(1990,1), freq=4) 
+  g1["A"] <- g1["B"] <- ts(c(1,1,1), start=c(1990,1), frequency=4) 
   g1["C"] <- function(A, B) {
     C <- A + B
   }
