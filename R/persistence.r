@@ -62,10 +62,10 @@
     param_list[['con']]
   }  else {
     flog.debug('connection has to be created...', name=ln)
-    con_ <- pgConnect()
-    on.exit(dbDisconnect(con_))
+    con <- pgConnect()
+    on.exit(dbDisconnect(con))
     flog.debug('connection created and set to be closed on.exit', name=ln)
-    con_
+    con
   }
   
   flog.debug("Message used for saving: %s", msg, name=ln)

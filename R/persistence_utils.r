@@ -11,11 +11,14 @@
 #' @include db.r
 
 loadTable <- function(tableName, tag, con=NULL) {
-  conWasNull <- is.null(con)
-  con <- pgConnect(con=con)
-  if(is.null(con)) {
-    on.exit(dbDisconnect(con))
+  con <- if(is.null(con)) {
+    cc <- pgConnect()
+    on.exit(dbDisconnect(cc))
+    cc
+  } else {
+    con
   }
+  
   fullTableName <- if(class(con) != "SQLiteConnection") {
     paste0(tableName, '_', tag) # nocov # e' valido solo su Postgres con table partition
   } else {
@@ -68,9 +71,12 @@ loadFormule <- function(tag, con=NULL) tryCatch({
 })
 
 loadGrafi <- function(con=NULL) {
-  con <- pgConnect(con)
-  if(is.null(con)) {
+  con <- if(is.null(con)) {
+    con <- pgConnect()
     on.exit(dbDisconnect(con))
+    con
+  } else {
+    con
   }
   dbReadTable(con, 'grafi')
 }
@@ -87,11 +93,17 @@ createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
     commento=msg, autore=autore,
     last_updated=x@timestamp)
   
-  if(is.null(con)) {
-    on.exit(dbDisconnect(con))
+
+  if (is.null(con)) {
+    con <- pgConnect()
+    on.exit({
+      dbDisconnect(con)
+    })
+    con
+  } else {
+    con
   }
-  con <- pgConnect(con=con)
-  
+
   tryCatch({
     dbBegin(con)
     dbExecute(con, sql)
@@ -107,17 +119,21 @@ createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
 
 
 resync <- function(x, con=NULL) {
-  conWasNull <- is.null(con)
-  con <- pgConnect(con=con)
-  if(conWasNull) {
+  if(is.null(con)) {
+    con <- pgConnect()
     on.exit(dbDisconnect(con))
+    con
+  } else {
+    con
   }
+  
   tag <- x@tag
   x@dbdati <- loadDati(tag, con=con)
   x@dbformule <- loadFormule(tag, con=con)
   ## e gli archi :?? :)
   x
 }
+
 
 need_resync <- function(x) {
   timeStamp <- x@timestamp

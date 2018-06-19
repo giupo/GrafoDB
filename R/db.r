@@ -300,8 +300,15 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL, ...) {
   if(!is.null(con)) {
     return(con)
   }
-  
-  .buildConnection(userid=whoami(), password=flypwd(), ...)
+
+  con <- getOption("pgConnect", NULL)
+  con <- if(is.null(con)) {
+    con <- .buildConnection(userid=whoami(), password=flypwd(), ...)
+    options(pgConnect=con)
+    con
+  } else {
+    con
+  }
 }
   
 # nocov start
@@ -320,3 +327,15 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL, ...) {
   dbExecute(conn, "BEGIN")
   TRUE
 }
+
+dbDisconnect <- function(con) {
+  ln <- "GrafoDB.db"
+  if(is.null(getOption("pgConnect", NULL))) {
+    flog.trace("Connection was created outside GrafoDB, closing for real...", name=ln)
+    DBI::dbDisconnect(con) # nocov
+  } else {
+    flog.trace("Connection was created inside GrafoDB, fake closing", name=ln)
+    TRUE
+  }
+}
+

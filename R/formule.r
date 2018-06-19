@@ -18,9 +18,13 @@ formule <- function(g, name) {
   if(!isNode(g, name)) {
     warning(name, " non e' un oggetto del Grafo ", g@tag)
   }
-  sql <- paste0("select distinct formula, tag, last_updated ",
-                "from formule where name = '", name, "' order by last_updated")
+
+  sql <- paste0(
+    "select distinct formula, tag, last_updated ",
+    "from formule where name = '", name, "' order by last_updated")
+
   df <- dbGetQuery(con, sql)
+
   if(nrow(df) == 0) {
     data.frame(formula=character(0), tag=character(0))
   } else {

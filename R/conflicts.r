@@ -99,10 +99,13 @@ setMethod(
   "getConflicts",
   signature("GrafoDB", "ANY"),
   function(x, name=NULL, con=NULL) {
-    if (is.null(con)) {
+    con <- if (is.null(con)) {
+      con <- pgConnect()
       on.exit(dbDisconnect(con))
+      con
+    } else {
+      con
     }
-    con <- pgConnect(con)
     
     tag <- x@tag
     helper <- x@helper
@@ -210,10 +213,14 @@ setMethod(
 #' @note funzione interna
 
 getChangedSeries <- function(x, con=NULL) {
-  if(is.null(con)) {
+  con <- if(is.null(con)) {
+    con <- pgConnect()
     on.exit(dbDisconnect(con))
+    con
+  } else {
+    con
   }
-  con <- pgConnect(con=con)
+
   tag <- x@tag
   helper <- x@helper
   timestamp <- x@timestamp
@@ -225,10 +232,12 @@ getChangedSeries <- function(x, con=NULL) {
 }
 
 getOuterDataNames <- function(x, con=NULL) {
-  conWasNull <- is.null(con)
-  con <- pgConnect(con=con)
-  if(conWasNull) {
+  con <- if(is.null(con)) {
+    con <- pgConnect()
     on.exit(dbDisconnect(con))
+    con
+  } else {
+    con
   }
   autore <- whoami()
   tag <- x@tag
@@ -241,10 +250,12 @@ getOuterDataNames <- function(x, con=NULL) {
 }
 
 getOuterFormulaNames <- function(x, con=NULL) {
-  conWasNull <- is.null(con)
-  con <- pgConnect(con=con)
-  if(conWasNull) {
+  con <- if(is.null(con)) {
+    con <- pgConnect()
     on.exit(dbDisconnect(con))
+    con
+  } else {
+    con
   }
 
   autore <- whoami()
@@ -316,10 +327,12 @@ checkConflicts <- function(x, con=NULL) {
 #' @include db.r
 
 creaConflittoDati <- function(x, nomi, con=NULL) {
-  conWasNull <- is.null(con)
-  con <- pgConnect(con=con)
-  if(conWasNull) {
+  con <- if(is.null(con)) {
+    con <- pgConnect()
     on.exit(dbDisconnect(con))
+    con
+  } else {
+    con
   }
   
   tag <- x@tag
@@ -358,9 +371,12 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
 creaConflittoFormule <- function(x, nomi, formula.db, con=NULL) {
   
   conWasNull <- is.null(con)
-  con <- pgConnect(con=con)
-  if(conWasNull) {
+  con <- if(is.null(con)) {
+    con <- pgConnect(con=con)
     on.exit(dbDisconnect(con))
+    con
+  } else {
+    con
   }
 
   autore <- whoami()
