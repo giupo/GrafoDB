@@ -86,7 +86,7 @@ loadGrafi <- function(con=NULL) {
 createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
   autore <- whoami()
   # FIXME: Devo usare i timestamp di R o del DBMS?
-  x@timestamp <- round(R.utils::System$currentTimeMillis())
+  x@timestamp <- time.in.millis()
   helper <- x@helper
   sql <- getSQLbyKey(
     helper, "CREATE_NEW_GRAFO", tag=tag,
@@ -147,3 +147,5 @@ need_resync <- function(x) {
   
   df[[1]] > 0
 }
+o
+time.in.millis <- function() as.numeric(Sys.time()) * 1000

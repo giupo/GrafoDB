@@ -324,7 +324,7 @@ checkConflicts <- function(x, con=NULL) {
 #' @importFrom foreach foreach %do%
 #' @importFrom iterators iter
 #' @importFrom DBI dbDisconnect
-#' @include db.r
+#' @include db.r persistence_utils.r
 
 creaConflittoDati <- function(x, nomi, con=NULL) {
   con <- if(is.null(con)) {
@@ -338,7 +338,7 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
   tag <- x@tag
   autore <- whoami()
   helper <- x@helper
-  timestamp <- round(R.utils::System$currentTimeMillis())
+  timestamp <- time.in.millis()
   dati <- foreach(name = iter(nomi), .combine=rbind) %do% {
 
     tt <- x[[name]]
@@ -382,7 +382,9 @@ creaConflittoFormule <- function(x, nomi, formula.db, con=NULL) {
   autore <- whoami()
   tag <- x@tag
   helper <- x@helper
-  timestamp <- round(R.utils::System$currentTimeMillis())
+  # timestamp <- round(R.utils::System$currentTimeMillis())
+
+  timestamp <- time.in.millis()
   foreach (name = iter(nomi)) %do% {
     # task <- expr(x, name, echo=FALSE)
     

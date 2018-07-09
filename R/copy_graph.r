@@ -1,6 +1,8 @@
 #' @include redis.r sqlhelper.r
 #' @importFrom R.utils System
 #' @importFrom DBI dbExecute
+#' @include persistence_utils.r
+
 .copyGraph <- function(from, to, con, ...) {
   param_list <- list(...)
   commento <- if('msg' %in% names(param_list)) {
@@ -39,5 +41,5 @@
   ## sendCopyMetadati(from, to)
   dbExecute(con, getSQLbyKey(
     helper, "INSERT_GRAFI", tag=to, commento=commento, autore=autore,
-    last_updated=round(R.utils::System$currentTimeMillis())))
+    last_updated=time.in.millis()))
 }
