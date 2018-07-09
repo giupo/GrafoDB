@@ -22,80 +22,35 @@
   names.with.conflicts <- intersect(x@touched, as.character(df$name))
   names.updated <- setdiff(keys(data), names.with.conflicts)
 
-  if(length(names.updated)) { 
+  if(length(names.updated)) {
+    
+    # create temporary data with names_updated
+    dbExecute(con, getSQLbyKey(helper, "CREATE_STAGE"))
+    on.exit({
+      dbExecute(con, getSQLbyKey(helper, "DROP_STAGE"))
+    })
+
+    # creo il data.frame dei dati da usare nel DB
+    last_updated = R.utils::System$currentTimeMillis()
     dati <- foreach (name = iter(names.updated), .combine=rbind) %dopar% {
       df <- to.data.frame(data[[name]])
-      cbind(df, name, tag) 
+      # cbind(df, name, tag)
+      cbind(df, name, tag, autore, msg, last_updated)
     }  # this is quite fast, let's ignore the Progressbar here...
 
-    # non mi e' chiaro perche' facciamo sta doppia passata di update e upsert
-    if(interactive()) {
-      pb <- ProgressBar(min=1, max=length(names.updated))
-    }
-    count <- 1
-    foreach(row = iter(dati, 'row')) %do% {
-      name <- as.character(row$name)
-      if(interactive()) updateProgressBar(pb, count, name)
-      anno <- row$anno
-      periodo <- row$periodo
-      freq <- row$freq
-      datirow <- row$dati
-      
-      sql1 <- getSQLbyKey(
-        helper, "UPDATE_DATI",
-        anno=anno,
-        periodo=periodo,
-        freq=freq,
-        dati=datirow,
-        autore=autore,
-        name=name,
-        tag=tag,
-        msg=msg,
-        last_updated=R.utils::System$currentTimeMillis())
-      
-      rcExecute <- dbExecute(con, sql1)
-      count <- count + 1
-      ret <- list()
-      ret[[name]] <- rcExecute
-      ret
-    }
+    dbWriteTable(con, "stage", dati, row.names=FALSE, overwrite=TRUE)
+    # aggiorna i record esistenti...
+    dbExecute(con, getSQLbyKey(helper, "UPDATE_WITH_STAGE"))
     
-    if(interactive()) {
-      kill(pb)
-      pb <- ProgressBar(min=1, max=length(names.updated))
-    }
-    
-    count <- 1
-    foreach(row = iter(dati, 'row')) %do% {
-      name <- as.character(row$name)
-      if(interactive()) updateProgressBar(pb, count, name)
-      anno <- row$anno
-      periodo <- row$periodo
-      freq <- row$freq
-      datirow <- row$dati
-      
-      sql2 <- getSQLbyKey(
-        helper, "UPSERT_DATI",
-        anno=anno,
-        periodo=periodo,
-        freq=freq,
-        dati=datirow,
-        autore=autore,
-        name=name,
-        tag=tag,
-        msg=msg,
-        last_updated=R.utils::System$currentTimeMillis())
-      
-      rcExecute <- dbExecute(con, sql2)
-      count <- count + 1
-      ret <- list()
-      ret[[name]] <- rcExecute
-      ret
-    }
-
-    if (interactive()) {
-      kill(pb)
-    }
+    # ...ed inserisci i nuovi
+    dbExecute(con, getSQLbyKey(helper, "DELETE_STAGE"))
+    # ...non inserisco quelli gia' presenti
+    dbDati <- loadDati(tag, con=con)
+    dati_insert <- dati[!dati$name %in% dbDati$name, ]
+    # e vado a scrivere stage...
+    dbWriteTable(con, "stage", dati_insert, row.names=FALSE, overwrite=TRUE)
+    # ... da usare nell'insert
+    dbExecute(con, getSQLbyKey(helper, "INSERT_WITH_STAGE"))
   }
   
   if (interactive()) {
