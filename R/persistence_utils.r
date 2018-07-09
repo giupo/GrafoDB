@@ -147,5 +147,5 @@ need_resync <- function(x) {
   
   df[[1]] > 0
 }
-o
+
 time.in.millis <- function() as.numeric(Sys.time()) * 1000
