@@ -39,7 +39,8 @@
 #' @rdname saveGraph-internal
 #' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
 #' @importFrom igraph graph.union graph.data.frame
-#' @importFrom futile.logger flog.trace flog.info flog.debug flog.warn flog.error flog.fatal
+#' @importFrom futile.logger flog.trace flog.info flog.debug
+#' @importFrom futile.logger flog.warn flog.error flog.fatal
 # FIXME: https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 
 .saveGraph <- function(x, tag = x@tag, ...) {
@@ -158,6 +159,7 @@
   x
 }
 
+
 #' @include update_archi.r update_data.r update_functions.r
 #' @importFrom R.utils System
 
@@ -165,7 +167,7 @@
   helper <- x@helper
   ## supporto per history
   doHistory(x, tag=tag, con=con)
-  .updateData(x, con=con, tag=tag, msg=msg)
+  .updateData(x, con=con, tag=tag, notes=msg)
   .updateFunctions(x, con=con, tag=tag, msg=msg)
   .updateArchi(x, con=con, tag=tag)
   dbExecute(con, getSQLbyKey(
@@ -174,6 +176,7 @@
     tag=tag,
     last_updated=round(R.utils::System$currentTimeMillis())))
 }
+
 
 #' crea ex-novo un istanza di grafo nel databae
 #'
@@ -325,13 +328,16 @@ nextRollingNameFor <- function(x, con) {
   paste0(tag, 'p', p)
 }
 
+
 #' Esegue il rolling dei vintage del `GrafoDB`
 #'
-#' Ad ogni salvataggio con il metodo `saveGraph` se non impostiamo un nuovo `tag`
-#' il `GrafoDB` salva i dati sullo stesso `tag` ma contemporaneamente salva la versione
-#' precedente con un progressivo, in modo da tener traccia di chi ha fatto cosa nel tempo.
+#' Ad ogni salvataggio con il metodo `saveGraph` se non impostiamo
+#' un nuovo `tag` il `GrafoDB` salva i dati sullo stesso `tag` ma
+#' contemporaneamente salva la versione precedente con un progressivo,
+#' in modo da tener traccia di chi ha fatto cosa nel tempo.
 #'
-#' Le versioni sono contraddistinte da un nuovo tag, `tag`p`X` dove `X` e' un numero progressivo
+#' Le versioni sono contraddistinte da un nuovo tag, `tag`p`X` dove
+#' `X` e' un numero progressivo
 #'
 #' Il grafo potra' successivamente essere caricato con il nuovo tag.
 #'
@@ -362,13 +368,14 @@ doHistory <- function(x, tag, con) {
   0
 }
 
-#' Salva un istanza di grafo sul file system
+#' Salva un istanza di grafo sul file system 
 #'
 #' @name saveBinary
 #' @usage saveBinary(x, path)
 #' @param x istanza del GrafoDB
 #' @param path percorso del file su cui salvare il grafo
 #' @export
+#' @note il restore si fa con il comando `readBinary`
 
 saveBinary <- function(x, path) {
   con <- file(path, "wb")
@@ -378,7 +385,7 @@ saveBinary <- function(x, path) {
 }
 
 
-#' Legge un GrafoDB dal filesystem in formato binario
+#' Legge un GrafoDB dal filesystem in formato binario con `saveBinary`
 #'
 #' @name readBinary
 #' @usage readBinary(path)
