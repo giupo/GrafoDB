@@ -34,8 +34,7 @@
 
     # creo il data.frame dei dati da usare nel DB
     tryCatch({
-#      last_updated <- R.utils::System$currentTimeMillis()
-      last_updated <- as.integer(Sys.time()) * 1000
+      last_updated <- time.in.millis()
       dati <- foreach (name = iter(names.updated), .combine=rbind) %dopar% {
         df <- to.data.frame(data[[name]])
         # cbind(df, name, tag)zxo

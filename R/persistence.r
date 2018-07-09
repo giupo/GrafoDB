@@ -174,7 +174,7 @@
     helper, "UPDATE_GRAFO_LAST_UPDATED",
     autore=whoami(),
     tag=tag,
-    last_updated=round(R.utils::System$currentTimeMillis())))
+    last_updated=time.in.millis()))
 }
 
 
@@ -224,7 +224,7 @@
         freq=freq,
         dati=dati,
         autore=autore,
-        last_updated=round(R.utils::System$currentTimeMillis())))
+        last_updated=time.in.millis()))
     }
   } else {
     stop("Non ci sono dati da salvare.")
@@ -242,7 +242,7 @@
         partenza=partenza,
         arrivo=arrivo,
         autore=autore,
-        last_updated=round(R.utils::System$currentTimeMillis())))
+        last_updated=time.in.millis()))
     }
   }
   
@@ -255,7 +255,7 @@
         name=name,
         formula=formula,
         autore=autore,
-        last_updated=round(R.utils::System$currentTimeMillis())))
+        last_updated=time.in.millis()))
     }
   }
   
@@ -264,7 +264,7 @@
     tag=tag,
     commento=commento,
     autore=autore,
-    last_updated=round(R.utils::System$currentTimeMillis())))
+    last_updated=time.in.millis()))
 }
 
 

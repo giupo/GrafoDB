@@ -72,7 +72,7 @@
       to <- row$arrivo
       dbExecute(con, getSQLbyKey(
         helper, "INSERT_ARCHI", tag=tag, from=from, to=to,
-        autore=autore, last_updated=round(R.utils::System$currentTimeMillis())))
+        autore=autore, last_updated=time.in.millis()))
     }
   }
 
