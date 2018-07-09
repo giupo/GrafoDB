@@ -167,7 +167,7 @@
   helper <- x@helper
   ## supporto per history
   doHistory(x, tag=tag, con=con)
-  .updateData(x, con=con, tag=tag, msg=msg)
+  .updateData(x, con=con, tag=tag, notes=msg)
   .updateFunctions(x, con=con, tag=tag, msg=msg)
   .updateArchi(x, con=con, tag=tag)
   dbExecute(con, getSQLbyKey(
@@ -368,13 +368,14 @@ doHistory <- function(x, tag, con) {
   0
 }
 
-#' Salva un istanza di grafo sul file system
+#' Salva un istanza di grafo sul file system 
 #'
 #' @name saveBinary
 #' @usage saveBinary(x, path)
 #' @param x istanza del GrafoDB
 #' @param path percorso del file su cui salvare il grafo
 #' @export
+#' @note il restore si fa con il comando `readBinary`
 
 saveBinary <- function(x, path) {
   con <- file(path, "wb")
@@ -384,7 +385,7 @@ saveBinary <- function(x, path) {
 }
 
 
-#' Legge un GrafoDB dal filesystem in formato binario
+#' Legge un GrafoDB dal filesystem in formato binario con `saveBinary`
 #'
 #' @name readBinary
 #' @usage readBinary(path)
