@@ -94,7 +94,7 @@ createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
     last_updated=x@timestamp)
   
 
-  if (is.null(con)) {
+  con <- if (is.null(con)) {
     con <- pgConnect()
     on.exit({
       dbDisconnect(con)
