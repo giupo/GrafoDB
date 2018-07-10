@@ -170,8 +170,21 @@
         updateProgressBar(pb, i, tail(names(evaluated), n=1)) # nocov
       }
 
+      # i ignore why %dopar% is loosing data.
+      # the following is a patch in the meantime
+      motherfucker <- setdiff(sources, names(evaluated))
+
+      while(length(motherfucker)) {
+        evaluated0 <- foreach(name=motherfucker, .combine=c) %dopar% {
+          proxy(name, object)
+        }
+        evaluated <- c(evaluated, evaluated0)
+        motherfucker <- setdiff(motherfucker, names(evaluated0))
+      }
+      # R you are a plain joke. <endofpatch>
+      
       if(length(evaluated) != length(sources)) {
-        warning("evaluated and sources are different in length")
+        stop("evaluated and sources are different in length")
       }
       
       if(length(evaluated) == 1) {
