@@ -12,12 +12,14 @@ doHistory(x, con)
 \item{con}{connessione al database}
 }
 \description{
-Ad ogni salvataggio con il metodo `saveGraph` se non impostiamo un nuovo `tag`
-il `GrafoDB` salva i dati sullo stesso `tag` ma contemporaneamente salva la versione
-precedente con un progressivo, in modo da tener traccia di chi ha fatto cosa nel tempo.
+Ad ogni salvataggio con il metodo `saveGraph` se non impostiamo
+un nuovo `tag` il `GrafoDB` salva i dati sullo stesso `tag` ma
+contemporaneamente salva la versione precedente con un progressivo,
+in modo da tener traccia di chi ha fatto cosa nel tempo.
 }
 \details{
-Le versioni sono contraddistinte da un nuovo tag, `tag`p`X` dove `X` e' un numero progressivo
+Le versioni sono contraddistinte da un nuovo tag, `tag`p`X` dove
+`X` e' un numero progressivo
 
 Il grafo potra' successivamente essere caricato con il nuovo tag.
 }

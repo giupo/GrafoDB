@@ -13,7 +13,8 @@
 
 \item{key}{nome del metadato}
 
-\item{value}{valore del metadato}
+\item{value}{valore del metadato (se non specificato, rimuove tutti i  metadati
+con la chiave specificata)}
 }
 \description{
 elimina un metadato dal DBI
