@@ -143,6 +143,11 @@ dbSettings <- function(flush=FALSE) {
 }
 
 
+#' Returns the enviroment for GrafoDB
+#'
+#' Returns the value of environment variable `GRAFODB_ENV`
+#' 
+#' @name getenv
 #' @export
 
 getenv <- function() {

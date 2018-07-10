@@ -140,7 +140,9 @@
   
   proxy <- function(name, object) {
     serie <- .evaluateSingle(name, object)
-    list(serie)
+    ret <- list()
+    ret[[name]] <- serie
+    ret
   }
   
   while(length(sources_id)) {
@@ -162,17 +164,20 @@
       evaluated <- foreach(name=sources, .combine=c) %dopar% {
         proxy(name, object)
       }
+
       i <- i + length(sources)
       if(is.interactive) {
-        updateProgressBar(pb, i, tail(sources, n=1)) # nocov
+        updateProgressBar(pb, i, tail(names(evaluated), n=1)) # nocov
       }
 
-      names(evaluated) <- sources
+      if(length(evaluated) != length(sources)) {
+        warning("evaluated and sources are different in length")
+      }
       
       if(length(evaluated) == 1) {
-        data[[sources]] <- evaluated[[sources]]
+        data[[names(evaluated)]] <- evaluated[[names(evaluated)]]
       } else {
-        data[sources] <- evaluated
+        data[names(evaluated)] <- evaluated
       }
     }
 
@@ -181,6 +186,7 @@
   }
 
   if(is.interactive) kill(pb)
+
   object@data <- data
   object@touched <- sort(unique(c(object@touched, keys(data))))
   object

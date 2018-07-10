@@ -4,7 +4,7 @@
 \alias{.buildConnection}
 \title{Factory di connessioni al database Postgresql}
 \usage{
-.buildConnection(userid = whoami(), password = flypwd())
+.buildConnection(userid = whoami(), password = flypwd(), ...)
 }
 \arguments{
 \item{userid}{userid utente}

@@ -55,9 +55,12 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
       expect_true(hasConflicts(g2))
       
       g <- GrafoDB("test")
-  
-      expect_true(identical(g[["A"]], newA1))
-      expect_true(!identical(g[["A"]],  newA2))
+
+      print(newA1)
+      print(newA2)
+      print(g[["A"]])
+      expect_true(all(abs(g[["A"]]-newA1)) < 0.0000001)
+      expect_true(any(abs(g[["A"]]-newA2)) > 0.0000001)
       
       conflicts <- getDataConflicts(g)
       expect_is(conflicts, "list")
