@@ -41,7 +41,7 @@
           formula=formularow,
           name=namerow,
           msg=msg,
-          last_updated=time.inm.millis()))
+          last_updated=time.in.millis()))
       }
     }
     
