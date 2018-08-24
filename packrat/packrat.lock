@@ -289,8 +289,8 @@ Hash: 463550cf44fb6f0a2359368f42eebe62
 
 Package: mockery
 Source: CRAN
-Version: 0.3.0
-Hash: b101ff792e627871b8b75c38a1ff7442
+Version: 0.4.1.1
+Hash: a74c2d2625124f15c2269fe3fcd176dd
 Requires: testthat
 
 Package: openssl

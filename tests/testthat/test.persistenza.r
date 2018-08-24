@@ -1,15 +1,20 @@
 context("Funzioni per la persistenza")
 
-g <- GrafoDB("test")
-g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
-g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
-g["C"] <- function(A,B) {
-  C = A + B    
+setup <- function(name) {
+  g <- GrafoDB(name)
+  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
+  g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
+  g["C"] <- function(A,B) {
+    C = A + B    
+  }
+  
+  g["D"] <- ts(c(NA,1,NA), start=c(1990,1), frequency=4)
+  
+  g <- saveGraph(g)
+  g
 }
 
-g["D"] <- ts(c(NA,1,NA), start=c(1990,1), frequency=4)
-
-g <- saveGraph(g)
+g <- setup("test")
 
 test_that("Posso salvare e ricaricare da un file", {
   path <- tempfile()
@@ -110,14 +115,4 @@ test_that("need_resync returns true if GrafoNeeds a resync", {
   g2["A"] <- ts(runif(10), start=c(1990,1), freq=4)
   saveGraph(g2)
   expect_true(need_resync(g1))
-})
-
-test_that("I cannot save a p-graph", {
-  g <- setup("test")
-  on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
-  })
-
-  saveGraph(g)
-  
 })

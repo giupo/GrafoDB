@@ -292,7 +292,7 @@ from.data.frame <- function(df) {
 #' @importFrom iterators iter
 #' @export
 
-getdb <- function(x, name, tag="cf10") {
+getdb <- function(x, name) {
   dbdati <- x@dbdati
   df <- dbdati[dbdati$name %in% name, ]
   if(length(name) > 1000) {
@@ -333,9 +333,9 @@ getdb <- function(x, name, tag="cf10") {
     if(x@ordinal != 0) {
       tag <- paste0(tag, "p", x@ordinal)
     }
-    ret <- getdb(x, da.caricare.db, tag)
-    if(length(ret) != length(da.caricare.db)) {
-      stop("You asked for ", paste(names(da.caricare.db), collapse=", "),
+    ret <- getdb(x, da.caricare.db)
+    if(length(names(ret)) != length(da.caricare.db)) {
+      stop("You asked for ", paste(da.caricare.db, collapse=", "),
            "but I only got ", paste(names(ret), collapse=", "),
            " from DB: check your data now!")
     }
