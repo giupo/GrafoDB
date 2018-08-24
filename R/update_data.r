@@ -35,13 +35,15 @@
       last_updated <- time.in.millis()
       dati <- foreach (name = iter(names.updated), .combine=rbind) %dopar% {
         df <- to.data.frame(data[[name]])
-        # cbind(df, name, tag)zxo
+        # cbind(df, name, tag)
         cbind(df, name, tag, autore, notes, last_updated)
       }  # this is quite fast, let's ignore the Progressbar here...
       
       dbWriteTable(con, stage_name, dati, row.names=FALSE, overwrite=TRUE)
       # aggiorna i record esistenti...
-      dbExecute(con, getSQLbyKey(helper, "UPDATE_WITH_STAGE", stage_name=stage_name))
+      dbExecute(con, getSQLbyKey(
+        helper, "UPDATE_WITH_STAGE",
+        stage_name=stage_name))
       
       # ...ed inserisci i nuovi
       dbExecute(con, getSQLbyKey(helper, "DELETE_STAGE", stage_name=stage_name))

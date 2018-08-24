@@ -295,18 +295,12 @@ from.data.frame <- function(df) {
 getdb <- function(x, name, tag="cf10") {
   dbdati <- x@dbdati
   df <- dbdati[dbdati$name %in% name, ]
-  dati <- if(length(name) > 1000) {
+  if(length(name) > 1000) {
     foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
       convert_data_frame(row)
     }
   } else {
     convert_data_frame(df)
-  }
-  
-  if(length(dati)==1 && is.ts(dati[[1]])) {
-    dati[[1]]
-  } else {
-    dati
   }
 }
 
@@ -340,13 +334,12 @@ getdb <- function(x, name, tag="cf10") {
       tag <- paste0(tag, "p", x@ordinal)
     }
     ret <- getdb(x, da.caricare.db, tag)
-    if(is.ts(ret)) {
-      ret1 <- list()
-      ret1[[da.caricare.db]] <- ret
-      ret1
-    } else {
-      ret
+    if(length(ret) != length(da.caricare.db)) {
+      stop("You asked for ", paste(names(da.caricare.db), collapse=", "),
+           "but I only got ", paste(names(ret), collapse=", "),
+           " from DB: check your data now!")
     }
+    ret
   } else {
     list()
   }
