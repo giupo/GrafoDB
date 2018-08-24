@@ -244,7 +244,7 @@ initdb <- function(con) {
     return(con)
   } 
 
-  if (! requireNamespace("RPostgreSQL", quietly = TRUE)) {
+  if (!requireNamespace("RPostgreSQL", quietly = TRUE)) {
     stop("Please install RPostgreSQL: install.packages('RPostgreSQL')")
   } else {
     require(RPostgreSQL)
@@ -267,7 +267,7 @@ initdb <- function(con) {
       })
   }
   
-  if(is.null(con)) {
+  con <- if(is.null(con)) {
     flog.warn("no kerberos ticket, fallback to userid/pwd", name=ln)
     userid <- if(is.null(userid)) {
       whoami()
@@ -286,6 +286,11 @@ initdb <- function(con) {
   } else {
     con
   } # nocov end # can't check this code without production environment
+
+
+  if(shouldCreateSchema(con)) {
+    initdb(cond)    
+  }
 }
 
 
@@ -344,3 +349,13 @@ dbDisconnect <- function(con) {
   }
 }
 
+
+shouldCreateSchema  <- function(con) {
+  tryCatch({
+    df <- dbGetQuery(con, "select * from grafi")
+  }, error=function(cond) {
+    TRUE
+  }, warning=function(cond) {
+    TRUE
+  })
+}
