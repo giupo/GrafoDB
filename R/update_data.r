@@ -29,9 +29,6 @@
     # create temporary data with names_updated
     dbExecute(con, getSQLbyKey(helper, "CREATE_STAGE", stage_name = stage_name))
     error <- FALSE
-    on.exit({
-      dbExecute(con, getSQLbyKey(helper, "DROP_STAGE", stage_name = stage_name))
-    })
 
     # creo il data.frame dei dati da usare nel DB
     tryCatch({
