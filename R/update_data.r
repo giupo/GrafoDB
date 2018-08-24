@@ -1,6 +1,7 @@
 #' @include redis.r conflicts.r
 #' @importFrom R.utils System
 #' @importFrom futile.logger flog.info
+#' @importFrom stringi stri_rand_strings
 
 .updateData <- function(x, con, tag=x@tag, notes="") {
   ln <- "GrafoDB::updateData"
@@ -24,12 +25,12 @@
   names.updated <- setdiff(keys(data), names.with.conflicts)
 
   if(length(names.updated)) {
-    
+    stage_name <- paste0('stage_', stri_rand_strings(1, 8))
     # create temporary data with names_updated
-    dbExecute(con, getSQLbyKey(helper, "CREATE_STAGE"))
+    dbExecute(con, getSQLbyKey(helper, "CREATE_STAGE", stage_name = stage_name))
     error <- FALSE
     on.exit({
-      if(!error) dbExecute(con, getSQLbyKey(helper, "DROP_STAGE"))
+      dbExecute(con, getSQLbyKey(helper, "DROP_STAGE", stage_name = stage_name))
     })
 
     # creo il data.frame dei dati da usare nel DB
@@ -41,20 +42,22 @@
         cbind(df, name, tag, autore, notes, last_updated)
       }  # this is quite fast, let's ignore the Progressbar here...
       
-      dbWriteTable(con, "stage", dati, row.names=FALSE, overwrite=TRUE)
+      dbWriteTable(con, stage_name, dati, row.names=FALSE, overwrite=TRUE)
       # aggiorna i record esistenti...
-      dbExecute(con, getSQLbyKey(helper, "UPDATE_WITH_STAGE"))
+      dbExecute(con, getSQLbyKey(helper, "UPDATE_WITH_STAGE", stage_name=stage_name))
       
       # ...ed inserisci i nuovi
-      dbExecute(con, getSQLbyKey(helper, "DELETE_STAGE"))
+      dbExecute(con, getSQLbyKey(helper, "DELETE_STAGE", stage_name=stage_name))
       # ...non inserisco quelli gia' presenti
       dbDati <- loadDati(tag, con=con)
       dati_insert <- dati[!dati$name %in% dbDati$name, ]
       # e vado a scrivere stage...
       if(nrow(dati_insert)) {
-        dbWriteTable(con, "stage", dati_insert, row.names=FALSE, overwrite=TRUE)
+        dbWriteTable(con, stage_name, dati_insert,
+                     row.names=FALSE, overwrite=TRUE)
         # ... da usare nell'insert
-        dbExecute(con, getSQLbyKey(helper, "INSERT_WITH_STAGE"))
+        dbExecute(con, getSQLbyKey(helper, "INSERT_WITH_STAGE",
+                                   stage_name=stage_name))
       }
     }, error=function(cond) {
       error <- TRUE
