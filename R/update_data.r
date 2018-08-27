@@ -43,6 +43,7 @@
       # aggiorna i record esistenti...
       dbExecute(con, getSQLbyKey(
         helper, "UPDATE_WITH_STAGE",
+        tag=tag,
         stage_name=stage_name))
       
       # ...ed inserisci i nuovi
