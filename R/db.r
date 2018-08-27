@@ -353,7 +353,7 @@ dbDisconnect <- function(con) {
 shouldCreateSchema  <- function(con) {
   tryCatch({
     df <- dbGetQuery(con, "select * from grafi")
-    is.data.frame(df)
+    !is.data.frame(df)
   }, error=function(cond) {
     TRUE
   }, warning=function(cond) {
