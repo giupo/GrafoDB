@@ -56,8 +56,12 @@
         dbWriteTable(con, stage_name, dati_insert,
                      row.names=FALSE, overwrite=TRUE)
         # ... da usare nell'insert
-        dbExecute(con, getSQLbyKey(helper, "INSERT_WITH_STAGE",
-                                   stage_name=stage_name))
+        dbExecute(
+          con,
+          getSQLbyKey(
+            helper, "INSERT_WITH_STAGE",
+            tag = tag,
+            stage_name=stage_name))
       }
     }, error=function(cond) {
       error <- TRUE
