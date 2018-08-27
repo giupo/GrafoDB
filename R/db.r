@@ -291,6 +291,7 @@ initdb <- function(con) {
   if(shouldCreateSchema(con)) {
     initdb(cond)    
   }
+  con
 }
 
 
