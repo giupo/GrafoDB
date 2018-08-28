@@ -5,7 +5,7 @@
 suppressMessages(library(testthat))
 #suppressMessages(library(rdataset))
 #suppressMessages(library(stringr))
-#suppressMessages(library(methods))
+suppressMessages(library(methods))
 #suppressMessages(library(rutils))
 #suppressMessages(library(hash))
 #suppressMessages(library(RSQLite))
