@@ -334,11 +334,11 @@ getdb <- function(x, name) {
       tag <- paste0(tag, "p", x@ordinal)
     }
     ret <- getdb(x, da.caricare.db)
-    if(length(names(ret)) != length(da.caricare.db)) {
-      stop("You asked for ", paste(da.caricare.db, collapse=", "),
-           "but I only got ", paste(names(ret), collapse=", "),
-           " from DB: check your data now!")
-    }
+    #if(length(names(ret)) != length(da.caricare.db)) {
+    #  stop("You asked for ", paste(da.caricare.db, collapse=", "),
+    #       "but I only got ", paste(names(ret), collapse=", "),
+    #       " from DB: check your data now!")
+    #}
     ret
   } else {
     list()
