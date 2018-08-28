@@ -257,18 +257,8 @@ initdb <- function(con) {
       NULL
     })
 
-  if(is.null(con)) {
-    ## refresh kerberos ticket
-    system("flypwd -p | kinit > /dev/null")  
-    con <- tryCatch(
-      dbConnect(drv, host=settings$host, dbname=settings$dbname),
-      error = function(cond) {
-        NULL
-      })
-  }
-  
   con <- if(is.null(con)) {
-    flog.warn("no kerberos ticket, fallback to userid/pwd", name=ln)
+    flog.info("no kerberos ticket, fallback to userid/pwd", name=ln)
     userid <- if(is.null(userid)) {
       whoami()
     } else {

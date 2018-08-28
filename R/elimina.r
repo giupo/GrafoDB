@@ -2,7 +2,7 @@
 .elimina <- function(tag, con, helper) {
   dbExecute(con, getSQLbyKey(helper, "DELETE_GRAFI", tag=tag))
   dbExecute(con, getSQLbyKey(helper, "DELETE_CONFLITTI", tag=tag))
-  orig_tables <- c("archi", "dati", "metadati", "formule", "history")
+  orig_tables <- c("archi", "dati", "metadati", "formule")
   tables <- paste(orig_tables, tag, sep="_")
   for(table in tables) {
     if(dbExistsTable(con, table)) {
