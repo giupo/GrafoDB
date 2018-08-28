@@ -329,6 +329,7 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL, ...) {
   TRUE
 }
 
+
 dbDisconnect <- function(con) {
   ln <- "GrafoDB.db"
   if(is.null(getOption("pgConnect", NULL))) {
