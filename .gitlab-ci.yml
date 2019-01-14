@@ -1,7 +1,5 @@
-
 before_script:
-  script:
-    - make restore_packrat
+  - make restore_packrat
 
 build:
   script:
