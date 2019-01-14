@@ -2,18 +2,28 @@ before_script:
   - make restore_packrat
 
 build:
+  tags: collaudo
   script:
     - R CMD build . --no-build-vignettes --no-manual
 
-test:
+test_collaudo:
+  tags: collaudo
   script:
     - make test
     
+test_prod:
+  tags: prod
+  script:
+    - make test
+    
+
 check:
+  tags: collaudo
   script:
     - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
     - R CMD check "${PKG_FILE_NAME}" --no-build-vignettes --no-manual --as-cran 
       
 coverage:
+  tags: collaudo
   script:
     - make coverage
