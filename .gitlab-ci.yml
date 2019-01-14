@@ -1,11 +1,21 @@
-test:
+
+before_script:
   script:
     - make restore_packrat
+
+build:
+  script:
+    - R CMD build . --no-build-vignettes --no-manual
+
+test:
+  script:
     - make test
-    # - R CMD build . --no-build-vignettes --no-manual
-    # - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
-    # - R CMD check "${PKG_FILE_NAME}" --no-build-vignettes --no-manual --as-cran 
     
+check:
+  script:
+    - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
+    - R CMD check "${PKG_FILE_NAME}" --no-build-vignettes --no-manual --as-cran 
+      
 coverage:
   script:
     - make coverage
