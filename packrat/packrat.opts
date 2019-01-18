@@ -7,7 +7,7 @@ external.packages:
     GrafoDB
     bimets
     stringi
-    RPostgreSQL,
+    RPostgreSQL
     rJava
 local.repos:
     ~/projects
