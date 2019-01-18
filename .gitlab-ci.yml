@@ -18,7 +18,8 @@ build:
     - collaudo
   script:
     - R CMD build . --no-build-vignettes --no-manual
-
+  retry: 2
+  
 test_collaudo:
   stage: test
   tags: 
@@ -33,7 +34,7 @@ test_prod:
     - prod
   script:
     - make test
-    
+  retry: 2  
 
 check:
   stage: check
@@ -42,7 +43,8 @@ check:
   script:
     - R CMD build . --no-build-vignettes --no-manual
     - R CMD check $(ls -1t *.tar.gz | head -n 1) -no-build-vignettes --no-manual --as-cran 
-      
+  retry: 2
+
 coverage:
   stage: coverage
   tags: 
@@ -56,6 +58,7 @@ deploy:
     - prod
   script:
     - make install
+  retry: 2
     
 deploy_collaudo:
   stage: deploy
@@ -63,3 +66,4 @@ deploy_collaudo:
     - collaudo
   script:
     - make install
+  allow_failure: true
