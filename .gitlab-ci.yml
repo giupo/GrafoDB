@@ -18,6 +18,9 @@ build:
     - collaudo
   script:
     - R CMD build . --no-build-vignettes --no-manual
+  artifacts:
+    paths:
+      *.tar.gz
 
 test_collaudo:
   stage: test
@@ -25,6 +28,7 @@ test_collaudo:
     - collaudo
   script:
     - make test
+  allow_failure: true
 
 test_prod:
   stage: test
