@@ -4,6 +4,10 @@ stages:
   - check
   - deploy
 
+cache:
+  paths:
+    - packrat/
+
 before_script:
   - make restore_packrat
 
