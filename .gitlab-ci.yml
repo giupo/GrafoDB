@@ -20,7 +20,7 @@ build:
     - R CMD build . --no-build-vignettes --no-manual
   artifacts:
     paths:
-      *.tar.gz
+      - ./*.tar.gz
 
 test_collaudo:
   stage: test
