@@ -1,19 +1,28 @@
+stages:
+  - build
+  - test
+  - check
+  - deploy
+
 before_script:
   - make restore_packrat
 
 build:
+  stage: build
   tags: 
     - collaudo
   script:
     - R CMD build . --no-build-vignettes --no-manual
 
 test_collaudo:
+  stage: test
   tags: 
     - collaudo
   script:
     - make test
-    
+
 test_prod:
+  stage: test
   tags: 
     - prod
   script:
@@ -21,6 +30,7 @@ test_prod:
     
 
 check:
+  stage: check
   tags: 
     - collaudo
   script:
@@ -28,7 +38,22 @@ check:
     - R CMD check "${PKG_FILE_NAME}" --no-build-vignettes --no-manual --as-cran 
       
 coverage:
+  stage: test
   tags: 
     - collaudo
   script:
     - make coverage
+    
+deploy:
+  stage: deploy
+  tags:
+    - prod
+  script:
+    - make install
+    
+deploy_collaudo:
+  stage: deploy
+  tags:
+    - collaudo
+  script:
+    - make install
