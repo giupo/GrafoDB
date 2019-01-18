@@ -39,7 +39,7 @@ check:
     - collaudo
   script:
     - R CMD build . --no-build-vignettes --no-manual
-    - R CMD check  -$(ls -1t *.tar.gz | head -n 1) -no-build-vignettes --no-manual --as-cran 
+    - R CMD check $(ls -1t *.tar.gz | head -n 1) -no-build-vignettes --no-manual --as-cran 
       
 coverage:
   stage: test
