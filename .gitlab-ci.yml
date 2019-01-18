@@ -34,8 +34,8 @@ check:
   tags: 
     - collaudo
   script:
-    - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
-    - R CMD check "${PKG_FILE_NAME}" --no-build-vignettes --no-manual --as-cran 
+    - R CMD build . --no-build-vignettes --no-manual
+    - R CMD check  -$(ls -1t *.tar.gz | head -n 1) -no-build-vignettes --no-manual --as-cran 
       
 coverage:
   stage: test
