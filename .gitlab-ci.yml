@@ -17,7 +17,7 @@ build:
   tags: 
     - collaudo
   before_script:
-    - echo 'bypass restore_packrat: not needed for build'
+    - "echo 'bypass restore_packrat: not needed for build'"
   script:
     - R CMD build . --no-build-vignettes --no-manual
 
