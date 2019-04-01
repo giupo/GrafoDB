@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.8.1
-RVersion: 3.3.3
+RVersion: 3.5.1
 Repos: CRAN=http://cran.rstudio.com
 
 Package: BH
@@ -61,18 +61,18 @@ Requires: DBI
 Package: RSQLite
 Source: CRAN
 Version: 2.0
-Hash: aa34cc0830f6223f6b1c419c31650000
+Hash: 166b24d127c0d6222b655769a753c1c9
 Requires: BH, DBI, Rcpp, bit64, blob, memoise, pkgconfig, plogr
 
 Package: Rcpp
 Source: CRAN
-Version: 0.12.13
-Hash: b9d8d89ff10ca2d8bfdaccdf83045ba1
+Version: 0.12.17
+Hash: d2eff4634ccd7aca030c540ad805ac4a
 
 Package: XML
 Source: CRAN
-Version: 3.98-1.9
-Hash: 02079c4025bbfa0f63400cc0bb414952
+Version: 3.98-1.11
+Hash: 93ca736e34d01f5952dc770fbfa5fa62
 
 Package: assertthat
 Source: CRAN
@@ -170,8 +170,8 @@ Requires: foreach, iterators
 
 Package: foreach
 Source: CRAN
-Version: 1.4.3
-Hash: cd53ef4cf29dc59ce3f8c5c1af735fd1
+Version: 1.4.4
+Hash: 4df5ab2c8c35382dacab75d414da6748
 Requires: iterators
 
 Package: formatR
@@ -201,6 +201,11 @@ Source: CRAN
 Version: 0.19.0
 Hash: f4f7966fc357f60dc62dbffcea917eef
 
+Package: glue
+Source: CRAN
+Version: 1.2.0
+Hash: 381e42baedecc633c0e547a0c7ca9de7
+
 Package: gtools
 Source: CRAN
 Version: 3.5.0
@@ -214,7 +219,7 @@ Hash: 4ee63151031d09c6f24a9179fe83e634
 Package: htmltools
 Source: CRAN
 Version: 0.3.6
-Hash: 34e5c725d3ae30a76516792edcc16f24
+Hash: b24df7ea0856eab6618f6a56016d940d
 Requires: Rcpp, digest
 
 Package: htmlwidgets
@@ -226,7 +231,7 @@ Requires: htmltools, jsonlite, yaml
 Package: httpuv
 Source: CRAN
 Version: 1.3.5
-Hash: 6fb95f48d0fbf453ad18ace1606b6192
+Hash: 6d4a0daa22bcfcfe6abeaf5c4c074c33
 Requires: Rcpp
 
 Package: httr
@@ -244,12 +249,12 @@ Requires: irlba, magrittr, pkgconfig
 Package: irlba
 Source: CRAN
 Version: 2.2.1
-Hash: 129c56a5ab6def05c411673cabe04054
+Hash: 8ad83546a332b93e6edaf5c44d932c2c
 
 Package: iterators
 Source: CRAN
-Version: 1.0.8
-Hash: 488b93c2a4166db0d15f1e8d882cb1d4
+Version: 1.0.9
+Hash: c2dc1341675d2508c180221949e40e98
 
 Package: jsonlite
 Source: CRAN
@@ -284,8 +289,8 @@ Hash: 463550cf44fb6f0a2359368f42eebe62
 
 Package: mockery
 Source: CRAN
-Version: 0.3.0
-Hash: b101ff792e627871b8b75c38a1ff7442
+Version: 0.4.1.1
+Hash: a74c2d2625124f15c2269fe3fcd176dd
 Requires: testthat
 
 Package: openssl
@@ -320,14 +325,14 @@ Hash: 3e8627a2a5bd45c9bad6112acfc231d9
 
 Package: rdataset
 Source: github
-Version: 0.2.21
-Hash: 3c1c9708b2e6b4ddb0632f7b2c0b6bf7
+Version: 0.3.1
+Hash: 2addbbd9b201f2abcf9d861b0a5f97be
 Requires: RJSONIO, Rcpp, foreach, hash, iterators, rprogressbar,
-    rutils, stringr, tis, xlsx, xts
+    rutils, stringr, tis, xts
 GithubRepo: rdataset
 GithubUsername: giupo
 GithubRef: master
-GithubSha1: 5d0e9bc3dcfa8f79fe174043024aa783ee100538
+GithubSha1: 202bc98253752dbc1932588fcbdddcdc5a322ef3
 
 Package: rex
 Source: CRAN
@@ -343,7 +348,7 @@ Hash: c17b638e3282aa222a47112d7a60bc66
 Package: roxygen2
 Source: CRAN
 Version: 6.0.1
-Hash: 2e062ab5f013e29ea37c1702b3fd226e
+Hash: 103c10a2707a21170b74bdde8a5f987a
 Requires: R6, Rcpp, brew, commonmark, desc, digest, stringi, stringr,
     xml2
 
@@ -376,12 +381,12 @@ Hash: e2ebaff8160aff3e6b32e6e78a693c2d
 Package: rutils
 Source: github
 Version: 0.5.0
-Hash: 06d173be0e0d67868a02b5ab4c522278
+Hash: 40fb3e827f5c2018bbbfb8753a49bd9f
 Requires: R6, XML, doParallel, foreach, testthat
 GithubRepo: rutils
 GithubUsername: giupo
 GithubRef: master
-GithubSha1: 7c903de2889e51bf59c6dfbee651b88e7cbd7ccb
+GithubSha1: 13b35889e3757b35ff329a6f90882be89e7ba61e
 
 Package: shiny
 Source: CRAN
@@ -403,14 +408,14 @@ Hash: 226d56d7469587da40b0f96180e711b4
 
 Package: stringi
 Source: CRAN
-Version: 1.1.5
-Hash: b6308e49357a0b475f433599e0d8b5eb
+Version: 1.2.3
+Hash: bccbb90bf5e1c53f659359c06c0dde79
 
 Package: stringr
 Source: CRAN
-Version: 1.2.0
-Hash: 25a86d7f410513ebb7c0bc6a5e16bdc3
-Requires: magrittr, stringi
+Version: 1.3.1
+Hash: 9f417a1d899ed1f080942ab36998e8b5
+Requires: glue, magrittr, stringi
 
 Package: tempdisagg
 Source: CRAN
@@ -426,13 +431,13 @@ Requires: R6, cli, crayon, digest, magrittr, praise, rlang, withr
 Package: tibble
 Source: CRAN
 Version: 1.3.4
-Hash: 3b72bdedb6c27fb216574ab9b15f2d43
+Hash: 9a1bacff404a1b87875073a314f9aa9b
 Requires: Rcpp, rlang
 
 Package: tis
 Source: CRAN
-Version: 1.32
-Hash: b5ece16c8bee99e06658647ea9ef6f43
+Version: 1.34
+Hash: 03089c9b40bfdfb0e58eb21811de7d3a
 
 Package: versions
 Source: CRAN
@@ -464,7 +469,7 @@ Requires: rJava
 Package: xml2
 Source: CRAN
 Version: 1.1.1
-Hash: bb72c0247ccf079bec2c838e54df64da
+Hash: fd629a568d1b5b3541370144fdb3fcbd
 Requires: BH, Rcpp
 
 Package: xtable
@@ -474,8 +479,8 @@ Hash: 7293235cfcc14cdff1ce7fd1a0212031
 
 Package: xts
 Source: CRAN
-Version: 0.10-0
-Hash: 03131e6ac5458d08143205a198284f18
+Version: 0.10-2
+Hash: 2a95f59a3dcd38ce2255d45ab750b7bc
 Requires: zoo
 
 Package: yaml
@@ -485,5 +490,5 @@ Hash: c81230c3a7d9ba20607ad6b4331173d1
 
 Package: zoo
 Source: CRAN
-Version: 1.8-0
-Hash: df9711767f56f086e8a8d1f0fb926ff6
+Version: 1.8-2
+Hash: b77d408fd89e2866df97f02bb4b3aa4f

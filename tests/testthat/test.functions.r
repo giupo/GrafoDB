@@ -1,7 +1,7 @@
 context("Util functions")
 
 test_that("to.data.frame converte correttamente una serie", {  
-  tt <- ts(runif(10), start=c(1990,1), freq=4)
+  tt <- ts(runif(10), start=c(1990,1), frequency=4)
   df <- to.data.frame(tt, "TEST")
   expect_true(identical(tt, from.data.frame(df)[[df$name]]))
 })
@@ -92,7 +92,7 @@ test_that("elimina handles exceptions", {
 })
 
 test_that("schemaFileFromEnv returns a consistent file", {
-  expect_equal(getenv(), "test")
+  expect_equal(getenv(), Sys.getenv("GRAFODB_ENV"))
   expect_true(is.list(dbSettings(TRUE)))
   test_file <- schemaFileFromEnv("test")
   prod_file <- schemaFileFromEnv("prod")

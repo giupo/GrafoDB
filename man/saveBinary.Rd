@@ -14,3 +14,6 @@ saveBinary(x, path)
 \description{
 Salva un istanza di grafo sul file system
 }
+\note{
+il restore si fa con il comando `readBinary`
+}

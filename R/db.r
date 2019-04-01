@@ -143,6 +143,11 @@ dbSettings <- function(flush=FALSE) {
 }
 
 
+#' Returns the enviroment for GrafoDB
+#'
+#' Returns the value of environment variable `GRAFODB_ENV`
+#' 
+#' @name getenv
 #' @export
 
 getenv <- function() {
@@ -239,7 +244,7 @@ initdb <- function(con) {
     return(con)
   } 
 
-  if (! requireNamespace("RPostgreSQL", quietly = TRUE)) {
+  if (!requireNamespace("RPostgreSQL", quietly = TRUE)) {
     stop("Please install RPostgreSQL: install.packages('RPostgreSQL')")
   } else {
     require(RPostgreSQL)
@@ -252,18 +257,8 @@ initdb <- function(con) {
       NULL
     })
 
-  if(is.null(con)) {
-    ## refresh kerberos ticket
-    system("flypwd -p | kinit > /dev/null")  
-    con <- tryCatch(
-      dbConnect(drv, host=settings$host, dbname=settings$dbname),
-      error = function(cond) {
-        NULL
-      })
-  }
-  
-  if(is.null(con)) {
-    flog.warn("no kerberos ticket, fallback to userid/pwd", name=ln)
+  con <- if(is.null(con)) {
+    flog.info("no kerberos ticket, fallback to userid/pwd", name=ln)
     userid <- if(is.null(userid)) {
       whoami()
     } else {
@@ -281,6 +276,12 @@ initdb <- function(con) {
   } else {
     con
   } # nocov end # can't check this code without production environment
+
+
+  if(shouldCreateSchema(con)) {
+    initdb(cond)    
+  }
+  con
 }
 
 
@@ -328,6 +329,7 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL, ...) {
   TRUE
 }
 
+
 dbDisconnect <- function(con) {
   ln <- "GrafoDB.db"
   if(is.null(getOption("pgConnect", NULL))) {
@@ -339,3 +341,14 @@ dbDisconnect <- function(con) {
   }
 }
 
+
+shouldCreateSchema  <- function(con) {
+  tryCatch({
+    df <- dbGetQuery(con, "select * from grafi")
+    !is.data.frame(df)
+  }, error=function(cond) {
+    TRUE
+  }, warning=function(cond) {
+    TRUE
+  })
+}

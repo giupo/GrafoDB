@@ -2,7 +2,7 @@ context("edit functions")
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), freq=1)
+  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=1)
   g["C"] <- function(A, B) {
     C = (A + 1) * (B + 2)
   }

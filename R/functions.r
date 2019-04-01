@@ -34,7 +34,7 @@
     0
   }
 
-  flog.debug("GRAFODB_ENV: %s", env, name=ln)
+  flog.debug("GRAFODB_ENV: %s", getenv(), name=ln)
   .Object@tag <- tag
   .Object@helper <- SQLHelper()
 
@@ -166,7 +166,7 @@ from.data.frame <- function(df) {
       dati <- ts(
         fromJSON(as.character(row$dati), nullValue=NA),
         start=c(anno, periodo),
-        freq=freq)
+        frequency=freq)
       ret[[name]] <- dati
     }
   }
@@ -292,21 +292,15 @@ from.data.frame <- function(df) {
 #' @importFrom iterators iter
 #' @export
 
-getdb <- function(x, name, tag="cf10") {
+getdb <- function(x, name) {
   dbdati <- x@dbdati
   df <- dbdati[dbdati$name %in% name, ]
-  dati <- if(length(name) > 1000) {
+  if(length(name) > 1000) {
     foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
       convert_data_frame(row)
     }
   } else {
     convert_data_frame(df)
-  }
-  
-  if(length(dati)==1 && is.ts(dati[[1]])) {
-    dati[[1]]
-  } else {
-    dati
   }
 }
 
@@ -339,14 +333,13 @@ getdb <- function(x, name, tag="cf10") {
     if(x@ordinal != 0) {
       tag <- paste0(tag, "p", x@ordinal)
     }
-    ret <- getdb(x, da.caricare.db, tag)
-    if(is.ts(ret)) {
-      ret1 <- list()
-      ret1[[da.caricare.db]] <- ret
-      ret1
-    } else {
-      ret
-    }
+    ret <- getdb(x, da.caricare.db)
+    #if(length(names(ret)) != length(da.caricare.db)) {
+    #  stop("You asked for ", paste(da.caricare.db, collapse=", "),
+    #       "but I only got ", paste(names(ret), collapse=", "),
+    #       " from DB: check your data now!")
+    #}
+    ret
   } else {
     list()
   }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/persistence.r
 \name{readBinary}
 \alias{readBinary}
-\title{Legge un GrafoDB dal filesystem in formato binario}
+\title{Legge un GrafoDB dal filesystem in formato binario con `saveBinary`}
 \usage{
 readBinary(path)
 }
@@ -13,5 +13,5 @@ readBinary(path)
 GrafoDB contenuto nel file `path`
 }
 \description{
-Legge un GrafoDB dal filesystem in formato binario
+Legge un GrafoDB dal filesystem in formato binario con `saveBinary`
 }

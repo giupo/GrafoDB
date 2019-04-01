@@ -4,7 +4,7 @@
 \alias{patch}
 \title{apply a patch (from a diff)}
 \usage{
-patch(x, diff_, column)
+patch(x, diff_, column = NULL)
 }
 \arguments{
 \item{x}{GrafoDB instance}

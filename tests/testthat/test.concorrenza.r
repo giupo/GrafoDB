@@ -35,7 +35,7 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- setup("test")
-  saveGraph(g, "test", msg="test")
+  saveGraph(g, "test")
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
 
@@ -44,20 +44,23 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
   
   g1["A"] <- newA1 <- ts(rep(0,10), start=c(1990,1), frequency=4)
   g2["A"] <- newA2 <- ts(rep(1,10), start=c(1990,1), frequency=4)
-  saveGraph(g1, msg="test")
+  saveGraph(g1)
   # Sys.sleep(2)
   with_mock(
     'GrafoDB:::getOuterDataNames' = function(...) "A", {
-      expect_warning(saveGraph(g2, msg="test"), "Ci sono conflitti")
+      expect_warning(saveGraph(g2), "Ci sono conflitti")
       
       ## sia g1 che g2, in quanto "test1" devono riportare dei conflitti
       expect_true(hasConflicts(g1))
       expect_true(hasConflicts(g2))
       
       g <- GrafoDB("test")
-  
-      expect_true(all(g[["A"]] ==  newA1))
-      expect_true(!any(g[["A"]] ==  newA2))
+
+      # print(newA1)
+      # print(newA2)
+      # print(g[["A"]])
+      expect_true(all(abs(g[["A"]]-newA1)) < 0.0000001)
+      expect_true(any(abs(g[["A"]]-newA2)) > 0.0000001)
       
       conflicts <- getDataConflicts(g)
       expect_is(conflicts, "list")
@@ -262,15 +265,25 @@ test_that("fixConflicts removes conflicts", {
 
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
-  
+
+  expect_equal(g1@timestamp, g2@timestamp)
   g1["A"] <- 0
-  saveGraph(g1)
+  # non mi aspetto warnings...
+  expect_warning(saveGraph(g1), NA)
   g2["A"] <- 2
+  expect_true(g2@timestamp != g1@timestamp)
+
   expect_warning(saveGraph(g2))
+  expect_equal(hasConflicts(g1), hasConflicts(g2))
   expect_true(hasConflicts(g1))
   expect_true(hasConflicts(g2))
+
   fixConflicts(g1)
-  saveGraph(g2)
+  # non mi aspetto piu' conflitti
+  expect_error(saveGraph(g2), NA)
+  expect_equal(hasConflicts(g1), hasConflicts(g2))
+  expect_false(hasConflicts(g1))
+  expect_false(hasConflicts(g2))
 })
 
 test_that("resync gets called when two sessions updates a Graph", {
@@ -311,8 +324,9 @@ test_that("La rilevazione di conflitti su serie primitive con missing non crea e
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
 
-  # accertati che sinao lo stesso grafo
+  # accertati che siano lo stesso grafo
   expect_equal(g1@timestamp, g2@timestamp)
+  expect_equal(g1@tag, g2@tag)
   
   g1["A"] <- ts(rep(NA, 10), start=c(1990,1), frequency=4)
   saveGraph(g1)
@@ -321,7 +335,6 @@ test_that("La rilevazione di conflitti su serie primitive con missing non crea e
   
   expect_true(g1@timestamp != g2@timestamp)
 
-  
   expect_warning(expect_error(saveGraph(g2), NA), "Ci sono conflitti")
   
   expect_true(hasConflicts(g2))
