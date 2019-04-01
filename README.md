@@ -1,5 +1,8 @@
 # Simple ETL for R
 
-[![Travis-CI Build Status](https://travis-ci.org/giupo/GrafoDB.svg?branch=master)](https://travis-ci.org/giupo/GrafoDB)
+
+[![build status](https://osiride-gitlab-dev.utenze.bankit.it/m024000/GrafoDB/badges/master/build.svg)](https://osiride-gitlab-dev.utenze.bankit.it/m024000/GrafoDB/commits/master)
+
+[![coverage report](https://osiride-gitlab-dev.utenze.bankit.it/m024000/GrafoDB/badges/master/coverage.svg)](https://osiride-gitlab-dev.utenze.bankit.it/m024000/GrafoDB/commits/master)
 
 [![codecov](https://codecov.io/gh/giupo/GrafoDB/branch/master/graph/badge.svg)](https://codecov.io/gh/giupo/GrafoDB)
