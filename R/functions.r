@@ -166,7 +166,7 @@ from.data.frame <- function(df) {
       dati <- ts(
         fromJSON(as.character(row$dati), nullValue=NA),
         start=c(anno, periodo),
-        freq=freq)
+        frequency=freq)
       ret[[name]] <- dati
     }
   }
