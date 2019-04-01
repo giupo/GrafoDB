@@ -12,3 +12,4 @@ packrat
 coverage.html
 lib
 ^\.travis\.yml$
+^\.gitlab-ci\.yml$

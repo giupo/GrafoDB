@@ -123,16 +123,19 @@ to.data.frame <- function(x, name=NULL) {
     prd <- 0
     freq <- 0
   }
+  
   raw_numbers <- gsub(" ", "", toJSON(x, digits=20))
 
   if(is.null(name)) {
     as.data.frame(
       list(anno=anno, periodo=prd,
-           freq=freq, dati=raw_numbers), stringsAsFactors = F)
+           freq=freq, dati=raw_numbers),
+      stringsAsFactors = F)
   } else {
     as.data.frame(
       list(name=name, anno=anno, periodo=prd,
-           freq=freq, dati=raw_numbers), stringAsFactors = F)
+           freq=freq, dati=raw_numbers),
+      stringAsFactors = F)
   }
 }
 

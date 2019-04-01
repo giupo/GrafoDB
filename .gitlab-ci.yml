@@ -1,0 +1,75 @@
+stages:
+  - build
+  - test
+  - check
+  - deploy
+  - coverage
+
+cache:
+  paths:
+    - packrat/
+
+before_script:
+  - make restore_packrat
+
+build:
+  stage: build
+  tags: 
+    - collaudo
+  before_script:
+    - "echo 'bypass restore_packrat: not needed for build'"
+  script:
+    - R CMD build . --no-build-vignettes --no-manual
+
+  
+test_collaudo:
+  stage: test
+  tags: 
+    - collaudo
+  script:
+    - make test
+  allow_failure: true
+
+test_prod:
+  stage: test
+  tags: 
+    - prod
+  script:
+    - make test
+ 
+
+check:
+  stage: check
+  tags: 
+    - collaudo
+  script:
+    - R CMD build . --no-build-vignettes --no-manual
+    - R CMD check $(ls -1t *.tar.gz | head -n 1) -no-build-vignettes --no-manual --as-cran 
+
+
+coverage:
+  stage: coverage
+  tags: 
+    - collaudo
+  script:
+    - make coverage
+    
+deploy:
+  stage: deploy
+  before_script:
+    - echo "bypass restore_packart, not needed"
+  tags:
+    - prod
+  script:
+    - make install
+
+    
+deploy_collaudo:
+  stage: deploy
+  before_script:
+    - echo "bypass restore_packart, not needed"
+  tags:
+    - collaudo
+  script:
+    - make install
+  allow_failure: true
