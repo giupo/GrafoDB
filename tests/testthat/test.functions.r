@@ -1,7 +1,7 @@
 context("Util functions")
 
 test_that("to.data.frame converte correttamente una serie", {  
-  tt <- ts(runif(10), start=c(1990,1), freq=4)
+  tt <- ts(runif(10), start=c(1990,1), frequency=4)
   df <- to.data.frame(tt, "TEST")
   expect_true(identical(tt, from.data.frame(df)[[df$name]]))
 })
