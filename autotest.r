@@ -22,5 +22,5 @@ invisible(flog.threshold(WARN, name='GrafoDB.persistence.saveGraph'))
 invisible(flog.threshold(WARN, name='GrafoDB.patch'))
 
 options(warn=2)
-#auto_test("R", "tests/testthat/")
+# auto_test("R/", "tests/testthat/")
 auto_test_package()
