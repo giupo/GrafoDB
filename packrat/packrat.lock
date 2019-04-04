@@ -465,19 +465,19 @@ Requires: R6, callr, cli, crayon, desc, digest, pkgbuild, prettyunits,
 
 Package: rdataset
 Source: github
-Version: 0.3.4
-Hash: 57770eac437c1795579ad5406f803abb
+Version: 0.4.0
+Hash: 5d7e8e7b886d6c3e7d192cb65fdc34e0
 Requires: RJSONIO, Rcpp, foreach, hash, iterators, rprogressbar,
     rutils, stringr, tis, xts
 GithubRepo: rdataset
 GithubUsername: giupo
 GithubRef: master
-GithubSha1: c7d16f9a9c09a0d7fb45118000dcb8e885115718
+GithubSha1: 8a75b2ab28f2fe621791d150a68c64a42e5e7c7a
 RemoteHost: api.github.com
 RemoteRepo: rdataset
 RemoteUsername: giupo
 RemoteRef: master
-RemoteSha: c7d16f9a9c09a0d7fb45118000dcb8e885115718
+RemoteSha: 8a75b2ab28f2fe621791d150a68c64a42e5e7c7a
 
 Package: remotes
 Source: CRAN
