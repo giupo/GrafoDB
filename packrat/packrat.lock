@@ -178,12 +178,21 @@ Hash: a0a3ca939997679a52816bae4ed6aaae
 Requires: R6, assertthat, crayon, rprojroot
 
 Package: devtools
-Source: CRAN
-Version: 2.0.1
-Hash: 4da83470ae57bd2db0ac06e91b1d3a08
+Source: github
+Version: 2.0.1.9000
+Hash: c70cd0a256654cc622ce87f07cb4b31a
 Requires: callr, cli, digest, git2r, httr, jsonlite, memoise, pkgbuild,
     pkgload, rcmdcheck, remotes, rstudioapi, sessioninfo, usethis,
     withr
+GithubRepo: devtools
+GithubUsername: r-lib
+GithubRef: master
+GithubSha1: 8b1b3fb7105db00b0ff1a80b9f1a3b5963924506
+RemoteHost: api.github.com
+RemoteRepo: devtools
+RemoteUsername: r-lib
+RemoteRef: master
+RemoteSha: 8b1b3fb7105db00b0ff1a80b9f1a3b5963924506
 
 Package: digest
 Source: CRAN
