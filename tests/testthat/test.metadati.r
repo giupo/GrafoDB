@@ -2,7 +2,7 @@ context("Metadati")
 
 setup <- function(tag) {
   dbSettings(TRUE)
-  flog.debug("Nome dell'env dall'env: %s", Sys.getenv("GRAFODB_ENV"))
+  flog.debug("Nome dell'env: %s", Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
 
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=1)
@@ -103,6 +103,7 @@ test_that("Ottengo un errore se accade un errore sul DB nella lettura di Metadat
   on.exit({
     elimina("test")
   })
+  require(futile.logger)
   g <- setup("test")
   stub(.getMeta, 'getSQLbyKey', function(...) stop("error"))
   expect_error(.getMeta(g, "A", "KEY"), "error")

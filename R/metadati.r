@@ -8,7 +8,6 @@
   tag <- x@tag
   df <- dbGetQuery(con, getSQLbyKey(
     helper, "GET_META", tag=tag, name=serie, key=metadato))
-
   if(nrow(df)) {
     as.character(df[,1])
   } else {
