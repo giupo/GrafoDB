@@ -38,9 +38,6 @@ Suggests:
     roxygen2,
     covr,
     tis,
-    DT,
-    shiny,
-    shinyAce,
     sourcetools,
     mockery,
     tempdisagg,
@@ -80,7 +77,7 @@ Collate:
     'patch.r'
     'rmNode.r'
     'subsetting.r'
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Remotes: github::giupo/rutils,
     github::giupo/rprogressbar,
     github::giupo/rdataset
