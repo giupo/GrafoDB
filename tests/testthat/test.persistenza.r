@@ -112,7 +112,7 @@ test_that("need_resync returns true if GrafoNeeds a resync", {
 
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
-  g2["A"] <- ts(runif(10), start=c(1990,1), freq=4)
+  g2["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
   saveGraph(g2)
   expect_true(need_resync(g1))
 })
