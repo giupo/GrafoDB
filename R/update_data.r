@@ -2,6 +2,7 @@
 #' @importFrom R.utils System
 #' @importFrom futile.logger flog.info
 #' @importFrom stringi stri_rand_strings
+#' @importFrom DBI dbWriteTable
 
 .updateData <- function(x, con, tag=x@tag, notes="") {
   ln <- "GrafoDB::updateData"
