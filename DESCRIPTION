@@ -1,6 +1,10 @@
 Package: GrafoDB
 Title: What the package does (one line)
+<<<<<<< HEAD
 Version: 1.29.9
+=======
+Version: 1.29.12
+>>>>>>> 0bb567b508a4230935ec8a663208633e33e83535
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
 Description: Complete rewrite of the grafo package: Adds DB backend to Grafo,
     async operations via Redis and support for microservices authentication.
@@ -38,9 +42,6 @@ Suggests:
     roxygen2,
     covr,
     tis,
-    DT,
-    shiny,
-    shinyAce,
     sourcetools,
     mockery,
     tempdisagg,
@@ -80,7 +81,7 @@ Collate:
     'patch.r'
     'rmNode.r'
     'subsetting.r'
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Remotes: github::giupo/rutils,
     github::giupo/rprogressbar,
     github::giupo/rdataset

@@ -4,16 +4,11 @@ print.banner.on.startup: auto
 vcs.ignore.lib: TRUE
 vcs.ignore.src: FALSE
 external.packages:
-    GrafoDB
     bimets
-    stringi
     RPostgreSQL
     rJava
-local.repos:
-    ~/projects
-    ./deps
+local.repos: ~/projects
 load.external.packages.on.startup: FALSE
-external.packages: 
 ignored.packages: 
 ignored.directories:
     data
@@ -24,3 +19,4 @@ snapshot.fields:
     Imports
     Depends
     LinkingTo
+symlink.system.packages: TRUE

@@ -47,7 +47,7 @@ setupdb <- function(overwrite=FALSE) { # nocov start
     getPass()
   } else {
     getPass <- function() {  
-      if(!requireNamespace(tcltk, quietly=TRUE)) {
+      if(!requireNamespace("tcltk", quietly=TRUE)) {
         stop("can't find tcl/tk")
       }
       wnd <- tktoplevel()
@@ -235,7 +235,6 @@ initdb <- function(con) {
     if (! requireNamespace("RSQLite", quietly = TRUE)) {
       stop("Please install RSQLite: install.packages('RSQLite')")
     }
-    require(RSQLite)
     drv <- RSQLite::dbDriver(settings$driver)
     con <- dbConnect(drv, dbname=settings$dbname)
     if(settings$dbname == ":memory:") {
@@ -246,9 +245,7 @@ initdb <- function(con) {
 
   if (!requireNamespace("RPostgreSQL", quietly = TRUE)) {
     stop("Please install RPostgreSQL: install.packages('RPostgreSQL')")
-  } else {
-    require(RPostgreSQL)
-  }
+  } 
   
   drv <- dbDriver(settings$driver) #nocov start
   con <- tryCatch(
