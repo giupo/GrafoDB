@@ -108,3 +108,44 @@ test_that("tsdiff returns TRUE if two timeseries have different dimensions",  {
   b <- ts(v2, start=c(1990,1), frequency=12)
   expect_true(tsdiff(a,b))
 })
+
+
+test_that("to.data.frame correctly converts a single obs timeseries", {
+  anno <- 1990
+  period <- 1
+  freq <- 4
+  dati <- 1
+  tt <- ts(dati, start=c(anno, period), frequency=freq)
+  x <- to.data.frame(tt)
+
+  expect_equal(x[, "anno"], anno)
+  expect_equal(x[, "freq"], freq)
+  expect_equal(x[, "periodo"], period)
+  expect_equal(x[, "dati"], "[1]")
+
+})
+
+test_that("to.data.frame correctly converts a single obs timeseries produced by formula", {
+  anno <- 1990
+  period <- 1
+  freq <- 4
+  dati <- 1
+
+  g <- GrafoDB("test")
+  on.exit(elimina("test"))
+
+  g["A"] <- g["B"] <- ts(c(1,2,3), start=c(anno, period), frequency=freq)
+  g["C"] <- function(A, B) {
+    C <- window(A+B, start=c(1990, 1+2)) # voglio solo l'ultimo periodo
+  }
+
+  x <- to.data.frame(g$C)
+  expect_equal(x[, "anno"], anno)
+  expect_equal(x[, "freq"], freq)
+  expect_equal(x[, "periodo"], period + 2)
+  expect_equal(x[, "dati"], "[6]")
+
+  expect_equal(length(g$C), 1)
+
+})
+
