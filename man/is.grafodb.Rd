@@ -13,8 +13,8 @@ is.grafodb(x)
 `TRUE` se `x` e' un `GrafoDB`, altrimenti `FALSE`
 }
 \description{
-Predicato; Ritorna `TRUE` se `x` e' un istanza di `GrafoDB`, altrimenti ritorna
-`FALSE`
+Predicato; Ritorna `TRUE` se `x` e' un istanza di `GrafoDB`, altrimenti
+ritorna `FALSE`
 }
 \examples{
 \dontrun{

@@ -13,7 +13,8 @@ expr(x, nomi)
 \item{nomi}{character array di nomi di serie storiche}
 }
 \value{
-`list` con nomi (i nomi sono gli stess del parametro `nomi`) con le formule
+`list` con nomi (i nomi sono gli stess del parametro `nomi`)
+        con le formule
 }
 \description{
 Ritorna come named list le formule per ogni serie specificata in `nomi`
