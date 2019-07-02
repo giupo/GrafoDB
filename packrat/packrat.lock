@@ -59,8 +59,8 @@ Hash: b822a1c716af0ff7b4f8cdf7287dca14
 
 Package: RPostgreSQL
 Source: CRAN
-Version: 0.4-1
-Hash: 42460e37a21dc9e3f1f47c7d8d210592
+Version: 0.6-2
+Hash: 3f9effd1b6b265ca9287546537bf5d96
 Requires: DBI
 
 Package: RSQLite
@@ -188,11 +188,6 @@ GithubRepo: devtools
 GithubUsername: r-lib
 GithubRef: master
 GithubSha1: 8b1b3fb7105db00b0ff1a80b9f1a3b5963924506
-RemoteHost: api.github.com
-RemoteRepo: devtools
-RemoteUsername: r-lib
-RemoteRef: master
-RemoteSha: 8b1b3fb7105db00b0ff1a80b9f1a3b5963924506
 
 Package: digest
 Source: CRAN
@@ -456,6 +451,11 @@ Version: 0.3.2
 Hash: d7bb7f62bb3af2d6510f50cb7190a060
 Requires: magrittr, rlang
 
+Package: rJava
+Source: CRAN
+Version: 0.9-8
+Hash: 3e8627a2a5bd45c9bad6112acfc231d9
+
 Package: rcmdcheck
 Source: CRAN
 Version: 1.3.2
@@ -517,11 +517,6 @@ GithubRepo: rprogressbar
 GithubUsername: giupo
 GithubRef: master
 GithubSha1: db7c8ffacb34705b488b185dacf05fb44a4d921c
-RemoteHost: api.github.com
-RemoteRepo: rprogressbar
-RemoteUsername: giupo
-RemoteRef: master
-RemoteSha: db7c8ffacb34705b488b185dacf05fb44a4d921c
 
 Package: rprojroot
 Source: CRAN
@@ -548,11 +543,6 @@ GithubRepo: rutils
 GithubUsername: giupo
 GithubRef: master
 GithubSha1: 3c879aba72526bb3c9885471b83ba3b5a88b229c
-RemoteHost: api.github.com
-RemoteRepo: rutils
-RemoteUsername: giupo
-RemoteRef: master
-RemoteSha: 3c879aba72526bb3c9885471b83ba3b5a88b229c
 
 Package: scales
 Source: CRAN
