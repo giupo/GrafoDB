@@ -46,21 +46,21 @@ setupdb <- function(overwrite=FALSE) { # nocov start
     }
     getPass()
   } else {
-    getPass <- function() {  
+    getPass <- function() {
       if(!requireNamespace("tcltk", quietly=TRUE)) {
         stop("can't find tcl/tk")
       }
       wnd <- tktoplevel()
       tclVar("") -> passVar
-      # Label  
+      # Label
       tkgrid(tklabel(wnd,text="Enter password:"))
-      # Password box  
+      # Password box
       tkgrid(tkentry(wnd, textvariable=passVar,show="*")->passBox)
-      # Hitting return will also submit password  
+      # Hitting return will also submit password
       tkbind(passBox,"<Return>",function() tkdestroy(wnd))
-      # OK button  
+      # OK button
       tkgrid(tkbutton(wnd,text="OK",command=function() tkdestroy(wnd)))
-      # Wait for user to click OK  
+      # Wait for user to click OK
       tkwait.window(wnd)
       tclvalue(passVar)
     }
@@ -73,7 +73,7 @@ setupdb <- function(overwrite=FALSE) { # nocov start
   config[["host"]] <- host
   config[["port"]] <- port
   config[["dbname"]] <- dbname
-  
+
   if (username != "") {
     config[["username"]] <- username
   }
@@ -84,7 +84,7 @@ setupdb <- function(overwrite=FALSE) { # nocov start
   for(nameitem in names(config)) {
     buffer <- c(buffer, paste0(nameitem, "=", config[[nameitem]]))
   }
-  
+
   buffer <- paste(buffer, sep="\n")
   fileName <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
   dir.create(dirname(fileName), showWarnings=FALSE, mode="0700")
@@ -112,9 +112,9 @@ dbSettings <- function(flush=FALSE) {
     flog.trace("Flushing settings", name=ln)
     options(dbSettings=NULL)
   }
-  
+
   settings <- getOption("dbSettings", NULL)
-  
+
   if(is.null(settings)) {
     flog.trace("settings are null", name=ln)
     home_ini_file <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
@@ -138,7 +138,7 @@ dbSettings <- function(flush=FALSE) {
 
   #flog.trace("SQLHelper type in dbSettings: %s", SQLHelperType_, name=ln)
   #options(SQLHelperType=SQLHelperType_)
-  
+
   settings
 }
 
@@ -146,7 +146,7 @@ dbSettings <- function(flush=FALSE) {
 #' Returns the enviroment for GrafoDB
 #'
 #' Returns the value of environment variable `GRAFODB_ENV`
-#' 
+#'
 #' @name getenv
 #' @export
 
@@ -193,12 +193,11 @@ initdb <- function(con) {
   sql <- paste(readLines(file), collapse="\n")
 
   statements <- str_split(sql, ";")[[1]]
-  
+
   tryCatch({
     dbBegin(con)
     for(stm in statements) {
       stm <- str_trim(as.character(stm))
-      
       if(nchar(stm) > 0) {
         flog.trace("%s", stm, name=ln)
         dbExecute(con, stm)
@@ -224,13 +223,13 @@ initdb <- function(con) {
 .buildConnection <- function(userid=whoami(), password=flypwd(), ...) {
   ln <- "GrafoDB.db"
   settings <- dbSettings()
-  
+
   env <- getenv()
-  
-  settings <- settings[[paste0("ConnectionInfo_", env)]]  
+
+  settings <- settings[[paste0("ConnectionInfo_", env)]]
 
   flog.debug("Partial Settings: %s", settings)
-  
+
   if(settings$driver == "SQLite") {
     if (! requireNamespace("RSQLite", quietly = TRUE)) {
       stop("Please install RSQLite: install.packages('RSQLite')")
@@ -241,12 +240,12 @@ initdb <- function(con) {
       initdb(con)
     }
     return(con)
-  } 
+  }
 
   if (!requireNamespace("RPostgreSQL", quietly = TRUE)) {
     stop("Please install RPostgreSQL: install.packages('RPostgreSQL')")
-  } 
-  
+  }
+
   drv <- dbDriver(settings$driver) #nocov start
   con <- tryCatch(
     dbConnect(drv, host=settings$host, dbname=settings$dbname),
@@ -261,13 +260,13 @@ initdb <- function(con) {
     } else {
       userid
     }
-    
+
     password <- if(is.null(password)) {
       flypwd()
     } else {
       password
     }
-    
+
     dbConnect(drv, user=userid, password=password,
               host=settings$host, dbname=settings$dbname)
   } else {
@@ -276,7 +275,7 @@ initdb <- function(con) {
 
 
   if(shouldCreateSchema(con)) {
-    initdb(cond)    
+    initdb(cond)
   }
   con
 }
@@ -308,7 +307,7 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL, ...) {
     con
   }
 }
-  
+
 # nocov start
 #' @importFrom DBI dbExecute
 .dbBeginPG <- function(conn) {

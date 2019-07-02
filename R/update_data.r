@@ -21,7 +21,7 @@
   } else {
     data.frame()
   }
-  
+
   names.with.conflicts <- intersect(x@touched, as.character(df$name))
   names.updated <- setdiff(keys(data), names.with.conflicts)
 
@@ -37,7 +37,7 @@
         df <- to.data.frame(data[[name]])
         cbind(df, name, tag, autore, notes, last_updated)
       }  # this is quite fast, let's ignore the Progressbar here...
-      
+
       dbExecute(con, getSQLbyKey(helper, "CREATE_STAGE", stage_name = stage_name))
       on.exit({
         tryCatch({
@@ -51,7 +51,7 @@
       dbExecute(con, getSQLbyKey(
         helper, "UPDATE_WITH_STAGE",
         tag=tag,
-        stage_name=stage_name)) 
+        stage_name=stage_name))
       dbExecute(con, getSQLbyKey(
         helper, "INSERT_WITH_STAGE",
         tag = tag,
@@ -59,7 +59,7 @@
     }, error=function(cond) {
       stop(cond)
     })
-  }  
+  }
   if (interactive()) {
     flog.info("Update Data done.", name=ln)
   }

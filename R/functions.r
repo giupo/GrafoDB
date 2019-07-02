@@ -22,7 +22,7 @@
   } else {
     tag <- tolower(tag)
   }
-  
+
   .Object@edges <- hash()
   .Object@data <- hash()
   .Object@functions <- hash()
@@ -40,10 +40,10 @@
 
   con <- pgConnect()
   on.exit(dbDisconnect(con))
-  
+
   archi <- loadArchi(tag, con=con)
   .Object <- resync(.Object, con=con)
-  
+
   network <- if(nrow(archi) > 0) {
     archi <- archi[, c("partenza", "arrivo")]
     graph.data.frame(as.data.frame(archi), directed=TRUE)
@@ -57,9 +57,9 @@
     pending.names <- setdiff(nomi, V(network)$name)
     network <- network + vertex(pending.names)
   }
-  
+
   .Object@network <- network
-  
+
   df <- loadGrafi(con)
   dftag <- df[df$tag == tag,]
   if(nrow(dftag)) {
@@ -72,15 +72,15 @@
     ## il grafo non esiste nel DB
     .Object <- createNewGrafo(.Object, tag, con=con)
   }
-  
+
   .Object
 }
 
 
 #' Controlla se `x` e' un `GrafoDB`
 #'
-#' Predicato; Ritorna `TRUE` se `x` e' un istanza di `GrafoDB`, altrimenti ritorna
-#' `FALSE`
+#' Predicato; Ritorna `TRUE` se `x` e' un istanza di `GrafoDB`, altrimenti
+#' ritorna `FALSE`
 #'
 #' @name is.grafodb
 #' @usage is.grafodb(x)
@@ -123,7 +123,7 @@ to.data.frame <- function(x, name=NULL) {
     prd <- 0
     freq <- 0
   }
-  
+
   raw_numbers <- gsub(" ", "", toJSON(x, digits=20))
 
   if(is.null(name)) {
@@ -194,10 +194,10 @@ from.data.frame <- function(df) {
   } else {
     f
   }
-  
+
   idx_inizio <- str_locate(f, "\\{")[[1]]
   idx_fine <- sapply(gregexpr("\\}", f), tail, 1)
-  
+
   f <- substring(f, idx_inizio + 1, idx_fine - 1)
   f <- gsub("^\n(.*)\n$", "\\1", f)
   str_trim(f)
@@ -254,7 +254,7 @@ from.data.frame <- function(df) {
 #' I parametri della funzione ritornata sono le dipendenze della serie,
 #' ed aggiunge il nome della funzione al termine per dichiarare il
 #' dato ritornato
-#' 
+#'
 #' @name .clutter_with_params_and_return
 #' @usage .clutter_with_params_and_return(f, name, deps, funcName)
 #' @param f function task to be converted as function
@@ -276,9 +276,6 @@ from.data.frame <- function(df) {
   task <- gsub("--NAME--", name, task)
   task
 }
-
-
-
 
 
 #' Carica i dati dal DB
@@ -346,23 +343,23 @@ getdb <- function(x, name) {
   } else {
     list()
   }
-  
+
   ret <- list()
   for(name in names(from.db)) {
     ret[[name]] <- from.db[[name]]
   }
-  
+
   for(name in in.data) {
     ret[[name]] <- data[[name]]
   }
-  
+
   ## controllo di avere tutte le serie
   if(!all(i %in% names(ret))) {
     non.presenti <- setdiff(i, names(ret))
     warning("le seguenti serie non sono presenti: ",
             paste(non.presenti, collapse=", "))
   }
-  
+
   if(length(ret) == 1) {
     ret <- ret[[1]]
   }
@@ -370,8 +367,8 @@ getdb <- function(x, name) {
 }
 
 #' @importFrom DBI dbGetQuery
-#' @include db.r 
-  
+#' @include db.r
+
 .tagExists <- function(tag, con=NULL) {
   con <- if(is.null(con)) {
     con <- pgConnect()
@@ -513,9 +510,9 @@ rilasci <- function(filtro=NULL) {
   } else {
     getSQLbyKey(helper, "TUTTI_RILASCI_FILTERED", filtro=filtro)
   }
- 
+
   data <- dbGetQuery(con, sql)
-  
+
   nomicol <- colnames(data)
   if(nrow(data) > 1) {
     time_col <- as.POSIXct(

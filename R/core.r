@@ -316,7 +316,7 @@ setMethod(
     is.scalar <- function(e) {
       is.numeric(e) & length(e) == 1 & !is.ts(e)
     }
-    
+
     nomi1 <- names(e1)
     nomi2 <- names(e2)
     common <- intersect(nomi1, nomi2)
@@ -329,15 +329,14 @@ setMethod(
 
     result <- Dataset()
     data <- foreach(name=iter(common), .combine=append) %dopar% {
-      
       ret <- list()
       ret[[name]] <- tryCatch({
         e11 <- e1[[name]]
         e22 <- e2[[name]]
-        
+
         stopifnot(is.numeric(e11))
         stopifnot(is.numeric(e22))
-        
+
         if(is.scalar(e11) && is.ts(e22) ||
              is.ts(e11) && is.scalar(e22)) {
           stop("Different object classes")
@@ -349,7 +348,7 @@ setMethod(
         })
       ret
     }
-    
+
     names(data) <- common
     result@data <- hash(data)
     result
@@ -363,7 +362,7 @@ setMethod(
     dbdati <- x@dbdati
     network <- x@network
     nodes <- V(network)[topological.sort(network)]$name
-    
+
     all_names <- union(
       keys(data),
       if(is.null(dbdati$name)) {
@@ -372,7 +371,7 @@ setMethod(
         dbdati$name
       })
     all_names <- union(all_names, V(network)$name)
-    
+
     remaining <- setdiff(all_names, nodes)
     # per preservare l'ordinamento topologico
     ret <- c(nodes, remaining)
@@ -392,7 +391,8 @@ setMethod(
 #' @usage expr(x, nomi)
 #' @param x istanza di oggetto R
 #' @param nomi character array di nomi di serie storiche
-#' @return `list` con nomi (i nomi sono gli stess del parametro `nomi`) con le formule
+#' @return `list` con nomi (i nomi sono gli stess del parametro `nomi`)
+#'         con le formule
 #' @examples \dontrun{
 #' g <- GrafoDB(...)
 #' expr(g, "TETSZ0AC") # ritorna list(TETSZ0AC = "TETSZ0AC = ASTSZ0AC...")
