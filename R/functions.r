@@ -124,6 +124,8 @@ to.data.frame <- function(x, name=NULL) {
     freq <- 0
   }
 
+  # fix per bug su CRCONFAC/PC che assegna names su una serie storica
+  names(x) = NULL
   raw_numbers <- gsub(" ", "", toJSON(x, digits=20))
 
   if(is.null(name)) {
