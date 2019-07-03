@@ -1,23 +1,23 @@
 
 .hasConflicts <- function(x, name=NULL, con=NULL) {
-  nrow(getConflicts(x, name=name, con=con)) > 0
+  nrow(getConflicts(x, name = name, con = con)) > 0
 }
 
 
 .removeConflicts <- function(x, name=NULL) {
   tag <- x@tag
   helper <- x@helper
-  key <- if(is.character(name)) {
+  key <- if (is.character(name)) {
     "REMOVE_CONFLICTS_NAME"
   } else {
     "REMOVE_CONFLICTS"
   }
-  
+
   con <- pgConnect()
   on.exit(dbDisconnect(con))
   tryCatch({
     dbBegin(con)
-    dbExecute(con, getSQLbyKey(helper, key, tag=tag, name=name))
+    dbExecute(con, getSQLbyKey(helper, key, tag = tag, name = name))
     dbCommit(con)
   }, error = function(err) {
     dbRollback(con)
@@ -32,7 +32,8 @@
 #' @usage hasConflicts(x, name)
 #' @param x oggetto R
 #' @param name character array di nomi (puo' essere omesso)
-#' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE` altrimenti
+#' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE`
+#'         altrimenti
 #' @examples \dontrun{
 #' g <- GrafoDB(...)
 #' hasConflicts(g) # dovrebbe essere FALSE
@@ -46,7 +47,7 @@
 
 setGeneric(
   "hasConflicts",
-  function(x, name=NULL, con=NULL) {
+  function(x, name = NULL, con = NULL) {
     standardGeneric("hasConflicts")
   })
 
@@ -57,7 +58,8 @@ setGeneric(
 #' @usage hasConflicts(x, name)
 #' @param x oggetto R
 #' @param name character array di nomi (puo' essere omesso)
-#' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE` altrimenti
+#' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti,
+#'         `FALSE` altrimenti
 #' @examples \dontrun{
 #' g <- GrafoDB(...)
 #' hasConflicts(g) # dovrebbe essere FALSE
@@ -72,14 +74,15 @@ setGeneric(
 setMethod(
   "hasConflicts",
   signature("GrafoDB", "ANY"),
-  function(x, name=NULL, con=NULL) {
-    .hasConflicts(x, name=name, con=con)
+  function(x, name = NULL, con = NULL) {
+    .hasConflicts(x, name = name, con = con)
   })
 
 
 #' Ritorna i conflitti per un Grafo
 #'
-#' Ritorna i conflitti di un grafo, tutti per serie specificate dal parametro `name`
+#' Ritorna i conflitti di un grafo, tutti per serie specificate dal
+#' parametro `name`
 #'
 #' @name getConflicts
 #' @usage getConflicts(x)
@@ -91,14 +94,14 @@ setMethod(
 
 setGeneric(
   "getConflicts",
-  function(x, name=NULL, con=NULL) {
+  function(x, name = NULL, con = NULL) {
     standardGeneric("getConflicts")
   })
 
 setMethod(
   "getConflicts",
   signature("GrafoDB", "ANY"),
-  function(x, name=NULL, con=NULL) {
+  function(x, name = NULL, con = NULL) {
     con <- if (is.null(con)) {
       con <- pgConnect()
       on.exit(dbDisconnect(con))
@@ -106,13 +109,13 @@ setMethod(
     } else {
       con
     }
-    
+
     tag <- x@tag
     helper <- x@helper
-    sql <- if(is.null(name)) {
-      getSQLbyKey(helper, "GET_CONFLICTS", tag=tag)
+    sql <- if (is.null(name)) {
+      getSQLbyKey(helper, "GET_CONFLICTS", tag = tag)
     } else {
-      getSQLbyKey(helper, "GET_CONFLICTS_NAME", tag=tag, name=name)
+      getSQLbyKey(helper, "GET_CONFLICTS_NAME", tag = tag, name = name)
     }
 
     dbGetQuery(con, sql)
@@ -121,34 +124,46 @@ setMethod(
 
 setGeneric(
   "getDataConflicts",
-  function(x, name=NULL) {
+  function(x, name = NULL) {
     standardGeneric("getDataConflicts")
   })
 
 setMethod(
   "getDataConflicts",
   signature("GrafoDB", "ANY"),
-  function(x, name=NULL) {
+  function(x, name = NULL) {
     df <- getConflicts(x, name)
-    if(nrow(df)) {
+    if (nrow(df)) {
       ret <- list()
       lista <- as.character(df$name)
-      foreach(name=iter(lista), .combine=rbind) %do% {
+      foreach(name = iter(lista), .combine = rbind) %do% {
         autore <- df[df$name == name, "autore"]
         current_autore <- df[df$name == name, "old_autore"]
-        current <- df[df$name == name, c("name", "old_anno", "old_periodo", "old_freq", "old_dati")]
-        colnames(current) <- c("name", "anno", "periodo", "freq", "dati")
+
+        current <- df[
+          df$name == name,
+          c("name", "old_anno", "old_periodo", "old_freq", "old_dati")
+        ]
+
+        colnames(current) <- c("name", "anno", "periodo",
+                               "freq", "dati")
+
         current <- from.data.frame(current)[[name]]
-        
-        nuova <- df[df$name == name, c("name", "anno", "periodo", "freq", "dati")]
+
+        nuova <- df[
+          df$name == name,
+          c("name", "anno", "periodo", "freq", "dati")
+        ]
+
         colnames(nuova) <- c("name", "anno", "periodo", "freq", "dati")
         nuova <- from.data.frame(nuova)[[name]]
-        
-        differenza <- if(frequency(nuova) == frequency(current)) {
+
+        differenza <- if (frequency(nuova) == frequency(current)) {
           nuova - current
         } else {
           NA
         }
+
         ret[[name]] <- cbind(nuova, autore, current, current_autore, differenza)
       }
       ret
@@ -157,22 +172,22 @@ setMethod(
 
 setGeneric(
   "getFormulaConflicts",
-  function(x, name=NULL) {
+  function(x, name = NULL) {
     standardGeneric("getFormulaConflicts")
   })
 
 setMethod(
   "getFormulaConflicts",
   signature("GrafoDB", "ANY"),
-  function(x, name=NULL) {
+  function(x, name = NULL) {
     tag <- x@tag
     helper <- x@helper
     con <- pgConnect()
     on.exit(dbDisconnect(con))
-    sql <- if(is.null(name)) {
-      getSQLbyKey(helper, "GET_FORMULA_CONFLICTS", tag=tag)
+    sql <- if (is.null(name)) {
+      getSQLbyKey(helper, "GET_FORMULA_CONFLICTS", tag = tag)
     } else {
-      getSQLbyKey(helper, "GET_FORMULA_CONFLICTS_NAME", tag=tag, name=name)
+      getSQLbyKey(helper, "GET_FORMULA_CONFLICTS_NAME", tag = tag, name = name)
     }
     dbGetQuery(con, sql)
   })
@@ -180,8 +195,8 @@ setMethod(
 
 #' contrassegna come risolti i conflitti salvati sul DB
 #'
-#' E' appannaggio dell'utente riusolvere i conflitti nella sua sessione e provvedere
-#' a salvate un Grafo consistente.
+#' E' appannaggio dell'utente riusolvere i conflitti nella sua sessione
+#' e provvedere a salvate un Grafo consistente.
 #'
 #' @name fixConflicts
 #' @usage fixConflicts(x)
@@ -192,15 +207,15 @@ setMethod(
 
 setGeneric(
   "fixConflicts",
-  function(x, name=NULL) {
+  function(x, name = NULL) {
     standardGeneric("fixConflicts")
   })
 
 setMethod(
   "fixConflicts",
   signature("GrafoDB"),
-  function(x, name=NULL) {
-    .removeConflicts(x, name=name)
+  function(x, name = NULL) {
+    .removeConflicts(x, name = name)
   })
 
 #' Trova le serie che sono cambiate nel database
@@ -212,8 +227,8 @@ setMethod(
 #' @return lista di nomi di serie cambiate sul database rispetto ad X
 #' @note funzione interna
 
-getChangedSeries <- function(x, con=NULL) {
-  con <- if(is.null(con)) {
+getChangedSeries <- function(x, con = NULL) {
+  con <- if (is.null(con)) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     con
@@ -225,14 +240,14 @@ getChangedSeries <- function(x, con=NULL) {
   helper <- x@helper
   timestamp <- x@timestamp
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_CHANGED_SERIES", tag=tag,
-    last_updated=timestamp))
+    helper, "GET_CHANGED_SERIES", tag = tag,
+    last_updated = timestamp))
   nomi <- as.character(df$name)
   unique(nomi)
 }
 
-getOuterDataNames <- function(x, con=NULL) {
-  con <- if(is.null(con)) {
+getOuterDataNames <- function(x, con = NULL) {
+  con <- if (is.null(con)) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     con
@@ -244,13 +259,13 @@ getOuterDataNames <- function(x, con=NULL) {
   timestamp <- x@timestamp
   helper <- x@helper
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_OUTER_DATA_NAMES", tag=tag, last_updated=timestamp,
-    autore=autore))
+    helper, "GET_OUTER_DATA_NAMES", tag = tag, last_updated = timestamp,
+    autore = autore))
   as.character(df$name)
 }
 
-getOuterFormulaNames <- function(x, con=NULL) {
-  con <- if(is.null(con)) {
+getOuterFormulaNames <- function(x, con = NULL) {
+  con <- if (is.null(con)) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     con
@@ -264,8 +279,10 @@ getOuterFormulaNames <- function(x, con=NULL) {
   helper <- x@helper
 
   df <- dbGetQuery(con, getSQLbyKey(
-    helper, "GET_OUTER_FORMULA_NAMES", tag=tag, last_updated=timestamp,
-    autore=autore))
+    helper, "GET_OUTER_FORMULA_NAMES",
+    tag = tag, last_updated = timestamp,
+    autore = autore))
+
   as.character(df$name)
 }
 
@@ -274,49 +291,48 @@ getOuterFormulaNames <- function(x, con=NULL) {
 #' @include db.r persistence_utils.r
 
 checkConflicts <- function(x, con=NULL) {
-   
   tag <- x@tag
 
   data <- x@data
   functions <- x@functions
-  
+
   nameData <- keys(x@data)
   namesFormule <- keys(x@functions)
 
-  outerDataNames <- getOuterDataNames(x, con=con)
-  outerFormulaNames <- getOuterFormulaNames(x, con=con)
+  outerDataNames <- getOuterDataNames(x, con = con)
+  outerFormulaNames <- getOuterFormulaNames(x, con = con)
 
   datiComuni <- intersect(nameData, outerDataNames)
-  if(length(datiComuni) > 0) {
+  if (length(datiComuni) > 0) {
     # trovo solo le root
     soloRoots <- intersect(.roots(x), datiComuni)
-    if(length(soloRoots) > 0) {   
+    if (length(soloRoots) > 0) {
       # Controllo una ad una le radici e verifico differenze di valori
-      dati.db <- loadDati(tag, con=con)
-      for(name in unique(soloRoots)) {
+      dati.db <- loadDati(tag, con = con)
+      for (name in unique(soloRoots)) {
         outerTs <- from.data.frame(dati.db[dati.db$name == name, ])[[name]]
         innerTs <- x[[name]]
-        if(! identical(outerTs, innerTs)) {
-          creaConflittoDati(x, name, con=con)
+        if (! identical(outerTs, innerTs)) {
+          creaConflittoDati(x, name, con = con)
         }
       }
     }
   }
-  
+
   formuleComuni <- intersect(namesFormule, outerFormulaNames)
-  if(length(formuleComuni) > 0) {  
+  if (length(formuleComuni) > 0) {
     #controllo ogni nome per verificare differenze.
-    formule.db <- loadFormule(tag, con=con)
-    formule.db <- formule.db[formule.db$name %in% formuleComuni,]
-    for(name in unique(as.character(formule.db$name))) {
-      formula.db <- formule.db[formule.db$name == name,]$formula
-      if(formula.db != functions[[name]]) {
+    formule.db <- loadFormule(tag, con = con)
+    formule.db <- formule.db[formule.db$name %in% formuleComuni, ]
+    for (name in unique(as.character(formule.db$name))) {
+      formula.db <- formule.db[formule.db$name == name, ]$formula
+      if (formula.db != functions[[name]]) {
         ## crea conflitto su formule per name
-        creaConflittoFormule(x, name, formula.db, con=con)
+        creaConflittoFormule(x, name, formula.db, con = con)
       }
     }
   }
-  
+
   x
 }
 
@@ -326,20 +342,20 @@ checkConflicts <- function(x, con=NULL) {
 #' @importFrom DBI dbDisconnect
 #' @include db.r persistence_utils.r
 
-creaConflittoDati <- function(x, nomi, con=NULL) {
-  con <- if(is.null(con)) {
+creaConflittoDati <- function(x, nomi, con = NULL) {
+  con <- if (is.null(con)) {
     con <- pgConnect()
     on.exit(dbDisconnect(con))
     con
   } else {
     con
   }
-  
+
   tag <- x@tag
   autore <- whoami()
   helper <- x@helper
   timestamp <- time.in.millis()
-  dati <- foreach(name = iter(nomi), .combine=rbind) %do% {
+  dati <- foreach(name = iter(nomi), .combine = rbind) %do% {
 
     tt <- x[[name]]
     df <- to.data.frame(tt, name)
@@ -347,32 +363,32 @@ creaConflittoDati <- function(x, nomi, con=NULL) {
     prd <- df$periodo
     freq <- df$freq
     dati <- df$dati
-  
+
     tryCatch({
       dbExecute(con, getSQLbyKey(
         helper, "CREA_CONFLITTO_DATI",
-        tag=tag,
-        name=name,
-        anno=anno,
-        periodo=prd,
-        freq=freq,
-        dati=dati,
-        autore=autore,
-        last_updated=timestamp))
+        tag = tag,
+        name = name,
+        anno = anno,
+        periodo = prd,
+        freq = freq,
+        dati = dati,
+        autore = autore,
+        last_updated = timestamp))
     }, error = function(cond) {
       stop(cond)
     })
   }
   warning(
     "Ci sono conflitti sui dati per le serie: ",
-    paste(nomi, collapse=", "))
+    paste(nomi, collapse = ", "))
 }
 
-creaConflittoFormule <- function(x, nomi, formula.db, con=NULL) {
-  
+creaConflittoFormule <- function(x, nomi, formula.db, con = NULL) {
+
   conWasNull <- is.null(con)
-  con <- if(is.null(con)) {
-    con <- pgConnect(con=con)
+  con <- if (is.null(con)) {
+    con <- pgConnect(con = con)
     on.exit(dbDisconnect(con))
     con
   } else {
@@ -382,33 +398,30 @@ creaConflittoFormule <- function(x, nomi, formula.db, con=NULL) {
   autore <- whoami()
   tag <- x@tag
   helper <- x@helper
-  # timestamp <- round(R.utils::System$currentTimeMillis())
 
   timestamp <- time.in.millis()
-  foreach (name = iter(nomi)) %do% {
-    # task <- expr(x, name, echo=FALSE)
-    
+  foreach(name = iter(nomi)) %do% {
     sql1 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE1",
-      formula=formula.db,
-      autore=autore,
-      name=name,
-      tag=tag,
-      last_updated=timestamp)
-    
+      formula = formula.db,
+      autore = autore,
+      name = name,
+      tag = tag,
+      last_updated = timestamp)
+
     dbExecute(con, sql1)
 
     sql2 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE2",
-      formula=formula.db,
-      autore=autore,
-      name=name,
-      tag=tag,
-      last_updated=timestamp)
+      formula = formula.db,
+      autore = autore,
+      name = name,
+      tag = tag,
+      last_updated = timestamp)
     dbExecute(con, sql2)
   }
 
   warning(
     "Ci sono conflitti sulle formule per le serie: ",
-    paste(nomi, collapse=", "))
+    paste(nomi, collapse = ", "))
 }
