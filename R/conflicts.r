@@ -290,7 +290,7 @@ getOuterFormulaNames <- function(x, con = NULL) {
 #' @importFrom hash keys
 #' @include db.r persistence_utils.r
 
-checkConflicts <- function(x, con=NULL) {
+checkConflicts <- function(x, con = NULL) {
   tag <- x@tag
 
   data <- x@data
