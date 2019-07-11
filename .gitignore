@@ -8,6 +8,7 @@
 *.Rcheck
 \.Rprofile
 *.tar.gz
+!.circleci/config.yml
 [#]*[#]
 .[#]*
 build/*
