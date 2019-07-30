@@ -15,5 +15,6 @@ getConflicts(x)
 un data.frame con le informazioni del conflitto
 }
 \description{
-Ritorna i conflitti di un grafo, tutti per serie specificate dal parametro `name`
+Ritorna i conflitti di un grafo, tutti per serie specificate dal
+parametro `name`
 }

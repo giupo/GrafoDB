@@ -19,9 +19,11 @@ hasConflicts(x)
 \item{name}{character array di nomi (puo' essere omesso)}
 }
 \value{
-`TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE` altrimenti
+`TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE`
+        altrimenti
 
-`TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE` altrimenti
+`TRUE` se l'istanza `x` e' un GrafoDB con conflitti,
+        `FALSE` altrimenti
 }
 \description{
 Ritorna `TRUE` se il grafo ha conflitti

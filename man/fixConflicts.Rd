@@ -12,6 +12,6 @@ fixConflicts(x)
 \item{name}{nome della serie da cui eliminare un conflitto}
 }
 \description{
-E' appannaggio dell'utente riusolvere i conflitti nella sua sessione e provvedere
-a salvate un Grafo consistente.
+E' appannaggio dell'utente riusolvere i conflitti nella sua sessione
+e provvedere a salvate un Grafo consistente.
 }
