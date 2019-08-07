@@ -348,7 +348,6 @@ nextRollingNameFor <- function(x, con) {
 #' @note questa e' una funzione interna del grafo invocata da `updateGraph`
 #' @seealso saveGraph updateGraph
 #' @importFrom DBI dbGetQuery
-#' @importFrom rprogressbar ProgressBar updateProgressBar kill
 #' @importFrom RJSONIO toJSON
 #' @importFrom iterators iter
 #' @importFrom foreach foreach %do% %dopar%

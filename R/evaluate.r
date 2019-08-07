@@ -1,3 +1,4 @@
+
 #' @include expr.r
 #' @importFrom rutils slice
 
@@ -80,7 +81,7 @@
 #' @usage .evaluate(object, v_start)
 #' @return il grafo con i dati correttamente valutato
 #' @importFrom igraph V induced.subgraph neighborhood delete.vertices degree
-#' @importFrom rprogressbar ProgressBar updateProgressBar kill
+#' @importFrom progress progress_bar
 #' @importFrom foreach foreach %dopar%
 #' @importFrom hash keys
 #' @rdname evaluate-internal
@@ -127,14 +128,33 @@
   }
 
   total <- length(V(network))
+  pb <- progress_bar$new(
+    format = ":what :bar :percent :elapsed (ETA :eta)",
+    clear = FALSE,
+    total = total)
+
+  pb$tick(0, tokens=list(what="Starting..."))
+
   i <- 0
   is.interactive <- interactive()
-  if(is.interactive) { # nocov start
-    pb <- ProgressBar(min=0, max=total)
-    updateProgressBar(pb, i, "Starting...")
-  } # nocov end
+  #if(is.interactive) { # nocov start
+  #  pb <- ProgressBar(min=0, max=total)
+  #  updateProgressBar(pb, i, "Starting...")
+  #} # nocov end
 
-  if(is.interactive) updateProgressBar(pb, i, "Starting...") # nocov
+
+  combineWithProgressBar <- function(pb) {
+    count <- 1
+    function(...) {
+      ll <- list(...)
+      nome <- names(tail(ll, n=1)[[1]])
+      count <<- count + length(ll)
+      pb$tick(count, tokens=list(what = nome))
+      c(...)
+    }
+  }
+
+  # if(is.interactive) updateProgressBar(pb, i, "Starting...") # nocov
 
   sources_id <- V(network)[degree(network, mode="in") == 0]
 
@@ -161,17 +181,18 @@
     sources <- setdiff(sources, sprimitive)
 
     if(length(sources)) {
-      evaluated <- foreach(name=sources, .combine=c) %dopar% {
+      evaluated <- foreach(name=sources, .combine=combineWithProgressBar(pb)) %dopar% {
         proxy(name, object)
       }
 
       i <- i + length(sources)
-      if(is.interactive) {
-        updateProgressBar(pb, i, tail(names(evaluated), n=1)) # nocov
-      }
+      #if(is.interactive) {
+      #  updateProgressBar(pb, i, tail(names(evaluated), n=1)) # nocov
+      #}
 
       # ignore why %dopar% is loosing data.
       # the following is a patch in the meantime
+      # TODO check if this still holds.
       motherfucker <- setdiff(sources, names(evaluated))
 
       while(length(motherfucker)) {
@@ -198,7 +219,7 @@
     sources_id <- V(network)[degree(network, mode="in") == 0]
   }
 
-  if(is.interactive) kill(pb)
+  # if(is.interactive) kill(pb)
 
   object@data <- data
   object@touched <- sort(unique(c(object@touched, keys(data))))

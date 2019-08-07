@@ -17,7 +17,7 @@ Imports:
     stringr,
     formatR,
     DBI,
-    rprogressbar,
+    progress,
     stats,
     foreach,
     iterators,
