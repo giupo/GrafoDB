@@ -11,7 +11,7 @@
 diff.GrafoDB <- function(x, ...) {
   y <- list(...)[[1]]
   helper <- x@helper
-  
+
   stopifnot(is.grafodb(y))
 
   not_common <- union(
@@ -21,7 +21,7 @@ diff.GrafoDB <- function(x, ...) {
     warning("not common names: ", paste0(not_common, collapse=", "))
   }
 
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
   sql <- getSQLbyKey(helper, "DIFF_FORMULE", new=x@tag, old=y@tag)
   flog.trace("Diff query: %s", sql, name='GrafoDB.diff')

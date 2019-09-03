@@ -672,7 +672,7 @@ setMethod(
   "getMeta",
   signature("GrafoDB", "missing", "missing"),
   function(x) {
-    con <- pgConnect()
+    con <- buildConnection()
     on.exit(dbDisconnect(con))
     dbGetQuery(con, getSQLbyKey(
       x@helper, "GET_ALL_META",

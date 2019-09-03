@@ -13,7 +13,7 @@
     "REMOVE_CONFLICTS"
   }
 
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
   tryCatch({
     dbBegin(con)
@@ -103,7 +103,7 @@ setMethod(
   signature("GrafoDB", "ANY"),
   function(x, name = NULL, con = NULL) {
     con <- if (is.null(con)) {
-      con <- pgConnect()
+      con <- buildConnection()
       on.exit(dbDisconnect(con))
       con
     } else {
@@ -182,7 +182,7 @@ setMethod(
   function(x, name = NULL) {
     tag <- x@tag
     helper <- x@helper
-    con <- pgConnect()
+    con <- buildConnection()
     on.exit(dbDisconnect(con))
     sql <- if (is.null(name)) {
       getSQLbyKey(helper, "GET_FORMULA_CONFLICTS", tag = tag)
@@ -229,7 +229,7 @@ setMethod(
 
 getChangedSeries <- function(x, con = NULL) {
   con <- if (is.null(con)) {
-    con <- pgConnect()
+    con <- buildConnection()
     on.exit(dbDisconnect(con))
     con
   } else {
@@ -248,7 +248,7 @@ getChangedSeries <- function(x, con = NULL) {
 
 getOuterDataNames <- function(x, con = NULL) {
   con <- if (is.null(con)) {
-    con <- pgConnect()
+    con <- buildConnection()
     on.exit(dbDisconnect(con))
     con
   } else {
@@ -266,7 +266,7 @@ getOuterDataNames <- function(x, con = NULL) {
 
 getOuterFormulaNames <- function(x, con = NULL) {
   con <- if (is.null(con)) {
-    con <- pgConnect()
+    con <- buildConnection()
     on.exit(dbDisconnect(con))
     con
   } else {
@@ -344,7 +344,7 @@ checkConflicts <- function(x, con = NULL) {
 
 creaConflittoDati <- function(x, nomi, con = NULL) {
   con <- if (is.null(con)) {
-    con <- pgConnect()
+    con <- buildConnection()
     on.exit(dbDisconnect(con))
     con
   } else {
@@ -388,7 +388,7 @@ creaConflittoFormule <- function(x, nomi, formula.db, con = NULL) {
 
   conWasNull <- is.null(con)
   con <- if (is.null(con)) {
-    con <- pgConnect(con = con)
+    con <- buildConnection(con = con)
     on.exit(dbDisconnect(con))
     con
   } else {

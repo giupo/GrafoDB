@@ -63,7 +63,7 @@
     param_list[['con']]
   }  else {
     flog.debug('connection has to be created...', name=ln)
-    con <- pgConnect()
+    con <- buildConnection()
     on.exit(dbDisconnect(con))
     flog.debug('connection created and set to be closed on.exit', name=ln)
     con

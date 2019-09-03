@@ -36,7 +36,7 @@ elimina <- function(tag) {
   }
 
   helper <- SQLHelper()
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
 
   tryCatch({

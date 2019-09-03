@@ -33,7 +33,7 @@ setupdb <- function(overwrite=FALSE) { # nocov start
   if(dbname == "") {
     dbname <- "grafo"
   }
-  
+
   username <- str_trim(readline(prompt="Username: "))
 
   password <- if(!is.windows()) {
@@ -172,12 +172,21 @@ getenv <- function() {
 
 schemaFileFromEnv <- function(env = getenv()) {
   ln <- "GrafoDB.db.schemaFileFromEnv"
-  settings <- dbSettings()
-  settings <- settings[[paste0("ConnectionInfo_", env)]]
-  schemaFileName <- paste0("schema-", settings$driver, ".sql")
+
+  driver <- if (env == "prod") {
+    "PostgreSQL"
+  } else {
+    "SQLite"
+  }
+
+  schemaFileName <- paste0("schema-", driver, ".sql")
   flog.debug("Schema file name: %s", schemaFileName, name=ln)
-  
   file <- file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
+  file <- file.path("/home/giupo/projects/GrafoDB/inst/sql", schemaFileName)
+  if(!file.exists(file)) {
+    flog.error("Schema file doesn't exists: %s", file, name=ln)
+    stop("Schema file doesn't exists: ", file)
+  }
   flog.debug("Schema filename full path: %s", file, name=ln)
   file
 }
@@ -185,9 +194,21 @@ schemaFileFromEnv <- function(env = getenv()) {
 #' @importFrom stringr str_split str_trim
 #' @importFrom futile.logger flog.debug flog.error flog.info flog.warn
 
-initdb <- function(con) {
-  ln <- "GrafoDB.db.initdb"
-  env <- getenv()
+initdb <- function(con, env=getenv()) {
+  if (env == "test") {
+    initdbSQLite(con, env=env)
+  } else {
+    initdbPostgreSQL(env=env)
+  }
+}
+
+initdbPostgreSQL <- function(env=getenv()) {
+  file <- schemaFileFromEnv(env=env)
+  system(paste0("psql < ", file))
+}
+
+initdbSQLite <- function(con, env=getenv()) {
+  ln <- "GrafoDB.db.initdbSQLite"
   flog.debug("Current env is '%s'", env, name=ln)
   file <- schemaFileFromEnv(env=env)
   sql <- paste(readLines(file), collapse="\n")
@@ -210,76 +231,31 @@ initdb <- function(con) {
   })
 }
 
-#' Factory di connessioni al database Postgresql
+#' Factory di connessioni al database
 #'
-#' @name .buildConnection
+#' @name buildConnection
 #' @note Funzione interna
 #' @rdname buildConnection-internal
-#' @param userid userid utente
-#' @param password password utente (defaults to flypwd)
-#' @importFrom rutils whoami flypwd
 #' @importFrom DBI dbDriver dbConnect
+#' @importFrom futile.logger flog.error
 
-.buildConnection <- function(userid=whoami(), password=flypwd(), ...) {
-  ln <- "GrafoDB.db"
-  settings <- dbSettings()
-
-  env <- getenv()
-
-  settings <- settings[[paste0("ConnectionInfo_", env)]]
-
-  flog.debug("Partial Settings: %s", settings)
-
-  if(settings$driver == "SQLite") {
-    if (! requireNamespace("RSQLite", quietly = TRUE)) {
-      stop("Please install RSQLite: install.packages('RSQLite')")
-    }
-    drv <- RSQLite::dbDriver(settings$driver)
-    con <- dbConnect(drv, dbname=settings$dbname)
-    if(settings$dbname == ":memory:") {
-      initdb(con)
-    }
-    return(con)
-  }
-
-  if (!requireNamespace("RPostgreSQL", quietly = TRUE)) {
-    stop("Please install RPostgreSQL: install.packages('RPostgreSQL')")
-  }
-
-  drv <- dbDriver(settings$driver) #nocov start
-  con <- tryCatch(
-    dbConnect(drv, host=settings$host, dbname=settings$dbname),
-    error = function(cond) {
-      NULL
-    })
-
-  con <- if(is.null(con)) {
-    flog.info("no kerberos ticket, fallback to userid/pwd", name=ln)
-    userid <- if(is.null(userid)) {
-      whoami()
-    } else {
-      userid
-    }
-
-    password <- if(is.null(password)) {
-      flypwd()
-    } else {
-      password
-    }
-
-    dbConnect(drv, user=userid, password=password,
-              host=settings$host, dbname=settings$dbname)
+buildConnection <- function(env = getenv()) {
+  ln <- "GrafoDB.buildConnection"
+  con <- if(env == "test") {
+    SQLiteConnect()
+  } else if (env == "prod") {
+    pgConnect()
   } else {
-    con
-  } # nocov end # can't check this code without production environment
-
-
-  if(shouldCreateSchema(con)) {
-    initdb(cond)
+    flog.error("Unknown env: %s, set GRAFODB_ENV variable to the correct value (prod/test)", env, name=ln)
+    stop("Unknown env: ", env)
   }
+
+  if (shouldCreateSchema(con)) {
+    initdb(con, env=env)
+  }
+
   con
 }
-
 
 #' trying to behave like a connection pool
 #' (with a single connection :( )
@@ -291,7 +267,7 @@ initdb <- function(con) {
 #' @importFrom DBI dbGetQuery
 #' @export
 
-pgConnect <- function(userid=NULL, password=NULL, con=NULL, ...) {
+pgConnect <- function(con=NULL) {
   ln <- "GrafoDB.db"
   flog.trace(msg="pgConnect", name=ln)
   if(!is.null(con)) {
@@ -299,13 +275,23 @@ pgConnect <- function(userid=NULL, password=NULL, con=NULL, ...) {
   }
 
   con <- getOption("pgConnect", NULL)
-  con <- if(is.null(con)) {
-    con <- .buildConnection(userid=whoami(), password=flypwd(), ...)
+  if(is.null(con)) {
+    drv <- dbDriver("PostgreSQL")
+    con <- dbConnect(drv)
     options(pgConnect=con)
     con
   } else {
     con
   }
+}
+
+
+SQLiteConnect <- function() {
+  if (! requireNamespace("RSQLite", quietly = TRUE)) {
+    stop("Please install RSQLite: install.packages('RSQLite')")
+  }
+  drv <- RSQLite::dbDriver("SQLite")
+  dbConnect(drv, dbname=":memory:")
 }
 
 # nocov start
@@ -340,7 +326,7 @@ dbDisconnect <- function(con) {
 
 shouldCreateSchema  <- function(con) {
   tryCatch({
-    df <- dbGetQuery(con, "select * from grafi")
+    df <- dbReadTable(con, "grafi")
     !is.data.frame(df)
   }, error=function(cond) {
     TRUE

@@ -8,7 +8,7 @@
 #' @export
 
 formule <- function(g, name) {
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
 
   if(isRoot(g, name)) {

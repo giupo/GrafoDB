@@ -38,7 +38,7 @@
   .Object@tag <- tag
   .Object@helper <- SQLHelper()
 
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
 
   archi <- loadArchi(tag, con=con)
@@ -373,7 +373,7 @@ getdb <- function(x, name) {
 
 .tagExists <- function(tag, con=NULL) {
   con <- if(is.null(con)) {
-    con <- pgConnect()
+    con <- buildConnection()
     on.exit(dbDisconnect(con))
     con
   } else {
@@ -504,7 +504,7 @@ tsdiff <- function(a, b, thr = .0000001) {
 #' @return data.frame con tutti i rilasci
 
 rilasci <- function(filtro=NULL) {
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
   helper <- SQLHelper()
   sql <- if(is.null(filtro)) {

@@ -32,7 +32,7 @@
          " sono in modifica. Salvare prima le modifiche ed in seguito rinominare le serie")
   }
   
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
   
   tag <- x@tag

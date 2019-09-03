@@ -25,7 +25,7 @@
 
   helper <- graph@helper
   
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
 
   tryCatch({  

@@ -2,7 +2,7 @@
 #' @include db.r tickets.r
 
 .getMeta <- function(x, serie, metadato) {
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
   helper <- x@helper
   tag <- x@tag
@@ -28,7 +28,7 @@
 #' @include db.r
 
 .getMetadata <- function(x, name) {
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
   tag <- x@tag
   helper <- x@helper
@@ -68,7 +68,7 @@
 #' @importFrom DBI dbGetQuery
 
 .keys <- function(x) {
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
   tag <- x@tag
   helper <- x@helper
@@ -90,7 +90,7 @@
 #' @importFrom DBI dbGetQuery
 
 .values <- function(x, key=NULL) {
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
   tag <- x@tag
   helper <- x@helper
@@ -122,7 +122,7 @@
   if(is.null(value)) {
     return(.deleteMetaByKey(x, name, key))
   }
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
   tag <- x@tag
   helper <- x@helper
@@ -145,7 +145,7 @@
 }
 
 .deleteMetaByKey <- function(x, name, key) {
-    con <- pgConnect()
+    con <- buildConnection()
     on.exit(dbDisconnect(con))
 
     tag <- x@tag
@@ -182,7 +182,7 @@
     already <- intersect(domain, name)
     warning("Ha gia' un metadato ", key, " = ", value, " :", paste(already, collapse=", "))
   } else {
-    con <- pgConnect()
+    con <- buildConnection()
     on.exit(dbDisconnect(con))
     tag <- x@tag
     helper <- x@helper
