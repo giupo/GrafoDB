@@ -182,8 +182,7 @@ schemaFileFromEnv <- function(env = getenv()) {
   schemaFileName <- paste0("schema-", driver, ".sql")
   flog.debug("Schema file name: %s", schemaFileName, name=ln)
   file <- file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
-  file <- file.path("/home/giupo/projects/GrafoDB/inst/sql", schemaFileName)
-  if(!file.exists(file)) {
+    if(!file.exists(file)) {
     flog.error("Schema file doesn't exists: %s", file, name=ln)
     stop("Schema file doesn't exists: ", file)
   }
