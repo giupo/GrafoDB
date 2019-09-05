@@ -268,7 +268,7 @@ buildConnection <- function(env = getenv()) {
 #' @export
 
 pgConnect <- function(con=NULL) {
-  ln <- "GrafoDB.db"
+  ln <- "GrafoDB.db.pgConnect"
   flog.trace(msg="pgConnect", name=ln)
   if(!is.null(con)) {
     return(con)
@@ -276,6 +276,11 @@ pgConnect <- function(con=NULL) {
 
   con <- getOption("pgConnect", NULL)
   if(is.null(con)) {
+
+    if (!requireNamespace("RPostgreSQL", quietly = TRUE)) {
+      stop("Please install RPostgreSQL: \"install.packages('RPostgreSQL')\"")
+    }
+
     drv <- dbDriver("PostgreSQL")
     con <- dbConnect(drv)
     options(pgConnect=con)
