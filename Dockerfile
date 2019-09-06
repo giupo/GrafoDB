@@ -1,4 +1,4 @@
-FROM rocker/r-ver:3.5.3
+FROM rocker/rstudio:3.5.3
 
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get -y install libxml2-dev libgit2-dev libcurl4-gnutls-dev postgresql-client libssl-dev libpq-dev
@@ -10,15 +10,13 @@ RUN R -e 'devtools::install_github("giupo/rutils")'
 RUN R -e 'devtools::install_github("giupo/rprogressbar")'
 RUN R -e 'devtools::install_github("giupo/rdataset")'
 
-# install rcf
+# install GrafoDB
 RUN mkdir /home/GrafoDB
 COPY . /home/GrafoDB
 WORKDIR /home/GrafoDB
-
 RUN rm -rf packrat/lib*
 RUN make install
 
-RUN mkdir -p /home/user
-WORKDIR /home/user
-
-CMD ["R"]
+ENV ROOT=TRUE
+# run rstudio
+CMD ["/init"]
