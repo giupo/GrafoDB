@@ -10,34 +10,62 @@ test_that("dbSettings can return custom home made ini settings", {
   expect_equal(dbSettings(TRUE), expected)
 })
 
-test_that("init_db can handle an error", {
+test_that("initdb can handle an error", {
   dbSettings(TRUE)
-  skip_if_not(require(mockery), "mockery required")
-  stub(initdb, 'str_trim', function(...) stop("my error"))
-  expect_error(initdb(pgConnect()), "my error")
+  skip_if_not(require(mockery), "mockery requred")
+  stub(initdb, 'getenv', function(...) stop("my error"))
+  expect_error(initdb(buildConnection()), "my error")
 })
 
-test_that("shouldCreateSchema returns FALSE if dbGetQuery succeed", {
+test_that("shouldCreateSchema returns FALSE if dbReadTable succeed", {
   skip_if_not(require(mockery), "mockery required")
   mock <- mock(data.frame())
-  stub(shouldCreateSchema, 'dbGetQuery', mock)
-
+  stub(shouldCreateSchema, 'dbReadTable', mock)
   expect_error(shouldCreateSchema(NULL), NA)
   expect_called(mock, 1)
 })
 
-test_that("shouldCreateSchema returns TRUE if dbGetQuery fails", {
+test_that("shouldCreateSchema returns TRUE if dbReadTable fails", {
   skip_if_not(require(mockery), "mockery required")
   mock  <- mock(stop('crap'))
-  stub(shouldCreateSchema, 'dbGetQuery', mock)
+  stub(shouldCreateSchema, 'dbReadTable', mock)
   expect_true(expect_error(shouldCreateSchema(NULL), NA))
   expect_called(mock, 1)
 })
 
-test_that("shouldCreateSchema returns False if dbGetQuery raise a warning", {
+test_that("shouldCreateSchema returns False if dbReadTable raise a warning", {
   skip_if_not(require(mockery), "mockery required")
   mock <- mock(warning(ciao))
-  stub(shouldCreateSchema, 'dbGetQuery', mock)
+  stub(shouldCreateSchema, 'dbReadTable', mock)
   expect_true(shouldCreateSchema(NULL))
   expect_called(mock, 1)
+})
+
+
+test_that("initdbPostgreSQL calls system with the correct dbname (collaudo)", {
+  skip_if_not(require(mockery), "mockery required")
+  mock <- mock("")
+  stub(initdbPostgreSQL, 'system', function(x) {
+    expect_true(grepl("grafo_test",x))
+  })
+  initdbPostgreSQL(env="collaudo")
+})
+
+test_that("initdbPostgreSQL calls system with the correct dbname (prod)", {
+  skip_if_not(require(mockery), "mockery required")
+  mock <- mock("")
+  stub(initdbPostgreSQL, 'system', function(x) {
+    expect_true(!grepl("grafo_test",x))
+  })
+  initdbPostgreSQL(env="prod")
+})
+
+test_that("initdb is not called in buildConnection", {
+  skip_if_not(require(mockery), "mockery required")
+  mk <- mock(stop("crap"))
+  stub(buildConnection, 'initdb', mk)
+  con <- buildConnection()
+  on.exit(dbDisconnect(con))
+  expect_called(mk, 0)
+  
 })

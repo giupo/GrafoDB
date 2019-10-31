@@ -17,10 +17,8 @@ test_that("if I apply a patch I get a new GrafoDB with new formulas", {
     elimina("secondo")
   })
 
-  expect_equal(getenv(), Sys.getenv("GRAFODB_ENV"))
-  
   saveGraph(g)
-  
+
   g1 <- GrafoDB("test")
 
   g1["C"] <- function(A, B) {
@@ -35,7 +33,7 @@ test_that("if I apply a patch I get a new GrafoDB with new formulas", {
   }
 
   g2 <- saveGraph(g2, "secondo")
-  
+
   diffe <- diff(g1, g2)
   expect_equal(nrow(diffe), 1)
 
@@ -46,14 +44,12 @@ test_that("if I apply a patch I get a new GrafoDB with new formulas", {
 
 test_that("If no column from diff is specified, it gets the most recent", {
   g <- setup("test")
-  
   on.exit({
     elimina("test")
     elimina("primo")
     elimina("secondo")
   })
 
-  expect_equal(getenv(), Sys.getenv("GRAFODB_ENV"))
   saveGraph(g)
 
   g1 <- GrafoDB("test")

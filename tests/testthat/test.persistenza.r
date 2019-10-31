@@ -30,16 +30,16 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })
-  con <- pgConnect()
+  con <- buildConnection()
   on.exit(dbDisconnect(con))
   dbExecute(
-	con,
-	"update dati set dati=replace(dati, 'null', 'NaN') where tag='test'")
+    con,
+    "update dati set dati=replace(dati, 'null', 'NaN') where tag='test'")
 
   saveGraph(g)
   g1 <- GrafoDB("test")
   expect_true( any( is.na(g[["D"]] )))
-  expect_true( length(g[["D"]])>0 )
+  expect_true( length(g[["D"]]) > 0 )
 })
 
 setup <- function(tag) {
