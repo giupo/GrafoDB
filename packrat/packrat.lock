@@ -500,13 +500,17 @@ Requires: R6, Rcpp, brew, commonmark, desc, digest, pkgload, purrr,
 
 Package: rprogressbar
 Source: github
-Version: 0.1.7
-Hash: fb50bc869ea48b7318afd1d7c6d61b27
-Requires: rstudioapi
+Version: 0.2.0
+Hash: f3145fdf71a0b2f6538798387b2391d8
 GithubRepo: rprogressbar
 GithubUsername: giupo
 GithubRef: master
-GithubSha1: db7c8ffacb34705b488b185dacf05fb44a4d921c
+GithubSha1: 57d63033521bdbb1f7b8c04d1defa6462d934aa6
+RemoteHost: api.github.com
+RemoteRepo: rprogressbar
+RemoteUsername: giupo
+RemoteRef: master
+RemoteSha: 57d63033521bdbb1f7b8c04d1defa6462d934aa6
 
 Package: rprojroot
 Source: CRAN
