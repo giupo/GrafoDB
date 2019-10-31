@@ -19,4 +19,3 @@ RUN make install
 
 ENV ROOT=TRUE
 # run rstudio
-CMD ["/init"]
