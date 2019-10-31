@@ -173,7 +173,7 @@ getenv <- function() {
 schemaFileFromEnv <- function(env = getenv()) {
   ln <- "GrafoDB.db.schemaFileFromEnv"
 
-  driver <- if (env == "prod") {
+  driver <- if (env == "prod" || env == "collaudo") {
     "PostgreSQL"
   } else {
     "SQLite"
@@ -203,7 +203,13 @@ initdb <- function(con, env=getenv()) {
 
 initdbPostgreSQL <- function(env=getenv()) {
   file <- schemaFileFromEnv(env=env)
-  system(paste0("psql < ", file))
+  dbname <- if (env != "prod") {
+    "grafo_test"
+  } else {
+    # let the PGDBNAME set this.
+    ""
+  }
+  system(paste0("psql ", dbname, " < ", file))
 }
 
 initdbSQLite <- function(con, env=getenv()) {
@@ -241,54 +247,31 @@ initdbSQLite <- function(con, env=getenv()) {
 buildConnection <- function(env = getenv()) {
   ln <- "GrafoDB.buildConnection"
   con <- if(env == "test") {
-    SQLiteConnect()
+    con <- getOption("GrafoDB_connection", NULL)
+    if (is.null(con)) {
+      con <- SQLiteConnect()
+      options(GrafoDB_connection = con)
+      con 
+    } else {
+      con
+    }
   } else if (env == "prod") {
-    pgConnect()
+    PostgresConnect()
   } else {
     flog.error("Unknown env: %s, set GRAFODB_ENV variable to the correct value (prod/test)", env, name=ln)
     stop("Unknown env: ", env)
   }
 
-  if (shouldCreateSchema(con)) {
-    initdb(con, env=env)
-  }
-
   con
 }
 
-#' trying to behave like a connection pool
-#' (with a single connection :( )
-#'
-#' @name pgConnect
-#' @usage pgConnect()
-#' @return a Connection to Postgresql
-#' @note this stores the connection into options and retrieves it back
-#' @importFrom DBI dbGetQuery
-#' @export
 
-pgConnect <- function(con=NULL) {
-  ln <- "GrafoDB.db.pgConnect"
-  flog.trace(msg="pgConnect", name=ln)
-  if(!is.null(con)) {
-    return(con)
+PostgresConnect <- function() {
+  if(!requireNamespace("RPostgreSQL", quietly=TRUE)) {
+    stop("install package RPostgreSQL with 'install.packages(\"RPostgreSQL\")")
   }
-
-  con <- getOption("pgConnect", NULL)
-  if(is.null(con)) {
-
-    if (!requireNamespace("RPostgreSQL", quietly = TRUE)) {
-      stop("Please install RPostgreSQL: \"install.packages('RPostgreSQL')\"")
-    }
-
-    drv <- dbDriver("PostgreSQL")
-    con <- dbConnect(drv)
-    options(pgConnect=con)
-    con
-  } else {
-    con
-  }
+  dbConnect(RPostgreSQL::PostgreSQL())
 }
-
 
 SQLiteConnect <- function() {
   if (! requireNamespace("RSQLite", quietly = TRUE)) {
@@ -313,18 +296,6 @@ SQLiteConnect <- function() {
   flog.trace("start transaction", name=ln)
   dbExecute(conn, "BEGIN")
   TRUE
-}
-
-
-dbDisconnect <- function(con) {
-  ln <- "GrafoDB.db"
-  if(is.null(getOption("pgConnect", NULL))) {
-    flog.trace("Connection was created outside GrafoDB, closing for real...", name=ln)
-    DBI::dbDisconnect(con) # nocov
-  } else {
-    flog.trace("Connection was created inside GrafoDB, fake closing", name=ln)
-    TRUE
-  }
 }
 
 

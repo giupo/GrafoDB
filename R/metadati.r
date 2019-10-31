@@ -176,18 +176,27 @@
     nong <- setdiff(name, nomiobj)
     stop("Non e' una serie del grafo: ", paste(nong, collapse=", "))
   }
-  
-  domain <- lookup(x, key, value)
+  con <- buildConnection()
+  on.exit(dbDisconnect(con))
+
+  helper <- x@helper
+
+  df <- dbGetQuery(con, getSQLbyKey(
+    helper, "LOOKUP_METADATI",
+    tag=x@tag,
+    key=key,
+    value=value))
+
+  domain <- as.character(df$name)
+
   if(any(name %in% domain)) {
     already <- intersect(domain, name)
     warning("Ha gia' un metadato ", key, " = ", value, " :", paste(already, collapse=", "))
   } else {
-    con <- buildConnection()
-    on.exit(dbDisconnect(con))
     tag <- x@tag
     helper <- x@helper
     autore <- whoami()
-    
+
     sql <- getSQLbyKey(
       helper, "INSERT_META",
       tag=tag,
@@ -195,7 +204,7 @@
       key=key,
       value=value,
       autore=autore)
-    
+
     dbExecute(con, sql)
   }
   x

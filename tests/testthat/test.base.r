@@ -58,7 +58,7 @@ test_that("Posso usare delle formule per definire le serie", {
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g["C"] <- function(A, B) {
-    C = A + B 
+    C = A + B
   }
   expect_equal(g[["A"]] + g[["B"]], g[["C"]])
 })
@@ -72,7 +72,7 @@ test_that("Posso cercare le serie con metadati", {
   g["A"] <- ts(runif(10), start=c(1990, 1), frequency=4)
   g["B"] <- ts(runif(10), start=c(1990, 1), frequency=4)
   g["C"] <- function(A,B) {
-    C = A + B    
+    C = A + B
   }
 
   g <- setMeta(g, "A", "key", "value")
@@ -93,7 +93,7 @@ test_that("Posso salvare il grafo sul database", {
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g["C"] <- function(A,B) {
-    C = A + B    
+    C = A + B
   }
 
   g <- setMeta(g, "A", "key", "value")
@@ -421,14 +421,14 @@ test_that("Posso subsettare una singola serie come Dataset", {
   g["C"] <- function(A,B) {
     C = A + B
   }
-  
+
   g["D"] <- function(A, C) {
     D = A + C
   }
 
   expect_true(is.dataset(g["A"]))
   expect_equal(names(g["A"]), "A")
-  expect_equal(g[["A"]], g["A"][["A"]])  
+  expect_equal(g[["A"]], g["A"][["A"]])
 })
 
 test_that("I get an error if I try to subset a series with missing deps", {

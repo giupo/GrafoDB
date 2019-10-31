@@ -92,11 +92,12 @@ test_that("elimina handles exceptions", {
 })
 
 test_that("schemaFileFromEnv returns a consistent file", {
-  expect_equal(getenv(), Sys.getenv("GRAFODB_ENV"))
   expect_true(is.list(dbSettings(TRUE)))
   test_file <- schemaFileFromEnv("test")
   prod_file <- schemaFileFromEnv("prod")
+  collaudo_file <- schemaFileFromEnv("collaudo")
 
   expect_equal(basename(test_file), "schema-SQLite.sql")
   expect_equal(basename(prod_file), "schema-PostgreSQL.sql")
+  expect_equal(basename(collaudo_file), "schema-PostgreSQL.sql")
 })

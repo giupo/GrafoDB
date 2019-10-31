@@ -202,19 +202,19 @@
       paste0("Rilascio per ", tag)
     }
   }
-  
+
   autore <- whoami()
   helper <- x@helper
-  
+
   if(length(names(x))) {
     dati <- foreach (name = iter(names(x)), .combine=rbind) %do% {
       tt <- x[[name]]
       df <- to.data.frame(tt, name)
-      anno <- df$anno
-      periodo <- df$periodo
-      freq <- df$freq
-      dati <- df$dati
-      
+      anno <- as.numeric(df$anno)
+      periodo <- as.numeric(df$periodo)
+      freq <- as.numeric(df$freq)
+      dati <- as.character(df$dati)
+
       dbExecute(con, getSQLbyKey(
         helper, "INSERT_DATI",
         tag=tag,
