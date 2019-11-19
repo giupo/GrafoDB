@@ -4,8 +4,8 @@ language: r
 
 cache:
   directories:
-    - $TRAVIS_BUILD_DIR/packrat/src
-    - $TRAVIS_BUILD_DIR/packrat/lib
+    - $HOME/.local/share/renv
+    - $TRAVIS_BUILD_DIR/renv
   packages: true
   
 sudo: false
@@ -14,7 +14,6 @@ addons:
   apt:
     packages:
        - libxml2-dev
-       - tk8.5
 
 notifications:
   slack:
@@ -34,14 +33,10 @@ repos:
 
 r_github_packages:
   - jimhester/covr
-  - rstudio/packrat
 
-before_install:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
 
 after_success:
-  - make restore_packrat
+  - make restore
   - make test
   - make codecov
   
