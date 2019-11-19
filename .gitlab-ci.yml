@@ -10,9 +10,8 @@ cache:
     - renv/library
     - renv/staging
 
-default:
-  before_script:
-    - make restore
+before_script:
+  - make restore
 
 build:
   stage: build
