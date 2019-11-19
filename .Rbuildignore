@@ -13,3 +13,5 @@ coverage.html
 lib
 ^\.travis\.yml$
 ^\.gitlab-ci\.yml$
+^renv$
+^renv\.lock$
