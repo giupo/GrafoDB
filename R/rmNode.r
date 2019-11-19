@@ -24,25 +24,25 @@
   }
 
   helper <- graph@helper
-  
+
   con <- buildConnection()
   on.exit(dbDisconnect(con))
 
-  tryCatch({  
+  tryCatch({
     dbBegin(con)
-    
+
     figlie <- downgrf(graph, tsName)
-    
+
     da.eliminare <- union(figlie, tsName)
-    
+
     ## eliminare i dati
     for(name in da.eliminare) {
       dbExecute(con, getSQLbyKey(
         helper, "DELETE_DATI_TAG_NAME", tag=tag, name=name))
     }
-    
+
     suppressWarnings(del(da.eliminare, graph@data))
-    
+
     network <- graph@network
     ## eliminare i vertici dal grafo
     network <- network - vertex(da.eliminare)
@@ -51,22 +51,22 @@
       dbExecute(con, getSQLbyKey(
         helper, "DELETE_FORMULE_TAG_NAME", tag=tag, name=name))
     }
-    
+
     suppressWarnings(del(da.eliminare, graph@functions))
     ## eliminare gli archi
     for(name in da.eliminare) {
       dbExecute(con, getSQLbyKey(
         helper, "DELETE_ARCHI_TAG_PA", tag=tag, partenza=name, arrivo=name))
-      
+
     }
-    
+
     ## eliminare i metadati
     for(name in da.eliminare) {
       dbExecute(con, getSQLbyKey(
         helper, "DELETE_META_TAG_NAME", tag=tag, name=name))
     }
 
-    
+
     graph@network <- network
     dbCommit(con)
   }, error = function(cond) {

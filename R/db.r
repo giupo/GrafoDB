@@ -1,96 +1,3 @@
-#' Setup the DB
-#'
-#' Interactively reads db parameters and stores into your home dir
-#'
-#' @name setupdb
-#' @usage setupdb()
-#' @param overwrite if a config file exists, setting this
-#'                  to `FALSE` raises an Exception
-#' @importFrom stringr str_trim
-#' @export
-
-setupdb <- function(overwrite=FALSE) { # nocov start
-
-  fileName <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
-  if((!overwrite) && file.exists(fileName)) {
-    stop(fileName, " already exists and overwrite args was set to FALSE")
-  }
-  driver <- str_trim(readline(prompt="Driver DB (default: 'PostgreSQL'): "))
-  if(driver == "") {
-    driver <- "PostgreSQL"
-  }
-  host <- str_trim(readline(prompt="Host Address (default: 'localhost'): "))
-  if(host == "") {
-    host <- "localhost"
-  }
-
-  port <- str_trim(readline(prompt="Listening Port (default: '5432'): "))
-  if(port == "") {
-    port <- "5432"
-  }
-
-  dbname <- str_trim(readline(prompt="Database name (default: 'grafo'): "))
-  if(dbname == "") {
-    dbname <- "grafo"
-  }
-
-  username <- str_trim(readline(prompt="Username: "))
-
-  password <- if(!is.windows()) {
-    getPass <- function(prompt = "Password:"){
-      cat(prompt)
-      pass <- system('stty -echo && read ff && stty echo && echo $ff && ff=""',
-                     intern=TRUE)
-      cat('\n')
-      invisible(pass)
-    }
-    getPass()
-  } else {
-    getPass <- function() {
-      if(!requireNamespace("tcltk", quietly=TRUE)) {
-        stop("can't find tcl/tk")
-      }
-      wnd <- tktoplevel()
-      tclVar("") -> passVar
-      # Label
-      tkgrid(tklabel(wnd,text="Enter password:"))
-      # Password box
-      tkgrid(tkentry(wnd, textvariable=passVar,show="*")->passBox)
-      # Hitting return will also submit password
-      tkbind(passBox,"<Return>",function() tkdestroy(wnd))
-      # OK button
-      tkgrid(tkbutton(wnd,text="OK",command=function() tkdestroy(wnd)))
-      # Wait for user to click OK
-      tkwait.window(wnd)
-      tclvalue(passVar)
-    }
-    getPass()
-  }
-  password <- str_trim(password)
-
-  config <- list()
-  config[["driver"]] <- driver
-  config[["host"]] <- host
-  config[["port"]] <- port
-  config[["dbname"]] <- dbname
-
-  if (username != "") {
-    config[["username"]] <- username
-  }
-  if (password != "") {
-    config[["password"]] <- username
-  }
-  buffer <- c("[ConnectionInfo]")
-  for(nameitem in names(config)) {
-    buffer <- c(buffer, paste0(nameitem, "=", config[[nameitem]]))
-  }
-
-  buffer <- paste(buffer, sep="\n")
-  fileName <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
-  dir.create(dirname(fileName), showWarnings=FALSE, mode="0700")
-  write(buffer, file=fileName, append=FALSE)
-} # nocov end
-
 #' Reads db connections settings
 #'
 #' Tryes :
@@ -152,7 +59,7 @@ dbSettings <- function(flush=FALSE) {
 
 getenv <- function() {
   ln <- "GrafoDB.db.getenv"
-  xx <- Sys.getenv("GRAFODB_ENV", "prod")
+  xx <- Sys.getenv("GRAFODB_ENV", "test")
   flog.debug("enviroment setting: %s", xx, name=ln)
   xx
 }
@@ -244,7 +151,9 @@ initdbSQLite <- function(con, env=getenv()) {
 #' @importFrom DBI dbDriver dbConnect
 #' @importFrom futile.logger flog.error
 
-buildConnection <- function(env = getenv()) {
+buildConnection <- function(env = getenv(), con = NULL) {
+  if (!is.null(con)) return(con)
+
   ln <- "GrafoDB.buildConnection"
   con <- if(env == "test") {
     con <- getOption("GrafoDB_connection", NULL)
@@ -262,6 +171,13 @@ buildConnection <- function(env = getenv()) {
     stop("Unknown env: ", env)
   }
 
+
+  if(env == "test" && shouldCreateSchema(con)) {
+    initdb(con, env=env)
+    setMethod("dbDisconnect", "SQLiteConnection", function(conn, ...) {
+      invisible(TRUE)
+    })
+  }
   con
 }
 

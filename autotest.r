@@ -15,12 +15,13 @@ suppressMessages(library(futile.logger))
 
 # devtools::load_all()
 
-flog.info("GRAFODB_ENV:%s", Sys.getenv("GRAFODB_ENV"))
+flog.info("GRAFODB_ENV: %s", Sys.getenv("GRAFODB_ENV"))
+
 invisible(flog.threshold(WARN, name='GrafoDB.sqlhelper'))
 invisible(flog.threshold(WARN, name='GrafoDB.db'))
 invisible(flog.threshold(WARN, name='GrafoDB.persistence.saveGraph'))
 invisible(flog.threshold(WARN, name='GrafoDB.patch'))
 
-options(warn=2)
-# auto_test("R/", "tests/testthat/")
+## options(warn=2)
+## auto_test("R/", "tests/testthat/")
 auto_test_package()

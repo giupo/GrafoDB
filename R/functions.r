@@ -15,7 +15,7 @@
 #' @importFrom R.utils System
 #' @include db.r persistence_utils.r
 
-.init <- function(.Object, tag="cf10") {
+.init <- function(.Object, tag="cf10", con = NULL) {
   ln <- "GrafoDB.functions.init"
   if(is.null(tag)) {
     tag <- "cf10"
@@ -38,8 +38,10 @@
   .Object@tag <- tag
   .Object@helper <- SQLHelper()
 
-  con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  if (is.null(con)) {
+    con <- buildConnection()
+    on.exit(dbDisconnect(con))
+  }
 
   archi <- loadArchi(tag, con=con)
   .Object <- resync(.Object, con=con)
