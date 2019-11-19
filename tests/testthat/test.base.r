@@ -50,6 +50,7 @@ test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
   expect_true(all(g[["B"]] != g[["C"]]))
 })
 
+
 test_that("Posso usare delle formule per definire le serie", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
@@ -123,15 +124,15 @@ test_that("subset with datasets", {
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g["C"] <- function(A,B) {
-    C = A + B    
+    C = A + B
   }
-  
+
   g <- setMeta(g, "A", "key", "value")
   g <- setMeta(g, "B", "key", "value")
   g <- setMeta(g, "C", "key", "value1")
-   
-  expect_true(all(c("A", "B", "C") %in% names(g)))  
-  
+
+  expect_true(all(c("A", "B", "C") %in% names(g)))
+
   ds <- Dataset()
   ds["A"] <- ts(c(-1,-2,-3), start=c(1990,1), frequency=4)
   ds["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -167,6 +168,7 @@ test_that("Cascade subsetting works", {
   expect_true("B" %in% names(g))
 })
 
+
 test_that("Saving preserves network and nodes", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
@@ -178,12 +180,13 @@ test_that("Saving preserves network and nodes", {
   }
   ## ora salvo, e vediamo cosa succede
   g <- saveGraph(g)
-  
+
   expect_true("A" %in% names(g))
   expect_true("B" %in% names(g))
   expect_true("A" %in% upgrf(g, "C", livello=1))
   expect_true("B" %in% upgrf(g, "C", livello=1))
 })
+
 
 test_that("navigate without arguments returns a downgrf", {
   on.exit({
@@ -203,6 +206,7 @@ test_that("navigate without arguments returns a downgrf", {
   expect_equal(names(g), x)
 })
 
+
 test_that("posso rimuovere archi", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
@@ -219,8 +223,8 @@ test_that("posso rimuovere archi", {
   g["C"] <- function(B) {
     C=B
   }
-  
-  expect_true(!"A" %in% upgrf(g, "C")) 
+
+  expect_true(!"A" %in% upgrf(g, "C"))
   expect_true("B" %in% upgrf(g, "C"))
   expect_equal(length(upgrf(g, "C")), 1)
 
@@ -230,15 +234,16 @@ test_that("posso rimuovere archi", {
   expect_true("B" %in% names(g))
   expect_true("C" %in% names(g))
   expect_true("A" %in% names(g))
-  
+
   g["C"] <- function(A) {
     C=A
   }
-  
+
   expect_true("A" %in% upgrf(g, "C"))
   expect_true(!"B" %in% upgrf(g, "C"))
   expect_equal(length(upgrf(g, "C")), 1)
 })
+
 
 test_that("I can cast a empty GrafoDB to a Dataset", {
   on.exit({
@@ -255,6 +260,7 @@ test_that("I can cast a empty GrafoDB to a Dataset", {
   }
 })
 
+
 test_that("I can cast a GrafoDB to a Dataset", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
@@ -267,7 +273,8 @@ test_that("I can cast a GrafoDB to a Dataset", {
   d <- as.dataset(g)
   expect_true(is.dataset(d))
   expect_true(all(c("A", "B", "C") %in% names(d)))
-}) 
+})
+
 
 test_that("Posso passare non timeseries", {
   on.exit({
@@ -285,6 +292,7 @@ test_that("Posso passare non timeseries", {
   }
   expect_equal(g[["periodo"]], c(1990,2))
 })
+
 
 test_that("posso salvare non timeseries", {
   on.exit({
@@ -304,6 +312,7 @@ test_that("posso salvare non timeseries", {
   expect_equal(g[["periodo"]], c(1990,2))
 })
 
+
 test_that("posso memorizzare stringhe", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
@@ -320,6 +329,7 @@ test_that("posso memorizzare stringhe", {
   expect_equal(g1[["archivio"]], "cippalippa")
 })
 
+
 test_that("isLeaf torna true per serie foglia", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
@@ -331,6 +341,7 @@ test_that("isLeaf torna true per serie foglia", {
   }
   expect_true(isLeaf(g, "C"))
 })
+
 
 test_that("isLeaf torna false per una serie non foglia", {
   on.exit({
@@ -386,7 +397,7 @@ test_that("Posso editare una serie esistente aggiungendo una dipendenza esistent
     D = A + C
   }
   g <- saveGraph(g)
-  
+
   g["D"] <- function(A, B, C) {
     D = A + B + C
   }
@@ -431,6 +442,7 @@ test_that("Posso subsettare una singola serie come Dataset", {
   expect_equal(g[["A"]], g["A"][["A"]])
 })
 
+
 test_that("I get an error if I try to subset a series with missing deps", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
@@ -443,6 +455,7 @@ test_that("I get an error if I try to subset a series with missing deps", {
     }
   })
 })
+
 
 test_that("isRoot returns true if node is a root", {
   on.exit({
@@ -461,6 +474,7 @@ test_that("isRoot returns true if node is a root", {
   expect_false(isLeaf(g, "B"))
 })
 
+
 test_that("show produces output", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
@@ -472,6 +486,7 @@ test_that("show produces output", {
   }
   expect_message(show(g))
 })
+
 
 test_that("I can subtract two GrafoDB", {
   for(tag in rilasci("test")$tag) elimina(tag)
@@ -485,13 +500,13 @@ test_that("I can subtract two GrafoDB", {
   }
 
   g["D"] <- 0
-  
+
   g1 <- GrafoDB("test1")
   g1["A"] <- g1["B"] <- ts(c(1,1,1), start=c(1990,1), frequency=4) 
   g1["C"] <- function(A, B) {
     C <- A + B
   }
-  
+
   expect_warning(diff <- g1 - g)
   expect_is(diff, "Dataset")
   expect_true(all(names(diff) %in% c("A", "B", "C")))
@@ -501,14 +516,16 @@ test_that("I can subtract two GrafoDB", {
   }
 })
 
+
 for(tag in rilasci("test")$tag) elimina(tag)
+
 
 test_that("I can't subtract container with different types of objects", {
   for(tag in rilasci("test")$tag) elimina(tag)
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })
-  
+
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
   g["C"] <- function(A, B) {
@@ -520,16 +537,17 @@ test_that("I can't subtract container with different types of objects", {
   g1["C"] <- function(A, B) {
     C <- A + B
   }
-  
+
   expect_error(diff <- g - g1, "Different object classes")
 })
+
 
 test_that("expr returns a list of formulas with multiple names", {
   for(tag in rilasci("test")$tag) elimina(tag)
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })
-  
+
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
   g["C"] <- function(A, B) {
@@ -545,53 +563,57 @@ test_that("expr returns a list of formulas with multiple names", {
   expect_true(all(names(ll) %in% c("C", "D")))
 })
 
+
 test_that("ser fails if returned object is not a timeseries", {
   for(tag in rilasci("test")$tag) elimina(tag)
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })
-  
+
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
   g["C"] <- function(A, B) {
     C <- A + B
   }
-  
+
   g["D"] <- function(A, C) {
     D <- A + C
   }
   expect_error(ser(g, "C"), "non e' un oggetto ts")
 })
 
+
 test_that("ser in debug fails if series has no formula", {
   for(tag in rilasci("test")$tag) elimina(tag)
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })
-  
+
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
   g["C"] <- function(A, B) {
     C <- A + B
   }
-  
+
   expect_error(ser(g, "A", debug=TRUE), "non e' una serie con formula")
 })
+
 
 test_that("ser in debug fails if name doesn't exist", {
   for(tag in rilasci("test")$tag) elimina(tag)
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })
-  
+
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
   g["C"] <- function(A, B) {
     C <- A + B
   }
-  
+
   expect_error(ser(g, "NONESISTO", debug=TRUE), "non e' una serie del grafo")
 })
+
 
 test_that("ser in debug executes the formula", {
   skip("Can't figure out how to stub debug")
@@ -600,7 +622,7 @@ test_that("ser in debug executes the formula", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })
-  
+
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
   g["C"] <- function(A, B) {
@@ -610,6 +632,7 @@ test_that("ser in debug executes the formula", {
   stub(ser, 'base::debug', function(...) {})
   expect_equal(ser(g, "C", debug=TRUE), g[["C"]])
 })
+
 
 test_that("tickets call the correct url", {
   with_mock(
@@ -624,17 +647,19 @@ test_that("tickets call the correct url", {
     })
 })
 
+
 test_that("an empty graph returns no names", {
   for(tag in rilasci("test")$tag) elimina(tag)
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })
-  
+
   g <- GrafoDB("test")
 
   expect_is(names(g), "character")
   expect_equal(names(g), character(0))
 })
+
 
 test_that("evaluate raises an error on unknown name series", {
   on.exit(elimina("test"))
@@ -662,11 +687,12 @@ test_that("I can evaluate multiple series on a single evaluate call", {
   expect_equal(keys(g@data), c("C","D"))
 })
 
+
 test_that("Se imposto una serie per formula senza definirla ho un errore", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })
-  
+
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
   expect_error({
@@ -675,6 +701,7 @@ test_that("Se imposto una serie per formula senza definirla ho un errore", {
     }
   })
 })
+
 
 test_that("Posso usare funzioni complesse nelle formule", {
   on.exit({
@@ -685,7 +712,7 @@ test_that("Posso usare funzioni complesse nelle formule", {
   if(!require("tempdisagg")) {
     skip("Tempdisagg not installed")
   }
-  
+
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(runif(100), start=c(1995,1), frequency=4)
   expect_error({g["C"] <- function(A, B) {
@@ -697,6 +724,7 @@ test_that("Posso usare funzioni complesse nelle formule", {
 
   expect_is(g[["C"]], "ts")
 })
+
 
 test_that("Posso valutare funzioni passate come stringhe", {
   g <- GrafoDB("test")
@@ -710,6 +738,7 @@ test_that("Posso valutare funzioni passate come stringhe", {
   expect_equal(g[["B"]], g[["A"]])
 })
 
+
 test_that("Posso valutare funzioni passate come stringhe", {
   g <- GrafoDB("test")
   on.exit({
@@ -721,6 +750,7 @@ test_that("Posso valutare funzioni passate come stringhe", {
 
   expect_equal(g[["B"]], 2)
 })
+
 
 test_that("Posso valutare espressioni come stringhe con newlines", {
 
