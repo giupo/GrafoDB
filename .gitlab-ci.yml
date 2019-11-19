@@ -10,15 +10,14 @@ cache:
     - renv/library
     - renv/staging
 
-before_script:
-  - make restore
+default:
+  before_script:
+    - make restore
 
 build:
   stage: build
   tags: 
     - collaudo
-  before_script:
-    - echo "bypass renv::restore(): not needed for build"
   script:
     - R CMD build . --no-build-vignettes --no-manual
 
@@ -57,8 +56,6 @@ coverage:
     
 deploy:
   stage: deploy
-  before_script:
-    - echo "bypass restore_packart, not needed"
   tags:
     - prod
   script:
@@ -67,8 +64,6 @@ deploy:
     
 deploy_collaudo:
   stage: deploy
-  before_script:
-    - echo "bypass restore_packart, not needed"
   tags:
     - collaudo
   script:
