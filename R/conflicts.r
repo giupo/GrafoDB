@@ -310,9 +310,9 @@ checkConflicts <- function(x, con = NULL) {
       # Controllo una ad una le radici e verifico differenze di valori
       dati.db <- loadDati(tag, con = con)
       for (name in unique(soloRoots)) {
-        outerTs <- from.data.frame(dati.db[dati.db$name == name, ])[[name]]
-        innerTs <- x[[name]]
-        if (! identical(outerTs, innerTs)) {
+        outerTs <- as.character(dati.db[dati.db$name == name, "dati"])
+        innerTs <- as.character(to.data.frame(x[[name]])[1, "dati"])
+        if ( outerTs != innerTs ) {
           creaConflittoDati(x, name, con = con)
         }
       }
