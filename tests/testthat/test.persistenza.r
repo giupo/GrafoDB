@@ -31,7 +31,7 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   dbExecute(
     con,
     "update dati set dati=replace(dati, 'null', 'NaN') where tag='test'")

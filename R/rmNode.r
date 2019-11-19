@@ -26,7 +26,7 @@
   helper <- graph@helper
 
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
 
   tryCatch({
     dbBegin(con)

@@ -65,11 +65,11 @@ test_that("initdb is not called in buildConnection", {
   mk <- mock(stop("crap"))
   stub(buildConnection, 'initdb', mk)
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   expect_called(mk, 0)
 })
 
-test_that("disconnect doesn't call dbDisconnect if env is 'test'", {
+test_that("disconnect doesn't call disconnect if env is 'test'", {
   mk <- mock(function (...) {})
   stub(disconnect, 'dbDisconnect', mk)
   disconnect(NULL, env="test")
@@ -77,7 +77,7 @@ test_that("disconnect doesn't call dbDisconnect if env is 'test'", {
 })
 
 
-test_that("disconnect calls dbDisconnect if env is not 'test'", {
+test_that("disconnect calls disconnect if env is not 'test'", {
   mk <- mock(function (...) {})
   stub(disconnect, 'dbDisconnect', mk)
   disconnect(NULL, env="cippalippa")

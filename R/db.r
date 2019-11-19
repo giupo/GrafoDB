@@ -174,9 +174,6 @@ buildConnection <- function(env = getenv(), con = NULL) {
 
   if(env == "test" && shouldCreateSchema(con)) {
     initdb(con, env=env)
-    setMethod("dbDisconnect", "SQLiteConnection", function(conn, ...) {
-      invisible(TRUE)
-    })
   }
   con
 }
@@ -231,6 +228,7 @@ shouldCreateSchema  <- function(con) {
 #' @name disconnect
 #' @param con connection to disconnect
 #' @param env environment to check against
+#' @importFrom DBI dbDisconnect
 
 disconnect <- function(con, env=getenv()) {
   if(env != "test") dbDisconnect(con)
