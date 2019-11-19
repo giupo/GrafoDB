@@ -33,7 +33,7 @@
   }
   
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   
   tag <- x@tag
   helper <- x@helper

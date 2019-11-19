@@ -22,7 +22,7 @@ diff.GrafoDB <- function(x, ...) {
   }
 
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   sql <- getSQLbyKey(helper, "DIFF_FORMULE", new=x@tag, old=y@tag)
   flog.trace("Diff query: %s", sql, name='GrafoDB.diff')
   df <- dbGetQuery(con, sql)

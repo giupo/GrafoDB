@@ -225,3 +225,13 @@ shouldCreateSchema  <- function(con) {
     TRUE
   })
 }
+
+#' proxy the dbDisconnect based on `getenv` value
+#'
+#' @name disconnect
+#' @param con connection to disconnect
+#' @param env environment to check against
+
+disconnect <- function(con, env=getenv()) {
+  if(env != "test") dbDisconnect(con)
+}

@@ -40,7 +40,7 @@
 
   if (is.null(con)) {
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
   }
 
   archi <- loadArchi(tag, con=con)
@@ -376,7 +376,7 @@ getdb <- function(x, name) {
 .tagExists <- function(tag, con=NULL) {
   con <- if(is.null(con)) {
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     con
   } else {
     con
@@ -507,7 +507,7 @@ tsdiff <- function(a, b, thr = .0000001) {
 
 rilasci <- function(filtro=NULL) {
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   helper <- SQLHelper()
   sql <- if(is.null(filtro)) {
     getSQLbyKey(helper, "TUTTI_RILASCI")

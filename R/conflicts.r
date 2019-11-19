@@ -14,7 +14,7 @@
   }
 
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   tryCatch({
     dbBegin(con)
     dbExecute(con, getSQLbyKey(helper, key, tag = tag, name = name))
@@ -104,7 +104,7 @@ setMethod(
   function(x, name = NULL, con = NULL) {
     con <- if (is.null(con)) {
       con <- buildConnection()
-      on.exit(dbDisconnect(con))
+      on.exit(disconnect(con))
       con
     } else {
       con
@@ -183,7 +183,7 @@ setMethod(
     tag <- x@tag
     helper <- x@helper
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     sql <- if (is.null(name)) {
       getSQLbyKey(helper, "GET_FORMULA_CONFLICTS", tag = tag)
     } else {
@@ -230,7 +230,7 @@ setMethod(
 getChangedSeries <- function(x, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     con
   } else {
     con
@@ -249,7 +249,7 @@ getChangedSeries <- function(x, con = NULL) {
 getOuterDataNames <- function(x, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     con
   } else {
     con
@@ -267,7 +267,7 @@ getOuterDataNames <- function(x, con = NULL) {
 getOuterFormulaNames <- function(x, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     con
   } else {
     con
@@ -339,13 +339,13 @@ checkConflicts <- function(x, con = NULL) {
 #' @importFrom rutils whoami
 #' @importFrom foreach foreach %do%
 #' @importFrom iterators iter
-#' @importFrom DBI dbDisconnect
+#' @importFrom DBI disconnect
 #' @include db.r persistence_utils.r
 
 creaConflittoDati <- function(x, nomi, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     con
   } else {
     con
@@ -389,7 +389,7 @@ creaConflittoFormule <- function(x, nomi, formula.db, con = NULL) {
   conWasNull <- is.null(con)
   con <- if (is.null(con)) {
     con <- buildConnection(con = con)
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     con
   } else {
     con

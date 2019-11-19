@@ -673,7 +673,7 @@ setMethod(
   signature("GrafoDB", "missing", "missing"),
   function(x) {
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     dbGetQuery(con, getSQLbyKey(
       x@helper, "GET_ALL_META",
       tag=x@tag))

@@ -64,7 +64,7 @@
   }  else {
     flog.debug('connection has to be created...', name=ln)
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     flog.debug('connection created and set to be closed on.exit', name=ln)
     con
   }

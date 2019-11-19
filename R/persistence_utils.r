@@ -13,7 +13,7 @@
 loadTable <- function(tableName, tag, con=NULL) {
   con <- if(is.null(con)) {
     cc <- buildConnection()
-    on.exit(dbDisconnect(cc))
+    on.exit(disconnect(cc))
     cc
   } else {
     con
@@ -73,7 +73,7 @@ loadFormule <- function(tag, con=NULL) tryCatch({
 loadGrafi <- function(con=NULL) {
   con <- if(is.null(con)) {
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     con
   } else {
     con
@@ -97,7 +97,7 @@ createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
   con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit({
-      dbDisconnect(con)
+      disconnect(con)
     })
     con
   } else {
@@ -121,7 +121,7 @@ createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
 resync <- function(x, con=NULL) {
   if(is.null(con)) {
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
     con
   } else {
     con
@@ -139,7 +139,7 @@ need_resync <- function(x) {
   timeStamp <- x@timestamp
   helper <- x@helper
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   tag <- x@tag
   df <- dbGetQuery(con, getSQLbyKey(
     helper, "NEED_RESYNC", tag=tag,

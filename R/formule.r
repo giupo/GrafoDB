@@ -9,7 +9,7 @@
 
 formule <- function(g, name) {
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
 
   if(isRoot(g, name)) {
     warning(name, " e' una radice")

@@ -3,7 +3,7 @@
 
 .getMeta <- function(x, serie, metadato) {
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   helper <- x@helper
   tag <- x@tag
   df <- dbGetQuery(con, getSQLbyKey(
@@ -29,7 +29,7 @@
 
 .getMetadata <- function(x, name) {
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
   sql <-  getSQLbyKey(helper, "GET_METADATA", tag=tag, name=name)
@@ -69,7 +69,7 @@
 
 .keys <- function(x) {
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
   sql <- getSQLbyKey(helper, "KEYS_METADATA", tag=tag)
@@ -91,7 +91,7 @@
 
 .values <- function(x, key=NULL) {
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
   sql <- if(is.null(key)) {
@@ -123,7 +123,7 @@
     return(.deleteMetaByKey(x, name, key))
   }
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
 
@@ -146,7 +146,7 @@
 
 .deleteMetaByKey <- function(x, name, key) {
     con <- buildConnection()
-    on.exit(dbDisconnect(con))
+    on.exit(disconnect(con))
 
     tag <- x@tag
     helper <- x@helper
@@ -177,7 +177,7 @@
     stop("Non e' una serie del grafo: ", paste(nong, collapse=", "))
   }
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
 
   helper <- x@helper
 

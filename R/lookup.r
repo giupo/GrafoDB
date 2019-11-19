@@ -13,7 +13,7 @@
 .lookup <- function(x, key, value) {
   tag <- x@tag
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
   helper <- x@helper
 
@@ -41,7 +41,7 @@
   tag <- x@tag
   helper <- x@helper
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
   df <- dbGetQuery(con, getSQLbyKey(
     helper, "LOOKUP_FORMULA",
@@ -66,7 +66,7 @@
   tag <- x@tag
   helper <- x@helper
   con <- buildConnection()
-  on.exit(dbDisconnect(con))
+  on.exit(disconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
   df <- dbGetQuery(con, getSQLbyKey(
     helper, "LOOKUP_DATI",
