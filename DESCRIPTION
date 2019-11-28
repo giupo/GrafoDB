@@ -1,11 +1,11 @@
 Package: GrafoDB
-Title: What the package does (one line)
+Title: simple ETL for timeseries in R
 Version: 1.33.3
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
 Description: Complete rewrite of the grafo package: Adds DB backend to Grafo,
     async operations via Redis and support for microservices authentication.
 Depends:
-    R (>= 3.2.3),
+    R (>= 3.3.3),
 License: BSD_2_clause + file LICENSE
 LazyData: true
 Imports:
