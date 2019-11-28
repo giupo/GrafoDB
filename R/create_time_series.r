@@ -21,9 +21,8 @@ convert_data_frame <- function(df) {
       dati <- as.character(row$dati)
       nome <- row$name
       stock <- row$stock
+      json_data <- fromJSON(dati);
       if(anno < tol  || periodo < tol || freq < tol) {
-        json_data <- fromJSON(dati);
-        
         z[[nome]]<- if (length(json_data) == 0) {
           numeric(0)
         } else {
