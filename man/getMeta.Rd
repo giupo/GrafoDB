@@ -5,6 +5,8 @@
 \title{Ottiene i valori di un `metadato` per una `serie``}
 \usage{
 getMeta(x, serie, metadato)
+
+getMeta(x, serie)
 }
 \arguments{
 \item{x}{istanza di `GrafoDB`}

@@ -128,18 +128,20 @@ to.data.frame <- function(x, name=NULL) {
 
   # fix per bug su CRCONFAC/PC che assegna names su una serie storica
   names(x) = NULL
-  raw_numbers <- gsub(" ", "", toJSON(x, digits=20))
+  raw_numbers <- jsonlite::toJSON(x, digits=20)
+  raw_numbers <- as.character(raw_numbers)
+  raw_numbers <- gsub(" ", "", raw_numbers)
 
   if(is.null(name)) {
     as.data.frame(
       list(anno=anno, periodo=prd,
            freq=freq, dati=raw_numbers),
-      stringsAsFactors = F)
+      stringsAsFactors = FALSE)
   } else {
     as.data.frame(
       list(name=name, anno=anno, periodo=prd,
            freq=freq, dati=raw_numbers),
-      stringAsFactors = F)
+      stringAsFactors = FALSE)
   }
 }
 
@@ -148,7 +150,7 @@ to.data.frame <- function(x, name=NULL) {
 #' @name from.data.frame
 #' @usage from.data.frame(df)
 #' @param df data.frame compilato dal database
-#' @importFrom RJSONIO fromJSON
+#' @importFrom jsonlite fromJSON
 #' @note i dati dal db sono memorizzati come stringhe JSON
 #' @rdname fromdataframe
 
@@ -168,10 +170,10 @@ from.data.frame <- function(df) {
       row$name
     })
     if(any(params == 0)) {
-      ret[[name]] <- fromJSON(as.character(row$dati), nullValue=NA)
+      ret[[name]] <- jsonlite::fromJSON(as.character(row$dati))
     } else {
       dati <- ts(
-        fromJSON(as.character(row$dati), nullValue=NA),
+        jsonlite::fromJSON(as.character(row$dati)),
         start=c(anno, periodo),
         frequency=freq)
       ret[[name]] <- dati

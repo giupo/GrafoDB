@@ -5,6 +5,8 @@
 \title{Legge tutta la tabella dei dati per un determinato tag}
 \usage{
 loadTable(tableName, tag)
+
+loadTable(tableName, tag, con)
 }
 \arguments{
 \item{tableName}{nome della tabella}

@@ -5,6 +5,8 @@
 \title{Ritorna i conflitti per un Grafo}
 \usage{
 getConflicts(x)
+
+getConflicts(x, name)
 }
 \arguments{
 \item{x}{istanza del GrafoDB}

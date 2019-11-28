@@ -1,5 +1,5 @@
 #' @importFrom RCurl getURL
-#' @importFrom RJSONIO fromJSON
+#' @importFrom jsonlite fromJSON
 
 get_tickets_urls_for_name <- function(g, name) {
   settings <- dbSettings()

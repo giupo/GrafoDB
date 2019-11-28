@@ -339,7 +339,7 @@ checkConflicts <- function(x, con = NULL) {
 #' @importFrom rutils whoami
 #' @importFrom foreach foreach %do%
 #' @importFrom iterators iter
-#' @importFrom DBI disconnect
+#' @importFrom DBI dbDisconnect
 #' @include db.r persistence_utils.r
 
 creaConflittoDati <- function(x, nomi, con = NULL) {

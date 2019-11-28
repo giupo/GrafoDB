@@ -5,11 +5,11 @@ setup <- function(name) {
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g["C"] <- function(A,B) {
-    C = A + B    
+    C = A + B
   }
-  
+
   g["D"] <- ts(c(NA,1,NA), start=c(1990,1), frequency=4)
-  
+
   g <- saveGraph(g)
   g
 }
@@ -34,7 +34,7 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   on.exit(disconnect(con))
   dbExecute(
     con,
-    "update dati set dati=replace(dati, 'null', 'NaN') where tag='test'")
+    "update dati set dati=replace(dati, 'null', '\"NaN\"') where tag='test'")
 
   saveGraph(g)
   g1 <- GrafoDB("test")

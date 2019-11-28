@@ -5,6 +5,8 @@
 \title{contrassegna come risolti i conflitti salvati sul DB}
 \usage{
 fixConflicts(x)
+
+fixConflicts(x, name)
 }
 \arguments{
 \item{x}{istanza di GrafoDB}

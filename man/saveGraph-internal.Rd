@@ -5,6 +5,8 @@
 \title{Funzione per salvare un grafo}
 \usage{
 .saveGraph(x, tag)
+
+.saveGraph(x)
 }
 \description{
 La funzione controlla la presenza di eventuali conflitti e necessita'

@@ -5,6 +5,8 @@
 \title{Ritorna i genitori delle serie}
 \usage{
 upgrf(x, name)
+
+upgrf(x, name, livello)
 }
 \arguments{
 \item{x}{un istanza di GrafoDB}

@@ -5,6 +5,8 @@
 \title{Salva il grafo}
 \usage{
 saveGraph(object)
+
+saveGraph(object, path)
 }
 \arguments{
 \item{object}{istanza di `GrafoDB`}

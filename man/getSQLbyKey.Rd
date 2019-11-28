@@ -5,6 +5,8 @@
 \title{Factory di query (stringhe) SQL.}
 \usage{
 getSQLbyKey(x, key)
+
+getSQLbyKey(x, key, param=value, param2, value2, ...)
 }
 \arguments{
 \item{x}{istanza di SQLHelper}

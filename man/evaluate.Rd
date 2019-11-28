@@ -6,6 +6,8 @@
 per la classe `GrafoDB`}
 \usage{
 evaluate(object)
+
+evaluate(object, v_start)
 }
 \description{
 Esegue il calcolo delle serie storiche presenti in questo Database

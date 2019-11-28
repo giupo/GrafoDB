@@ -299,7 +299,6 @@ countRolling <- function(x, con) {
       dbExecute(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
       countRolling(x, con)
     }
-    
   } else {
     ## se SQLite:
     getMaxP(helper, tag, con) + 1
@@ -315,7 +314,7 @@ getMaxP <- function(helper, tag, con) {
     max(numeri, na.rm=TRUE)
   }
 }
-  
+
 
 #' Costruice il progressivo per il grafo `x`
 #'
@@ -349,7 +348,7 @@ nextRollingNameFor <- function(x, con) {
 #' @seealso saveGraph updateGraph
 #' @importFrom DBI dbGetQuery
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
-#' @importFrom RJSONIO toJSON
+#' @importFrom jsonlite toJSON
 #' @importFrom iterators iter
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom rutils slice

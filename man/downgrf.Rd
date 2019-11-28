@@ -5,6 +5,8 @@
 \title{Ritorna i figli delle serie}
 \usage{
 downgrf(x, name)
+
+downgrf(x, name, livello)
 }
 \arguments{
 \item{x}{un istanza di GrafoDB}

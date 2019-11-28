@@ -4,7 +4,7 @@
 \alias{.init}
 \title{Funzione d'inizializzazione del grafo.}
 \usage{
-.init(.Object, tag = "cf10")
+.init(.Object, tag = "cf10", con = NULL)
 }
 \arguments{
 \item{.Object}{(creato da new)}

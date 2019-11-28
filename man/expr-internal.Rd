@@ -5,6 +5,8 @@
 \title{Ritorna le formule del GrafoDB}
 \usage{
 .expr(x, name)
+
+.expr(x, name, echo=FALSE)
 }
 \arguments{
 \item{x}{istanza di GrafoDB}

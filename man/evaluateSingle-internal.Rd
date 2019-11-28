@@ -6,6 +6,8 @@
 \title{Valuta un singolo oggetto del grafo identificato da `name`}
 \usage{
 .evaluateSingle(name, object)
+
+evaluateSingle(name, object)
 }
 \arguments{
 \item{name}{`character` nome della serie}

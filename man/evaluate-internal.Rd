@@ -6,6 +6,8 @@
 per la classe `GrafoDB`}
 \usage{
 .evaluate(object)
+
+.evaluate(object, v_start)
 }
 \value{
 il grafo con i dati correttamente valutato

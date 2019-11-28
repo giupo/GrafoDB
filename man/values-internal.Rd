@@ -5,6 +5,8 @@
 \title{Ritorna i valori dei metadati (o per singolo metadato)}
 \usage{
 .values(x)
+
+.values(x, key)
 }
 \arguments{
 \item{x}{istanza di grafo}
