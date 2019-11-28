@@ -7,11 +7,10 @@ stages:
 
 cache:
   paths:
-    - renv/library
-    - renv/staging
+    - renv/
 
 before_script:
-  - make restore
+  - R -e 'renv::restore()'
 
 build:
   stage: build
@@ -20,22 +19,18 @@ build:
   script:
     - R CMD build . --no-build-vignettes --no-manual
 
-  
-test_collaudo:
+test:
   stage: test
   tags: 
     - collaudo
-  script:
-    - make test
-  allow_failure: true
+  script: 
+    - R -e 'options(testthat.output_file="tests.xml"); devtools::test(reporter="junit")'
+  artifacts:
+    paths:
+      - tests.xml
+    reports:
+      junit: tests.xml
 
-test_prod:
-  stage: test
-  tags: 
-    - prod
-  script:
-    - make test
- 
 
 check:
   stage: check
@@ -43,7 +38,24 @@ check:
     - collaudo
   script:
     - R CMD build . --no-build-vignettes --no-manual
-    - R CMD check $(ls -1t *.tar.gz | head -n 1) -no-build-vignettes --no-manual --as-cran 
+    - R CMD check $(ls -1t *.tar.gz | head -n 1) -no-build-vignettes --no-manual
+  allow_failure: true
+
+deploy:
+  stage: deploy
+  tags:
+    - prod
+  script:
+    - make install
+  allow_failure: false
+    
+deploy_collaudo:
+  stage: deploy
+  tags:
+    - collaudo
+  script:
+    - make install
+  allow_failure: true
 
 
 coverage:
@@ -52,19 +64,4 @@ coverage:
     - collaudo
   script:
     - make coverage
-    
-deploy:
-  stage: deploy
-  tags:
-    - prod
-  script:
-    - make install
-
-    
-deploy_collaudo:
-  stage: deploy
-  tags:
-    - collaudo
-  script:
-    - make install
   allow_failure: true
