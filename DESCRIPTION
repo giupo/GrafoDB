@@ -43,7 +43,7 @@ Suggests:
     tempdisagg,
     RPostgreSQL,
     RSQLite
-LinkingTo: Rcpp, BH
+LinkingTo: BH
 Collate: 
     'RcppExports.R'
     'checkDAG.r'
