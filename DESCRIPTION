@@ -25,7 +25,6 @@ Imports:
     rredis,
     R.utils,
     rdataset,
-    Rcpp,
     RCurl,
     zoo,
     futile.logger,
