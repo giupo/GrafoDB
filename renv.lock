@@ -91,11 +91,6 @@
       "Version": "1.0.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "RemoteType": "standard",
-      "RemoteRef": "Rcpp",
-      "RemoteRepos": "https://cloud.r-project.org",
-      "RemotePkgType": "source",
-      "RemoteSha": "1.0.3",
       "Hash": "9f1985842ec887e9aaf07140e426b82e"
     },
     "assertthat": {
@@ -280,6 +275,13 @@
       "Repository": "CRAN",
       "Hash": "21e1ae642f8994eae5ce48a749d98829"
     },
+    "jsonlite": {
+      "Package": "jsonlite",
+      "Version": "1.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "9ec2b2fe0e874a66d0cb54d8ced5618e"
+    },
     "lambda.r": {
       "Package": "lambda.r",
       "Version": "1.2.3",
@@ -382,8 +384,8 @@
       "Package": "rdataset",
       "Version": "0.5.0",
       "Source": "GitHub",
-      "Remotes": "github::giupo/rutils",
       "RemoteType": "github",
+      "Remotes": "github::giupo/rutils",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "rdataset",
       "RemoteUsername": "giupo",
@@ -411,8 +413,8 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "rprogressbar",
       "RemoteUsername": "giupo",
+      "RemoteRepo": "rprogressbar",
       "RemoteRef": "master",
       "RemoteSha": "cc7aeb3e6e1277e2e3ca09d88e8758cd08518020",
       "Hash": "b87607631e97de8608904ad247ef2c52"
@@ -444,8 +446,8 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "rutils",
       "RemoteUsername": "giupo",
+      "RemoteRepo": "rutils",
       "RemoteRef": "master",
       "RemoteSha": "dc2070c77e551cf7eed5ac8b9a10bcb67e977b3c",
       "Hash": "5b2dcc0d0bb202e1e76f15f879ee883b"
