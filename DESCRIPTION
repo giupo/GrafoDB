@@ -42,8 +42,7 @@ Suggests:
     tempdisagg,
     RPostgreSQL,
     RSQLite
-Collate: 
-    'RcppExports.R'
+Collate:
     'checkDAG.r'
     'db.r'
     'persistence_utils.r'
