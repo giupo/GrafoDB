@@ -59,7 +59,7 @@ dbSettings <- function(flush=FALSE) {
 
 getenv <- function() {
   ln <- "GrafoDB.db.getenv"
-  xx <- Sys.getenv("GRAFODB_ENV", "test")
+  xx <- Sys.getenv("GRAFODB_ENV", "prod")
   flog.debug("enviroment setting: %s", xx, name=ln)
   xx
 }

@@ -15,6 +15,7 @@ suppressMessages(library(futile.logger))
 
 # devtools::load_all()
 
+Sys.setenv(GRAFODB_ENV="test")
 flog.info("GRAFODB_ENV: %s", Sys.getenv("GRAFODB_ENV"))
 
 invisible(flog.threshold(WARN, name='GrafoDB.sqlhelper'))

@@ -306,7 +306,7 @@ test_that("posso salvare non timeseries", {
   g["B"] <- ts(c(1,1,1), start=c(1990,1), frequency=4)
   g["periodo"] <- c(1990,2)
   g["C"] <- function(A,B, periodo) {
-    C <- mergeSeries(A, window(B, start=periodo))
+    C <- as.ts(mergeSeries(A, window(B, start=periodo)))
   }
   g <- saveGraph(g)
   expect_equal(g[["periodo"]], c(1990,2))
@@ -642,7 +642,7 @@ test_that("tickets call the correct url", {
       "[]"
     }, {
       x <- ticket(1)
-      expect_is(x, "AsIs")
+      expect_is(x, "list")
       expect_equal(length(x), 0)
     })
 })

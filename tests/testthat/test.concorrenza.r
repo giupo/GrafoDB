@@ -1,5 +1,9 @@
 context("Concorrenza")
 
+identicalts <- function(x, y, toll=0.000001) {
+  all(abs(x-y) < toll)
+}
+
 setup <- function(tag) {
   g <- GrafoDB(tag)
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
@@ -27,7 +31,7 @@ test_that("Salvare una serie non crea un conflitto", {
   g1 <- saveGraph(g1, msg="test")
 
   expect_true(g1@timestamp != g2@timestamp)
-  expect_true(all(g1[["A"]] == newA1))
+  expect_true(identicalts(g1[["A"]], newA1))
 })
 
 test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto", {
@@ -39,9 +43,9 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
 
-  
+
   expect_equal(g1@timestamp, g2@timestamp)
-  
+
   g1["A"] <- newA1 <- ts(rep(0,10), start=c(1990,1), frequency=4)
   g2["A"] <- newA2 <- ts(rep(1,10), start=c(1990,1), frequency=4)
   saveGraph(g1)
@@ -49,11 +53,11 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
   with_mock(
     'GrafoDB:::getOuterDataNames' = function(...) "A", {
       expect_warning(saveGraph(g2), "Ci sono conflitti")
-      
+
       ## sia g1 che g2, in quanto "test1" devono riportare dei conflitti
       expect_true(hasConflicts(g1))
       expect_true(hasConflicts(g2))
-      
+
       g <- GrafoDB("test")
 
       # print(newA1)
@@ -61,7 +65,7 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
       # print(g[["A"]])
       expect_true(all(abs(g[["A"]]-newA1)) < 0.0000001)
       expect_true(any(abs(g[["A"]]-newA2)) > 0.0000001)
-      
+
       conflicts <- getDataConflicts(g)
       expect_is(conflicts, "list")
       expect_equal(names(conflicts), "A")
@@ -90,8 +94,8 @@ test_that("Salvare lo stesso grafo con interventi su serie distinte non crea con
   saveGraph(g2, "test", msg="test")
 
   g <- GrafoDB("test")
-  expect_true(all(g[["A"]] == newA))
-  expect_true(all(g[["B"]] == newB))
+  expect_true(identicalts(g[["A"]], newA))
+  expect_true(identicalts(g[["B"]], newB))
 })
 
 test_that("Salvare lo stesso grafo con formula aggiunta", {

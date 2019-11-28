@@ -1,21 +1,26 @@
 context("Util functions")
 
+
+identicalts <- function(x, y, toll=0.000001) {
+  all(x-y < toll)
+}
+
 test_that("to.data.frame converte correttamente una serie", {
   tt <- ts(runif(10), start=c(1990,1), frequency=4)
   df <- to.data.frame(tt, "TEST")
-  expect_true(identical(tt, from.data.frame(df)[[df$name]]))
+  expect_true(identicalts(tt, from.data.frame(df)[[df$name]]))
 })
 
 test_that("to.data.frame converte correttamente vettori", {
   tt <- runif(10)
   df <- to.data.frame(tt, "TEST")
-  expect_true(identical(tt, from.data.frame(df)$TEST))
+  expect_true(identicalts(tt, from.data.frame(df)$TEST))
 })
 
 test_that("to.data.frame converte correttamente scalari", {
   tt <- 1
   df <- to.data.frame(tt, "TEST")
-  expect_true(identical(tt, from.data.frame(df)$TEST))
+  expect_true(identicalts(tt, from.data.frame(df)$TEST))
 })
 
 
