@@ -28,8 +28,8 @@ test:
   artifacts:
     paths:
       - tests.xml
-    reports:
-      junit: tests.xml
+# reports:
+#    junit: tests.xml
 
 
 check:
