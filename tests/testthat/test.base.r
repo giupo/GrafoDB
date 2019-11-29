@@ -1,6 +1,8 @@
 context("Basic Operations")
 dbSettings(TRUE)
 
+requireNamespace("devtools")
+
 test_that("Posso istanziare un GrafoDB", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
