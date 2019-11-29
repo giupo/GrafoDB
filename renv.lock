@@ -9,6 +9,13 @@
     ]
   },
   "Packages": {
+    "devtools": {
+      "Package": "devtools",
+      "Version": "2.2.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "966106eb253ea61d66678bbba074f531"
+    },
     "BH": {
       "Package": "BH",
       "Version": "1.69.0-1",
