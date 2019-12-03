@@ -112,6 +112,7 @@ is.grafodb <- function(x) {
 #' @note funzione interna
 #' @rdname todataframe
 #' @importFrom stats start frequency
+#' @importFrom jsonlite toJSON
 
 to.data.frame <- function(x, name=NULL) {
   ## questa funzione converte a dataframe la timeseries,
@@ -128,7 +129,7 @@ to.data.frame <- function(x, name=NULL) {
 
   # fix per bug su CRCONFAC/PC che assegna names su una serie storica
   names(x) = NULL
-  raw_numbers <- jsonlite::toJSON(x, digits=20)
+  raw_numbers <- jsonlite::toJSON(x, digits=20, na=NULL)
   raw_numbers <- as.character(raw_numbers)
   raw_numbers <- gsub(" ", "", raw_numbers)
 

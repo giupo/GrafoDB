@@ -22,8 +22,8 @@ convert_data_frame <- function(df) {
       nome <- row$name
       stock <- row$stock
                                         # watch the order
-      dati <- gsub("NaN", "'NaN'", dati)
-      dati <- gsub("null", "'NaN'", dati)
+      # dati <- gsub("NaN", "'NaN'", dati)
+      # dati <- gsub("null", "'NaN'", dati)
 
       json_data <- jsonlite::fromJSON(dati)
       if(anno < tol  || periodo < tol || freq < tol) {

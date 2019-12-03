@@ -348,7 +348,6 @@ nextRollingNameFor <- function(x, con) {
 #' @seealso saveGraph updateGraph
 #' @importFrom DBI dbGetQuery
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
-#' @importFrom jsonlite toJSON
 #' @importFrom iterators iter
 #' @importFrom foreach foreach %do% %dopar%
 #' @importFrom rutils slice
