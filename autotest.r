@@ -11,7 +11,6 @@ suppressMessages(library(methods))
 #suppressMessages(library(RSQLite))
 #suppressMessages(library(igraph))
 suppressMessages(library(futile.logger))
-#suppressMessages(library(stringi))
 
 # devtools::load_all()
 

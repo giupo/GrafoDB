@@ -28,8 +28,7 @@ Imports:
     RCurl,
     zoo,
     futile.logger,
-    crayon,
-    stringi
+    crayon
 Suggests:
     devtools,
     rstudioapi,
