@@ -1,8 +1,8 @@
 stages:
   - build
   - test
-  - check
   - deploy
+  - check
   - coverage
 
 cache:
@@ -17,6 +17,7 @@ build:
   tags: 
     - collaudo
   script:
+    - R -e 'devtools::restore()'
     - R CMD build . --no-build-vignettes --no-manual
 
 test:
@@ -37,6 +38,7 @@ check:
   tags: 
     - collaudo
   script:
+    - R -e 'devtools::document()'
     - R CMD build . --no-build-vignettes --no-manual
     - R CMD check $(ls -1t *.tar.gz | head -n 1) -no-build-vignettes --no-manual
   allow_failure: true
