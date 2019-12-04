@@ -17,7 +17,7 @@ build:
   tags: 
     - collaudo
   script:
-    - R -e 'devtools::restore()'
+    - R -e 'devtools::document()'
     - R CMD build . --no-build-vignettes --no-manual
 
 test:
