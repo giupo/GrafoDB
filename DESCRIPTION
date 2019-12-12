@@ -67,6 +67,7 @@ Collate:
     'diff.r'
     'edita.r'
     'elimina.r'
+    'find_deps.r'
     'formule.r'
     'life_cycle.r'
     'logging.r'
