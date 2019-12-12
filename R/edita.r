@@ -36,11 +36,6 @@
   file.edit(file, title=name)
   txtsrc <- paste(readLines(file), collapse="\n")
   edited <- .declutter_function(txtsrc)
-
-  if(FALSE) {
-    ## non e' cambiata la formula: non faccio nulla
-    return(invisible(x))
-  }
   
   params <- list(...)
   tryCatch({
