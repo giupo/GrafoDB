@@ -1,16 +1,69 @@
 version: 2
 jobs:
   build:
+    working_directory: ~/main
     docker:
-      - image: debian:stretch
-
+      - image: giupo/r-dev:3.5.3
     steps:
       - checkout
+      - run: apt-get update -yy && apt-get upgrade -yy
+      - run: apt-get install -yy libpq-dev unixodbc-dev
+      - restore_cache:
+          keys:
+            - deps1-{{ .Branch }}-{{ checksum "DESCRIPTION" }}
+            - deps1-{{ .Branch }}
+            - deps1-
 
       - run:
-          name: Greeting
-          command: echo Hello, world.
+          name: renv
+          command: |
+            R -e 'renv::restore()'
+
+      - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "DESCRIPTION" }}
+          paths:
+            - "~/main/GrafoDB/renv"
+            - "~/.local/share/renv"
+      - run:
+          name: check
+          command: |
+            R -e 'install.packages("devtools")'
+            R -e 'devtools::install_github("giupo/GrafoDB")'
+            R -e 'devtools::check(cran=FALSE, error_on="error")'
+
+      - store_artifacts:
+          path: man/
+          destination: man
+  test:
+    working_directory: ~/main
+    docker:
+      - image: giupo/r-dev:3.5.3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - deps1-{{ .Branch }}-{{ checksum "DESCRIPTION" }}
+            - deps1-{{ .Branch }}
+            - deps1-
+      - run:
+          name: renv
+          command: |
+            R -e 'renv::restore()'
 
       - run:
-          name: Print the Current Time
-          command: date
+          name: tests
+          command: |
+            mkdir -p reports
+            R -e 'options(testthat.output_file="reports/junit.xml"); devtools::test(reporter="junit")'
+          when: always
+      - store_test_results:
+          path: reports
+      - store_artifacts:
+          path: reports
+
+      - run:
+          name: coverage
+          command: |
+             make coverage
+
+        
