@@ -14,7 +14,6 @@ RUN R -e 'devtools::install_github("giupo/rdataset")'
 RUN mkdir /home/GrafoDB
 COPY . /home/GrafoDB
 WORKDIR /home/GrafoDB
-RUN rm -rf packrat/lib*
 RUN make install
 
 ENV ROOT=TRUE
