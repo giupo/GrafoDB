@@ -65,7 +65,7 @@ jobs:
           command: |
              make coverage
   
-build_image:
+  build_image:
     environment:
       IMAGE_NAME: giupo/GrafoDB
       VERSION: 3.5.3
@@ -82,23 +82,23 @@ build_image:
           name: Build Docker image ($VERSION)
           command: docker build -t $IMAGE_NAME:$VERSION .
 
-publish:
-  environment:
-    IMAGE_NAME: giupo/GrafoDB
-  docker:
-    - image: giupo/r-dev:3.5.3
-  steps:
-    - setup_remote_docker
-    - run:
-        name: Publish Docker Image to Docker Hub latest
-        command: |
-          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-          docker push $IMAGE_NAME:latest
-    - run:
-        name: Publish Docker Image to Docker Hub latest $VERSION
-        command: |
-          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-          docker push $IMAGE_NAME:$VERSION
+  publish:
+    environment:
+      IMAGE_NAME: giupo/GrafoDB
+    docker:
+      - image: giupo/r-dev:3.5.3
+    steps:
+      - setup_remote_docker
+      - run:
+          name: Publish Docker Image to Docker Hub latest
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME:latest
+      - run:
+          name: Publish Docker Image to Docker Hub latest $VERSION
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME:$VERSION
   
 workflows:
   version: 2
