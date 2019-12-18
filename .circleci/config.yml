@@ -71,7 +71,7 @@ jobs:
       VERSION: 3.5.3
     working_directory: ~/main
     docker:
-      - image: giupo/r-dev:3.5.3
+      - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
       - setup_remote_docker
@@ -86,7 +86,7 @@ jobs:
     environment:
       IMAGE_NAME: giupo/GrafoDB
     docker:
-      - image: giupo/r-dev:3.5.3
+      - image: circleci/buildpack-deps:stretch
     steps:
       - setup_remote_docker
       - run:
