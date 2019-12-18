@@ -28,7 +28,6 @@ jobs:
           name: check
           command: |
             R -e 'install.packages("devtools")'
-            R -e 'devtools::install_github("giupo/GrafoDB")'
             R -e 'devtools::check(cran=FALSE, error_on="error")'
 
       - store_artifacts:
