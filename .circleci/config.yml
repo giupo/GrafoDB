@@ -4,6 +4,7 @@ executors:
   docker-publisher:
     environment:
       IMAGE_NAME: giupo/grafodb
+      IMAGE_VERSION: 3.5.3
     docker:
       - image: circleci/buildpack-deps:stretch
 
@@ -105,10 +106,9 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME:latest
-            IMAGE_TAG=${CIRCLE_TAG/v/''}
-            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
+            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_VERSION
             docker push $IMAGE_NAME:latest
-            docker push $IMAGE_NAME:$IMAGE_TAG
+            docker push $IMAGE_NAME:$IMAGE_VERSION
   
 workflows:
   version: 2
