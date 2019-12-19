@@ -79,7 +79,7 @@ jobs:
           name: Build Docker image (latest)
           command: docker build -t $IMAGE_NAME:latest .
       - run:
-          name: Build Docker image ($VERSION)
+          name: Build Docker image ( $VERSION )
           command: docker build -t $IMAGE_NAME:$VERSION .
 
   publish:
@@ -117,7 +117,7 @@ workflows:
               only: master
       - publish:
           requires:
-            - build
+            - build_image
           filters:
             branches:
               only: master
