@@ -1,4 +1,13 @@
 version: 2
+
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: building-on-ci
+      VERSION: 3.5.3
+    docker:
+      - image: circleci/buildpack-deps:stretch
+
 jobs:
   build:
     working_directory: ~/main
@@ -66,12 +75,8 @@ jobs:
              make coverage
   
   build_image:
-    environment:
-      IMAGE_NAME: giupo/grafodb
-      VERSION: 3.5.3
+    executor: docker-publisher
     working_directory: ~/main
-    docker:
-      - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
       - setup_remote_docker
@@ -81,14 +86,30 @@ jobs:
       - run:
           name: Build Docker image ( $VERSION )
           command: docker build -t $IMAGE_NAME:$VERSION .
+      - run:
+          name: Archive Docker image latest
+          command: docker save -o image.tar $IMAGE_NAME:latest
+      - run:
+          name: Archive Docker image $VERSION
+          command: docker save -o image-$VERSION.tar $IMAGE_NAME:$VERSION
+    - persist_to_workspace:
+        root: .
+        paths:
+          - ./image.tar
+          - ./image-$VERSION.tar
 
   publish:
-    environment:
-      IMAGE_NAME: giupo/grafodb
-    docker:
-      - image: circleci/buildpack-deps:stretch
+    executor: docker-publisher
     steps:
       - setup_remote_docker
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Load archived Docker image latest
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Load archived Docker image $VERSION
+          command: docker load -i /tmp/workspace/image-$VERSION.tar
       - run:
           name: Publish Docker Image to Docker Hub latest
           command: |
