@@ -92,11 +92,11 @@ jobs:
       - run:
           name: Archive Docker image $VERSION
           command: docker save -o image-$VERSION.tar $IMAGE_NAME:$VERSION
-    - persist_to_workspace:
-        root: .
-        paths:
-          - ./image.tar
-          - ./image-$VERSION.tar
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
+            - ./image-$VERSION.tar
 
   publish:
     executor: docker-publisher
