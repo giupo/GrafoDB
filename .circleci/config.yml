@@ -67,7 +67,7 @@ jobs:
   
   build_image:
     environment:
-      IMAGE_NAME: giupo/GrafoDB
+      IMAGE_NAME: giupo/grafodb
       VERSION: 3.5.3
     working_directory: ~/main
     docker:
@@ -84,7 +84,7 @@ jobs:
 
   publish:
     environment:
-      IMAGE_NAME: giupo/GrafoDB
+      IMAGE_NAME: giupo/grafodb
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
