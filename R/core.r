@@ -204,6 +204,14 @@ GrafoDB <- setClass(
     helper = "SQLHelper"),
   contains = "Dataset")
 
+#' alias for GrafoDB
+#' 
+#' @name grafodb
+#' @export 
+#' @note only for you!
+
+grafodb <- GrafoDB
+
 #' costruttore per la classe GrafoDB
 #'
 #' @name initialize
