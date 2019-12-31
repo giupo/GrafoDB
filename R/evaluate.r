@@ -204,3 +204,24 @@
   object@touched <- sort(unique(c(object@touched, keys(data))))
   object
 }
+
+#' patch to evaluate
+#' 
+#' @name evaluate_plain
+#' @importFrom progress progress_bar
+#' @export 
+
+evaluate_plain <- function(x, i=names(x)) {
+  pb <- progress::progress_bar$new(
+    total = length(i), 
+    format = ":what [:bar] :current/:total :percent eta: :eta",
+  )
+
+  for(name in i) {
+    pb$tick(tokens=list(what=name))
+    g@data[[name]] <- .evaluateSingle(name, g)
+  }
+
+  g@touched <- sort(unique(c(g@touched, keys(data))))
+  invisible(g)
+}

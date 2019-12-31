@@ -2,7 +2,7 @@
 % Please edit documentation in R/formule.r
 \name{formule}
 \alias{formule}
-\title{This programs shows all the editions of a particular formula}
+\title{This programs shows all the editions of a formula}
 \usage{
 formule(g, name)
 }
@@ -12,8 +12,8 @@ formule(g, name)
 \item{name}{name of the object to be inspected}
 }
 \value{
-a timeseries with unique formulas and `tag` edition
+a data.frame with unique formulas and `tag`
 }
 \description{
-This programs shows all the editions of a particular formula
+This programs shows all the editions of a formula
 }
