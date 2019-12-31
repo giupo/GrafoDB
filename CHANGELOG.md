@@ -4,6 +4,9 @@ Changelog
 
 (unreleased)
 ------------
+- Bump version: 1.34.7 → 1.34.8. [Giuseppe Acito]
+- Update changelog. [Giuseppe Acito]
+- Fix #5. [Giuseppe Acito]
 - Fix #6, adds evaluate_plain, adds utils/exponent. [Giuseppe Acito]
 - Update changelog. [Giuseppe Acito]
 - Adds grafodb alias for Diego. [Giuseppe Acito]
