@@ -302,6 +302,12 @@ from.data.frame <- function(df) {
 getdb <- function(x, name) {
   dbdati <- x@dbdati
   df <- dbdati[dbdati$name %in% name, ]
+
+  if (nrow(df) == 0) {
+    return(list())
+  }
+
+
   if(length(name) > 1000) {
     foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
       convert_data_frame(row)
@@ -340,13 +346,13 @@ getdb <- function(x, name) {
     if(x@ordinal != 0) {
       tag <- paste0(tag, "p", x@ordinal)
     }
-    ret <- getdb(x, da.caricare.db)
+    da.db <- getdb(x, da.caricare.db)
     #if(length(names(ret)) != length(da.caricare.db)) {
     #  stop("You asked for ", paste(da.caricare.db, collapse=", "),
     #       "but I only got ", paste(names(ret), collapse=", "),
     #       " from DB: check your data now!")
     #}
-    ret
+    da.db
   } else {
     list()
   }
