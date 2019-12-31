@@ -1,410 +1,1249 @@
-### Changelog
+Changelog
+=========
+
+
+(unreleased)
+------------
+- Fix #6, adds evaluate_plain, adds utils/exponent. [Giuseppe Acito]
+- Update changelog. [Giuseppe Acito]
+- Adds grafodb alias for Diego. [Giuseppe Acito]
+- Fix missing version. [Giuseppe Acito]
+- Errors, errors everywhere. [Giuseppe Acito]
+- Fix on first docker push. [Giuseppe Acito]
+- Fix dockerhub upload step. [Giuseppe Acito]
+- Fix typo in config.yml. [Giuseppe Acito]
+- Update version for circleci config. [Giuseppe Acito]
+- Fix missing image in docker circleci push. [Giuseppe Acito]
+- Fix build steps deps. [Giuseppe Acito]
+- Image labels must be lowercase. [Giuseppe Acito]
+- Fix wrong docker image. [Giuseppe Acito]
+- Fix on circleci script. [Giuseppe Acito]
+- Adding build image on docker. [Giuseppe Acito]
+- Error in circle-ci. [Giuseppe Acito]
+- Aggiorna circle-ci steps. [Giuseppe Acito]
+- Update documentation. [Giuseppe Acito]
+- Add find_deps. [Giuseppe Acito]
+- Damn CR/LF. [Giuseppe Acito]
+- Fix typo in gitlab-ci.yml. [Giuseppe]
+- Merge branch 'master' of https://github.com/giupo/GrafoDB. [Giuseppe]
+- Bump version: 1.34.4 → 1.34.5. [giupo]
+- Windows I hate you. [giupo]
+- Reorder gilab ci stages. [Giuseppe]
+- Stringi. [Giuseppe]
+- Fix #17. [Giuseppe]
+- Updated changelog. [Giuseppe]
+- Bump version: 1.34.3 → 1.34.4. [giupo]
+- Updated .Rbuildignore with .vscode, .circleci and .dockerignore.
+  [giupo]
+- Bump version: 1.34.2 → 1.34.3. [giupo]
+- Forced devtools dep. [giupo]
+- Adds devtools to renv.lock. [giupo]
+- Gitlab 9.x.x non supporta junit reports upload. [giupo]
+- Bump version: 1.34.1 → 1.34.2. [giupo]
+- Let's try junit. [giupo]
+- Bump version: 1.34.0 → 1.34.1. [giupo]
+- Remove from NAMESPACE compiled reference to dynlib. [giupo]
+- Remove RcppExports.R. [Giuseppe]
+- Remove Rcpp from Imports. [Giuseppe]
+- Remove any reference to linking in DESCRIPTION. [Giuseppe]
+- Remove unused file for Rcpp. [Giuseppe]
+- Bump version: 1.33.3 → 1.34.0. [giupo]
+- Removes dependency to compiled code. [giupo]
+- Update docs. [giupo]
+- OAMerge branch 'merge' [giupo]
+- Fix error on. [giupo]
+- Fix json_data scope. [Giuseppe]
+- Fix merge with remote. [giupo]
+- Fix typo on dati. [giupo]
+- Fix typos. [Giuseppe]
+- Fix typo. [Giuseppe]
+- Merging with remote. [giupo]
+- Remove native compilation, not used anymore. [Giuseppe]
+- Bump version: 1.33.2 → 1.33.3. [Giuseppe Acito]
+- Update travis. [Giuseppe Acito]
+- Bump version: 1.33.1 → 1.33.2. [Giuseppe Acito]
+- Remove dbDisconnect from tests. [Giuseppe Acito]
+- Bump version: 1.33.0 → 1.33.1. [Giuseppe Acito]
+- Proxy disconect for dbDisconnect. [Giuseppe Acito]
+- Bump version: 1.32.2 → 1.33.0. [Giuseppe Acito]
+- Works with SQLite. [Giuseppe Acito]
+- Bump version: 1.32.1 → 1.32.2. [Giuseppe Acito]
+- Renv ok. [Giuseppe Acito]
+- Merge branch 'master' of https://github.com/giupo/GrafoDB into
+  develop. [Giuseppe Acito]
+- Bump version: 1.32.0 → 1.32.1. [giupo]
+- Nothing important. [giupo]
+- Update on .gitlab-ci.yml. [giupo]
+- Fixes on .gitlab-ci.yml. [giupo]
+- Moves to renv. [giupo]
+- Bump version: 1.31.0 → 1.32.0. [giupo]
+- Bump version: 1.30.8 → 1.31.0. [giupo]
+- Passing to renv. [giupo]
+- Merge branch 'hotfix/shouldCreateSchemaOutOfBuildConnection' [Giuseppe
+  Acito]
+- Merge branch 'hotfix/shouldCreateSchemaOutOfBuildConnection' into
+  develop. [Giuseppe Acito]
+- Removes initdb from buildConnection and other amenities. [Giuseppe
+  Acito]
+- Updated packrat. [Giuseppe Acito]
+- Updated packrat. [Giuseppe Acito]
+- Bump version: 1.30.7 → 1.30.8. [Giuseppe Acito]
+- Remove CMD since it get inherited from rocker/rstudio. [Giuseppe
+  Acito]
+- Updates on Dockerfile. [Giuseppe Acito]
+- Updates rprogressbar deps. [Giuseppe Acito]
+- Changes from r to rstudio. [Giuseppe Acito]
+- Bump version: 1.30.6 → 1.30.7. [Giuseppe Acito]
+- Dumb me: I forgot a file path calbled in code. [Giuseppe Acito]
+- Bump version: 1.30.5 → 1.30.6. [Giuseppe Acito]
+- Adds checks on library RPostgreSQL. [Giuseppe Acito]
+- Bump version: 1.30.4 → 1.30.5. [Giuseppe Acito]
+- Removes packrat from Dockerfile. [Giuseppe Acito]
+- Merge branch 'master' of https://github.com/giupo/GrafoDB into
+  develop. [Giuseppe Acito]
+- Updated Dockerfile. [Giuseppe Acito]
+- Adds Dockerfile. [Giuseppe Acito]
+- Refactor of buildConnection. [Giuseppe Acito]
+- Trying to build some structure to schema creation. [Giuseppe Acito]
+- Bump version: 1.30.3 → 1.30.4. [Giuseppe Acito]
+- Remove unused external dep. [Giuseppe Acito]
+- Update packrat.lock. [Giuseppe Acito]
+- Adds primordial circleci config. [Giuseppe Acito]
+- Nothing important. [Giuseppe Acito]
+- Linting... [Giuseppe Acito]
+- Docs created. [Giuseppe Acito]
+- Bump version: 1.30.2 → 1.30.3. [Giuseppe Acito]
+- Fixed bug single obs timeseries. [Giuseppe Acito]
+- Bump version: 1.30.1 → 1.30.2. [Giuseppe Acito]
+- Bump version: 1.30.0 → 1.30.1. [Giuseppe Acito]
+- Adds checks for single obs timeseries. [Giuseppe Acito]
+- Packrat snapshot. [Giuseppe Acito]
+- Cosmetics. [Giuseppe Acito]
+- Bump version: 1.29.14 → 1.30.0. [Giuseppe Acito]
+- Bump version: 1.29.13 → 1.29.14. [Giuseppe Acito]
+- Fix mess in DESCRIPTION. [Giuseppe Acito]
+- Bump version: 1.29.12 → 1.29.13. [Giuseppe Acito]
+- Fix missing tag in UPDATE_WITH_STAGE. [Giuseppe Acito]
+- Merge fix. [Giuseppe Acito]
+- Bump version: 1.29.11 → 1.29.12. [Giuseppe Acito]
+- Adds selective support for CHANGED_SERIES on tags. [Giuseppe Acito]
+- Adds .gitignore su packrat. [m024000]
+- Merge branch 'hotfix/missingdbWriteTable' [Giuseppe Acito]
+- Added roxygen metatag for importing dbWriteTablewq. [Giuseppe Acito]
+- Bump version: 1.29.10 → 1.29.11. [Giuseppe Acito]
+- Bump version: 1.29.9 → 1.29.10. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Update packrat with rdataset 0.4. [Giuseppe Acito]
+- Merge branch 'release/checks01' into develop. [Giuseppe Acito]
+- Merge branch 'release/checks01' [Giuseppe Acito]
+- Bump version: 1.29.8 → 1.29.9. [Giuseppe Acito]
+- Merge branch 'feature/requireNamespace' into develop. [Giuseppe Acito]
+- Remove unusued calls to require, found throught check. [Giuseppe
+  Acito]
+- Update namespace. [Giuseppe Acito]
+- Update namespace. [Giuseppe Acito]
+- Merge branch 'hotfix/missingFlog' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/missingFlog' [Giuseppe Acito]
+- Fixed error on tests (upgraded devtools to dev branch on github)
+  [Giuseppe Acito]
+- Bump version: 1.29.7 → 1.29.8. [Giuseppe Acito]
+- Merge branch 'master' of osiride-gitlab-
+  dev.utenze.bankit.it:m024000/GrafoDB into develop. [Giuseppe Acito]
+- Updated to packrat 0.5. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
+- Ignore restore_packrate where it's not needed. [Giuseppe Acito]
+- Fix merge. [Giuseppe Acito]
+- Bump version: 1.29.8 → 1.29.9. [Giuseppe Acito]
+- Bump version: 1.29.7 → 1.29.8. [Giuseppe Acito]
+- Adds selective support for CHANGED_SERIES on tags. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Fix merge. [Giuseppe Acito]
+- Bump version: 1.29.6 → 1.29.7. [Giuseppe Acito]
+- Fixing conflicts. [Giuseppe Acito]
+- Update .gitlab-ci.yml. [m024000]
+- Update .gitlab-ci.yml. [m024000]
+- Bump version: 1.29.5 → 1.29.6. [Giuseppe Acito]
+- Bump version: 1.29.4 → 1.29.5. [Giuseppe Acito]
+- Ignore restore_packrate where it's not needed. [Giuseppe Acito]
+- Update .gitlab-ci.yml. [m024000]
+- Update .gitlab-ci.yml. [m024000]
+- Update .gitlab-ci.yml. [m024000]
+- Update .gitlab-ci.yml. [m024000]
+- Update .gitlab-ci.yml adds some failures and artifacts management.
+  [m024000]
+- Update README.md. [m024000]
+- Part coverage from testing. [Giuseppe Acito]
+- Fix merge. [Giuseppe Acito]
+- Updates changelog. [Giuseppe Acito]
+- Bump version: 1.29.3 → 1.29.4. [Giuseppe Acito]
+- Fix type error in g .gitlab-ci.yml. [Giuseppe Acito]
+- Remove .gitlab-ci.yml from package build. [Giuseppe Acito]
+- Bump version: 1.29.2 → 1.29.3. [Giuseppe Acito]
+- Nonsense from R CMD check. [Giuseppe Acito]
+- Damn commas... [Giuseppe Acito]
+- Let's cache packrat so we don't stress out filesystem/proxy/every
+  shithole in town... [m024000]
+- Adds nonesense. [Giuseppe Acito]
+- Adds changelog. [Giuseppe Acito]
+- Check must follow a build. [m024000]
+- Update .gitlab-ci.yml: refactored with some organization. [m024000]
+- Update .gitignore, adds packrat.opts to accepted files in this dir...
+  [m024000]
+- Adds packrat.opts. [m024000]
+- Tags must be an array of strings. [m024000]
+- Adds Tags. [m024000]
+- Update README.md. [m024000]
+- Fix malformed before_script node. [m024000]
+- Update .gitlab-ci.yml. [m024000]
+- Add .gitlab-ci.yml. [m024000]
+- Adds nonesense. [Giuseppe Acito]
+- Adds changelog. [Giuseppe Acito]
+- Merge branch 'hotfix/fixTs' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/fixTs' [Giuseppe Acito]
+- Bump version: 1.29.2 → 1.29.3. [Giuseppe Acito]
+- Replace freq= to frequency= in building ts() [Giuseppe Acito]
+- Bump version: 1.29.1 → 1.29.2. [Giuseppe Acito]
+- Methods added to autotest.r, 3.3.3 doesn't like not having it.
+  [Giuseppe Acito]
+- Bump version: 1.29.0 → 1.29.1. [Giuseppe Acito]
+- Remove warning from .getdata to restore the behaviour. [Giuseppe
+  Acito]
+- Bump version: 1.28.15 → 1.29.0. [Giuseppe Acito]
+- Preparo il rilascio. [Giuseppe Acito]
+- Save with stage works on postgres. [Giuseppe Acito]
+- Bump version: 1.28.14 → 1.28.15. [Giuseppe Acito]
+- Oh crap, I hate myself. [Giuseppe Acito]
+- Bump version: 1.28.13 → 1.28.14. [Giuseppe Acito]
+- Oh crap. [Giuseppe Acito]
+- Bump version: 1.28.12 → 1.28.13. [Giuseppe Acito]
+- Oh crap. [Giuseppe Acito]
+- Bump version: 1.28.11 → 1.28.12. [Giuseppe Acito]
+- Fix su SQL. [Giuseppe Acito]
+- Bump version: 1.28.10 → 1.28.11. [Giuseppe Acito]
+- Oh crap, still typos. [Giuseppe Acito]
+- Bump version: 1.28.9 → 1.28.10. [Giuseppe Acito]
+- Oh crap, typos everywhere. [Giuseppe Acito]
+- I will test. Promise. [Giuseppe Acito]
+- Bump version: 1.28.8 → 1.28.9. [Giuseppe Acito]
+- Updates query for update_with_stage with tag. [Giuseppe Acito]
+- Bump version: 1.28.7 → 1.28.8. [Giuseppe Acito]
+- Remove warning in assign [<- [Giuseppe Acito]
+- Bump version: 1.28.6 → 1.28.7. [Giuseppe Acito]
+- Fixing errors for data inconsistencies. still missing test for lack of
+  a beter mock library. [Giuseppe Acito]
+- Bump version: 1.28.5 → 1.28.6. [Giuseppe Acito]
+- Removed unused code, added check on retrieved data. [Giuseppe Acito]
+- Bump version: 1.28.4 → 1.28.5. [Giuseppe Acito]
+- Remove DROP STAGE. [Giuseppe Acito]
+- Bump version: 1.28.3 → 1.28.4. [Giuseppe Acito]
+- Adds random stage name. [Giuseppe Acito]
+- Bump version: 1.28.2 → 1.28.3. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
+- Bump version: 1.28.1 → 1.28.2. [Giuseppe Acito]
+- Still some sql statements missing, dumb me. [Giuseppe Acito]
+- Bump version: 1.28.0 → 1.28.1. [Giuseppe Acito]
+- Bypass on data partition on PostgreSQL. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Adds getenv docs. [Giuseppe Acito]
+- Merge branch 'release/performances' into develop. [Giuseppe Acito]
+- Merge branch 'release/performances' [Giuseppe Acito]
+- Bump version: 1.27.3 → 1.28.0. [Giuseppe Acito]
+- Looks ok. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Removed unused print statements. [Giuseppe Acito]
+- Merge branch 'hotfix/conflictsWithPerformances' into develop.
+  [Giuseppe Acito]
+- Merge branch 'hotfix/conflictsWithPerformances' [Giuseppe Acito]
+- Fixed. [Giuseppe Acito]
+- Minor fixes, no fixes. [Giuseppe Acito]
+- Bump version: 1.27.2 → 1.27.3. [Giuseppe Acito]
+- Bump version: 1.27.1 → 1.27.2. [Giuseppe Acito]
+- Fix typo on time.in.millis. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 1.27.0 → 1.27.1. [Giuseppe Acito]
+- Fix typo. [Giuseppe Acito]
+- Merge branch 'release/performanceRelease' into develop. [Giuseppe
+  Acito]
+- Merge branch 'release/performanceRelease' [Giuseppe Acito]
+- Bump version: 1.26.3 → 1.27.0. [Giuseppe Acito]
+- Bump version: 1.26.2 → 1.26.3. [Giuseppe Acito]
+- Adds time.in.mills. [Giuseppe Acito]
+- Merge branch 'feature/bulkUpsert' into develop. [Giuseppe Acito]
+- Working at least, still experimenting. [Giuseppe Acito]
+- Wow, working like a charm. [Giuseppe Acito]
+- Aggiornati file inutili. [Giuseppe Acito]
+- Remove unused files. [Giuseppe Acito]
+- Pre pull. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 1.26.1 → 1.26.2. [Giuseppe Acito]
+- Fix sulle connessioni aperte del grafo. [Giuseppe Acito]
+- Merge branch 'hotfix/dropCascade' into develop. [Giuseppe Acito]
+- Merge branch 'release/removedPgConnectFromOptions' into develop.
+  [Giuseppe Acito]
+- Merge branch 'hotfix/dropCascade' [Giuseppe Acito]
+- Adds cascade on drop table. [Giuseppe Acito]
+- Bump version: 1.26.0 → 1.26.1. [Giuseppe Acito]
+- Merge branch 'release/removedPgConnectFromOptions' [Giuseppe Acito]
+- Bump version: 1.25.0 → 1.26.0. [Giuseppe Acito]
+- Removed pgConnect from options. [Giuseppe Acito]
+- Merge branch 'release/edges' into develop. [Giuseppe Acito]
+- Merge branch 'release/edges' [Giuseppe Acito]
+- Bump version: 1.24.0 → 1.25.0. [Giuseppe Acito]
+- Merge branch 'feature/edges' into develop. [Giuseppe Acito]
+- Added removing edges. [Giuseppe Acito]
+- Adds edges. [Giuseppe Acito]
+- Prepare to adds checks on formula and deps. [Giuseppe Acito]
+- Merge branch 'release/diffWithAuthor' into develop. [Giuseppe Acito]
+- Merge branch 'release/diffWithAuthor' [Giuseppe Acito]
+- Bump version: 1.23.5 → 1.24.0. [Giuseppe Acito]
+- Tests ok. [Giuseppe Acito]
+- Bump version: 1.23.4 → 1.23.5. [Giuseppe Acito]
+- Removed pwd.h. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
+- Merge branch 'release/updateDataProgressBar' [Giuseppe Acito]
+- Bump version: 1.23.3 → 1.23.4. [Giuseppe Acito]
+- Adds updateProgressBar to updateData. [Giuseppe Acito]
+- Bump version: 1.23.2 → 1.23.3. [Giuseppe Acito]
+- Move crayon from Suggest to Import. [Giuseppe Acito]
+- Bump version: 1.23.1 → 1.23.2. [Giuseppe Acito]
+- Merge branch 'master' of https://github.com/giupo/GrafoDB into
+  develop. [Giuseppe Acito]
+- Adds feature in #32090. [Giuseppe Acito]
+- Updated rpgrogressbar deps. [Giuseppe Acito]
+- Merge branch 'hotfix/bug32083' [Giuseppe Acito]
+- Merge branch 'release/patch' [Giuseppe Acito]
+- Merge branch 'hotfix/fixFunctionAsString0' [Giuseppe Acito]
+- Merge branch 'hotfix/bug32083' into develop. [Giuseppe Acito]
+- Bump version: 1.23.0 → 1.23.1. [Giuseppe Acito]
+- Fixes #32083. [Giuseppe Acito]
+- Nothing important. [Giuseppe Acito]
+- Merge branch 'release/patch' into develop. [Giuseppe Acito]
+- Bump version: 1.22.1 → 1.23.0. [Giuseppe Acito]
+- Adds patch and modify diff to include dates. [Giuseppe Acito]
+- Merge branch 'hotfix/fixFunctionAsString0' into develop. [Giuseppe
+  Acito]
+- Adds test with newlines. [Giuseppe Acito]
+- Bump version: 1.22.0 → 1.22.1. [Giuseppe Acito]
+- Nothing important. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 1.21.8 → 1.22.0. [Giuseppe Acito]
+- Pronto per push. [Giuseppe Acito]
+- Nothing finished. [Giuseppe Acito]
+- Merge branch 'hotfix/stringByFunction' [Giuseppe Acito]
+- Fixed minor errors with loggerName. [Giuseppe Acito]
+- Bump version: 1.21.7 → 1.21.8. [Giuseppe Acito]
+- Fix conflicts. [Giuseppe Acito]
+- Bump version: 1.21.6 → 1.21.7. [Giuseppe Acito]
+- Fix wrong import in roxygen comment. [Giuseppe Acito]
+- Bump version: 1.21.5 → 1.21.6. [Giuseppe Acito]
+- Stabile, tutti i test ok, ad eccezioni di un paio instabili. [Giuseppe
+  Acito]
+- Bump version: 1.21.4 → 1.21.5. [Giuseppe Acito]
+- Massiva revisione del codice. [Giuseppe Acito]
+- Bump version: 1.21.3 → 1.21.4. [Giuseppe Acito]
+- Remove with_mock used with base functions. [Giuseppe Acito]
+- Bump version: 1.21.2 → 1.21.3. [Giuseppe Acito]
+- Skipping test for edita and testthat 2.0. [Giuseppe Acito]
+- Adds testthat 2.0. [Giuseppe Acito]
+- Change of repos. [Giuseppe Acito]
+- Adds cran.rstudio.com as default CRAN. [Giuseppe Acito]
+- Minor Commits. [Giuseppe Acito]
+- Trying to fix the lack of logging... [Giuseppe Acito]
+- Bump version: 1.21.1 → 1.21.2. [Giuseppe Acito]
+- Rimosso dbBegin, e' implementato sia in RPostgreSQL che RSQLite.
+  [Giuseppe Acito]
+- Bump version: 1.21.0 → 1.21.1. [Giuseppe Acito]
+- Checks in buildConnection and some minor fixes in test fixtures.
+  [Giuseppe Acito]
+- Update NAMESPACE. [Giuseppe Acito]
+- Installed 3.3.3. [Giuseppe Acito]
+- Update DESCRIPTION. [Giuseppe]
+- Adattato a 3.2.3. [Giuseppe Acito]
+- Updated for 3.3.3. [Giuseppe Acito]
+- Bump version: 1.20.8 → 1.21.0. [Giuseppe Acito]
+- Enforced checks of functions return objects. [Giuseppe Acito]
+- Restore to check slack. [Giuseppe Acito]
+- Aggiungo mod insignificante per testare Devops. [Giuseppe Acito]
+- Adds slack notifications. [Giuseppe]
+- Update man and NAMESPACE. [Giuseppe Acito]
+- Abilita elimina anche a cf10. [Giuseppe Acito]
+- Nothing important. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 1.20.7 → 1.20.8. [Giuseppe Acito]
+- Aggiunta check costraint nei grafi copia. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 1.20.6 → 1.20.7. [Giuseppe Acito]
+- Adds formule. [Giuseppe Acito]
+- Bump version: 1.20.5 → 1.20.6. [Giuseppe Acito]
+- Fix sulla creazione conflitti. [Giuseppe Acito]
+- Merge branch 'release/saveGraph0' into develop. [Giuseppe Acito]
+- Merge branch 'release/saveGraph0' [Giuseppe Acito]
+- Bump version: 1.20.4 → 1.20.5. [Giuseppe Acito]
+- Another fix:31849. [Giuseppe Acito]
+- Bump version: 1.20.3 → 1.20.4. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Corretto piccolo bug in navigate. Ora si comporta come tsort.
+  [Giuseppe Acito]
+- Merge branch 'release/NotSoMuch' into develop. [Giuseppe Acito]
+- Merge branch 'release/NotSoMuch' [Giuseppe Acito]
+- Bump version: 1.20.2 → 1.20.3. [Giuseppe Acito]
+- Rimozione spazi inutili. [Giuseppe Acito]
+- Bump version: 1.20.1 → 1.20.2. [Giuseppe Acito]
+- Mod handling of author. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
+- Bump version: 1.20.0 → 1.20.1. [Giuseppe Acito]
+- Revisione su doHistory. [Giuseppe Acito]
+- Bump version: 1.19.5 → 1.20.0. [Giuseppe Acito]
+- Reg tests ok. [Giuseppe Acito]
+- Fixed merge. [Giuseppe Acito]
+- Bump version: 1.19.4 → 1.19.5. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Some codecov. [Giuseppe Acito]
+- Bump version: 1.19.3 → 1.19.4. [Giuseppe Acito]
+- Make sure to look for the correct error. [Giuseppe Acito]
+- Dear LORD. [Giuseppe Acito]
+- Bump version: 1.19.2 → 1.19.3. [Giuseppe Acito]
+- Added codecoverage for checkDAG. [Giuseppe Acito]
+- Update DESCRIPTION. [Giuseppe Acito]
+- Cambiato checkDAG su update_archi. [Giuseppe Acito]
+- Bump version: 1.19.1 → 1.19.2. [Giuseppe Acito]
+- Update resync logic. [Giuseppe Acito]
+- Update docs. [Giuseppe Acito]
+- Bump version: 1.19.0 → 1.19.1. [Giuseppe Acito]
+- Added resync feature; added docs. [Giuseppe Acito]
+- Erge branch 'develop' [Giuseppe Acito]
+- Merge branch 'hotfix/diffMethod' [Giuseppe Acito]
+- Merge problems... :( [Giuseppe Acito]
+- Conflict resolved. [Giuseppe Acito]
+- Use seq for provisional data. I suck at DB design... [Giuseppe Acito]
+- Bump version: 1.19.1 → 1.19.2. [Giuseppe Acito]
+- Added sequences for provisional data. [Giuseppe Acito]
+- Bump version: 1.19.0 → 1.19.1. [Giuseppe Acito]
+- Adds owners management. [Giuseppe Acito]
+- Nothing importat. [Giuseppe Acito]
+- I suck at DB design, I suck at DB design, I suck at DB design ...
+  [Giuseppe Acito]
+- Update NAMESPACE and man. [Giuseppe Acito]
+- Merge branch 'hotfix/diffMethod' into develop. [Giuseppe Acito]
+- Adds diff for formulas. [Giuseppe Acito]
+- Bump version: 1.18.0 → 1.19.0. [Giuseppe Acito]
+- Cosmetics. [Giuseppe Acito]
+- Nothing really. [Giuseppe Acito]
+- Bump version: 1.17.0 → 1.18.0. [Giuseppe Acito]
+- Fix bug #31911. [Giuseppe Acito]
+- Bump version: 1.16.29 → 1.17.0. [Giuseppe Acito]
+- Aggiunta possibilita' di editare anche primitive. [Giuseppe Acito]
+- Bump version: 1.16.28 → 1.16.29. [Giuseppe Acito]
+- Added code coverage. [Giuseppe Acito]
+- Bump version: 1.16.27 → 1.16.28. [Giuseppe Acito]
+- Fixed (?) some random behaviour on concurrency tests. [Giuseppe Acito]
+- Bump version: 1.16.26 → 1.16.27. [Giuseppe Acito]
+- Added some edita testing; beware that with_mock could be deprecated
+  soon. [Giuseppe Acito]
+- Bump version: 1.16.25 → 1.16.26. [Giuseppe Acito]
+- Some minor adjustments; added coverage. [Giuseppe Acito]
+- Bump version: 1.16.24 → 1.16.25. [Giuseppe Acito]
+- Improved coverage on conflicts. [Giuseppe Acito]
+- Added some code coverage and excluded code that cannot be tested on
+  CI. [Giuseppe Acito]
+- Hu oh... updated .travis.yml with correct instructions for testing and
+  codecov. [Giuseppe Acito]
+- Trying desperatly to ignore jsoncpp code. [Giuseppe Acito]
+- Addes some expectations in old api tests. [Giuseppe Acito]
+- Bump version: 1.16.23 → 1.16.24. [Giuseppe Acito]
+- Added more tests. [Giuseppe Acito]
+- Nothing important. [Giuseppe Acito]
+- Bump version: 1.16.22 → 1.16.23. [Giuseppe Acito]
+- Updated queries and metadati. added more code coverage. [Giuseppe
+  Acito]
+- Bump version: 1.16.21 → 1.16.22. [Giuseppe Acito]
+- Fix on query sql. [Giuseppe Acito]
+- Bump version: 1.16.20 → 1.16.21. [Giuseppe Acito]
+- I hate R. [Giuseppe Acito]
+- Added codecov badge. [Giuseppe Acito]
+- Bump version: 1.16.19 → 1.16.20. [Giuseppe Acito]
+- Addes some code coverage. [Giuseppe Acito]
+- Bump version: 1.16.18 → 1.16.19. [Giuseppe Acito]
+- Addes some tests and refactored some tests. [Giuseppe Acito]
+- Bump version: 1.16.17 → 1.16.18. [Giuseppe Acito]
+- Addes some code coverage. [Giuseppe Acito]
+- Some minor changes; added some tests for coverage. [Giuseppe Acito]
+- Bump version: 1.16.16 → 1.16.17. [Giuseppe Acito]
+- Added nocov to expr.r; added tests for multiple expr calls. [Giuseppe
+  Acito]
+- Bump version: 1.16.15 → 1.16.16. [Giuseppe Acito]
+- Added tests for Redis. [Giuseppe Acito]
+- Bump version: 1.16.14 → 1.16.15. [Giuseppe Acito]
+- Removing files from the R package. [Giuseppe Acito]
+- Bump version: 1.16.13 → 1.16.14. [Giuseppe Acito]
+- Added nocov tags. Let's hope it works. [Giuseppe Acito]
+- Bump version: 1.16.12 → 1.16.13. [Giuseppe Acito]
+- Added code coverage. [Giuseppe Acito]
+- Some errors on tests... still working on it. [Giuseppe Acito]
+- Removed unused files. [Giuseppe Acito]
+- Refactor del Makefile. [Giuseppe Acito]
+- Mocking TRAC connection. [Giuseppe Acito]
+- Cleaning test code; checking in for coverage. [Giuseppe Acito]
+- Addes some coverage. [Giuseppe Acito]
+- Excluded json, minor changes to Makefile. [Giuseppe Acito]
+- Making NAMESPACE with devtools. [Giuseppe Acito]
+- Removed abort from json.h (R doesn't like it); updated makefile for
+  make test. [Giuseppe Acito]
+- Removed some unused code; updated NAMESPACE. [Giuseppe Acito]
+- Some cleanup on tests. [Giuseppe Acito]
+- Add codecov stepp to Makefile. [Giuseppe Acito]
+- Bump version: 1.16.11 → 1.16.12. [Giuseppe Acito]
+- Updated own packages. [Giuseppe Acito]
+- Removed ignore of man in .gitiignore. [Giuseppe Acito]
+- Remove .gitignore in man. [Giuseppe Acito]
+- Test for codecov. [Giuseppe Acito]
+- Tried to build a more consistent .travis.yml. [Giuseppe Acito]
+- Added Xfvb. [Giuseppe Acito]
+- Changed packrat.lock; let's see Travis. [Giuseppe Acito]
+- Add rstudioapi as preloaded. [Giuseppe Acito]
+- Travis complains about --force-yes, here you get it. [Giuseppe Acito]
+- Added env section in Travis-CI; fixed duplicate 'zoo' deps in
+  DESCRIPTION. [Giuseppe Acito]
+- Bump version: 1.16.10 → 1.16.11. [Giuseppe Acito]
+- Damn you R, you and you deploying recipes. [Giuseppe Acito]
+- Bump version: 1.16.9 → 1.16.10. [Giuseppe Acito]
+- Fixed Travis CI yaml script: added packrat and specific steps for
+  installing and testing packages. [Giuseppe Acito]
+- Bump version: 1.16.8 → 1.16.9. [Giuseppe Acito]
+- Ignoring init.R and sourceing is not a smart move. [Giuseppe Acito]
+- Ahhh, R Version mismatch on packrat.lock. [Giuseppe Acito]
+- Bump version: 1.16.7 → 1.16.8. [Giuseppe Acito]
+- Modificato db.r import e NAMESPACE. [Giuseppe Acito]
+- Removed dbGetInfo. [Giuseppe Acito]
+- Bump version: 1.16.6 → 1.16.7. [Giuseppe Acito]
+- Dependency management on R is hell. [Giuseppe Acito]
+- Adds suggests to DT and shiny for code coverage reports. [Giuseppe
+  Acito]
+- Bump version: 1.16.5 → 1.16.6. [Giuseppe Acito]
+- Come on you idiot I don't want your warning shit. [Giuseppe Acito]
+- Bump version: 1.16.4 → 1.16.5. [Giuseppe Acito]
+- Adds message for missing packrat::init. [Giuseppe Acito]
+- Bump version: 1.16.3 → 1.16.4. [Giuseppe Acito]
+- Added dependencies to packrat: DT, shiny and shinyAce (plus httpuv)
+  [Giuseppe Acito]
+- Bump version: 1.16.2 → 1.16.3. [Giuseppe Acito]
+- Added setOldClass for igraph. [Giuseppe Acito]
+- Bump version: 1.16.1 → 1.16.2. [Giuseppe Acito]
+- Fixed some namespace issues. [Giuseppe Acito]
+- Bump version: 1.16.0 → 1.16.1. [Giuseppe Acito]
+- Still mess with rcf and GrafODB. [Giuseppe Acito]
+- Bump version: 1.15.1 → 1.16.0. [Giuseppe Acito]
+- Aggiungo integrazione con il trac. [Giuseppe Acito]
+- Adds tickets. [Giuseppe Acito]
+- Bump version: 1.15.0 → 1.15.1. [Giuseppe Acito]
+- Remove unused functions and refers to registerDoMC: is left to the
+  user session. [Giuseppe Acito]
+- Bump version: 1.14.0 → 1.15.0. [Giuseppe Acito]
+- Modified SQL code for updating. [Giuseppe Acito]
+- Added packrat and fixing the author feud (not there yet) [Giuseppe
+  Acito]
+- Reindentato pezzo di codice; niente d'importante. [Giuseppe Acito]
+- Bump version: 1.13.13 → 1.14.0. [Giuseppe Acito]
+- Imposta sempre a lowercase i tag. [Giuseppe Acito]
+- Bump version: 1.13.12 → 1.13.13. [Giuseppe Acito]
+- Aggiunge una colonna  date ai rilasci. [Giuseppe Acito]
+- Bump version: 1.13.11 → 1.13.12. [Giuseppe Acito]
+- Aggiunge una colonna  date ai rilasci. [Giuseppe Acito]
+- Bump version: 1.13.10 → 1.13.11. [Giuseppe Acito]
+- Add export of deleteMeta. [Giuseppe Acito]
+- Fix some notes on check. [Giuseppe Acito]
+- Removed plain import from NAMESPACE. [Giuseppe Acito]
+- Bump version: 1.13.9 → 1.13.10. [Giuseppe Acito]
+- Trying to figure out how to remove warnings at package loading.
+  [Giuseppe Acito]
+- Aggiunge devtools nel profile e piccolo upgrade di DBI in packrat.
+  [Giuseppe Acito]
+- Add a TODO note. [Giuseppe Acito]
+- Bump version: 1.13.8 → 1.13.9. [Giuseppe Acito]
+- Add rstudioapi to Suggests. [Giuseppe Acito]
+- Bump version: 1.13.7 → 1.13.8. [Giuseppe Acito]
+- Add devtools to Suggests. [Giuseppe Acito]
+- Bump version: 1.13.6 → 1.13.7. [Giuseppe Acito]
+- Add BH  deps to DESCRIPTION. [Giuseppe Acito]
+- Add BH  deps to DESCRIPTION. [Giuseppe Acito]
+- Add Rcpp to Imports. [Giuseppe Acito]
+- Bump version: 1.13.5 → 1.13.6. [Giuseppe Acito]
+- Add Rcpp to Imports. [Giuseppe Acito]
+- Bump version: 1.13.4 → 1.13.5. [Giuseppe Acito]
+- Adds sudo:true for Travis. [Giuseppe Acito]
+- Bump version: 1.13.3 → 1.13.4. [Giuseppe Acito]
+- Adds deps for travis. [Giuseppe Acito]
+- Bump version: 1.13.2 → 1.13.3. [Giuseppe Acito]
+- Metto sotto tryCatch init.R. [Giuseppe Acito]
+- Bump version: 1.13.1 → 1.13.2. [Giuseppe Acito]
+- Packrat aggiunto. Ma non lo avevo gia' giunto? [Giuseppe Acito]
+- Bump version: 1.13.0 → 1.13.1. [Giuseppe Acito]
+- Packrat aggiunto. Ma non lo avevo gia' giunto? [Giuseppe Acito]
+- Removed packrat. [Giuseppe Acito]
+- Rebasing. [Giuseppe Acito]
+- Bump version: 1.12.1 → 1.13.0. [Giuseppe Acito]
+- Added Travis. [Giuseppe Acito]
+- Remove coverage.html e lib. [Giuseppe Acito]
+- Bump version: 1.12.0 → 1.12.1. [Giuseppe Acito]
+- Behavior mod on elementary. [Giuseppe Acito]
+- Just one last test... [Giuseppe Acito]
+- Some more tests fixed... [Giuseppe Acito]
+- Resetting defaults. [Giuseppe Acito]
+- Removing unused deps. [Giuseppe Acito]
+- Added packrat. [Giuseppe Acito]
+- Rimosso da packrat dipendenze inutili. [Giuseppe Acito]
+- Rimosso da packrat dipendenze inutili. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
+- Removed rcf and added rdataset; removed bimets. [Giuseppe Acito]
+- Removed rcf and added rdataset; removed bimets. [Giuseppe Acito]
+- Pulisco grafo. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
+- Minor differences. [Giuseppe Acito]
+- Merge branch 'release/senzaGrafo' [Giuseppe Acito]
+- Merge branch 'release/senzaGrafo' into develop. [Giuseppe Acito]
+- Bump version: 1.11.2 → 1.12.0. [Giuseppe Acito]
+- Rimosso grafo da GrafoDB. [Giuseppe Acito]
+- Aggiornato RPostgreSQL, per ricompilarlo sul mac. [Giuseppe Acito]
+- Added snapshot. [Giuseppe Acito]
+- Bump version: 1.11.1 → 1.11.2. [Giuseppe Acito]
+- Removes comments from Makefile and updated .Rprofile to be used on
+  production environments where packrat is not used. [Giuseppe Acito]
+- Bump version: 1.11.0 → 1.11.1. [Giuseppe Acito]
+- Aggiungo test per concorrenza su modifiche di parti diverse di grafo.
+  [Giuseppe Acito]
+- Bump version: 1.10.2 → 1.11.0. [Giuseppe Acito]
+- Rimossi i warning, adesso e' tutto green. [Giuseppe Acito]
+- Nothing important. [Giuseppe Acito]
+- Adds devtools to packrat. [Giuseppe Acito]
+- Updated packrat.lock. [Giuseppe Acito]
+- Updated snapshot. [Giuseppe Acito]
+- Fail silently on redis connect failure. [Giuseppe Acito]
+- Allineato a packrat. [Giuseppe Acito]
+- Packratting. [Giuseppe Acito]
+- Bump version: 1.10.1 → 1.10.2. [Giuseppe Acito]
+- Rimosso riferimento a RPostgreSQL2. [Giuseppe Acito]
+- Comply on LICENSE. [Giuseppe Acito]
+- Edita modifica la serie anche se cambio solo le dipendenze. [Giuseppe
+  Acito]
+- Edita modifica la serie anche se cambio solo le dipendenze. [Giuseppe
+  Acito]
+- Adding CONTRIBUTING.rst. [Giuseppe Acito]
+- Nothing. [Giuseppe Acito]
+- Bump version: 1.9.6 → 1.10.0. [Giuseppe Acito]
+- Test ok, pronto a release e push. [Giuseppe Acito]
+- Bump version: 1.9.5 → 1.9.6. [Giuseppe Acito]
+- Remove dep from DESCRIPTION. [Giuseppe Acito]
+- Bump version: 1.9.4 → 1.9.5. [Giuseppe Acito]
+- Mancava la copia dati in copyGraph. [Giuseppe Acito]
+- Bump version: 1.9.3 → 1.9.4. [Giuseppe Acito]
+- Aggiunge ReplaceMethod per $ [Giuseppe Acito]
+- Bump version: 1.9.2 → 1.9.3. [Giuseppe Acito]
+- Rimuovo Rd da man. [Giuseppe Acito]
+- Ignora man. [Giuseppe Acito]
+- Elimino da autotest cose inutili. [Giuseppe Acito]
+- Tests ok linux. [Giuseppe Acito]
+- Bump version: 1.9.1 → 1.9.2. [Giuseppe Acito]
+- Mod project layout to comply with checks. [Giuseppe Acito]
+- Semplifico la build. [Giuseppe Acito]
+- Merge branch 'release/sleepSuiTestConcorrenxa' [Giuseppe Acito]
+- Bumpversion. [Giuseppe Acito]
+- Aggiungo sleep per i test sui conflitti. [Giuseppe Acito]
+- Bump version: 1.9.0 → 1.9.1. [Giuseppe Acito]
+- Mod on  .gitignore. [Giuseppe Acito]
+- Mod on  .gitignore. [Giuseppe Acito]
+- Fix to work with R > 3.1 and testthat > 0.9. [Giuseppe Acito]
+- Nonsense. [Giuseppe Acito]
+- Nothing important. [Giuseppe Acito]
+- Bump version: 1.8.4 → 1.9.0. [Giuseppe Acito]
+- Ok su SQLite. [Giuseppe Acito]
+- Test ok su postgresql. [Giuseppe Acito]
+- Aggiungo il round per assicurarmi che siano solo millisecondi e non
+  frazioni di millisecondo. [Giuseppe Acito]
+- Bump version: 1.8.3 → 1.8.4. [Giuseppe Acito]
+- Sistemato errori SQL per Postgres su last_updated. [Giuseppe Acito]
+- Bump version: 1.8.2 → 1.8.3. [Giuseppe Acito]
+- Change sulle query per Postgresql. [Giuseppe Acito]
+- Bump version: 1.8.1 → 1.8.2. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Fix sullo show di GrafoDB per mostrare la data anziche' il timestamp.
+  [Giuseppe Acito]
+- Bump version: 1.8.0 → 1.8.1. [Giuseppe Acito]
+- Ignora tutto in libs tranne .gitignore. [Giuseppe Acito]
+- Prepare to release. [Giuseppe Acito]
+- Bump version: 1.7.1 → 1.8.0. [Giuseppe Acito]
+- Some linter fix. [Giuseppe Acito]
+- Rimosso file tgz aggiunto per sbaglio. [Giuseppe Acito]
+- Bump version: 1.7.0 → 1.7.1. [Giuseppe Acito]
+- Rimossa la dipendenza da rutils::Cluster; aggiunta la gestione, seppur
+  remota che due utenti salvino nello stesso istante due serie diverse:
+  controllo l'uguaglianza dell'utente. [Giuseppe Acito]
+- Bump version: 1.6.3 → 1.7.0. [Giuseppe Acito]
+- Bump version: 1.6.2 → 1.6.3. [Giuseppe Acito]
+- Test OK: sistemato piccolo bug sulla conversione di query tramite
+  l'helper. Ora manca la parte per PostgreSQL. [Giuseppe Acito]
+- 1 solo errore 1! [Giuseppe Acito]
+- Adds messsges at saveGraph. [Giuseppe Acito]
+- C'e' un problema con queste maledette options e testthat. [Giuseppe
+  Acito]
+- Test fatti male per SQLHelper. [Giuseppe Acito]
+- Quasi ok su SQLite, c'era bug grosso come una casa su elimina e la
+  gestione delle tabelle partizionate nel codice: e' un ERRORE.
+  [Giuseppe Acito]
+- .to e to diverse tra 1.1.0 e 1.0.1 di igraph. [Giuseppe Acito]
+- Rimuovo directory inutile, modifico il make per lavorare su OSX.
+  [Giuseppe Acito]
+- Prepare to move. [Giuseppe Acito]
+- Hell no! not this version. [Giuseppe Acito]
+- Bump version: 1.6.1 → 1.6.2. [Giuseppe Acito]
+- Maletetto dbBegin. [Giuseppe Acito]
+- Sistemato schema per sqlite, messo un as.POSIXct all'init. [Giuseppe
+  Acito]
+- Bump version: 1.6.0 → 1.6.1. [Giuseppe Acito]
+- Cambiato dbSettings per cambiare l'env. [Giuseppe Acito]
+- Aggiunte query per SQLite. [Giuseppe Acito]
+- Bump version: 1.5.0 → 1.6.0. [Giuseppe Acito]
+- Spostato le query nel file INI. [Giuseppe Acito]
+- Inizio passattio a nuova gestione SQL. [Giuseppe Acito]
+- Adds SQLHelper per separare query da codice. [Giuseppe Acito]
+- Bump version: 1.4.13 → 1.5.0. [Giuseppe Acito]
+- Dry run all green. [Giuseppe Acito]
+- Looks like conflicts are fixed, by now. [Giuseppe Acito]
+- Bump version: 1.4.12 → 1.4.13. [Giuseppe Acito]
+- Ora i conflitti vengono creati correttamente anche per le formule.
+  [Giuseppe Acito]
+- Bump version: 1.4.11 → 1.4.12. [Giuseppe Acito]
+- Rimozione di dbGetPreparedQuery. [Giuseppe Acito]
+- Bump version: 1.4.10 → 1.4.11. [Giuseppe Acito]
+- Rimosso todo.org, aggiornate pagine di docs. [Giuseppe Acito]
+- Bump version: 1.4.9 → 1.4.10. [Giuseppe Acito]
+- Sistemato il bug dei commenti, gli unittest ancora fanno le bizze.
+  [Giuseppe Acito]
+- Riallineo git. [Giuseppe Acito]
+- Bump version: 1.4.8 → 1.4.9. [Giuseppe Acito]
+- Rivista logica del salvataggio. [Giuseppe Acito]
+- Bump version: 1.4.7 → 1.4.8. [Giuseppe Acito]
+- Gestisce anche la serializzazione dei numeri infinity gestendoli come
+  NA. [Giuseppe Acito]
+- Bump version: 1.4.6 → 1.4.7. [Giuseppe Acito]
+- Patch su keys/values errati. [Giuseppe Acito]
+- Bump version: 1.4.5 → 1.4.6. [Giuseppe Acito]
+- Non modifico il tag eliminando i progressivo, non serve piu' [Giuseppe
+  Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 1.4.4 → 1.4.5. [Giuseppe Acito]
+- Bump version: 1.4.3 → 1.4.4. [Giuseppe Acito]
+- Gestone della cache da rivedere. [Giuseppe Acito]
+- Bump version: 1.4.2 → 1.4.3. [Giuseppe Acito]
+- Bug sulla rimozione dei dati in cache su redis; deleteMeta aveva un
+  errore: fixed. [Giuseppe Acito]
+- Bump version: 1.4.1 → 1.4.2. [Giuseppe Acito]
+- Bump version: 1.4.0 → 1.4.1. [Giuseppe Acito]
+- Gestisce values come liste e dataset. [Giuseppe Acito]
+- Merge branch 'hotfix/noConnectOnShow' into develop. [Giuseppe Acito]
+- Merge branch 'release/upFront' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/noConnectOnShow' [Giuseppe Acito]
+- Rimossa la creazione di connessione al DB dove non necessario.
+  [Giuseppe Acito]
+- Merge branch 'release/upFront' [Giuseppe Acito]
+- Bump version: 1.3.4 → 1.4.0. [Giuseppe Acito]
+- Merge branch 'feature/upFront' into develop. [Giuseppe Acito]
+- Bump version: 1.3.3 → 1.3.4. [Giuseppe Acito]
+- Elimino la query su show. [Giuseppe Acito]
+- Bump version: 1.3.2 → 1.3.3. [Giuseppe Acito]
+- R ti odio. [Giuseppe Acito]
+- Bump version: 1.3.1 → 1.3.2. [Giuseppe Acito]
+- CountRolling era buggato; fixed. [Giuseppe Acito]
+- Bump version: 1.3.0 → 1.3.1. [Giuseppe Acito]
+- Messo unique su loadDati, VERIFICARE i dati. [Giuseppe Acito]
+- Bump version: 1.2.2 → 1.3.0. [Giuseppe Acito]
+- Rimosso il cluster, uso MC. [Giuseppe Acito]
+- Aggiunti messaggi di log. [Giuseppe Acito]
+- Bump version: 1.2.1 → 1.2.2. [Giuseppe Acito]
+- Adds several mods. [Giuseppe Acito]
+- Fix su NAMESPACE. [Giuseppe Acito]
+- Bump version: 1.2.0 → 1.2.1. [Giuseppe Acito]
+- Sposto rcf, bimets e grafo in Depends. [Giuseppe Acito]
+- Bump version: 1.1.0 → 1.2.0. [Giuseppe Acito]
+- Aggiunto il from.data.frame nativo. [Giuseppe Acito]
+- Elimino build tools per componenti nativi non piu' usati. [Giuseppe
+  Acito]
+- Bump version: 1.0.5 → 1.1.0. [Giuseppe Acito]
+- Aggiunge ignore su file di backup. [Giuseppe Acito]
+- Aggiunge creaConflittoDati/Formule. [Giuseppe Acito]
+- Elimino la parte nativa, non serve piu'; refactoring del codice in
+  piu' file piu' piccoli; aggiunta checkConflicts ancora da completare.
+  [Giuseppe Acito]
+- Alcune migliorie sul NAMESPACE. [Giuseppe Acito]
+- TEST OK! [Giuseppe Acito]
+- Sistemati test su rmNode, mancava un resync. [Giuseppe Acito]
+- Sistemato lookup non funzionante ed aggiunto initdb + schema.sql.
+  [Giuseppe Acito]
+- Riorganizzazione codice. [Giuseppe Acito]
+- Refactoring access to DB, removing references in names. [Giuseppe
+  Acito]
+- Bump version: 1.0.4 → 1.0.5. [Giuseppe Acito]
+- Testing back ok. [Giuseppe Acito]
+- R ti odio con tutto il cuore. [Giuseppe Acito]
+- Aggiunge un todo.org per appunti. [Giuseppe Acito]
+- Aggiustato dipendenze verso imports. [Giuseppe Acito]
+- Bump version: 1.0.3 → 1.0.4. [Giuseppe Acito]
+- Rollback dell'accesso case insensitive: piu' problemi che opportunita'
+  [Giuseppe Acito]
+- Carica i dati in modo case insensitive dal DB. [Giuseppe Acito]
+- Bump version: 1.0.2 → 1.0.3. [Giuseppe Acito]
+- Case insensitive. [Giuseppe Acito]
+- CRLF still on my way. [Giuseppe Acito]
+- CRLF still on my way. [Giuseppe Acito]
+- Load_formule aggiunto. [Giuseppe Acito]
+- Aggiunto load_formule. [Giuseppe Acito]
+- Bump version: 1.0.1 → 1.0.2. [Giuseppe Acito]
+- Expr outputs formula. [Giuseppe Acito]
+- Bump version: 1.0.0 → 1.0.1. [Giuseppe Acito]
+- Aggiunto rilasci per listare i rilasci di GrafoDB. [Giuseppe Acito]
+- Aggiunto il metodo dollaro per accedere ai singoli elementi. [Giuseppe
+  Acito]
+- Aggiunto il metodo dollaro per accedere ai singoli elementi. [Giuseppe
+  Acito]
+- Merge branch 'release/v1.0' [Giuseppe Acito]
+- Bump version: 0.28.0 → 1.0.0. [Giuseppe Acito]
+- Aggiornato il NAMESPACE, eliminato un export che creava un errore.
+  [Giuseppe Acito]
+- Bump version: 0.27.6 → 0.28.0. [Giuseppe Acito]
+- Remove unused cpp files. [Giuseppe Acito]
+- Merge branch 'hotfix/getMetaGlobale' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/getMetaGlobale' [Giuseppe Acito]
+- Aggiunto il caricamento globale dei metadati. [Giuseppe Acito]
+- Bump version: 0.27.5 → 0.27.6. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Fix conflicts. [Giuseppe Acito]
+- Adds exception handling to C++ [Giuseppe Acito]
+- Merge branch 'hotfix/exceptionhandlingnative' [Giuseppe Acito]
+- Aggiunto error handling al C++ per debuggare strani Crash to Desktop
+  dell'applicazione. [Giuseppe Acito]
+- Bump version: 0.27.4 → 0.27.5. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 0.27.3 → 0.27.4. [Giuseppe Acito]
+- Corretto bug su dbSettings. [Giuseppe Acito]
+- Merge branch 'hotfix/connectionProperties' into develop. [Giuseppe
+  Acito]
+- Merge branch 'hotfix/upgrfPiuSerie' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/connectionProperties' [Giuseppe Acito]
+- Inizio la parametrizzazione del DB. [Giuseppe Acito]
+- Merge branch 'hotfix/upgrfPiuSerie' [Giuseppe Acito]
+- Fixes upgrf multiple names in input. [Giuseppe Acito]
+- Bump version: 0.27.2 → 0.27.3. [Giuseppe Acito]
+- Risolti conflitti. [Giuseppe Acito]
+- Ok, possiamo procedere con Redis. [Giuseppe Acito]
+- Ripulito il tar.gz e le cose che installava. [Giuseppe Acito]
+- Bump version: 0.27.1 → 0.27.2. [Giuseppe Acito]
+- Bump version: 0.27.0 → 0.27.1. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Merge branch 'release/rootsLeaves' [Giuseppe Acito]
+- Merge branch 'release/grafiInput' [Giuseppe Acito]
+- Merge branch 'release/Osiride2' [Giuseppe Acito]
+- Merge branch 'hotfix/diffNotWorkingOnCluster' [Giuseppe Acito]
+- Bump version: 0.27.0 → 0.27.1. [Giuseppe Acito]
+- I hate you R. [Giuseppe Acito]
+- Merge branch 'release/rootsLeaves' into develop. [Giuseppe Acito]
+- Bump version: 0.26.0 → 0.27.0. [Giuseppe Acito]
+- Bump version: 0.25.0 → 0.26.0. [Giuseppe Acito]
+- Aggiunge leaves e roots. [Giuseppe Acito]
+- Merge branch 'release/grafiInput' into develop. [Giuseppe Acito]
+- Bump version: 0.24.0 → 0.25.0. [Giuseppe Acito]
+- Couldn't be that easy. [Giuseppe Acito]
+- Pre mod per grafi d'input. [Giuseppe Acito]
+- Merge branch 'release/Osiride2' into develop. [Giuseppe Acito]
+- Passaggio ad Osiride2. [Giuseppe Acito]
+- Bump version: 0.23.3 → 0.24.0. [Giuseppe Acito]
+- Pre release per Osiride2. [Giuseppe Acito]
+- Merge branch 'hotfix/diffNotWorkingOnCluster' into develop. [Giuseppe
+  Acito]
+- Bump version: 0.23.2 → 0.23.3. [Giuseppe Acito]
+- Aggiunto fix per '-' non funzionante su grafodb e refresh kerberos.
+  [Giuseppe Acito]
+- Bump version: 0.23.1 → 0.23.2. [Giuseppe Acito]
+- Prepare for patch on '-' [Giuseppe Acito]
+- Bump version: 0.23.0 → 0.23.1. [Giuseppe Acito]
+- Modificato lookup & load_data (per evitare clash su
+  devtools::load_data) [Giuseppe Acito]
+- Bump version: 0.22.0 → 0.23.0. [Giuseppe Acito]
+- Rinomina load_data in load_data_nativo per non collidere con
+  devtools::load_data. [Giuseppe Acito]
+- Riscritto i man. [Giuseppe Acito]
+- Bump version: 0.21.1 → 0.22.0. [Giuseppe Acito]
+- Aggiunta la possibilita' di cercare i singoli numeri. [Giuseppe Acito]
+- Bump version: 0.21.0 → 0.21.1. [Giuseppe Acito]
+- Aggiungo alcuni unit test sulla conversione da e verso data.frame.
+  [Giuseppe Acito]
+- Cosmetics. [Giuseppe Acito]
+- Bump version: 0.20.2 → 0.21.0. [Giuseppe Acito]
+- Bump version: 0.20.1 → 0.20.2. [Giuseppe Acito]
+- Rimossi i CRLF. [Giuseppe Acito]
+- Bump version: 0.20.0 → 0.20.1. [Giuseppe Acito]
+- Rivedo documentazione; esporto forzatamente searchNode. [Giuseppe
+  Acito]
+- Struggling on namespaces. [Giuseppe Acito]
+- Vediamo se funziona anche su produzione. [Giuseppe Acito]
+- Adds multiprocess to make. [Giuseppe Acito]
+- Cerchiamo di far funzionare questo jsoncpp. [Giuseppe Acito]
+- Merge branch 'release/elementaryOnSteroids' [Giuseppe Acito]
+- Bump version: 0.19.4 → 0.20.0. [Giuseppe Acito]
+- Aggiunti un po' di test su elementary con formule. [Giuseppe Acito]
+- Now it works as expected. [Giuseppe Acito]
+- Merge branch 'feature/elementariAutoCaricate' into develop. [Giuseppe
+  Acito]
+- Aggiunge il controllo su isElementary, ma devo applicare una hotfix su
+  isElementary. [Giuseppe Acito]
+- Merge branch 'hotfix/isElementaryBroken' into develop. [Giuseppe
+  Acito]
+- Merge branch 'hotfix/isElementaryBroken' [Giuseppe Acito]
+- Bump version: 0.19.3 → 0.19.4. [Giuseppe Acito]
+- IsElementary funziona :) [Giuseppe Acito]
+- Bump version: 0.19.2 → 0.19.3. [Giuseppe Acito]
+- Bump version: 0.19.1 → 0.19.2. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Minor changes in README.md. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Elimina l'istanza di test. [Giuseppe Acito]
+- Merge branch 'hotfix/jsonCppNoNaN' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/jsonCppNoNaN' [Giuseppe Acito]
+- Fix #24. Applicata patch al codice C++ [Giuseppe Acito]
+- Bump version: 0.19.0 → 0.19.1. [Giuseppe Acito]
+- Bump version: 0.18.2 → 0.19.0. [Giuseppe Acito]
+- Ignore modules. [Giuseppe Acito]
+- Bump version: 0.18.1 → 0.18.2. [Giuseppe Acito]
+- Removes edita from single execution: let's see why I can't see what
+  series failed. [Giuseppe Acito]
+- Fixed conflict. [Giuseppe Acito]
+- Adds edita on single process execution. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Adds edita on single process execution. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 0.18.0 → 0.18.1. [Giuseppe Acito]
+- Adds edita on single process execution. [Giuseppe Acito]
+- Merge branch 'hotfix/noPreload' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/noPreload' [Giuseppe Acito]
+- No Preload, that's bullshit. [Giuseppe Acito]
+- Bump version: 0.17.2 → 0.18.0. [Giuseppe Acito]
+- Bump version: 0.17.1 → 0.17.2. [Giuseppe Acito]
+- Fixed message in Readme.md. [Giuseppe Acito]
+- Bump version: 0.17.0 → 0.17.1. [Giuseppe Acito]
+- Oh god I hate Makefiles. [Giuseppe Acito]
+- Bump version: 0.16.2 → 0.17.0. [Giuseppe Acito]
+- Corretto itemize nella documentazione. [Giuseppe Acito]
+- Aggiunto configure.ac e Makevars.in. [Giuseppe Acito]
+- Rimuovo anche gli object e i file *.so. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Fix merges after commit. [Giuseppe Acito]
+- Rimuovo i require da .Rprofile: non fanno girare il ciclo di build
+  (manca setNames? what the hell. [Giuseppe Acito]
+- Merge branch 'hotfix/removeDepsFromRCF' [Giuseppe Acito]
+- Removed rcf almost anywhere. [Giuseppe Acito]
+- Aggiunta readBinary e saveBinary. [Giuseppe Acito]
+- Rimuovo i require da .Rprofile: non fanno girare il ciclo di build
+  (manca setNames? what the hell. [Giuseppe Acito]
+- I can see the light. [Giuseppe Acito]
+- Istruzioni per compilare. [Giuseppe Acito]
+- Makevars funziona con le librerie statiche. [Giuseppe Acito]
+- Removed boost. [Giuseppe Acito]
+- Minor changes to README.md. [Giuseppe Acito]
+- Gitignore ignora tutto. [Giuseppe Acito]
+- Aggiunto README.md. [Giuseppe Acito]
+- Adds ext to be ignored bui R CMD build. [Giuseppe Acito]
+- Add ext. [Giuseppe Acito]
+- Forse riesco a compilare pure da Mac. [Giuseppe Acito]
+- Aggiunto include <assert.h> [Giuseppe Acito]
+- Merge branch 'release/assertedRelease' [Giuseppe Acito]
+- Bump version: 0.16.1 → 0.16.2. [Giuseppe Acito]
+- Added some asserts to check on OSX. [Giuseppe Acito]
+- Uso un unico proxy. [Giuseppe Acito]
+- Added tsdiff. [Giuseppe Acito]
+- Merge branch 'hotfix/progressBarAndNoClusterFix' into develop.
+  [Giuseppe Acito]
+- Merge branch 'hotfix/progressBarAndNoClusterFix' [Giuseppe Acito]
+- Finito cluster fix, ora aggiungo tsdiff. [Giuseppe Acito]
+- Bump version: 0.16.0 → 0.16.1. [Giuseppe Acito]
+- Bump version: 0.15.1 → 0.16.0. [Giuseppe Acito]
+- Aggiunta il rename di serie. [Giuseppe Acito]
+- Bump version: 0.15.0 → 0.15.1. [Giuseppe Acito]
+- Adds some management for grouping on setMeta and deleteMeta. [Giuseppe
+  Acito]
+- Riaggiunte pgConnect e dbDisconnect. [Giuseppe Acito]
+- Bump version: 0.14.1 → 0.15.0. [Giuseppe Acito]
+- Ora il cluster chiude le connessioni. [Giuseppe Acito]
+- Bump version: 0.14.0 → 0.14.1. [Giuseppe Acito]
+- Controllo se edita cambia le formule. [Giuseppe Acito]
+- NAMESPACE is REQUIRED. [Giuseppe Acito]
+- Remove from export db_adapter. [Giuseppe Acito]
+- Se aggiungo una serie per sbaglio non modificare il grafo. [Giuseppe
+  Acito]
+- Aggiunge dettagli su quale grafo ha conflitti. [Giuseppe Acito]
+- Bump version: 0.13.1 → 0.14.0. [Giuseppe Acito]
+- Baco enorme dovuto all'ottimizzazione del caricamento da preload.
+  Risolto. [Giuseppe Acito]
+- Remove unused Rprintf from c++ [Giuseppe Acito]
+- Bump version: 0.13.0 → 0.13.1. [Giuseppe Acito]
+- Eliminato warning su edit di serie senza dipendenze. [Giuseppe Acito]
+- Adds history. [Giuseppe Acito]
+- Bump version: 0.12.3 → 0.13.0. [Giuseppe Acito]
+- Ora vengono salvati solo i conflitti sulle stesse serie. [Giuseppe
+  Acito]
+- Bump version: 0.12.2 → 0.12.3. [Giuseppe Acito]
+- Passings tests. [Giuseppe Acito]
+- Passings tests; conflicts still pending. [Giuseppe Acito]
+- Bump version: 0.12.0 → 0.12.1. [Giuseppe Acito]
+- Fix #13. Se setto una serie che ha una formula con una serie scalare
+  devo avere un messaggio sensato. [Giuseppe Acito]
+- Bump version: 0.11.8 → 0.12.0. [Giuseppe Acito]
+- Quando salvo il grafo, non c'e' piu' bisogno di fare g=saveGraph(g)
+  [Giuseppe Acito]
+- Bump version: 0.11.7 → 0.11.8. [Giuseppe Acito]
+- Export deleteMeta, previously undone. Fix #7. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 0.11.6 → 0.11.7. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Add support for temporary edges. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 0.11.5 → 0.11.6. [Giuseppe Acito]
+- Occhio alla versione di Rcpp uguale a grafodb. [Giuseppe Acito]
+- Merge branch 'hotfix/noChangeMe' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/editExistingNode' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/noChangeMe' [Giuseppe Acito]
+- Rimosso changes me, lo odiavo. Fix #8. [Giuseppe Acito]
+- Bump version: 0.11.4 → 0.11.5. [Giuseppe Acito]
+- Merge branch 'hotfix/editExistingNode' [Giuseppe Acito]
+- Fix #6. eseguivo due volte .evaluateSingle. Ora non ricordo il motivo
+  ma e' da tenere a mente. [Giuseppe Acito]
+- Bump version: 0.11.3 → 0.11.4. [Giuseppe Acito]
+- Bump version: 0.11.2 → 0.11.3. [Giuseppe Acito]
+- Aggiunto l'ordinamento dei metadati. [Giuseppe Acito]
+- Bump version: 0.11.1 → 0.11.2. [Giuseppe Acito]
+- Added keys and values. [Giuseppe Acito]
+- Bump version: 0.11.0 → 0.11.1. [Giuseppe Acito]
+- Fixed exportMethod fallato. [Giuseppe Acito]
+- Bump version: 0.10.0 → 0.11.0. [Giuseppe Acito]
+- GetMeta implementato. [Giuseppe Acito]
+- Bump version: 0.9.0 → 0.10.0. [Giuseppe Acito]
+- Perfezionata la rmNode. [Giuseppe Acito]
+- Bump version: 0.8.9 → 0.9.0. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Massivo refactoring su C++, per provvedere ad un adapter generico per
+  il backend; ora si puo' salvare anche una stringa (findamentale per il
+  join su preload) [Giuseppe Acito]
+- Merge branch 'hotfix/connectionHandling' into develop. [Giuseppe
+  Acito]
+- Refactored C++ code to load non timeseries data from DB. [Giuseppe
+  Acito]
+- Merge branch 'hotfix/connectionHandling' [Giuseppe Acito]
+- Rimuovi connessione persistente: porta hanging delle transazioni.
+  [Giuseppe Acito]
+- Bump version: 0.8.8 → 0.8.9. [Giuseppe Acito]
+- Bump version: 0.8.7 → 0.8.8. [Giuseppe Acito]
+- Aggiunto test sulla copia del grafo; aggiunte modifiche alla funzione
+  elimina. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Added todataframe.Rd. [Giuseppe Acito]
+- Merge branch 'hotfix/additionalParams' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/additionalParams' [Giuseppe Acito]
+- Now I can add a scalar to DB: to be fixed. [Giuseppe Acito]
+- Bump version: 0.8.6 → 0.8.7. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Fix #5. Ora Edita correttamente consente di editare le formule
+  ripetutamente, anche in caso di errore. Ser consente l'esecuzione
+  delle formule di serie elementari, senza padri. [Giuseppe Acito]
+- Consente di eseguire il ser di serie elementari. [Giuseppe Acito]
+- Merge branch 'hotfix/editaNonMantiene' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/editaNonMantiene' [Giuseppe Acito]
+- Edita ora non cancella ad ogni errore l'inserimento della formula ma
+  consente l'editing. [Giuseppe Acito]
+- Bump version: 0.8.4 → 0.8.5. [Giuseppe Acito]
+- Risetto la funzione sul grafo in caso di errore, cosi' l'utente non
+  deve rieditarla. [Giuseppe Acito]
+- Bump version: 0.8.3 → 0.8.4. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Some minor changes on subsetting ad casting to dataset. [Giuseppe
+  Acito]
+- Bump version: 0.8.2 → 0.8.3. [Giuseppe Acito]
+- Bump version: 0.8.1 → 0.8.2. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Fix #3 ? I dunno even if #3 was a real problem or a misuse of GrafoDB.
+  [Giuseppe Acito]
+- Aggiunti incancellabili da elimina. [Giuseppe Acito]
+- Merge branch 'release/fixedHistory' into develop. [Giuseppe Acito]
+- Merge branch 'release/fixedHistory' [Giuseppe Acito]
+- Bump version: 0.8.0 → 0.8.1. [Giuseppe Acito]
+- Fix #1. Ora il rolling viene effettuato solo se il grafo ha
+  effettivamente serie salvate. O meglio, non fa la history se creo il
+  grafo. [Giuseppe Acito]
+- Merge branch 'release/elementari' into develop. [Giuseppe Acito]
+- Merge branch 'release/elementari' [Giuseppe Acito]
+- Bump version: 0.7.1 → 0.8.0. [Giuseppe Acito]
+- Aggiunti test per serie elementari. [Giuseppe Acito]
+- Prepare for feature elementari. [Giuseppe Acito]
+- Merge branch 'release/evaluateSingle1' into develop. [Giuseppe Acito]
+- Merge branch 'release/evaluateSingle1' [Giuseppe Acito]
+- Bump version: 0.7.0 → 0.7.1. [Giuseppe Acito]
+- Changed evaluateSingle and performance Tuned. [Giuseppe Acito]
+- Bump version: 0.6.1 → 0.7.0. [Giuseppe Acito]
+- Compile on OSX. [Giuseppe Acito]
+- Nothing I've done. [Giuseppe Acito]
+- Bump version: 0.6.0 → 0.6.1. [Giuseppe Acito]
+- Review della history. [Giuseppe Acito]
+- Mod su roxygen che faceva fallire NAMESPACE. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- DESCRIPTION changed I dunno why. [Giuseppe Acito]
+- Merge branch 'release/historicalData' into develop. [Giuseppe Acito]
+- Merge branch 'release/historicalData' [Giuseppe Acito]
+- Bump version: 0.5.5 → 0.6.0. [Giuseppe Acito]
+- Loads data from historical data when a tag with ---p(number) is
+  specified: Hurra\! [Giuseppe Acito]
+- Adds showHistory; and Makefile entry to compile from Emacs. [Giuseppe
+  Acito]
+- Autotest ok, history implementata al 25% [Giuseppe Acito]
+- Bump version: 0.5.4 → 0.5.5. [Giuseppe Acito]
+- Prepare for release. [Giuseppe Acito]
+- Bump version: 0.5.3 → 0.5.4. [Giuseppe Acito]
+- Resolve conflicts. [Giuseppe Acito]
+- DBAdapter refactor; works. [Giuseppe Acito]
+- Refactoring devastante. [Giuseppe Acito]
+- Working on history. [Giuseppe Acito]
+- File.edit preso direttamente da utils che rstudio fa casino. [Giuseppe
+  Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 0.5.2 → 0.5.3. [Giuseppe Acito]
+- Cambio formato sull'editor. [Giuseppe Acito]
+- Ora puoi editare serie vuote. [Giuseppe Acito]
+- Bump version: 0.5.1 → 0.5.2. [Giuseppe Acito]
+- Remove progressbar.r from Collate. [Giuseppe Acito]
+- Mod on NAMESPACE. [Giuseppe Acito]
+- Adds edita to NAMESPACE. [Giuseppe Acito]
+- Bump version: 0.5.0 → 0.5.1. [Giuseppe Acito]
+- Steps to native saving... [Giuseppe Acito]
+- Moving to native save. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- No inglese ;) [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Fix finale sul ProgressBar. [Giuseppe Acito]
+- Merge branch 'release/final0.5.0' into develop. [Giuseppe Acito]
+- Merge branch 'release/final0.5.0' [Giuseppe Acito]
+- Bump version: 0.4.2 → 0.5.0. [Giuseppe Acito]
+- Rimuove il casino con le funzioni/nomi di serie lasciate nel
+  globalenv() [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Merge branch 'hotfix/clusterLoadNativo' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/fixRoxygen' into develop. [Giuseppe Acito]
+- Fix roxygen in C++ [Giuseppe Acito]
+- Merge branch 'release/nativeDB' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/clusterLoadNativo' [Giuseppe Acito]
+- Commit before hotfix. [Giuseppe Acito]
+- Bump version: 0.4.1 → 0.4.2. [Giuseppe Acito]
+- Merge branch 'hotfix/fixRoxygen' [Giuseppe Acito]
+- Bump version: 0.4.0 → 0.4.1. [Giuseppe Acito]
+- Merge branch 'release/nativeDB' [Giuseppe Acito]
+- Bump version: 0.3.0 → 0.4.0. [Giuseppe Acito]
+- Merge branch 'feature/nativeDB' into develop. [Giuseppe Acito]
+- Evvai, test ok, load nativo. [Giuseppe Acito]
+- Risolto problema di assegnazione a NULL. [Giuseppe Acito]
+- Restore versione funzionante, eliminato typo. [Giuseppe Acito]
+- Odio tutti. [Giuseppe Acito]
+- Prima prova di accesso nativo ai dati; 100 volte piu' veloce.
+  [Giuseppe Acito]
+- Initial Import for native DB. [Giuseppe Acito]
+- Merge branch 'release/working' into develop. [Giuseppe Acito]
+- Merge branch 'release/working' [Giuseppe Acito]
+- Bump version: 0.2.9 → 0.3.0. [Giuseppe Acito]
+- Ti odio. [Giuseppe Acito]
+- Bump version: 0.2.8 → 0.2.9. [Giuseppe Acito]
+- I hate the world; still problems with clusters. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Bump version: 0.2.7 → 0.2.8. [Giuseppe Acito]
+- Fix minor error on object init for navigate. [Giuseppe Acito]
+- Merge branch 'hotfix/serCazzo' into develop. [Giuseppe Acito]
+- ANcora devo lavorare su ser. [Giuseppe Acito]
+- Prepatch on evaluating series without a return statement. [Giuseppe
+  Acito]
+- Let's you subset with datasets. [Giuseppe Acito]
+- Some performance Tuning. [Giuseppe Acito]
+- Bump version: 0.2.4 → 0.2.5. [Giuseppe Acito]
+- Merge branch 'hotfix/serCazzo' [Giuseppe Acito]
+- Bump version: 0.2.6 → 0.2.7. [Giuseppe Acito]
+- Merge branch 'hotfix/serCazzo' [Giuseppe Acito]
+- ANcora devo lavorare su ser. [Giuseppe Acito]
+- Bump version: 0.2.5 → 0.2.6. [Giuseppe Acito]
+- Bump version: 0.2.4 → 0.2.5. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- RImosso l'uso di attach/detach in evaluateSingle. [Giuseppe Acito]
+- Prima del performance tuning. [Giuseppe Acito]
+- Merge branch 'hotfix/editaChangeEdges' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/clusterMadness' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/downgrfUpgrf' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/nameClash' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/clusteringMess' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/performanceTuning' [Giuseppe Acito]
+- RImosso l'uso di attach/detach in evaluateSingle. [Giuseppe Acito]
+- Bump version: 0.2.3 → 0.2.4. [Giuseppe Acito]
+- Merge branch 'hotfix/editaChangeEdges' [Giuseppe Acito]
+- Ora edita esegue una rivalutazione. [Giuseppe Acito]
+- Bump version: 0.2.2 → 0.2.3. [Giuseppe Acito]
+- Always add a series when changing it. [Giuseppe Acito]
+- Merge branch 'hotfix/clusterMadness' [Giuseppe Acito]
+- Hope this shuts down the shit on clusters. [Giuseppe Acito]
+- Bump version: 0.2.1 → 0.2.2. [Giuseppe Acito]
+- Merge branch 'hotfix/downgrfUpgrf' [Giuseppe Acito]
+- Commit new NAMESPACE. [Giuseppe Acito]
+- Bump version: 0.2.0 → 0.2.1. [Giuseppe Acito]
+- Merge branch 'hotfix/nameClash' [Giuseppe Acito]
+- Changes to initDefaultCluster. [Giuseppe Acito]
+- Bump version: 0.1.3 → 0.2.0. [Giuseppe Acito]
+- Bump version: 0.1.2 → 0.1.3. [Giuseppe Acito]
+- Merge branch 'hotfix/clusteringMess' [Giuseppe Acito]
+- Restore default number of cores. [Giuseppe Acito]
+- Bump version: 0.1.1 → 0.1.2. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Merge branch 'release/release1.1' into develop. [Giuseppe Acito]
+- Merge branch 'release/release1.1' [Giuseppe Acito]
+- Bump version: 0.1.0 → 0.1.1. [Giuseppe Acito]
+- Still struggling with clusters. [Giuseppe Acito]
+- Strugling against cluster nonsense. [Giuseppe Acito]
+- Aggiunta di documentazione. [Giuseppe Acito]
+- Merge branch 'release/firstShitfullRelease' into develop. [Giuseppe
+  Acito]
+- Merge branch 'release/firstShitfullRelease' [Giuseppe Acito]
+- Bump version: 0.0.5 → 0.1.0. [Giuseppe Acito]
+- Test ok, ancora da rivedere la correzione di conflitti. [Giuseppe
+  Acito]
+- Bump version: 0.0.4 → 0.0.5. [Giuseppe Acito]
+- Mostra il codice indentato. [Giuseppe Acito]
+- Non sense. [Giuseppe Acito]
+- Elimina un enrome baco su updateArchi. [Giuseppe Acito]
+- Adds a decent progressbar. [Giuseppe Acito]
+- Fixed errors on updateData. [Giuseppe Acito]
+- Adds tests. [Giuseppe Acito]
+- Added full support to clusters and 1 connection per session. [Giuseppe
+  Acito]
+- Removed parallel execution. [Giuseppe Acito]
+- Working home. [Giuseppe Acito]
+- Fix inizializzazione network. [Giuseppe Acito]
+- Rilevazione conflitti quasi completa :) [Giuseppe Acito]
+- Update grafi completo. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
+- Merge branch 'release/rilevazioneConflitti' [Giuseppe Acito]
+- Merge branch 'release/rilevazioneConflitti' into develop. [Giuseppe
+  Acito]
+- Bump version: 0.0.3 → 0.0.4. [Giuseppe Acito]
+- Fixes some minor issues with tags and ordering on conflicts. [Giuseppe
+  Acito]
+- Rilevazione conflitti corretta. Ora manca la soluzione. [Giuseppe
+  Acito]
+- MEss. [Giuseppe Acito]
+- Bump version: 0.0.2 → 0.0.3. [Giuseppe Acito]
+- Minor fixes; still pending a generic/method discrepancy. [Giuseppe
+  Acito]
+- Bump version: 0.0.1 → 0.0.2. [Giuseppe Acito]
+- A quanto pare i problemi di testthat sono con generics e
+  implementazioni separate. [Giuseppe Acito]
+- Let's debug testthat. [Giuseppe Acito]
+- Initial commit. [Giuseppe Acito]
 
-All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-Generated by [`auto-changelog`](https://github.com/CookPete/auto-changelog).
-
-#### [v1.34.4](https://github.com/giupo/GrafoDB/compare/v1.34.6...v1.34.7)
-> 20 December 2019
-
-- ddds grafodb alias for Diego [`8d97671`](https://github.com/giupo/GrafoDB/commit/8d976711d46f5d506a153c6b19787383de7bb920)
-
-#### [v1.34.4](https://github.com/giupo/GrafoDB/compare/v1.34.3...v1.34.4)
-
-> 29 November 2019
-
-- Bump version: 1.34.3 → 1.34.4 [`1ef5a39`](https://github.com/giupo/GrafoDB/commit/1ef5a391761e8d9073202b9c06f8cf6e5fa975ab)
-- updated .Rbuildignore with .vscode, .circleci and .dockerignore [`752b617`](https://github.com/giupo/GrafoDB/commit/752b617f903638fa3a9ade6e256155c13299cc27)
-
-#### [v1.34.3](https://github.com/giupo/GrafoDB/compare/v1.34.2...v1.34.3)
-
-> 29 November 2019
-
-- forced devtools dep [`a74ec99`](https://github.com/giupo/GrafoDB/commit/a74ec99e788870afc68b648f9996347a9d8a74a9)
-- adds devtools to renv.lock [`b0b8d21`](https://github.com/giupo/GrafoDB/commit/b0b8d21e0dbfd8cab5f31e6e640c15c5cd29926a)
-- Bump version: 1.34.2 → 1.34.3 [`7533897`](https://github.com/giupo/GrafoDB/commit/7533897c625314db29aa8e81c8740b898b01a4a7)
-
-#### [v1.34.2](https://github.com/giupo/GrafoDB/compare/v1.34.1...v1.34.2)
-
-> 28 November 2019
-
-- let's try junit [`b5b566f`](https://github.com/giupo/GrafoDB/commit/b5b566ff1ecce71d3903032a362b0b3af68a80fa)
-- Bump version: 1.34.1 → 1.34.2 [`d018d56`](https://github.com/giupo/GrafoDB/commit/d018d569247a8f50e874ab202df5c7ff592123c4)
-
-#### [v1.34.1](https://github.com/giupo/GrafoDB/compare/v1.34.0...v1.34.1)
-
-> 28 November 2019
-
-- remove from NAMESPACE compiled reference to dynlib [`5e06d2b`](https://github.com/giupo/GrafoDB/commit/5e06d2b23be32e069b013a64392f6050f194af63)
-- Remove unused file for Rcpp [`8e64a00`](https://github.com/giupo/GrafoDB/commit/8e64a007b39d376e29bb77844e7a0f0ca37e2a23)
-- Bump version: 1.34.0 → 1.34.1 [`72b56c3`](https://github.com/giupo/GrafoDB/commit/72b56c3582ca3f8a192f19d06021b6405c5a1c5a)
-
-#### [v1.34.0](https://github.com/giupo/GrafoDB/compare/v1.33.3...v1.34.0)
-
-> 28 November 2019
-
-- remove native compilation, not used anymore [`bd1eac9`](https://github.com/giupo/GrafoDB/commit/bd1eac9b5e864c73d794dca76fcc28f746cb1184)
-- update docs [`b98fc11`](https://github.com/giupo/GrafoDB/commit/b98fc116e1b59977c83e6ea5d99df7c54b181cb7)
-- merging with remote [`ef2ed8a`](https://github.com/giupo/GrafoDB/commit/ef2ed8a9279ba8007ee107a1cb5626cdca9fbd44)
-
-#### [v1.33.3](https://github.com/giupo/GrafoDB/compare/v1.33.2...v1.33.3)
-
-> 19 November 2019
-
-- update travis [`437393d`](https://github.com/giupo/GrafoDB/commit/437393d05b15a93034c24328e56ad1528964b8ab)
-- Bump version: 1.33.2 → 1.33.3 [`444c7ca`](https://github.com/giupo/GrafoDB/commit/444c7ca7e7b79ab2fea695fac43b8158b8527566)
-
-#### [v1.33.2](https://github.com/giupo/GrafoDB/compare/v1.33.1...v1.33.2)
-
-> 19 November 2019
-
-- remove dbDisconnect from tests [`b4ba6b0`](https://github.com/giupo/GrafoDB/commit/b4ba6b0f55a1278ac96c1c8fd0fc9639214c6d17)
-- Bump version: 1.33.1 → 1.33.2 [`4af3bc3`](https://github.com/giupo/GrafoDB/commit/4af3bc321edf05c80a6d1fd90113f1d9a31fc28d)
-
-#### [v1.33.1](https://github.com/giupo/GrafoDB/compare/v1.33.0...v1.33.1)
-
-> 19 November 2019
-
-- proxy disconect for dbDisconnect [`e3b518b`](https://github.com/giupo/GrafoDB/commit/e3b518b98ac30adf1f41bdf491d8b583e65264c2)
-- Bump version: 1.33.0 → 1.33.1 [`406bc05`](https://github.com/giupo/GrafoDB/commit/406bc0500f9a83af4dabe9c09bf2a099d140e9fe)
-
-#### [v1.33.0](https://github.com/giupo/GrafoDB/compare/v1.32.2...v1.33.0)
-
-> 19 November 2019
-
-- works with SQLite [`59aac10`](https://github.com/giupo/GrafoDB/commit/59aac10804c2be79bc312a7eb48036ece6fb99a4)
-- Bump version: 1.32.2 → 1.33.0 [`80cdcb2`](https://github.com/giupo/GrafoDB/commit/80cdcb2d8b3efbd3f413827102a0b8b65bc4dd65)
-
-#### [v1.32.2](https://github.com/giupo/GrafoDB/compare/v1.32.1...v1.32.2)
-
-> 19 November 2019
-
-- Renv ok [`bb45cb6`](https://github.com/giupo/GrafoDB/commit/bb45cb6b97350ab8cfccc24c5741a8fb4a66d15a)
-- Bump version: 1.32.1 → 1.32.2 [`5cc2a59`](https://github.com/giupo/GrafoDB/commit/5cc2a59592f0d7b45acb24bb44a51700d07e60d4)
-
-#### [v1.32.1](https://github.com/giupo/GrafoDB/compare/v1.32.0...v1.32.1)
-
-> 19 November 2019
-
-- nothing important [`9c747bb`](https://github.com/giupo/GrafoDB/commit/9c747bb47cdb249167d4bb1a367e000c2cda4fcf)
-- moves to renv [`4f61899`](https://github.com/giupo/GrafoDB/commit/4f618990b2ebfaff2727422a41fc5dfed6543c3a)
-- fixes on .gitlab-ci.yml [`f36ff09`](https://github.com/giupo/GrafoDB/commit/f36ff097ba320b16277e1e92f82fafd8be348ae8)
-
-#### [v1.32.0](https://github.com/giupo/GrafoDB/compare/v1.30.8...v1.32.0)
-
-> 19 November 2019
-
-- passing to renv [`d7d77d0`](https://github.com/giupo/GrafoDB/commit/d7d77d0096ce746654de50c99df30088b82f49aa)
-- removes initdb from buildConnection and other amenities [`88b5bc2`](https://github.com/giupo/GrafoDB/commit/88b5bc22a4ab068ac6fd44a6f3e42047dd9e7b52)
-- updated packrat [`e2bb6ff`](https://github.com/giupo/GrafoDB/commit/e2bb6ffc13718cde5b9b1ed0fd49c75b138c7e46)
-
-#### [v1.30.8](https://github.com/giupo/GrafoDB/compare/v1.30.7...v1.30.8)
-
-> 31 October 2019
-
-- changes from r to rstudio [`1fdaa32`](https://github.com/giupo/GrafoDB/commit/1fdaa3228f6e4a8725c23d0bca02fa1e5aef79d5)
-- updates on Dockerfile [`507e4ca`](https://github.com/giupo/GrafoDB/commit/507e4ca6483ef608dbe3dd679344f637154a1908)
-- Bump version: 1.30.7 → 1.30.8 [`ddd56a6`](https://github.com/giupo/GrafoDB/commit/ddd56a68e4853bda4d945cbfce6cddca626c8620)
-
-#### [v1.30.7](https://github.com/giupo/GrafoDB/compare/v1.30.6...v1.30.7)
-
-> 5 September 2019
-
-- Bump version: 1.30.6 → 1.30.7 [`9f0c6e2`](https://github.com/giupo/GrafoDB/commit/9f0c6e2714b8d6616746779e717709366644138d)
-- dumb me: I forgot a file path calbled in code [`b7d3cf6`](https://github.com/giupo/GrafoDB/commit/b7d3cf6e76e7eb901c728d02ef4c496a4cdf7a50)
-
-#### [v1.30.6](https://github.com/giupo/GrafoDB/compare/v1.30.5...v1.30.6)
-
-> 5 September 2019
-
-- Adds checks on library RPostgreSQL [`cae62f4`](https://github.com/giupo/GrafoDB/commit/cae62f4b97cd1fd25203967733abef71406c05f3)
-- Bump version: 1.30.5 → 1.30.6 [`147bce6`](https://github.com/giupo/GrafoDB/commit/147bce69ff20c8bdb0e99b443157a53d558c2dd7)
-
-#### [v1.30.5](https://github.com/giupo/GrafoDB/compare/v1.30.4...v1.30.5)
-
-> 3 September 2019
-
-- refactor of buildConnection [`cc27261`](https://github.com/giupo/GrafoDB/commit/cc27261b4f8f6cb4ce9da0ac6e39fdb84a1040cc)
-- trying [`b19e6cb`](https://github.com/giupo/GrafoDB/commit/b19e6cb1c9c662b94534b74b770b4bbf6fe915c7)
-- adds Dockerfile [`ece8a3a`](https://github.com/giupo/GrafoDB/commit/ece8a3a2c2d415ba0235f1aa467a0a7190941af9)
-
-#### [v1.30.4](https://github.com/giupo/GrafoDB/compare/v1.30.3...v1.30.4)
-
-> 30 July 2019
-
-- linting... [`4d4faca`](https://github.com/giupo/GrafoDB/commit/4d4faca7623b9bc58cb824079d1a395a911def9e)
-- update packrat.lock [`70eccfe`](https://github.com/giupo/GrafoDB/commit/70eccfe935ccc14af23c80a9ab9b3618ad63b4c9)
-- nothing important [`628b401`](https://github.com/giupo/GrafoDB/commit/628b4018ea1606cc1788c2d48f61c6e89ace0afc)
-
-#### [v1.30.3](https://github.com/giupo/GrafoDB/compare/v1.30.2...v1.30.3)
-
-> 2 July 2019
-
-- Bump version: 1.30.2 → 1.30.3 [`942f721`](https://github.com/giupo/GrafoDB/commit/942f721616aaaf74771c72b3685a398350b164c8)
-- Fixed bug single obs timeseries [`b984792`](https://github.com/giupo/GrafoDB/commit/b984792cde9f728f760722d71df642fc80e1e1d0)
-
-#### [v1.30.2](https://github.com/giupo/GrafoDB/compare/v1.30.1...v1.30.2)
-
-> 2 July 2019
-
-- Bump version: 1.30.1 → 1.30.2 [`85adf07`](https://github.com/giupo/GrafoDB/commit/85adf0710f16d4f62810a7350632d2f98513d7c8)
-
-#### [v1.30.1](https://github.com/giupo/GrafoDB/compare/v1.30.0...v1.30.1)
-
-> 2 July 2019
-
-- Cosmetics [`b1c405b`](https://github.com/giupo/GrafoDB/commit/b1c405b26993f2b152541d7ed80544cb6d6323f3)
-- adds checks for single obs timeseries [`d7ef52f`](https://github.com/giupo/GrafoDB/commit/d7ef52fd6868580f355b457954a23f72b22a8055)
-- packrat snapshot [`686667f`](https://github.com/giupo/GrafoDB/commit/686667fba7c5e2de0a9573e045f971976abb6bdf)
-
-#### [v1.30.0](https://github.com/giupo/GrafoDB/compare/v1.29.14...v1.30.0)
-
-> 12 June 2019
-
-- Bump version: 1.29.14 → 1.30.0 [`623b397`](https://github.com/giupo/GrafoDB/commit/623b39747535b2f171f26c785714b49c3311731b)
-
-#### [v1.29.14](https://github.com/giupo/GrafoDB/compare/v1.29.13...v1.29.14)
-
-> 12 June 2019
-
-- Bump version: 1.29.13 → 1.29.14 [`0e11cfd`](https://github.com/giupo/GrafoDB/commit/0e11cfdf1e55c116a574ba6a8c7c89d42fff54cc)
-- fix mess in DESCRIPTION [`2dc7e1f`](https://github.com/giupo/GrafoDB/commit/2dc7e1f74330861ddeecc6f421357db37b96d18f)
-
-#### [v1.29.13](https://github.com/giupo/GrafoDB/compare/v1.29.12...v1.29.13)
-
-> 12 June 2019
-
-- Bump version: 1.29.12 → 1.29.13 [`01f0803`](https://github.com/giupo/GrafoDB/commit/01f0803582ae7b49586ea45848b9ad8d163da8b1)
-- fix missing tag in UPDATE_WITH_STAGE [`b1b8333`](https://github.com/giupo/GrafoDB/commit/b1b83330ed2ddf6445726c2dd2c07cb480ad0ddd)
-- merge fix [`2dbc75c`](https://github.com/giupo/GrafoDB/commit/2dbc75cbd83bf8f66054194895258e366352d89f)
-
-#### [v1.29.12](https://github.com/giupo/GrafoDB/compare/v1.29.9...v1.29.12)
-
-> 12 June 2019
-
-- adds selective support for CHANGED_SERIES on tags [`f8d332c`](https://github.com/giupo/GrafoDB/commit/f8d332c1a55625c250ae15a7556616673a5eced2)
-- Bump version: 1.29.11 → 1.29.12 [`0bb567b`](https://github.com/giupo/GrafoDB/commit/0bb567b508a4230935ec8a663208633e33e83535)
-- fix merge [`dac4063`](https://github.com/giupo/GrafoDB/commit/dac4063d8fe2a690d0f228655ec8e69f6a5f4e12)
-
-#### [v1.29.11](https://github.com/giupo/GrafoDB/compare/v1.29.10...v1.29.11)
-
-> 5 April 2019
-
-- Bump version: 1.29.10 → 1.29.11 [`61e350b`](https://github.com/giupo/GrafoDB/commit/61e350b67fb48d7949f1b5dbc622c99d557ac653)
-
-#### [v1.29.10](https://github.com/giupo/GrafoDB/compare/v1.29.3...v1.29.10)
-
-> 4 April 2019
-
-- updated to packrat 0.5 [`3584d33`](https://github.com/giupo/GrafoDB/commit/3584d335cc054e816a779ec1d96e9ce9a81488d0)
-- update namespace [`1c91828`](https://github.com/giupo/GrafoDB/commit/1c91828f616dea1479cef41e8ad9263191a98e44)
-- update namespace [`2c33f9e`](https://github.com/giupo/GrafoDB/commit/2c33f9efa7c434888daca65990fca8c12835c1cc)
-
-#### [v1.29.9](https://github.com/giupo/GrafoDB/compare/v1.29.8...v1.29.9)
-
-> 12 June 2019
-
-- Bump version: 1.29.8 → 1.29.9 [`b409e5e`](https://github.com/giupo/GrafoDB/commit/b409e5e0b4d4a8e6021acc629b3ad92f0440fda3)
-
-#### [v1.29.8](https://github.com/giupo/GrafoDB/compare/v1.29.11...v1.29.8)
-
-> 12 June 2019
-
-- adds selective support for CHANGED_SERIES on tags [`28eea1c`](https://github.com/giupo/GrafoDB/commit/28eea1cc97c44df7ddc89c2939f65e9387c475a4)
-- adds .gitignore su packrat [`52185f0`](https://github.com/giupo/GrafoDB/commit/52185f0f499f1326b7fce756ef3dda16c0c57779)
-- Bump version: 1.29.7 → 1.29.8 [`b6b7262`](https://github.com/giupo/GrafoDB/commit/b6b7262d225f16a10a51befe8e74f9faa683cfff)
-
-#### [v1.29.4](https://github.com/giupo/GrafoDB/compare/v1.29.2...v1.29.4)
-
-> 18 January 2019
-
-- adds changelog [`2f3859c`](https://github.com/giupo/GrafoDB/commit/2f3859c35b2402ed971c5dd73df7b41ee860b6b5)
-- adds changelog [`bac94cc`](https://github.com/giupo/GrafoDB/commit/bac94cc313fdbfb797883f80b554dc3d042646d9)
-- Update .gitlab-ci.yml: refactored with some organization [`e5da64c`](https://github.com/giupo/GrafoDB/commit/e5da64cef003a53eae862dfa8a00cddc1c06da06)
-
-#### [v1.29.3](https://github.com/giupo/GrafoDB/compare/v1.29.4...v1.29.3)
-
-> 1 April 2019
-
-- updates changelog [`7b17ae4`](https://github.com/giupo/GrafoDB/commit/7b17ae41b8c55bac6932df132843756576bba402)
-- replace freq= to frequency= in building ts() [`ed1fce4`](https://github.com/giupo/GrafoDB/commit/ed1fce4cf1f70e52d7f920aed3f88d3799982907)
-- Update .gitlab-ci.yml [`02e5bab`](https://github.com/giupo/GrafoDB/commit/02e5babf124ed253a4609eb839e4cc71412d0f76)
-
-#### [v1.29.2](https://github.com/giupo/GrafoDB/compare/v1.29.1...v1.29.2)
-
-> 28 August 2018
-
-- Bump version: 1.29.1 → 1.29.2 [`767423b`](https://github.com/giupo/GrafoDB/commit/767423b5a7a7ceaf734b30a60bae8a422ad6bee1)
-- methods added to autotest.r, 3.3.3 doesn't like not having it [`e410cea`](https://github.com/giupo/GrafoDB/commit/e410cead63813664edb250e6220ba966b4ca05e9)
-
-#### [v1.29.1](https://github.com/giupo/GrafoDB/compare/v1.29.0...v1.29.1)
-
-> 28 August 2018
-
-- remove warning from .getdata to restore the behaviour [`8bfa6f2`](https://github.com/giupo/GrafoDB/commit/8bfa6f2304d9341fd3940c6d5d8216b9ef49bbbe)
-- Bump version: 1.29.0 → 1.29.1 [`2ecfcf1`](https://github.com/giupo/GrafoDB/commit/2ecfcf1c1869260f3d33897b5aca7dc519cc3d51)
-
-#### [v1.29.0](https://github.com/giupo/GrafoDB/compare/v1.28.15...v1.29.0)
-
-> 28 August 2018
-
-- save with stage works on postgres [`0aaa7b1`](https://github.com/giupo/GrafoDB/commit/0aaa7b1edb600b192972b1e8f99a85638c135694)
-- preparo il rilascio [`334f426`](https://github.com/giupo/GrafoDB/commit/334f426c14ac8935201a29a6cc050a3961e1e7c6)
-- Bump version: 1.28.15 → 1.29.0 [`8f9eedb`](https://github.com/giupo/GrafoDB/commit/8f9eedb894bdced0334a3122b9f866cb9a4de540)
-
-#### [v1.28.15](https://github.com/giupo/GrafoDB/compare/v1.28.14...v1.28.15)
-
-> 27 August 2018
-
-- Bump version: 1.28.14 → 1.28.15 [`cc23dd9`](https://github.com/giupo/GrafoDB/commit/cc23dd944b0bf35c5b33232fcff965ccf9ecbb75)
-- oh crap, I hate myself [`e4b28da`](https://github.com/giupo/GrafoDB/commit/e4b28da17700a3a0185680cce15029a0078e259b)
-
-#### [v1.28.14](https://github.com/giupo/GrafoDB/compare/v1.28.13...v1.28.14)
-
-> 27 August 2018
-
-- Bump version: 1.28.13 → 1.28.14 [`e57c2ad`](https://github.com/giupo/GrafoDB/commit/e57c2ada8913d58570b62d5c7abfa3d1d68b8251)
-- oh crap [`fa4c130`](https://github.com/giupo/GrafoDB/commit/fa4c130003186d8bfb2d342aae9952c0242f6b3d)
-
-#### [v1.28.13](https://github.com/giupo/GrafoDB/compare/v1.28.12...v1.28.13)
-
-> 27 August 2018
-
-- oh crap [`cd3ae50`](https://github.com/giupo/GrafoDB/commit/cd3ae50fc056d9fcfdf508bcfe5b1cff748e8d5f)
-- Bump version: 1.28.12 → 1.28.13 [`becc827`](https://github.com/giupo/GrafoDB/commit/becc827fc1da370b5ce141d6e6b9f0569ec91c6d)
-
-#### [v1.28.12](https://github.com/giupo/GrafoDB/compare/v1.28.11...v1.28.12)
-
-> 27 August 2018
-
-- Bump version: 1.28.11 → 1.28.12 [`50cf2e6`](https://github.com/giupo/GrafoDB/commit/50cf2e6fce9f90b193bc0daa5330150162917e41)
-- fix su SQL [`7dab6ff`](https://github.com/giupo/GrafoDB/commit/7dab6ff9a6509a625bba8ffa3b0de95596e28056)
-
-#### [v1.28.11](https://github.com/giupo/GrafoDB/compare/v1.28.10...v1.28.11)
-
-> 27 August 2018
-
-- Bump version: 1.28.10 → 1.28.11 [`b162f3c`](https://github.com/giupo/GrafoDB/commit/b162f3c55069fc3f697be4c215c3c3dff8e0701e)
-- oh crap, still typos [`d3fdd83`](https://github.com/giupo/GrafoDB/commit/d3fdd83587620e4dc05fdbbfbcf61b101798fee7)
-
-#### [v1.28.10](https://github.com/giupo/GrafoDB/compare/v1.28.9...v1.28.10)
-
-> 27 August 2018
-
-- I will test. Promise [`241a383`](https://github.com/giupo/GrafoDB/commit/241a383aea930b9a4fcbe977e5a7ce4210968c68)
-- Bump version: 1.28.9 → 1.28.10 [`452f41a`](https://github.com/giupo/GrafoDB/commit/452f41a35d7dae09e6cee39595cd35189fa0a6ff)
-- oh crap, typos everywhere [`395bd71`](https://github.com/giupo/GrafoDB/commit/395bd7169a5723771b50c0e227c43f21b9977e6f)
-
-#### [v1.28.9](https://github.com/giupo/GrafoDB/compare/v1.28.8...v1.28.9)
-
-> 27 August 2018
-
-- Bump version: 1.28.8 → 1.28.9 [`0510a98`](https://github.com/giupo/GrafoDB/commit/0510a987a6b3bdb594539006beee61e98c5e7841)
-- updates query for update_with_stage with tag [`4aa2a63`](https://github.com/giupo/GrafoDB/commit/4aa2a635e9e80cc312a262fcf13e74675651fc35)
-
-#### [v1.28.8](https://github.com/giupo/GrafoDB/compare/v1.28.7...v1.28.8)
-
-> 24 August 2018
-
-- remove warning in assign [&lt;- [`d11dbc0`](https://github.com/giupo/GrafoDB/commit/d11dbc00b8854a577b110020ba3908fa492175d0)
-- Bump version: 1.28.7 → 1.28.8 [`09b60f5`](https://github.com/giupo/GrafoDB/commit/09b60f55fd07a0646301a5b264fc72e0107bf02b)
-
-#### [v1.28.7](https://github.com/giupo/GrafoDB/compare/v1.28.6...v1.28.7)
-
-> 24 August 2018
-
-- Fixing errors for data inconsistencies. still missing test for lack of a beter mock library [`3bb689a`](https://github.com/giupo/GrafoDB/commit/3bb689a058c8c4bc7deb12ca6796ff3846355c17)
-- Bump version: 1.28.6 → 1.28.7 [`461553c`](https://github.com/giupo/GrafoDB/commit/461553c59f88237ce8087fb7b57ff8cb3ca6fd7e)
-
-#### [v1.28.6](https://github.com/giupo/GrafoDB/compare/v1.28.5...v1.28.6)
-
-> 24 August 2018
-
-- removed unused code, added check on retrieved data [`309f159`](https://github.com/giupo/GrafoDB/commit/309f159afa7b3931913db089ea79396f7d0746c4)
-- Bump version: 1.28.5 → 1.28.6 [`27dc0dd`](https://github.com/giupo/GrafoDB/commit/27dc0dd135c3878bdc3b0493db423c73bafc4829)
-
-#### [v1.28.5](https://github.com/giupo/GrafoDB/compare/v1.28.4...v1.28.5)
-
-> 24 August 2018
-
-- Remove DROP STAGE [`15d3250`](https://github.com/giupo/GrafoDB/commit/15d3250180b4bee8d23153693b3acbe6516ec872)
-- Bump version: 1.28.4 → 1.28.5 [`88b49c6`](https://github.com/giupo/GrafoDB/commit/88b49c6a6238b09488dd605e0d21991aca816f84)
-
-#### [v1.28.4](https://github.com/giupo/GrafoDB/compare/v1.28.3...v1.28.4)
-
-> 24 August 2018
-
-- adds random stage name [`baec618`](https://github.com/giupo/GrafoDB/commit/baec6182cf0b42038b8beb2bf74953d428a3387b)
-- Bump version: 1.28.3 → 1.28.4 [`dacbb25`](https://github.com/giupo/GrafoDB/commit/dacbb2587b318c383938dc7ef10fb6066659de0f)
-
-#### [v1.28.3](https://github.com/giupo/GrafoDB/compare/v1.28.2...v1.28.3)
-
-> 24 August 2018
-
-- Bump version: 1.28.2 → 1.28.3 [`b8afdce`](https://github.com/giupo/GrafoDB/commit/b8afdce251e1123efc364d333174544585689016)
-
-#### [v1.28.2](https://github.com/giupo/GrafoDB/compare/v1.28.1...v1.28.2)
-
-> 24 August 2018
-
-- still some sql statements missing, dumb me [`c4a80be`](https://github.com/giupo/GrafoDB/commit/c4a80be6db53e4f7775fd5cfa724e6a22dc8cc7d)
-- Bump version: 1.28.1 → 1.28.2 [`9d63df0`](https://github.com/giupo/GrafoDB/commit/9d63df0db05d8f2ea975ee9b2c8cd3f72b25b919)
-
-#### [v1.28.1](https://github.com/giupo/GrafoDB/compare/v1.28.0...v1.28.1)
-
-> 24 August 2018
-
-- bypass on data partition on PostgreSQL [`8ec3d0f`](https://github.com/giupo/GrafoDB/commit/8ec3d0fa15567f6ff12e92fc67ab5ffd293b5ff4)
-- adds getenv docs [`7893ead`](https://github.com/giupo/GrafoDB/commit/7893eadd93d72a966dd3b60592f3c6bb175b874b)
-- Bump version: 1.28.0 → 1.28.1 [`32ee804`](https://github.com/giupo/GrafoDB/commit/32ee804274b52262a1dec6d4161fb006f4790308)
-
-#### [v1.28.0](https://github.com/giupo/GrafoDB/compare/v1.27.3...v1.28.0)
-
-> 10 July 2018
-
-- Looks ok [`872416a`](https://github.com/giupo/GrafoDB/commit/872416a71a7de2e404cfb3f5b6046abbe671e56c)
-- fixed [`80746a9`](https://github.com/giupo/GrafoDB/commit/80746a9022e4fa755cb35bf1eb0d273b76c48bd7)
-- minor fixes, no fixes [`457fdc5`](https://github.com/giupo/GrafoDB/commit/457fdc58c745901fd1e157250199cf5149923042)
-
-#### [v1.27.3](https://github.com/giupo/GrafoDB/compare/v1.27.2...v1.27.3)
-
-> 10 July 2018
-
-- Bump version: 1.27.2 → 1.27.3 [`fc57c14`](https://github.com/giupo/GrafoDB/commit/fc57c14d286e4c81f64d33b65d0be8555b376927)
-
-#### [v1.27.2](https://github.com/giupo/GrafoDB/compare/v1.27.1...v1.27.2)
-
-> 10 July 2018
-
-- Bump version: 1.27.1 → 1.27.2 [`1b3f557`](https://github.com/giupo/GrafoDB/commit/1b3f55740f944f6643b5503ac94c6942c711831c)
-- fix typo on time.in.millis [`61c81a9`](https://github.com/giupo/GrafoDB/commit/61c81a9a7801150c85f07a3607291b8aa5cab3db)
-
-#### [v1.27.1](https://github.com/giupo/GrafoDB/compare/v1.27.0...v1.27.1)
-
-> 9 July 2018
-
-- Bump version: 1.27.0 → 1.27.1 [`9e3d7b6`](https://github.com/giupo/GrafoDB/commit/9e3d7b6a4d9a3ffa33c5434717b078f83211c795)
-- fix typo [`435a83d`](https://github.com/giupo/GrafoDB/commit/435a83d47d0c02e157d1cbef4f3ffd20b5d29d0b)
-
-#### [v1.27.0](https://github.com/giupo/GrafoDB/compare/v1.26.3...v1.27.0)
-
-> 9 July 2018
-
-- Bump version: 1.26.3 → 1.27.0 [`b306215`](https://github.com/giupo/GrafoDB/commit/b306215f16cfe8e49bab72f7a8f7ed61adf4796c)
-
-#### v1.26.3
-
-> 9 July 2018
-
-- Fixes #32083 [`#32083`](https://github.com/giupo/GrafoDB/issues/32083)
-- Fix #24. Applicata patch al codice C++ [`#24`](https://github.com/giupo/GrafoDB/issues/24)
-- Fix #13. Se setto una serie che ha una formula con una serie scalare devo avere un messaggio sensato [`#13`](https://github.com/giupo/GrafoDB/issues/13)
-- export deleteMeta, previously undone. Fix #7 [`#7`](https://github.com/giupo/GrafoDB/issues/7)
-- Rimosso changes me, lo odiavo. Fix #8 [`#8`](https://github.com/giupo/GrafoDB/issues/8)
-- Fix #6. eseguivo due volte .evaluateSingle. Ora non ricordo il motivo ma e' da tenere a mente [`#6`](https://github.com/giupo/GrafoDB/issues/6)
-- Fix #5. Ora Edita correttamente consente di editare le formule ripetutamente, anche in caso di errore. Ser consente l'esecuzione delle formule di serie elementari, senza padri [`#5`](https://github.com/giupo/GrafoDB/issues/5)
-- Fix #3 ? I dunno even if #3 was a real problem or a misuse of GrafoDB [`#3`](https://github.com/giupo/GrafoDB/issues/3)
-- Fix #1. Ora il rolling viene effettuato solo se il grafo ha effettivamente serie salvate. O meglio, non fa la history se creo il grafo [`#1`](https://github.com/giupo/GrafoDB/issues/1)
-- Semplifico la build [`7d83d2d`](https://github.com/giupo/GrafoDB/commit/7d83d2de5f5765e0d7473d7037c340a8f9b73c0f)
-- Rimuovo directory inutile, modifico il make per lavorare su OSX [`1a15ccb`](https://github.com/giupo/GrafoDB/commit/1a15ccbf7f3699268ef62376b7f5f99accd64547)
-- sistemato lookup non funzionante ed aggiunto initdb + schema.sql [`402464c`](https://github.com/giupo/GrafoDB/commit/402464c683bcb6b328b69dd120fe031c3ae95b9d)
