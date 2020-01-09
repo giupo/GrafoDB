@@ -25,13 +25,9 @@ test:
   tags: 
     - collaudo
   script: 
-    - R -e 'options(testthat.output_file="tests.xml"); devtools::test(reporter="junit")'
-  artifacts:
-    paths:
-      - tests.xml
+    - R -e 'devtools::test()'
 # reports:
 #    junit: tests.xml
-
 
 check:
   stage: check
