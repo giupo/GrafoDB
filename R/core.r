@@ -165,7 +165,6 @@ setGeneric(
 #'
 #' @name GrafoDB
 #' @rdname GrafoDB
-#' @aliases GrafoDB-class
 #' @title Database Grafo
 #' @param ... don't know if used
 #' @slot data \link[hash]{hash} containing changed data of this \link{GrafoDB}
@@ -204,11 +203,7 @@ GrafoDB <- setClass(
     helper = "SQLHelper"),
   contains = "Dataset")
 
-#' alias for GrafoDB
-#' 
-#' @name grafodb
-#' @export 
-#' @note only for you!
+#' @export
 
 grafodb <- GrafoDB
 
