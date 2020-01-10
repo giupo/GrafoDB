@@ -662,16 +662,16 @@
     },
     "rdataset": {
       "Package": "rdataset",
-      "Version": "0.5.0",
+      "Version": "0.5.2",
       "Source": "GitHub",
-      "RemoteType": "github",
       "Remotes": "github::giupo/rutils",
+      "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "rdataset",
       "RemoteUsername": "giupo",
       "RemoteRef": "master",
-      "RemoteSha": "f4825cdf89e116535b775d4bab3c7ec6876d82d7",
-      "Hash": "4ddea8729cba3819e79aac9cc786f9fd"
+      "RemoteSha": "36f957e2c9979a514b57df6dfdd9e310bdcf4e00",
+      "Hash": "2c6261332262ddb102d9a78a1fe4a2ea"
     },
     "remotes": {
       "Package": "remotes",
