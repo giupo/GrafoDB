@@ -68,13 +68,13 @@
     flog.debug('connection created and set to be closed on.exit', name=ln)
     con
   }
-  
+
   flog.debug("Message used for saving: %s", msg, name=ln)
-  
+
   tryCatch({
     flog.trace("beginning transaction", name=ln)
     dbBegin(con)
-    
+
     if(hasConflicts(x, con=con)) {
       stop("Il grafo ", tag, " ha conflitti, risolverli prima di salvare")
     }
@@ -100,8 +100,8 @@
       x@network <- network
       x <- evaluate(x, clean_names)
     }
-    
-    checkConflicts(x, con=con)    
+
+    checkConflicts(x, con=con)
 
     if(.tagExists(tag, con=con)) {
       # se esiste il tag sul DB
@@ -125,7 +125,7 @@
         flog.trace('tag as param equals tag as slot: creating a new graph', name=ln)
         # se non esiste il tag sul DB
         # sto creando un nuovo grafo
-        .createGraph(x, tag, con=con, msg=msg)  
+        .createGraph(x, tag, con=con, msg=msg)
       } else {
         # se i tag sono differenti
         if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
@@ -143,13 +143,14 @@
         }
       }
     }
+
     flog.trace("Contacting Redis cache...", name=ln)
     removeFromRedis(x, x@touched)
     flog.trace("Redis interaction completed.", name=ln)
-    
+
     dbCommit(con)
   }, error=function(err) {
-    tryCatch({  
+    tryCatch({
       dbRollback(con)
     }, error = function(err2) {
       stop(err2, "Root: ", err)
@@ -229,9 +230,9 @@
   } else {
     stop("Non ci sono dati da salvare.")
   }
-  
+
   archi <- as.data.frame(get.edgelist(x@network))
-  
+
   if(nrow(archi)) {
     foreach(row = iter(archi, 'row')) %do% {
       partenza <- row[,1]
@@ -245,7 +246,7 @@
         last_updated=time.in.millis()))
     }
   }
-  
+
   foreach(name = iter(names(x)), .combine=rbind) %do% {
     formula <- expr(x, name, echo=FALSE)
     if(!is.null(formula)) {
@@ -258,7 +259,7 @@
         last_updated=time.in.millis()))
     }
   }
-  
+
   dbExecute(con, getSQLbyKey(
     helper, "INSERT_GRAFI", 
     tag=tag,
@@ -290,7 +291,7 @@ countRolling <- function(x, con) {
   if (helper@type == "PostgreSQL") {
     ## se PostgreSQL:
     nome_seq <- paste0("grafi_", tag, "_ordinal_seq")
-    
+
     if(nrow(dbGetQuery(con, getSQLbyKey(helper, "EXISTS_SEQ", seq=nome_seq))) > 0) {
       df <- dbGetQuery(con, getSQLbyKey(helper, "NEXT_VAL", seq=nome_seq))
       as.numeric(df[[1]])
@@ -358,7 +359,7 @@ doHistory <- function(x, tag, con) {
   if(length(autore) == 0) {
     autore <- whoami()
   }
-  
+
   dest <- nextRollingNameFor(x, con)
   if(interactive()) message("Salvo il grafo ", x@tag, " in ", dest)
   .copyGraph(x@tag, dest, con=con, autore=autore,
