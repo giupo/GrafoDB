@@ -10,11 +10,17 @@
   } else {
     paste0("Rilascio per ", to)
   }
-  
+
   helper <- if("helper" %in% names(param_list)) {
     param_list[["helper"]]
   } else {
     SQLHelper()
+  }
+
+  last_updated <- if("last_updated" %in% names(param_list)) {
+    param_list[["last_updated"]]
+  } else {
+    time.in.millis()
   }
 
   autore <- if('autore' %in% names(param_list)) {
@@ -22,7 +28,7 @@
   } else {
     whoami()
   }
-  
+
   params <- cbind(to, autore, from)
 
   ## copia archi

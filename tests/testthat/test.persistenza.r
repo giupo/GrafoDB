@@ -116,3 +116,18 @@ test_that("need_resync returns true if GrafoNeeds a resync", {
   saveGraph(g2)
   expect_true(need_resync(g1))
 })
+
+test_that("doHistory preserves last_updated", {
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
+  g1 <- saveGraph(g)
+  Sys.sleep(0.1)
+  g1["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
+  saveGraph(g1)
+  p <- GrafoDB("testp1")
+  expect_true("A" %in% names(p))
+  expect_false(g1@timestamp == g@timestamp)
+  expect_equal(g@timestamp, p@timestamp)
+})

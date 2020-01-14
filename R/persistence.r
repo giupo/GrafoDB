@@ -361,7 +361,8 @@ doHistory <- function(x, tag, con) {
   
   dest <- nextRollingNameFor(x, con)
   if(interactive()) message("Salvo il grafo ", x@tag, " in ", dest)
-  .copyGraph(x@tag, dest, con=con, autore=autore, helper=x@helper)
+  .copyGraph(x@tag, dest, con=con, autore=autore,
+             helper=x@helper, last_update=x@timestamp)
   if(interactive()) message("salvataggio ", dest, " completo")
   0
 }
