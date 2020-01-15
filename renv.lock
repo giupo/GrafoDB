@@ -172,10 +172,10 @@
     },
     "callr": {
       "Package": "callr",
-      "Version": "3.3.2",
+      "Version": "3.3.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "75d46070f66638c29e4518d5a944abfa"
+      "Hash": "b3c10a6b94482a227ba11e245c194884"
     },
     "cli": {
       "Package": "cli",
@@ -664,8 +664,8 @@
       "Package": "rdataset",
       "Version": "0.5.2",
       "Source": "GitHub",
-      "Remotes": "github::giupo/rutils",
       "RemoteType": "github",
+      "Remotes": "github::giupo/rutils",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "rdataset",
       "RemoteUsername": "giupo",
