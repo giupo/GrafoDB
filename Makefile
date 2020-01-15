@@ -61,4 +61,4 @@ codecov:
 	Rscript -e 'covr::codecov(path=".", line_exclusions=c(list.files(path="renv", recursive=T, full.names=T), "src/jsoncpp.cpp", "src/json/json.h"))'
 
 restore:
-	R -e 'renv::restore()'
+	R -e 'renv::restore(); renv::install("callr@3.3.0")'
