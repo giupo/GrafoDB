@@ -219,7 +219,7 @@ setGeneric(
 setMethod(
   "navigate",
   signature("GrafoDB", "ANY", "ANY", "ANY"),
-  function(object, nodes=NULL, order=1L, mode="out" {
+  function(object, nodes=NULL, order=1L, mode="out") {
     .navigate(object, nodes=nodes, order=order, mode=mode)
   })
 
