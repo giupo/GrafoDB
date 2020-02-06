@@ -42,19 +42,19 @@ setMethod(
 .subsetting <- function(x, i, value) {
   nameObject <- deparse(substitute(x))
   network <- x@network
-  all_names <- V(network)$name
+  all_names <- igraph::V(network)$name
   name <- i
   
   already_in_dag <- all(name %in% all_names)  
   network <- if(!already_in_dag) {
     toBeAdded <- setdiff(name, all_names)
-    network + vertex(toBeAdded)
+    network + igraph::vertex(toBeAdded)
   } else {
       if(!is.dataset(value) && length(E(network)) > 0) {
         if(packageVersion("igraph") >= '1.1.0') {
-            network - E(network)[.to(name)]  # nocov
+            network - igraph::E(network)[.to(name)]  # nocov
         } else {
-            network - E(network)[to(name)]   # nocov
+            network - igraph::E(network)[to(name)]   # nocov
         }
     } else {
       network
@@ -85,10 +85,10 @@ setMethod(
     }
     
     for(dep in dependencies) {
-      network <- network + edge(dep, name)
+      network <- network + igraph::edge(dep, name)
     }
     ## rimuovo i tempedges perche' li ho appena inseriti
-    if(name %in% keys(x@edges)) {
+    if(name %in% hash::keys(x@edges)) {
       suppressWarnings(del(name, x@edges))
     }
     
@@ -112,8 +112,8 @@ setMethod(
     }
     
     x@network <- network
-    if(is.dataset(value) || is.list(value)) {
-      value <- as.dataset(value)
+    if(rdataset::is.dataset(value) || is.list(value)) {
+      value <- rdataset::as.dataset(value)
       data <- x@data
       for(n in names(value)) {
         data[n] <- value[[n]]
@@ -128,7 +128,8 @@ setMethod(
     }
   }
   x@touched <- sort(unique(c(x@touched, name)))
-  assign(nameObject, x, envir=parent.frame())
+  #TODO(giupo): this causes a warning, fix me.
+  assign(nameObject, x, envir=parent.frame()) 
   invisible(x)
 }
 

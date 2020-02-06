@@ -73,7 +73,7 @@
 
   tryCatch({
     flog.trace("beginning transaction", name=ln)
-    dbBegin(con)
+    DBI::dbBegin(con)
 
     if(hasConflicts(x, con=con)) {
       stop("Il grafo ", tag, " ha conflitti, risolverli prima di salvare")
@@ -86,7 +86,7 @@
       # trova serie che necessitano il resync
       name_to_sync <- getChangedSeries(x, con=con)
       # trova serie con conflitti
-      name_in_conflicts <- intersect(name_to_sync, union(keys(x@functions), keys(x@data)))
+      name_in_conflicts <- intersect(name_to_sync, union(hash::keys(x@functions), hash::keys(x@data)))
       clean_names <- setdiff(name_to_sync, name_in_conflicts)
       # clean_names contiene le serie che possono essere ricaricate dal db e rivalutate
       # senza problemi
@@ -94,8 +94,8 @@
       network <- x@network
       archi <- loadArchi(tag, con=con)
       archi <- archi[, c("partenza", "arrivo")]
-      dbnetwork <- graph.data.frame(as.data.frame(archi), directed=TRUE)
-      network <- graph.union(network, dbnetwork, byname=TRUE)
+      dbnetwork <- igraph::graph.data.frame(as.data.frame(archi), directed=TRUE)
+      network <- igraph::graph.union(network, dbnetwork, byname=TRUE)
       checkDAG(network)
       x@network <- network
       x <- evaluate(x, clean_names)
@@ -148,10 +148,10 @@
     removeFromRedis(x, x@touched)
     flog.trace("Redis interaction completed.", name=ln)
 
-    dbCommit(con)
+    DBI::dbCommit(con)
   }, error=function(err) {
     tryCatch({
-      dbRollback(con)
+      DBI::dbRollback(con)
     }, error = function(err2) {
       stop(err2, "Root: ", err)
     })
@@ -171,7 +171,7 @@
   .updateData(x, con=con, tag=tag, notes=msg)
   .updateFunctions(x, con=con, tag=tag, msg=msg)
   .updateArchi(x, con=con, tag=tag)
-  dbExecute(con, getSQLbyKey(
+  DBI::dbExecute(con, getSQLbyKey(
     helper, "UPDATE_GRAFO_LAST_UPDATED",
     autore=whoami(),
     tag=tag,
@@ -216,7 +216,7 @@
       freq <- as.numeric(df$freq)
       dati <- as.character(df$dati)
 
-      dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, getSQLbyKey(
         helper, "INSERT_DATI",
         tag=tag,
         name=name,
@@ -234,7 +234,7 @@
   archi <- as.data.frame(get.edgelist(x@network))
 
   if(nrow(archi)) {
-    foreach(row = iter(archi, 'row')) %do% {
+    foreach::foreach(row = iter(archi, 'row')) %do% {
       partenza <- row[,1]
       arrivo <- row[,2]
       dbExecute(con, getSQLbyKey(
@@ -247,7 +247,7 @@
     }
   }
 
-  foreach(name = iter(names(x)), .combine=rbind) %do% {
+  foreach::foreach(name = iter(names(x)), .combine=rbind) %do% {
     formula <- expr(x, name, echo=FALSE)
     if(!is.null(formula)) {
       dbExecute(con, getSQLbyKey(
@@ -260,7 +260,7 @@
     }
   }
 
-  dbExecute(con, getSQLbyKey(
+  DBI::dbExecute(con, getSQLbyKey(
     helper, "INSERT_GRAFI", 
     tag=tag,
     commento=commento,
@@ -292,12 +292,12 @@ countRolling <- function(x, con) {
     ## se PostgreSQL:
     nome_seq <- paste0("grafi_", tag, "_ordinal_seq")
 
-    if(nrow(dbGetQuery(con, getSQLbyKey(helper, "EXISTS_SEQ", seq=nome_seq))) > 0) {
-      df <- dbGetQuery(con, getSQLbyKey(helper, "NEXT_VAL", seq=nome_seq))
+    if(nrow(DBI::dbGetQuery(con, getSQLbyKey(helper, "EXISTS_SEQ", seq=nome_seq))) > 0) {
+      df <- DBI::dbGetQuery(con, getSQLbyKey(helper, "NEXT_VAL", seq=nome_seq))
       as.numeric(df[[1]])
     } else {
       val <- getMaxP(helper, tag, con) + 1
-      dbExecute(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
+      DBI::dbExecute(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
       countRolling(x, con)
     }
   } else {
@@ -307,7 +307,7 @@ countRolling <- function(x, con) {
 }
 
 getMaxP <- function(helper, tag, con) {
-  df <- dbGetQuery(con, getSQLbyKey(helper, "COUNT_ROLLING", tag=tag))
+  df <- DBI::dbGetQuery(con, getSQLbyKey(helper, "COUNT_ROLLING", tag=tag))
   if(nrow(df) == 0) {
     0
   } else {

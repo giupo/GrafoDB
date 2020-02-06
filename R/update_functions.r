@@ -8,9 +8,9 @@
   ## non usare controllo di transazione qui
   functions <- x@functions
   timestamp <- x@timestamp
-  autore <- whoami()
+  autore <- rutils::whoami()
   helper <- x@helper
-  df <- if(length(keys(functions))) {
+  df <- if(length(hash::keys(functions))) {
     dbGetQuery(con, getSQLbyKey(
       helper, "GET_CHANGED_FORMULE",
       tag=tag,
@@ -21,20 +21,20 @@
 
   names.with.conflicts <- intersect(x@touched, as.character(df$name))
   
-  names.updated <- setdiff(keys(x@functions), names.with.conflicts)
+  names.updated <- setdiff(hash::keys(x@functions), names.with.conflicts)
   if(length(names.updated)) {
-    formule <- foreach (name = iter(names.updated), .combine=rbind) %dopar% {
+    formule <- foreach::foreach (name = iter(names.updated), .combine=rbind) %dopar% {
       formula <- expr(x, name, echo=FALSE)
       cbind(formula, autore, name, tag)
     }
 
-    if(dbExistsTable(con, paste0("formule_", tag)) ||
+    if(DBI::dbExistsTable(con, paste0("formule_", tag)) ||
          class(con) == "SQLiteConnection") {
-      foreach(row = iter(formule, 'row')) %do% {
+      foreach::foreach(row = iter(formule, 'row')) %do% {
         formularow <- row[,1]
         namerow <- row[,3]
        
-        dbExecute(con, getSQLbyKey(
+        DBI::dbExecute(con, getSQLbyKey(
           helper, "UPDATE_FORMULE",
           tag=tag,
           autore=autore,
@@ -46,9 +46,9 @@
     }
     
     
-    foreach(name = iter(names.updated)) %do% {
+    foreach::foreach(name = iter(names.updated)) %do% {
       formula <- expr(x, name, echo=FALSE)
-      dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, getSQLbyKey(
         helper, "UPSERT_FORMULE",
         formula=formula,
         autore=autore,

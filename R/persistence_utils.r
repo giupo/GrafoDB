@@ -25,10 +25,10 @@ loadTable <- function(tableName, tag, con=NULL) {
     tableName
   }
   
-  df <- if(dbExistsTable(con, fullTableName)) {
+  df <- if(DBI::dbExistsTable(con, fullTableName)) {
     ## FIXME: not really smart to load the whole table in memory when you need just a tag
     ## BUT it's only valid for test environments running SQLite.
-    dbReadTable(con, fullTableName)
+    DBI::dbReadTable(con, fullTableName)
   } else {
     stop(fullTableName, " non esiste")
   }
@@ -78,7 +78,7 @@ loadGrafi <- function(con=NULL) {
   } else {
     con
   }
-  dbReadTable(con, 'grafi')
+  DBI::dbReadTable(con, 'grafi')
 }
 
 
@@ -105,9 +105,9 @@ createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
   }
 
   tryCatch({
-    dbBegin(con)
-    dbExecute(con, sql)
-    dbCommit(con)
+    DBI::dbBegin(con)
+    DBI::dbExecute(con, sql)
+    DBI::dbCommit(con)
   }, error = function(cond) {
     tryCatch(dbRollback(con), error= function(cx) {
       stop(cx, ", Root: ", cond)

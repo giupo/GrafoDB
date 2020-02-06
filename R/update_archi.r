@@ -30,7 +30,7 @@
 
   df <- if(length(keys(data))) {
     ## cerco archi aggiunti di recente.
-    dbGetQuery(con, getSQLbyKey(
+    DBI::dbGetQuery(con, getSQLbyKey(
       helper, "ARCHI_TAG_LAST_UPDATED",
       tag=tag, last_updated=round(as.numeric(timestamp))))
   } else {
@@ -40,9 +40,9 @@
   if(nrow(df) > 0) {
     ## controllo che i nuovi archi non siano tra le serie che ho modificato e
     ## che non creino un anello
-    wood <- graph.data.frame(df, directed=TRUE)
-    network_aux <- graph.union(network, wood)
-    if(any(keys(functions) %in% df$arrivo)) {
+    wood <- igraph::graph.data.frame(df, directed=TRUE)
+    network_aux <- igraph::graph.union(network, wood)
+    if(any(hash::keys(functions) %in% df$arrivo)) {
       warning("Ci sono conflitti sugli archi, continuo su dati e formule")    
     }
     checkDAG(network_aux)    
@@ -67,10 +67,10 @@
     }
     params <- c(tag, df, autore)
     
-    foreach(row=iter(df, by='row')) %do% {
+    foreach::foreach(row=iter(df, by='row')) %do% {
       from <- row$partenza
       to <- row$arrivo
-      dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, getSQLbyKey(
         helper, "INSERT_ARCHI", tag=tag, from=from, to=to,
         autore=autore, last_updated=time.in.millis()))
     }
@@ -87,7 +87,7 @@
       names(df) <- c("partenza", "arrivo")
       df
     } else {
-      splitted <- unlist(str_split(da.eliminare, sep))
+      splitted <- unlist(stringr::str_split(da.eliminare, sep))
       df <- as.data.frame(matrix(splitted, nrow=length(da.eliminare), byrow=T),
                           stringsAsFactors = F)
       names(df) <- c("partenza", "arrivo")
@@ -95,10 +95,10 @@
     }
     params <- c(tag, df, autore)
     
-    foreach(row=iter(df, by='row')) %do% {
+    foreach::foreach(row=iter(df, by='row')) %do% {
       from <- row$partenza
       to <- row$arrivo
-      dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, getSQLbyKey(
         helper, "DELETE_ARCHI", tag=tag, from=from, to=to))
     }
   }

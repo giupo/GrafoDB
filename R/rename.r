@@ -39,22 +39,22 @@
   helper <- x@helper
   params <- as.data.frame(list(nuovo=nuovo, vecchio=vecchio))
   tryCatch({
-    dbBegin(con)
+    DBI::dbBegin(con)
 
-    dbExecute(con, getSQLbyKey(
+    DBI::dbExecute(con, getSQLbyKey(
       helper, "RENAME_DATI",
       tag=tag,
       nuovo=nuovo,
       vecchio=vecchio))
     
-    dbExecute(con, getSQLbyKey(
+    DBI::dbExecute(con, getSQLbyKey(
       helper, "RENAME_FORMULE",
       tag=tag,
       nuovo=nuovo,
       vecchio=vecchio))
     
     for(figlia in figlie) {
-      dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, getSQLbyKey(
         helper, "RENAME_FORMULA",
         tag=tag,
         vecchio=vecchio,
@@ -62,35 +62,34 @@
         figlia=figlia))
     }
 
-    dbExecute(con, getSQLbyKey(
+    DBI::dbExecute(con, getSQLbyKey(
       helper, "RENAME_ARCHI_PARTENZA",
       nuovo=nuovo,
       vecchio=vecchio,
       tag=tag))
 
-    dbExecute(con, getSQLbyKey(
+    DBI::dbExecute(con, getSQLbyKey(
       helper, "RENAME_ARCHI_ARRIVO",
       nuovo=nuovo,
       vecchio=vecchio,
       tag=tag))
     
-    if(dbExistsTable(con, paste0("metadati_",tag))) {
-      dbExecute(con, getSQLbyKey(
+    if(DBI::dbExistsTable(con, paste0("metadati_",tag))) {
+      DBI::dbExecute(con, getSQLbyKey(
         helper, "RENAME_METADATI",
         nuovo=nuovo,
         vecchio=vecchio,
         tag=tag))
     }
-    
-    
-    nomiarchi <- get.vertex.attribute(x@network, "name")
+        
+    nomiarchi <- igraph::get.vertex.attribute(x@network, "name")
     nomiarchi[nomiarchi == vecchio] <- nuovo
-    x@network <- set.vertex.attribute(x@network, "name", value=nomiarchi)
+    x@network <- igraph::set.vertex.attribute(x@network, "name", value=nomiarchi)
     x <- resync(x, con=con)    
-    dbCommit(con)
+    DBI::dbCommit(con)
     x
   }, error = function(cond) {
-    dbRollback(con)
+    DBI::dbRollback(con)
     stop(cond)
   })
 }

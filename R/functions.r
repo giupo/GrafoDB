@@ -23,12 +23,12 @@
     tag <- tolower(tag)
   }
 
-  .Object@edges <- hash()
-  .Object@data <- hash()
-  .Object@functions <- hash()
+  .Object@edges <- hash::hash()
+  .Object@data <- hash::hash()
+  .Object@functions <- hash::hash()
   .Object@touched <- character(0)
   .Object@ordinal <- if(grepl("p(\\d+)$", tag)) {
-    mth <- str_match(tag, "p(\\d+)$")
+    mth <- stringr::str_match(tag, "p(\\d+)$")
     as.numeric(mth[1,2])
   } else {
     0
@@ -48,16 +48,16 @@
 
   network <- if(nrow(archi) > 0) {
     archi <- archi[, c("partenza", "arrivo")]
-    graph.data.frame(as.data.frame(archi), directed=TRUE)
+    igraph::graph.data.frame(as.data.frame(archi), directed=TRUE)
   } else {
-    graph.empty(directed=TRUE)
+    igraph::graph.empty(directed=TRUE)
   }
 
   .Object@network <- network
   nomi <- names(.Object)
   if(length(nomi) >0 ) {
     pending.names <- setdiff(nomi, V(network)$name)
-    network <- network + vertex(pending.names)
+    network <- network + igraph::vertex(pending.names)
   }
 
   .Object@network <- network
@@ -120,7 +120,7 @@ to.data.frame <- function(x, name=NULL) {
   if(is.ts(x)) {
     anno <- stats::start(x)[[1]]
     prd  <- stats::start(x)[[2]]
-    freq <- frequency(x)
+    freq <- stats::frequency(x)
   } else {
     anno <- 0
     prd <- 0
@@ -391,9 +391,7 @@ getdb <- function(x, name) {
     con
   }
 
-  df <- dbGetQuery(
-    con,
-    paste0("select * from grafi where tag='", tag,"'"))
+  df <- DBI::dbGetQuery(con, paste0("select * from grafi where tag='", tag,"'"))
   nrow(df) > 0
 }
 
@@ -419,7 +417,7 @@ getdb <- function(x, name) {
 
 .roots <- function(x) {
   n <- x@network
-  V(n)[degree(n, mode="in") == 0]$name
+  igraph::V(n)[igraph::degree(n, mode="in") == 0]$name
 }
 
 #' Ritorna le figlie del GrafoDB
@@ -434,7 +432,7 @@ getdb <- function(x, name) {
 
 .leaves <- function(x) {
   n <- x@network
-  V(n)[degree(n, mode="out") == 0]$name
+  igraph::V(n)[igraph::degree(n, mode="out") == 0]$name
 }
 
 

@@ -110,23 +110,22 @@
 
   if(!is.null(v_start)) {
     v_start <- as.character(v_start)
-    network <- induced.subgraph(
+    network <- igraph::induced.subgraph(
       network,
       V(network)[
-        unlist(
-          neighborhood(
-            network, order=.Machine$integer.max,
-            nodes=v_start, mode="out")
+        unlist(igraph::neighborhood(
+          network, order=.Machine$integer.max,
+          nodes=v_start, mode="out")
         )])
   }
 
   ## se il network e' vuoto dopo l'eliminazione delle sorgenti,
   ## ritorno senza fare nulla
-  if(!length(V(network))) {
+  total <- length(igraph::V(network))
+  if(total == 0) {
     return(invisible(object))
   }
 
-  total <- length(V(network))
   i <- 0
   is.interactive <- interactive()
   if(is.interactive) { # nocov start
@@ -136,7 +135,7 @@
 
   if(is.interactive) updateProgressBar(pb, i, "Starting...") # nocov
 
-  sources_id <- V(network)[degree(network, mode="in") == 0]
+  sources_id <- igraph::V(network)[igraph::degree(network, mode="in") == 0]
 
   proxy <- function(name, object) {
     serie <- .evaluateSingle(name, object)
@@ -175,7 +174,7 @@
       motherfucker <- setdiff(sources, names(evaluated))
 
       while(length(motherfucker)) {
-        evaluated0 <- foreach(name=motherfucker, .combine=c) %dopar% {
+        evaluated0 <- forach::foreach(name=motherfucker, .combine=c) %dopar% {
           proxy(name, object)
         }
         evaluated <- c(evaluated, evaluated0)
@@ -194,14 +193,14 @@
       }
     }
 
-    network <- delete.vertices(network, sources_id)
-    sources_id <- V(network)[degree(network, mode="in") == 0]
+    network <- igraph::delete.vertices(network, sources_id)
+    sources_id <- igraph::V(network)[igraph::degree(network, mode="in") == 0]
   }
 
   if(is.interactive) kill(pb)
 
   object@data <- data
-  object@touched <- sort(unique(c(object@touched, keys(data))))
+  object@touched <- sort(unique(c(object@touched, hash::keys(data))))
   object
 }
 
