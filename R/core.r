@@ -205,22 +205,22 @@ setMethod(
 #'
 #' @name navigate
 #' @title Funzioni del package `grafo`
-#' @usage navugate(graph, nodes, order, mode, plot)
+#' @usage navugate(graph, nodes, order, mode)
 #' @seealso `grafo::describe`
 #' @include navigate.r
 #' @export
 
 setGeneric(
   "navigate",
-  function(object, nodes=NULL, order=1L, mode="out", plot=FALSE) {
+  function(object, nodes=NULL, order=1L, mode="out") {
     standardGeneric("navigate")
   })
 
 setMethod(
   "navigate",
-  signature("GrafoDB", "ANY", "ANY", "ANY", "ANY"),
-  function(object, nodes=NULL, order=1L, mode="out", plot=FALSE) {
-    .navigate(object, nodes=nodes, order=order, mode=mode, plot=plot)
+  signature("GrafoDB", "ANY", "ANY", "ANY"),
+  function(object, nodes=NULL, order=1L, mode="out" {
+    .navigate(object, nodes=nodes, order=order, mode=mode)
   })
 
 setMethod(
@@ -453,21 +453,21 @@ setMethod(
 #'
 #' @name describe
 #' @title Funzioni del package `grafo`
-#' @usage describe(graph, nodes, order, mode, plot)
+#' @usage describe(graph, nodes, order, mode)
 #' @seealso `grafo::describe`
 #' @exportMethod describe
 
 setGeneric(
   "describe",
-  function(object, nodes=NULL, order=1L, mode="out", plot=FALSE) {
+  function(object, nodes=NULL, order=1L, mode="out") {
     standardGeneric("describe")
   })
 
 setMethod(
   "describe",
-  signature("GrafoDB", "ANY", "ANY", "ANY", "ANY"),
-  function(object, nodes = NULL, order = 1L, mode = "out", plot = FALSE) {
-    navigate(object, nodes, order, mode, plot)
+  signature("GrafoDB", "ANY", "ANY", "ANY"),
+  function(object, nodes = NULL, order = 1L, mode = "out") {
+    navigate(object, nodes, order, mode)
   })
 
 
