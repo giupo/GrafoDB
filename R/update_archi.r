@@ -15,7 +15,7 @@
   in.memory <- as.data.frame(igraph::get.edgelist(network), stringsAsFactors = F)
   autore <- rutils::whoami()
   names(in.memory) <- c("partenza", "arrivo")
-  in.db <- dbGetQuery(con, getSQLbyKey(helper, "ARCHI_TAG", tag=tag))
+  in.db <- DBI::dbGetQuery(con, getSQLbyKey(helper, "ARCHI_TAG", tag=tag))
   
   sep <- "-"
   in.db <- gdata::drop.levels(in.db)

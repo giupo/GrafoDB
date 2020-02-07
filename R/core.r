@@ -308,7 +308,7 @@ setMethod(
       })
     }
 
-    result <- Dataset()
+    result <- rdataset::Dataset()
     data <- foreach::foreach(name=iterators::iter(common), .combine=append) %dopar% {
       ret <- list()
       ret[[name]] <- tryCatch({
@@ -757,7 +757,7 @@ setMethod(
   "$",
   signature("GrafoDB"),
   function(x, name) {
-    x[[unlist(str_split(name, " "))]]
+    x[[unlist(stringr::str_split(name, " "))]]
   })
 
 .dollar <- function(x, name, value) {

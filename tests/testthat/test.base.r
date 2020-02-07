@@ -509,7 +509,7 @@ test_that("I can subtract two GrafoDB", {
   }
 
   expect_warning(diff <- g1 - g)
-  expect_is(diff, "Dataset")
+  expect_true(rdataset::is.dataset(diff))
   expect_true(all(names(diff) %in% c("A", "B", "C")))
   expect_true(!"D" %in% names(diff))
   for(name in names(diff)) {
