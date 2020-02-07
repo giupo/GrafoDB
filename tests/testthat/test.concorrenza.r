@@ -235,7 +235,7 @@ test_that(
       expect_equal(g1[[name]], g2[[name]])
     }
     
-    expect_identical(get.edgelist(g1@network), get.edgelist(g2@network))
+    expect_identical(igraph::get.edgelist(g1@network), igraph::get.edgelist(g2@network))
     ## ok, they are identical
     
     ## not let's change C in g1 and save it

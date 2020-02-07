@@ -1,5 +1,4 @@
 #' @include functions.r
-#' @importFrom igraph topological.sort neighborhood induced.subgraph V
 
 .navigate <- function(object, nodes=NULL, order=1L, mode='out') {    
   network <- object@network

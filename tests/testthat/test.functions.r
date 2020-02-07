@@ -64,12 +64,12 @@ test_that(".decluter_functions preserves commnets", {
 })
 
 test_that("checkDAG raises an exception with a cycle in network", {
-  g <- graph.empty(directed=TRUE)
-  g <- g + vertex("A")
-  g <- g + vertex("B")
-  g <- g + edge("A", "B")
+  g <- igraph::graph.empty(directed=TRUE)
+  g <- g + igraph::vertex("A")
+  g <- g + igraph::vertex("B")
+  g <- g + igraph::edge("A", "B")
   expect_error(checkDAG(g), NA)
-  g <- g + edge("B", "A")
+  g <- g + igraph::edge("B", "A")
   expect_error(checkDAG(g), "Cycles found")
 })
 

@@ -1,4 +1,6 @@
-#' @importFrom igraph V E is.dag vertex topological.sort edge
+#' Controlla se il network e' un DAG
+#' 
+#' TODO: dovrebbe tornare una lista di cicli se trovati. con la nuova versione di igraph non funziona.
 
 checkDAG <- function(network) {
   if (!igraph::is.dag(network)) {

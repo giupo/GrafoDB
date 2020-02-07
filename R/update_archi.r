@@ -1,5 +1,4 @@
 #' @importFrom gdata drop.levels
-#' @importFrom igraph get.edgelist graph.union graph.data.frame is.dag topological.sort
 #' @importFrom stringr str_split
 #' @importFrom rutils whoami
 #' @importFrom futile.logger flog.info
@@ -15,7 +14,7 @@
   timestamp <- x@timestamp
   helper <- x@helper
   network <- x@network
-  in.memory <- as.data.frame(get.edgelist(network), stringsAsFactors = F)
+  in.memory <- as.data.frame(igraph::get.edgelist(network), stringsAsFactors = F)
   autore <- whoami()
   names(in.memory) <- c("partenza", "arrivo")
   in.db <- dbGetQuery(con, getSQLbyKey(helper, "ARCHI_TAG", tag=tag))

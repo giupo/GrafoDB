@@ -10,7 +10,7 @@ proxytest <- function(numero) {
   for(nome in deps) {
     g[nome] <- tt
   }
-  g@network <- graph.data.frame(as.data.frame(cbind(deps, "B")))
+  g@network <- igraph::graph.data.frame(as.data.frame(cbind(deps, "B")))
   g <- evaluate(g, "B")
   expect_true("B" %in% names(g))
   expected <- g[["B"]]

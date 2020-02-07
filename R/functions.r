@@ -9,7 +9,6 @@
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
 #' @include persistence.r sqlhelper.r
-#' @importFrom igraph graph.data.frame graph.empty vertex
 #' @importFrom stringr str_match
 #' @importFrom hash hash
 #' @importFrom R.utils System

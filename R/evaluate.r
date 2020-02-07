@@ -79,7 +79,6 @@
 #' @usage .evaluate(object)
 #' @usage .evaluate(object, v_start)
 #' @return il grafo con i dati correttamente valutato
-#' @importFrom igraph V induced.subgraph neighborhood delete.vertices degree
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
 #' @importFrom foreach foreach %dopar%
 #' @importFrom hash keys

@@ -38,7 +38,6 @@
 #' @include conflicts.r copy_graph.r checkDAG.r persistence_utils.r
 #' @rdname saveGraph-internal
 #' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
-#' @importFrom igraph graph.union graph.data.frame
 #' @importFrom futile.logger flog.trace flog.info flog.debug
 #' @importFrom futile.logger flog.warn flog.error flog.fatal
 # FIXME: https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
@@ -229,7 +228,7 @@
     stop("Non ci sono dati da salvare.")
   }
 
-  archi <- as.data.frame(get.edgelist(x@network))
+  archi <- as.data.frame(igraph::get.edgelist(x@network))
 
   if(nrow(archi)) {
     foreach::foreach(row = iter(archi, 'row')) %do% {

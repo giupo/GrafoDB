@@ -35,7 +35,6 @@ setMethod(
 #' @note funzione interna
 #' @rdname subsetting_internal
 #' @include functions.r core.r checkDAG.r find_deps.r
-#' @importFrom igraph V E is.dag vertex topological.sort edge
 #' @importFrom rdataset is.dataset
 #' @importFrom hash del
 

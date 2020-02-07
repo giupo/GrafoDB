@@ -108,7 +108,7 @@ setMethod(
   function(graph) {
     network <- graph@network
     formule <- graph@dbformule$name
-    leaves <- V(network)[degree(network, mode="out") == 0]$name
+    leaves <- igraph::V(network)[igraph::degree(network, mode="out") == 0]$name
     setdiff(formule, leaves)
   })
 
@@ -134,7 +134,7 @@ setMethod(
     network <- graph@network
     tag <- graph@tag
     formule <- union(graph@dbformule$name, keys(graph@functions))
-    sources <- V(network)[degree(network, mode="in") == 0]$name
+    sources <- igraph::V(network)[igraph::degree(network, mode="in") == 0]$name
     intersect(sources, formule)
   })
 
@@ -157,7 +157,7 @@ setMethod(
   signature("GrafoDB"),
   function(graph) {
     network <- graph@network
-    sources <- V(network)[degree(network, mode="in") == 0]$name
+    sources <- igraph::V(network)[igraph::degree(network, mode="in") == 0]$name
     elementary <- listElementaries(graph)
     setdiff(sources, elementary)
   })
