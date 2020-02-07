@@ -108,7 +108,7 @@
     v_start <- as.character(v_start)
     network <- igraph::induced.subgraph(
       network,
-      V(network)[
+      igraph::V(network)[
         unlist(igraph::neighborhood(
           network, order=.Machine$integer.max,
           nodes=v_start, mode="out")
@@ -141,7 +141,7 @@
   }
 
   while(length(sources_id)) {
-    sources <- V(network)[sources_id]$name
+    sources <- igraph::V(network)[sources_id]$name
     sprimitive <- intersect(sources, primitive)
     i <- i + length(sprimitive)
     prim_non_in_data <- setdiff(sprimitive, hash::keys(data))
