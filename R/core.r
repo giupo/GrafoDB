@@ -650,7 +650,7 @@ setMethod(
       tag=x@tag))
   })
 
-#' @include metadati.r"
+#' @include metadati.r
 #' @importMethodsFrom hash keys
 #' @exportMethod keys
 
