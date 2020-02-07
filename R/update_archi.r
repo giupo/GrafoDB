@@ -65,7 +65,7 @@
     }
     params <- c(tag, df, autore)
     
-    foreach::foreach(row=iter(df, by='row')) %do% {
+    foreach::foreach(row=iterators::iter(df, by='row')) %do% {
       from <- row$partenza
       to <- row$arrivo
       DBI::dbExecute(con, getSQLbyKey(
@@ -93,7 +93,7 @@
     }
     params <- c(tag, df, autore)
     
-    foreach::foreach(row=iter(df, by='row')) %do% {
+    foreach::foreach(row=iterators::iter(df, by='row')) %do% {
       from <- row$partenza
       to <- row$arrivo
       DBI::dbExecute(con, getSQLbyKey(

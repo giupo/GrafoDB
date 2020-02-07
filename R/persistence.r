@@ -204,7 +204,7 @@
   helper <- x@helper
 
   if(length(names(x))) {
-    dati <- foreach::foreach (name = iter(names(x)), .combine=rbind) %do% {
+    dati <- foreach::foreach (name = iterators::iter(names(x)), .combine=rbind) %do% {
       tt <- x[[name]]
       df <- to.data.frame(tt, name)
       anno <- as.numeric(df$anno)
@@ -230,7 +230,7 @@
   archi <- as.data.frame(igraph::get.edgelist(x@network))
 
   if(nrow(archi)) {
-    foreach::foreach(row = iter(archi, 'row')) %do% {
+    foreach::foreach(row = iterators::iter(archi, 'row')) %do% {
       partenza <- row[,1]
       arrivo <- row[,2]
       DBI::dbExecute(con, getSQLbyKey(
@@ -243,7 +243,7 @@
     }
   }
 
-  foreach::foreach(name = iter(names(x)), .combine=rbind) %do% {
+  foreach::foreach(name = iterators::iter(names(x)), .combine=rbind) %do% {
     formula <- expr(x, name, echo=FALSE)
     if(!is.null(formula)) {
       DBI::dbExecute(con, getSQLbyKey(
@@ -343,7 +343,6 @@ nextRollingNameFor <- function(x, con) {
 #' @note questa e' una funzione interna del grafo invocata da `updateGraph`
 #' @seealso saveGraph updateGraph
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
-#' @importFrom iterators iter
 #' @importFrom foreach %do% %dopar%
 #' @importFrom rutils slice
 

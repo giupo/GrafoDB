@@ -23,14 +23,14 @@
   
   names.updated <- setdiff(hash::keys(x@functions), names.with.conflicts)
   if(length(names.updated)) {
-    formule <- foreach::foreach (name = iter(names.updated), .combine=rbind) %dopar% {
+    formule <- foreach::foreach (name = iterators::iter(names.updated), .combine=rbind) %dopar% {
       formula <- expr(x, name, echo=FALSE)
       cbind(formula, autore, name, tag)
     }
 
     if(DBI::dbExistsTable(con, paste0("formule_", tag)) ||
          class(con) == "SQLiteConnection") {
-      foreach::foreach(row = iter(formule, 'row')) %do% {
+      foreach::foreach(row = iterators::iter(formule, 'row')) %do% {
         formularow <- row[,1]
         namerow <- row[,3]
        
@@ -46,7 +46,7 @@
     }
     
     
-    foreach::foreach(name = iter(names.updated)) %do% {
+    foreach::foreach(name = iterators::iter(names.updated)) %do% {
       formula <- expr(x, name, echo=FALSE)
       DBI::dbExecute(con, getSQLbyKey(
         helper, "UPSERT_FORMULE",

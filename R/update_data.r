@@ -30,7 +30,7 @@
     # creo il data.frame dei dati da usare nel DB
     tryCatch({
       last_updated <- time.in.millis()
-      dati <- foreach::foreach(name = iter(names.updated), .combine=rbind) %dopar% {
+      dati <- foreach::foreach(name = iterators::iter(names.updated), .combine=rbind) %dopar% {
         df <- to.data.frame(data[[name]])
         cbind(df, name, tag, autore, notes, last_updated)
       }  # this is quite fast, let's ignore the Progressbar here...

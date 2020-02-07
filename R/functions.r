@@ -291,7 +291,6 @@ from.data.frame <- function(df) {
 #' @return una serie o una lista di serie
 #' @importFrom rutils whoami flypwd
 #' @importFrom foreach %do% %dopar%
-#' @importFrom iterators iter
 #' @export
 
 getdb <- function(x, name) {
@@ -304,7 +303,7 @@ getdb <- function(x, name) {
 
 
   if(length(name) > 1000) {
-    foreach::foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
+    foreach::foreach(row=iterators::iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
       convert_data_frame(row)
     }
   } else {
