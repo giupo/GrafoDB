@@ -122,7 +122,6 @@ test_that("subset with datasets", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  require(rdataset)
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g["C"] <- function(A,B) {
@@ -135,7 +134,7 @@ test_that("subset with datasets", {
 
   expect_true(all(c("A", "B", "C") %in% names(g)))
 
-  ds <- Dataset()
+  ds <- rdataset::Dataset()
   ds["A"] <- ts(c(-1,-2,-3), start=c(1990,1), frequency=4)
   ds["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
 
@@ -252,8 +251,8 @@ test_that("I can cast a empty GrafoDB to a Dataset", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- GrafoDB("test")
-  d <- as.dataset(g)
-  expect_true(is.dataset(d))
+  d <- rdataset::as.dataset(g)
+  expect_true(rdataset::is.dataset(d))
   expect_true(all(names(d) %in% names(g)))
   for(name in names(d)) {
     d1 <- d[[name]]
@@ -272,8 +271,8 @@ test_that("I can cast a GrafoDB to a Dataset", {
   g["C"] <- function(A) {
     C <- A
   }
-  d <- as.dataset(g)
-  expect_true(is.dataset(d))
+  d <- rdataset::as.dataset(g)
+  expect_true(rdataset::is.dataset(d))
   expect_true(all(c("A", "B", "C") %in% names(d)))
 })
 
@@ -439,7 +438,7 @@ test_that("Posso subsettare una singola serie come Dataset", {
     D = A + C
   }
 
-  expect_true(is.dataset(g["A"]))
+  expect_true(rdataset::is.dataset(g["A"]))
   expect_equal(names(g["A"]), "A")
   expect_equal(g[["A"]], g["A"][["A"]])
 })

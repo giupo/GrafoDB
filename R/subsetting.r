@@ -1,11 +1,11 @@
-#' @importFrom rdataset as.dataset
+
 
 setMethod(
   "[",
   c("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., drop = TRUE) {
     if(length(i) == 0) {
-      return(Dataset())
+      return(rdataset::Dataset())
     }
     raw <- x[[i]]
     if(length(i)==1) {
@@ -14,7 +14,7 @@ setMethod(
     } else {
       ret <- raw
     }
-    as.dataset(ret)
+    rdataset::as.dataset(ret)
   })
 
 
@@ -35,7 +35,6 @@ setMethod(
 #' @note funzione interna
 #' @rdname subsetting_internal
 #' @include functions.r core.r checkDAG.r find_deps.r
-#' @importFrom rdataset is.dataset
 
 .subsetting <- function(x, i, value) {
   nameObject <- deparse(substitute(x))
@@ -48,7 +47,7 @@ setMethod(
     toBeAdded <- setdiff(name, all_names)
     network + igraph::vertex(toBeAdded)
   } else {
-      if(!is.dataset(value) && length(E(network)) > 0) {
+      if(!rdataset::is.dataset(value) && length(igraph::E(network)) > 0) {
         if(packageVersion("igraph") >= '1.1.0') {
             network - igraph::E(network)[.to(name)]  # nocov
         } else {
