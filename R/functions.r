@@ -52,7 +52,7 @@
   .Object@network <- network
   nomi <- names(.Object)
   if(length(nomi) >0 ) {
-    pending.names <- setdiff(nomi, V(network)$name)
+    pending.names <- setdiff(nomi, igraph::V(network)$name)
     network <- network + igraph::vertex(pending.names)
   }
 
