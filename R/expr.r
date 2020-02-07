@@ -8,7 +8,6 @@
 #' @param x istanza di GrafoDB
 #' @param nomi array di nomi di serie storiche
 #' @rdname expr-internal
-#' @importFrom formatR tidy_source
 #' @include functions.r
 
 .expr <- function(x, nomi, echo=FALSE) {
@@ -35,7 +34,7 @@
   } else if(nrow(formule) == 1) {
     task <- as.character(formule$formula)
     if(interactive() && echo) {
-      tidy_source(text=task, indent = 2) # nocov
+      formatR::tidy_source(text=task, indent = 2) # nocov
     }
     task
   } else {
