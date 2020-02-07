@@ -162,7 +162,6 @@
 
 
 #' @include update_archi.r update_data.r update_functions.r
-#' @importFrom R.utils System
 
 .updateGraph <- function(x, tag=x@tag, con=NULL, msg="") {
   helper <- x@helper
@@ -189,7 +188,6 @@
 #' @usage .createGraph(g, tag)
 #' @importFrom foreach foreach %do%
 #' @importFrom rutils whoami
-#' @importFrom DBI dbSendQuery dbRollback
 #' @importFrom R.utils System
 
 .createGraph <- function(x, tag, con, ...) {
@@ -237,7 +235,7 @@
     foreach::foreach(row = iter(archi, 'row')) %do% {
       partenza <- row[,1]
       arrivo <- row[,2]
-      dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, getSQLbyKey(
         helper, "INSERT_ARCO",
         tag=tag,
         partenza=partenza,
@@ -250,7 +248,7 @@
   foreach::foreach(name = iter(names(x)), .combine=rbind) %do% {
     formula <- expr(x, name, echo=FALSE)
     if(!is.null(formula)) {
-      dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, getSQLbyKey(
         helper, "INSERT_FORMULA",
         tag=tag,
         name=name,
@@ -276,7 +274,6 @@
 #' @param x istanza di grafo
 #' @param con connessione al DB
 #' @return un intero ad indicare il numero di versioni rolling salvate sul DB
-#' @importFrom DBI dbGetQuery
 #' @include db.r
 
 countRolling <- function(x, con) {
@@ -347,7 +344,6 @@ nextRollingNameFor <- function(x, con) {
 #' @param con connessione al database
 #' @note questa e' una funzione interna del grafo invocata da `updateGraph`
 #' @seealso saveGraph updateGraph
-#' @importFrom DBI dbGetQuery
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
 #' @importFrom iterators iter
 #' @importFrom foreach foreach %do% %dopar%

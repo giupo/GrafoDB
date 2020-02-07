@@ -20,7 +20,7 @@ test_that("initdb can handle an error", {
 test_that("shouldCreateSchema returns FALSE if dbReadTable succeed", {
   skip_if_not(require(mockery), "mockery required")
   mock <- mock(data.frame())
-  stub(shouldCreateSchema, 'dbReadTable', mock)
+  stub(shouldCreateSchema, 'DBI::dbReadTable', mock)
   expect_error(shouldCreateSchema(NULL), NA)
   expect_called(mock, 1)
 })
@@ -28,7 +28,7 @@ test_that("shouldCreateSchema returns FALSE if dbReadTable succeed", {
 test_that("shouldCreateSchema returns TRUE if dbReadTable fails", {
   skip_if_not(require(mockery), "mockery required")
   mock  <- mock(stop('crap'))
-  stub(shouldCreateSchema, 'dbReadTable', mock)
+  stub(shouldCreateSchema, 'DBI::dbReadTable', mock)
   expect_true(expect_error(shouldCreateSchema(NULL), NA))
   expect_called(mock, 1)
 })
@@ -36,7 +36,7 @@ test_that("shouldCreateSchema returns TRUE if dbReadTable fails", {
 test_that("shouldCreateSchema returns False if dbReadTable raise a warning", {
   skip_if_not(require(mockery), "mockery required")
   mock <- mock(warning(ciao))
-  stub(shouldCreateSchema, 'dbReadTable', mock)
+  stub(shouldCreateSchema, 'DBI::dbReadTable', mock)
   expect_true(shouldCreateSchema(NULL))
   expect_called(mock, 1)
 })

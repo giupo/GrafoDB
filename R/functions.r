@@ -379,7 +379,6 @@ getdb <- function(x, name) {
   ret
 }
 
-#' @importFrom DBI dbGetQuery
 #' @include db.r
 
 .tagExists <- function(tag, con=NULL) {
@@ -522,7 +521,7 @@ rilasci <- function(filtro=NULL) {
     getSQLbyKey(helper, "TUTTI_RILASCI_FILTERED", filtro=filtro)
   }
 
-  data <- dbGetQuery(con, sql)
+  data <- DBI::dbGetQuery(con, sql)
 
   nomicol <- colnames(data)
   if(nrow(data) > 1) {

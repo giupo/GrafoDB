@@ -8,7 +8,6 @@
 #' @param value valore del metadato
 #' @return lista di nomi che matchano la condizione `key==valy`
 #' @include db.r
-#' @importFrom DBI dbGetQuery
 
 .lookup <- function(x, key, value) {
   tag <- x@tag
@@ -17,7 +16,7 @@
   ## non ci sono prepared statement funzionanti. maledetti.
   helper <- x@helper
 
-  df <- dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, getSQLbyKey(
     helper, "LOOKUP_METADATI",
     tag=tag,
     key=key,
@@ -35,7 +34,6 @@
 #' @param key Stringa da cercare
 #' @return lista di nomi che hanno `key` nella formula
 #' @include db.r
-#' @importFrom DBI dbGetQuery
 
 .lookup_formula <- function(x, key) {
   tag <- x@tag
@@ -43,7 +41,7 @@
   con <- buildConnection()
   on.exit(disconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
-  df <- dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, getSQLbyKey(
     helper, "LOOKUP_FORMULA",
     tag=tag,
     key=as.character(key)))
@@ -60,7 +58,6 @@
 #' @param key numero da cercare
 #' @return lista di nomi che matchano `key` nella formula
 #' @include db.r
-#' @importFrom DBI dbGetQuery
 
 .lookup_dati <- function(x, key) {
   tag <- x@tag
@@ -68,7 +65,7 @@
   con <- buildConnection()
   on.exit(disconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
-  df <- dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, getSQLbyKey(
     helper, "LOOKUP_DATI",
     tag=tag,
     key=as.character(key)))

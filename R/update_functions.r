@@ -11,7 +11,7 @@
   autore <- rutils::whoami()
   helper <- x@helper
   df <- if(length(hash::keys(functions))) {
-    dbGetQuery(con, getSQLbyKey(
+    DBI::dbGetQuery(con, getSQLbyKey(
       helper, "GET_CHANGED_FORMULE",
       tag=tag,
       last_updated=as.numeric(timestamp)))

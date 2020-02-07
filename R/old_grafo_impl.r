@@ -235,7 +235,6 @@ setMethod(
 #' @include persistence.r
 #' @exportMethod saveGraph
 
-# FIXME: 31849
 setGeneric(
   "saveGraph",
   function(object, path=object@tag, ...) {
@@ -252,7 +251,7 @@ setMethod(
     if(object@tag == path) {
       assign(nameObject, object, envir=parent.frame())
     }
-    object
+    invisible(object)
   })
 
 #' Removes an attribute

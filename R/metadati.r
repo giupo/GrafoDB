@@ -1,4 +1,3 @@
-#' @importFrom DBI dbGetQuery
 #' @include db.r tickets.r
 
 .getMeta <- function(x, serie, metadato) {
@@ -6,7 +5,7 @@
   on.exit(disconnect(con))
   helper <- x@helper
   tag <- x@tag
-  df <- dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, getSQLbyKey(
     helper, "GET_META", tag=tag, name=serie, key=metadato))
   if(nrow(df)) {
     as.character(df[,1])
@@ -24,7 +23,6 @@
 #' @param x istanza di grafo
 #' @param name nome della serie storica
 #' @return data.frame contenente i metadati della serie
-#' @importFrom DBI dbGetQuery
 #' @include db.r
 
 .getMetadata <- function(x, name) {
@@ -33,7 +31,7 @@
   tag <- x@tag
   helper <- x@helper
   sql <-  getSQLbyKey(helper, "GET_METADATA", tag=tag, name=name)
-  df <- dbGetQuery(con, sql)
+  df <- DBI::dbGetQuery(con, sql)
   tryCatch({
     tickets <- get_tickets_urls_for_name(x, name)
     if(!is.null(tickets) && length(tickets) > 0) {
@@ -65,7 +63,6 @@
 #' @importFrom hash keys
 #' @rdname keys-internal
 #' @include db.r
-#' @importFrom DBI dbGetQuery
 
 .keys <- function(x) {
   con <- buildConnection()
@@ -73,7 +70,7 @@
   tag <- x@tag
   helper <- x@helper
   sql <- getSQLbyKey(helper, "KEYS_METADATA", tag=tag)
-  dbGetQuery(con, sql)
+  DBI::dbGetQuery(con, sql)
 }
 
 
@@ -87,7 +84,6 @@
 #' @param key chiave del metadato
 #' @return lista di valori per metadato
 #' @include db.r
-#' @importFrom DBI dbGetQuery
 
 .values <- function(x, key=NULL) {
   con <- buildConnection()
@@ -100,7 +96,7 @@
     getSQLbyKey(helper, "VALUES_METADATA_KEY", tag=tag, key=key)
   }
 
-  df <- dbGetQuery(con, sql)
+  df <- DBI::dbGetQuery(con, sql)
   as.character(df[,1])
 }
 
@@ -116,7 +112,6 @@
 #'              con la chiave specificata)
 #' @rdname deleteMeta-internal
 #' @include db.r
-#' @importFrom DBI dbGetQuery
 
 .deleteMeta <- function(x, name, key, value=NULL) {
   if(is.null(value)) {
@@ -127,17 +122,17 @@
   tag <- x@tag
   helper <- x@helper
 
-  dbBegin(con)
+  DBI::dbBegin(con)
   tryCatch({
-    dbExecute(con, getSQLbyKey(
+    DBI::dbExecute(con, getSQLbyKey(
       helper, "DELETE_META_TAG_NAME_KEY_VALUE",
       tag=tag,
       name=name,
       key=key,
       value=value))
-    dbCommit(con)
+    DBI::dbCommit(con)
   }, error = function(cond) {
-    dbRollback(con)
+    DBI::dbRollback(con)
     stop(cond)
   })
   
@@ -151,16 +146,16 @@
     tag <- x@tag
     helper <- x@helper
 
-    dbBegin(con)
+    DBI::dbBegin(con)
     tryCatch({
-      dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, getSQLbyKey(
         helper, "DELETE_META_TAG_NAME_KEY",
         tag=tag,
         name=name,
         key=key))
-      dbCommit(con)
+      DBI::dbCommit(con)
     }, error = function(cond) {
-      dbRollback(con)
+      DBI::dbRollback(con)
       stop(cond)
     })
 }
@@ -168,7 +163,6 @@
 
 #' @importFrom rutils whoami
 #' @include db.r sqlhelper.r
-#' @importFrom DBI dbGetQuery
 
 .setMeta <- function(x, name, key, value) {
   nomiobj <- names(x)
@@ -181,7 +175,7 @@
 
   helper <- x@helper
 
-  df <- dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, getSQLbyKey(
     helper, "LOOKUP_METADATI",
     tag=x@tag,
     key=key,
@@ -205,7 +199,7 @@
       value=value,
       autore=autore)
 
-    dbExecute(con, sql)
+    DBI::dbExecute(con, sql)
   }
   x
 }

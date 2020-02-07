@@ -128,8 +128,6 @@ setMethod(
     }
   }
   x@touched <- sort(unique(c(x@touched, name)))
-  #TODO(giupo): this causes a warning, fix me.
-  assign(nameObject, x, envir=parent.frame()) 
   invisible(x)
 }
 
@@ -139,6 +137,7 @@ setMethod(
   function(x, i, j, ..., value) {
     nameObject <- deparse(substitute(x))
     x <- .subsetting(x, i, value)
+    #TODO(giupo): this causes a warning, fix me.
     assign(nameObject, x, envir=parent.frame())
     invisible(x)
   })
@@ -149,6 +148,7 @@ setMethod(
   function(x, i, j, ..., value) {
     x <- .subsetting(x, i, value)
     nameObject <- deparse(substitute(x))
+    #TODO(giupo): this causes a warning, fix me.
     assign(nameObject, x, envir=parent.frame())
     invisible(x)
   })

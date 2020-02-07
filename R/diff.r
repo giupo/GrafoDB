@@ -25,7 +25,7 @@ diff.GrafoDB <- function(x, ...) {
   on.exit(disconnect(con))
   sql <- getSQLbyKey(helper, "DIFF_FORMULE", new=x@tag, old=y@tag)
   flog.trace("Diff query: %s", sql, name='GrafoDB.diff')
-  df <- dbGetQuery(con, sql)
+  df <- DBI::dbGetQuery(con, sql)
 
   if(nrow(df)) {
     colnames(df) <- c("name", x@tag, paste0(x@tag, "_autore"),

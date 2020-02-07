@@ -7,7 +7,6 @@
 #' @param tableName nome della tabella
 #' @param tag nome del tag
 #' @note funzione interna
-#' @importFrom DBI dbReadTable
 #' @include db.r
 
 loadTable <- function(tableName, tag, con=NULL) {
@@ -109,7 +108,7 @@ createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
     DBI::dbExecute(con, sql)
     DBI::dbCommit(con)
   }, error = function(cond) {
-    tryCatch(dbRollback(con), error= function(cx) {
+    tryCatch(DBI::dbRollback(con), error= function(cx) {
       stop(cx, ", Root: ", cond)
     })
     stop(cond)
@@ -141,7 +140,7 @@ need_resync <- function(x) {
   con <- buildConnection()
   on.exit(disconnect(con))
   tag <- x@tag
-  df <- dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, getSQLbyKey(
     helper, "NEED_RESYNC", tag=tag,
     last_updated=as.character(timeStamp)))
   

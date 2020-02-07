@@ -32,7 +32,7 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   })
   con <- buildConnection()
   on.exit(disconnect(con))
-  dbExecute(
+  DBI::dbExecute(
     con,
     "update dati set dati=replace(dati, 'null', '\"NaN\"') where tag='test'")
 

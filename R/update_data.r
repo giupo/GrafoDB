@@ -1,7 +1,6 @@
 #' @include redis.r conflicts.r
 #' @importFrom R.utils System
 #' @importFrom futile.logger flog.info
-#' @importFrom DBI dbWriteTable
 
 .updateData <- function(x, con, tag=x@tag, notes="") {
   ln <- "GrafoDB::updateData"

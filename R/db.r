@@ -128,17 +128,17 @@ initdbSQLite <- function(con, env=getenv()) {
   statements <- str_split(sql, ";")[[1]]
 
   tryCatch({
-    dbBegin(con)
+    DBI::dbBegin(con)
     for(stm in statements) {
       stm <- str_trim(as.character(stm))
       if(nchar(stm) > 0) {
         flog.trace("%s", stm, name=ln)
-        dbExecute(con, stm)
+        DBI::dbExecute(con, stm)
       }
     }
-    dbCommit(con)
+    DBI::dbCommit(con)
   }, error=function(cond) {
-    dbRollback(con)
+    DBI::dbRollback(con)
     stop(cond)
   })
 }
@@ -147,8 +147,7 @@ initdbSQLite <- function(con, env=getenv()) {
 #'
 #' @name buildConnection
 #' @note Funzione interna
-#' @rdname buildConnection-internal
-#' @importFrom DBI dbDriver dbConnect
+#' @rdname buildConnection-internalzzs
 #' @importFrom futile.logger flog.error
 
 buildConnection <- function(env = getenv(), con = NULL) {
@@ -183,7 +182,7 @@ PostgresConnect <- function() {
   if(!requireNamespace("RPostgreSQL", quietly=TRUE)) {
     stop("install package RPostgreSQL with 'install.packages(\"RPostgreSQL\")")
   }
-  dbConnect(RPostgreSQL::PostgreSQL())
+  DBI::dbConnect(RPostgreSQL::PostgreSQL())
 }
 
 SQLiteConnect <- function() {
@@ -191,15 +190,14 @@ SQLiteConnect <- function() {
     stop("Please install RSQLite: install.packages('RSQLite')")
   }
   drv <- RSQLite::dbDriver("SQLite")
-  dbConnect(drv, dbname=":memory:")
+  DBI::dbConnect(drv, dbname=":memory:")
 }
 
 # nocov start
-#' @importFrom DBI dbExecute
 .dbBeginPG <- function(conn) {
   ln <- "GrafoDB.db"
   flog.trace("start transaction", name=ln)
-  dbExecute(conn, "START TRANSACTION")
+  DBI::dbExecute(conn, "START TRANSACTION")
   TRUE
 }
 # nocov end # can't check this code without production environment
@@ -207,14 +205,14 @@ SQLiteConnect <- function() {
 .dbBeginSQLite <- function(conn) {
   ln <- "GrafoDB.db"
   flog.trace("start transaction", name=ln)
-  dbExecute(conn, "BEGIN")
+  DBI::dbExecute(conn, "BEGIN")
   TRUE
 }
 
 
 shouldCreateSchema  <- function(con) {
   tryCatch({
-    df <- dbReadTable(con, "grafi")
+    df <- DBI::dbReadTable(con, "grafi")
     !is.data.frame(df)
   }, error=function(cond) {
     TRUE
@@ -228,8 +226,7 @@ shouldCreateSchema  <- function(con) {
 #' @name disconnect
 #' @param con connection to disconnect
 #' @param env environment to check against
-#' @importFrom DBI dbDisconnect
 
 disconnect <- function(con, env=getenv()) {
-  if(env != "test") dbDisconnect(con)
+  if(env != "test") DBI::dbDisconnect(con)
 }

@@ -21,7 +21,7 @@ formule <- function(g, name) {
     warning(name, " non e' un oggetto del Grafo ", g@tag)
   }
 
-  df <- dbGetQuery(con, getSQLbyKey(helper, "HISTORY_FORMULE", name=name))
+  df <- DBi::dbGetQuery(con, getSQLbyKey(helper, "HISTORY_FORMULE", name=name))
   if(nrow(df) == 0) {
     data.frame(formula=character(0), tag=character(0), 
        autore=character(0), last_updated=character(0))

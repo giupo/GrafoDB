@@ -10,7 +10,6 @@
 #' @param nuovo nome nuovo da sostituire
 #' @return grafo modificato
 #' @include db.r functions.r
-#' @importFrom DBI dbGetQuery dbExecute
 #' @importFrom igraph get.vertex.attribute set.vertex.attribute
 
 .rename <- function(x, vecchio, nuovo) {
