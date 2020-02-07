@@ -164,9 +164,9 @@ setGeneric(
 #'                          # in questo caso ordinal e' 2
 #' }
 
-setOldClass("igraph")
+methods::setOldClass("igraph")
 
-GrafoDB <- setClass(
+GrafoDB <- methods::setClass(
   "GrafoDB",
   representation(
     tag = "character",
@@ -767,7 +767,7 @@ setMethod(
   invisible(x)
 }
 
-setReplaceMethod(
+methods::setReplaceMethod(
   '$', c( x="GrafoDB", value="ANY"),
   function(x, name, value) {
     .dollar(x, name, value)

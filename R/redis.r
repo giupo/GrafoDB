@@ -2,8 +2,6 @@ redisMakeKey <- function(name, tag, what) {
   paste(name, tag, what, sep="|")
 }
 
-#' @importFrom rredis redisConnect redisDelete redisClose
-
 removeFromRedis <- function(x, nomi) {
   tag <- x@tag
   settings <- dbSettings()
@@ -14,14 +12,12 @@ removeFromRedis <- function(x, nomi) {
     
     for(name in nomi) {
       key <- redisMakeKey(name, tag, 'data')
-      suppressWarnings(redisDelete(key))
+      suppressWarnings(rredis::redisDelete(key))
     }
     rredis::redisClose()
   }, error=function(cond) {
   })
 }
-
-#' @importFrom rredis redisConnect redisDelete redisClose redisLPush
 
 sendCopyMetadati <- function(sourceTag, destTag) {
   msg = paste(sourceTag, destTag, sep="|")
