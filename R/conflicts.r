@@ -158,7 +158,7 @@ setMethod(
         colnames(nuova) <- c("name", "anno", "periodo", "freq", "dati")
         nuova <- from.data.frame(nuova)[[name]]
 
-        differenza <- if (frequency(nuova) == frequency(current)) {
+        differenza <- if (stats::frequency(nuova) == stats::frequency(current)) {
           nuova - current
         } else {
           NA

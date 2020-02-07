@@ -25,9 +25,9 @@ test_that("conversione da data.frame a bimets", {
 
   tt <- tt[["TEST"]]
   expect_true(is.ts(tt))
-  expect_equal(start(tt)[[1]], 1990)
-  expect_equal(start(tt)[[2]], 1)
-  expect_equal(frequency(tt), 1)
+  expect_equal(stats::start(tt)[[1]], 1990)
+  expect_equal(stats::start(tt)[[2]], 1)
+  expect_equal(stats::frequency(tt), 1)
 
   df <- as.data.frame(list(name="TEST", anno=1990, periodo=1, freq=12, dati="[1,2,3,4,5]"), stringsAsFactors = F)
   tt <- from.data.frame(df)
@@ -36,18 +36,18 @@ test_that("conversione da data.frame a bimets", {
   expect_true(is.list(tt))
   tt <- tt[["TEST"]]
   expect_true(is.ts(tt))
-  expect_equal(start(tt)[[1]], 1990)
-  expect_equal(start(tt)[[2]], 1)
-  expect_equal(frequency(tt), 12)
+  expect_equal(stats::start(tt)[[1]], 1990)
+  expect_equal(stats::start(tt)[[2]], 1)
+  expect_equal(stats::frequency(tt), 12)
 
   df <- as.data.frame(list(name="TEST", anno=1990, periodo=1, freq=4, dati="[1,2,3,4,5]"), stringsAsFactors = F)
   tt <- from.data.frame(df)
   expect_true(is.list(tt))
   tt <- tt[["TEST"]]
   expect_true(is.ts(tt))
-  expect_equal(start(tt)[[1]], 1990)
-  expect_equal(start(tt)[[2]], 1)
-  expect_equal(frequency(tt), 4)
+  expect_equal(stats::start(tt)[[1]], 1990)
+  expect_equal(stats::start(tt)[[2]], 1)
+  expect_equal(stats::frequency(tt), 4)
 })
 
 test_that("valori null passati a from.data.frame vengono convertiti in NA", {
@@ -55,10 +55,9 @@ test_that("valori null passati a from.data.frame vengono convertiti in NA", {
   tt <- from.data.frame(df)
   expect_true(is.list(tt))
   tt <- tt[["TEST"]]
-  expect_true(is.ts(tt))
-  require(xts)
-  expect_true(is.na(last(tt)))
-  expect_true(is.na(first(tt)))
+  expect_true(stats::is.ts(tt))
+  expect_true(is.na(xts::last(tt)))
+  expect_true(is.na(xts::first(tt)))
 })
 
 
