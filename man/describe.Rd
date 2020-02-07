@@ -4,7 +4,7 @@
 \alias{describe}
 \title{Funzioni del package `grafo`}
 \usage{
-describe(graph, nodes, order, mode, plot)
+describe(graph, nodes, order, mode)
 }
 \description{
 implementazione di describe di `package::grafo`

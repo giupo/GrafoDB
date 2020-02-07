@@ -4,7 +4,7 @@
 \alias{navigate}
 \title{Funzioni del package `grafo`}
 \usage{
-navugate(graph, nodes, order, mode, plot)
+navugate(graph, nodes, order, mode)
 }
 \description{
 naviga nel grafo
