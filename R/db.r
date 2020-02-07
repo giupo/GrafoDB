@@ -145,7 +145,7 @@ initdbSQLite <- function(con, env=getenv()) {
 #'
 #' @name buildConnection
 #' @note Funzione interna
-#' @rdname buildConnection-internalzzs
+#' @rdname buildConnection-internal
 #' @importFrom futile.logger flog.error
 
 buildConnection <- function(env = getenv(), con = NULL) {
