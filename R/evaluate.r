@@ -204,7 +204,6 @@
 #' patch to evaluate
 #' 
 #' @name evaluate_plain
-#' @importFrom progress progress_bar
 #' @export 
 
 evaluate_plain <- function(x, i=names(x)) {
