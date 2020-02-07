@@ -77,7 +77,8 @@ Collate:
     'patch.r'
     'rmNode.r'
     'subsetting.r'
-RoxygenNote: 7.0.1
+    'upgrf.r'
+RoxygenNote: 7.0.2
 Remotes: github::giupo/rutils,
     github::giupo/rprogressbar,
     github::giupo/rdataset
