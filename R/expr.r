@@ -22,7 +22,7 @@
     data.frame(name=character(), formula=character())
   }
    
-  in.functions <- foreach(
+  in.functions <- foreach::foreach(
     row=iter(in.functions, by='row'),
     .combine=rbind) %do% {
       data.frame(name=row, formula=functions[[row]])

@@ -290,7 +290,7 @@ from.data.frame <- function(df) {
 #' @param tag id del grafo (default su `cf10`)
 #' @return una serie o una lista di serie
 #' @importFrom rutils whoami flypwd
-#' @importFrom foreach foreach %do% %dopar%
+#' @importFrom foreach %do% %dopar%
 #' @importFrom iterators iter
 #' @export
 
@@ -304,7 +304,7 @@ getdb <- function(x, name) {
 
 
   if(length(name) > 1000) {
-    foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
+    foreach::foreach(row=iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
       convert_data_frame(row)
     }
   } else {

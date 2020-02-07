@@ -185,7 +185,7 @@
 #' @param tag identificativo della versione
 #' @param con connessione al DB
 #' @usage .createGraph(g, tag)
-#' @importFrom foreach foreach %do%
+#' @importFrom foreach %do%
 #' @importFrom rutils whoami
 
 .createGraph <- function(x, tag, con, ...) {
@@ -204,7 +204,7 @@
   helper <- x@helper
 
   if(length(names(x))) {
-    dati <- foreach (name = iter(names(x)), .combine=rbind) %do% {
+    dati <- foreach::foreach (name = iter(names(x)), .combine=rbind) %do% {
       tt <- x[[name]]
       df <- to.data.frame(tt, name)
       anno <- as.numeric(df$anno)
@@ -344,7 +344,7 @@ nextRollingNameFor <- function(x, con) {
 #' @seealso saveGraph updateGraph
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
 #' @importFrom iterators iter
-#' @importFrom foreach foreach %do% %dopar%
+#' @importFrom foreach %do% %dopar%
 #' @importFrom rutils slice
 
 doHistory <- function(x, tag, con) {

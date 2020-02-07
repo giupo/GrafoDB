@@ -136,7 +136,7 @@ setMethod(
     if (nrow(df)) {
       ret <- list()
       lista <- as.character(df$name)
-      foreach(name = iter(lista), .combine = rbind) %do% {
+        foreach::foreach(name = iter(lista), .combine = rbind) %do% {
         autore <- df[df$name == name, "autore"]
         current_autore <- df[df$name == name, "old_autore"]
 
@@ -336,7 +336,7 @@ checkConflicts <- function(x, con = NULL) {
 }
 
 #' @importFrom rutils whoami
-#' @importFrom foreach foreach %do%
+#' @importFrom foreach %do%
 #' @importFrom iterators iter
 #' @include db.r persistence_utils.r
 
@@ -353,7 +353,7 @@ creaConflittoDati <- function(x, nomi, con = NULL) {
   autore <- whoami()
   helper <- x@helper
   timestamp <- time.in.millis()
-  dati <- foreach(name = iter(nomi), .combine = rbind) %do% {
+  dati <- foreach::foreach(name = iter(nomi), .combine = rbind) %do% {
 
     tt <- x[[name]]
     df <- to.data.frame(tt, name)
@@ -398,7 +398,7 @@ creaConflittoFormule <- function(x, nomi, formula.db, con = NULL) {
   helper <- x@helper
 
   timestamp <- time.in.millis()
-  foreach(name = iter(nomi)) %do% {
+  foreach::foreach(name = iter(nomi)) %do% {
     sql1 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE1",
       formula = formula.db,

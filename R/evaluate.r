@@ -80,7 +80,7 @@
 #' @usage .evaluate(object, v_start)
 #' @return il grafo con i dati correttamente valutato
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
-#' @importFrom foreach foreach %dopar%
+#' @importFrom foreach %dopar%
 #' @rdname evaluate-internal
 
 .evaluate <- function(object, v_start=NULL, ...) {
@@ -158,7 +158,7 @@
     sources <- setdiff(sources, sprimitive)
 
     if(length(sources)) {
-      evaluated <- foreach(name=sources, .combine=c) %dopar% {
+      evaluated <- foreach::foreach(name=sources, .combine=c) %dopar% {
         proxy(name, object)
       }
 
@@ -172,7 +172,7 @@
       motherfucker <- setdiff(sources, names(evaluated))
 
       while(length(motherfucker)) {
-        evaluated0 <- forach::foreach(name=motherfucker, .combine=c) %dopar% {
+        evaluated0 <- foreach::foreach(name=motherfucker, .combine=c) %dopar% {
           proxy(name, object)
         }
         evaluated <- c(evaluated, evaluated0)
