@@ -607,6 +607,8 @@ setMethod(
     upgrf(x, name, livello=1)
   })
 
+#' importMethodsFrom GrafoDB as.dataset
+
 setMethod(
   "as.dataset",
   signature("GrafoDB"),
