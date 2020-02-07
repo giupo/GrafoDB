@@ -644,7 +644,7 @@ setMethod(
   function(x) {
     con <- buildConnection()
     on.exit(disconnect(con))
-    dbGetQuery(con, getSQLbyKey(
+    DBI::dbGetQuery(con, getSQLbyKey(
       x@helper, "GET_ALL_META",
       tag=x@tag))
   })

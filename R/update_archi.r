@@ -75,7 +75,7 @@
 
   if(length(da.eliminare)) {
     params <- if(length(da.eliminare) == 1) {
-      tokens <- str_split(da.eliminare, sep)[[1]]
+      tokens <- stringr::str_split(da.eliminare, sep)[[1]]
       df <- as.data.frame(
         list(
           partenza = tokens[[1]],
