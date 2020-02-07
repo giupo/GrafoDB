@@ -6,7 +6,6 @@
 #' @usage convert_data_frame(df)
 #' @param df data.frame con le serie storiche 
 #' @return a List
-#' @importFrom jsonlite fromJSON
 #' @export
 
 convert_data_frame <- function(df) {

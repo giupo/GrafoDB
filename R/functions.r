@@ -107,8 +107,6 @@ is.grafodb <- function(x) {
 #' @return una rappresentazione a data.frame della serie `x`
 #' @note funzione interna
 #' @rdname todataframe
-#' @importFrom stats start frequency
-#' @importFrom jsonlite toJSON
 
 to.data.frame <- function(x, name=NULL) {
   ## questa funzione converte a dataframe la timeseries,
@@ -147,7 +145,6 @@ to.data.frame <- function(x, name=NULL) {
 #' @name from.data.frame
 #' @usage from.data.frame(df)
 #' @param df data.frame compilato dal database
-#' @importFrom jsonlite fromJSON
 #' @note i dati dal db sono memorizzati come stringhe JSON
 #' @rdname fromdataframe
 
