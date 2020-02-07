@@ -469,7 +469,6 @@ getdb <- function(x, name) {
 #' @usage tsdiff()
 #' @param a timeseries
 #' @param b timeseries
-#' @importFrom zoo index
 #' @return `TRUE` if `a`!=`b`, `FALSE` otherwise
 #' @export
 
@@ -478,7 +477,7 @@ tsdiff <- function(a, b, thr = .0000001) {
     return(TRUE)
   }
 
-  idiff <- suppressWarnings(index(a) - index(b))
+  idiff <- suppressWarnings(zoo::index(a) - zoo::index(b))
   if(!all(idiff == 0)) {
     return(TRUE)
   }
