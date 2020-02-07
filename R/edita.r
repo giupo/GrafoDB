@@ -9,7 +9,7 @@
   new_task <- paste0(name, " = ... # work it")
   if(!isNode(x, name)) {
     deps <- c()
-    if(name %in% keys(x@functions)) {
+    if(name %in% hash::keys(x@functions)) {
       task <- x@functions[[name]]
     } else {
       task <- new_task

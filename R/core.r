@@ -346,7 +346,7 @@ setMethod(
     nodes <- igraph::V(network)[igraph::topological.sort(network)]$name
 
     all_names <- union(
-      keys(data),
+      hash::keys(data),
       if(is.null(dbdati$name)) {
         character()
       } else {
