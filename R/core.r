@@ -286,7 +286,7 @@ setMethod(
 
 #' Esegue la differenza tra due grafi
 #'
-#' @importFrom foreach foreach %dopar%
+#' @importFrom foreach %dopar%
 #' @importFrom iterators iter
 # TODO: test me!!!
 
@@ -650,7 +650,6 @@ setMethod(
       tag=x@tag))
   })
 
-#' @importFrom hash keys
 #' @include metadati.r
 #' @exportMethod keys
 
@@ -661,7 +660,6 @@ setMethod(
     .keys(x)
   })
 
-#' @importFrom hash values
 #' @include metadati.r
 #' @exportMethod values
 
