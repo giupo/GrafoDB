@@ -1,4 +1,4 @@
-#' @importFrom gdata drop.levels
+
 #' @importFrom futile.logger flog.info
 #' @include checkDAG.r
 
@@ -18,7 +18,7 @@
   in.db <- dbGetQuery(con, getSQLbyKey(helper, "ARCHI_TAG", tag=tag))
   
   sep <- "-"
-  in.db <- drop.levels(in.db)
+  in.db <- gdata::drop.levels(in.db)
   in.db <- paste(in.db$partenza, in.db$arrivo, sep=sep)
   in.memory <- paste(in.memory$partenza, in.memory$arrivo, sep=sep)
   
