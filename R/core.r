@@ -287,7 +287,6 @@ setMethod(
 #' Esegue la differenza tra due grafi
 #'
 #' @importFrom foreach %dopar%
-#' @importFrom iterators iter
 # TODO: test me!!!
 
 setMethod(
@@ -310,7 +309,7 @@ setMethod(
     }
 
     result <- Dataset()
-    data <- foreach(name=iter(common), .combine=append) %dopar% {
+    data <- foreach::foreach(name=iterators::iter(common), .combine=append) %dopar% {
       ret <- list()
       ret[[name]] <- tryCatch({
         e11 <- e1[[name]]
@@ -754,8 +753,6 @@ setMethod(
     .leaves(x)
   })
 
-
-#' @importFrom stringr str_split
 setMethod(
   "$",
   signature("GrafoDB"),
