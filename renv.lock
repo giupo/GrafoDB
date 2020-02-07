@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "3.6.2",
+    "Version": "3.5.3",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -43,27 +43,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "08588806cba69f04797dab50627428ed"
-    },
-    "R.methodsS3": {
-      "Package": "R.methodsS3",
-      "Version": "1.7.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "525c2e4d8915038c0ca7f9c1eedbd47a"
-    },
-    "R.oo": {
-      "Package": "R.oo",
-      "Version": "1.23.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "6be65e89d25f79fb4d147d65e19601e8"
-    },
-    "R.utils": {
-      "Package": "R.utils",
-      "Version": "2.9.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "63cdbbf467a00d0ed2aa3391f4918d6e"
     },
     "R6": {
       "Package": "R6",
@@ -172,10 +151,10 @@
     },
     "callr": {
       "Package": "callr",
-      "Version": "3.4.1",
+      "Version": "3.3.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f3c7c37950ae9a772b3676e4c172f978"
+      "Hash": "b3c10a6b94482a227ba11e245c194884"
     },
     "cli": {
       "Package": "cli",
@@ -525,6 +504,11 @@
       "Version": "1.8-31",
       "Source": "Repository",
       "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemoteRef": "mgcv",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgType": "source",
+      "RemoteSha": "1.8-31",
       "Hash": "4bb7e0c4f3557583e1e8d3c9ffb8ba5c"
     },
     "mime": {
@@ -664,8 +648,8 @@
       "Package": "rdataset",
       "Version": "0.5.2",
       "Source": "GitHub",
-      "Remotes": "github::giupo/rutils",
       "RemoteType": "github",
+      "Remotes": "github::giupo/rutils",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "rdataset",
       "RemoteUsername": "giupo",
@@ -721,8 +705,8 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "rprogressbar",
       "RemoteUsername": "giupo",
+      "RemoteRepo": "rprogressbar",
       "RemoteRef": "master",
       "RemoteSha": "cc7aeb3e6e1277e2e3ca09d88e8758cd08518020",
       "Hash": "e10388a50ba7adb636ae5d38d9ba23a5"
@@ -754,8 +738,8 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "rutils",
       "RemoteUsername": "giupo",
+      "RemoteRepo": "rutils",
       "RemoteRef": "master",
       "RemoteSha": "dc2070c77e551cf7eed5ac8b9a10bcb67e977b3c",
       "Hash": "c06fa3f3127595f282c5b65d9a298b15"
