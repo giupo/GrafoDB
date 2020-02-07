@@ -79,7 +79,7 @@ test_that("disconnect doesn't call disconnect if env is 'test'", {
 
 test_that("disconnect calls disconnect if env is not 'test'", {
   mk <- mock(function (...) {})
-  stub(disconnect, 'dbDisconnect', mk)
+  stub(disconnect, 'DBI::dbDisconnect', mk)
   disconnect(NULL, env="cippalippa")
   expect_called(mk, 1)
 })
