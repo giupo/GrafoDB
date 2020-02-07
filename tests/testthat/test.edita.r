@@ -31,7 +31,7 @@ test_that("I can edit a function", {
   })
   edita(g, "D")
   expect_equal(g@functions[["D"]], "D = A - B")
-  expect_true("D" %in% V(g@network)$name)
+  expect_true("D" %in% igraph::V(g@network)$name)
 
   stub(edita, 'utils::file.edit', function(file, title) {
     write("function(A, B)\n{ C = A /// B }", file=file)
