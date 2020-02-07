@@ -341,7 +341,6 @@ nextRollingNameFor <- function(x, con) {
 #' @param con connessione al database
 #' @note questa e' una funzione interna del grafo invocata da `updateGraph`
 #' @seealso saveGraph updateGraph
-#' @importFrom rprogressbar ProgressBar updateProgressBar kill
 #' @importFrom foreach %do% %dopar%
 
 doHistory <- function(x, tag, con) {

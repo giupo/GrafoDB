@@ -78,7 +78,6 @@
 #' @usage .evaluate(object)
 #' @usage .evaluate(object, v_start)
 #' @return il grafo con i dati correttamente valutato
-#' @importFrom rprogressbar ProgressBar updateProgressBar kill
 #' @importFrom foreach %dopar%
 #' @rdname evaluate-internal
 
@@ -126,11 +125,11 @@
   i <- 0
   is.interactive <- interactive()
   if(is.interactive) { # nocov start
-    pb <- ProgressBar(min=0, max=total)
-    updateProgressBar(pb, i, "Starting...")
+    pb <- rprogressbar::ProgressBar(min=0, max=total)
+    rprogressbar::updateProgressBar(pb, i, "Starting...")
   } # nocov end
 
-  if(is.interactive) updateProgressBar(pb, i, "Starting...") # nocov
+  if(is.interactive) rprogressbar::updateProgressBar(pb, i, "Starting...") # nocov
 
   sources_id <- igraph::V(network)[igraph::degree(network, mode="in") == 0]
 
@@ -163,7 +162,7 @@
 
       i <- i + length(sources)
       if(is.interactive) {
-        updateProgressBar(pb, i, tail(names(evaluated), n=1)) # nocov
+        rprogressbar::updateProgressBar(pb, i, tail(names(evaluated), n=1)) # nocov
       }
 
       # ignore why %dopar% is loosing data.
@@ -194,7 +193,7 @@
     sources_id <- igraph::V(network)[igraph::degree(network, mode="in") == 0]
   }
 
-  if(is.interactive) kill(pb)
+  if(is.interactive) rprogressbar::kill(pb)
 
   object@data <- data
   object@touched <- sort(unique(c(object@touched, hash::keys(data))))
