@@ -25,7 +25,7 @@
 
   old_deps <- deps
   old_task <- task
-  if(name %in% keys(x@edges)) {
+  if(name %in% hash::keys(x@edges)) {
     deps <- x@edges[[name]]
   }  
   

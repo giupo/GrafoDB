@@ -685,8 +685,8 @@ test_that("I can evaluate multiple series on a single evaluate call", {
 
   saveGraph(g) # to clean internal structures
   g <- evaluate(g, c("D", "C")) # just for codecov
-  expect_equal(keys(g@functions), character(0))
-  expect_equal(keys(g@data), c("C","D"))
+  expect_equal(hash::keys(g@functions), character(0))
+  expect_equal(hash::keys(g@data), c("C","D"))
 })
 
 

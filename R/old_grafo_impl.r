@@ -133,7 +133,7 @@ setMethod(
   function(graph) {
     network <- graph@network
     tag <- graph@tag
-    formule <- union(graph@dbformule$name, keys(graph@functions))
+    formule <- union(graph@dbformule$name, hash::keys(graph@functions))
     sources <- igraph::V(network)[igraph::degree(network, mode="in") == 0]$name
     intersect(sources, formule)
   })

@@ -9,12 +9,11 @@
 #' @param nomi array di nomi di serie storiche
 #' @rdname expr-internal
 #' @importFrom formatR tidy_source
-#' @importFrom hash keys
 #' @include functions.r
 
 .expr <- function(x, nomi, echo=FALSE) {
   functions <- x@functions
-  in.functions <- intersect(keys(functions), nomi)
+  in.functions <- intersect(hash::keys(functions), nomi)
   da.caricare.db <- setdiff(nomi, in.functions)
   from.db <- if(length(da.caricare.db)) {
     dbformule <- x@dbformule

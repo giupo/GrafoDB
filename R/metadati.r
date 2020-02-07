@@ -60,7 +60,6 @@
 #' @usage .keys(x)
 #' @param x istanza di grafo
 #' @return ritorna un dataframe con le chiavi dei metadati
-#' @importFrom hash keys
 #' @rdname keys-internal
 #' @include db.r
 

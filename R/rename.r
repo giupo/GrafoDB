@@ -23,9 +23,9 @@
   figlie <- downgrf(x, vecchio, livello=1)
   data <- x@data
   functions <- x@functions
-  if(vecchio %in% keys(data) || vecchio %in% keys(functions) ||
-       any(figlie %in% keys(data)) ||
-       any(figlie %in% keys(functions))) {
+  if(vecchio %in% hash::keys(data) || vecchio %in% hash::keys(functions) ||
+       any(figlie %in% hash::keys(data)) ||
+       any(figlie %in% hash::keys(functions))) {
     stop(vecchio, " o figlie di ", vecchio,
          " sono in modifica. Salvare prima le modifiche ed in seguito rinominare le serie")
   }

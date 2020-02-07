@@ -287,7 +287,6 @@ getOuterFormulaNames <- function(x, con = NULL) {
 }
 
 #' @include functions.r
-#' @importFrom hash keys
 #' @include db.r persistence_utils.r
 
 checkConflicts <- function(x, con = NULL) {
@@ -296,8 +295,8 @@ checkConflicts <- function(x, con = NULL) {
   data <- x@data
   functions <- x@functions
 
-  nameData <- keys(x@data)
-  namesFormule <- keys(x@functions)
+  nameData <- hash::keys(x@data)
+  namesFormule <- hash::keys(x@functions)
 
   outerDataNames <- getOuterDataNames(x, con = con)
   outerFormulaNames <- getOuterFormulaNames(x, con = con)

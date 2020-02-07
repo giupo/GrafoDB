@@ -36,7 +36,6 @@ setMethod(
 #' @rdname subsetting_internal
 #' @include functions.r core.r checkDAG.r find_deps.r
 #' @importFrom rdataset is.dataset
-#' @importFrom hash del
 
 .subsetting <- function(x, i, value) {
   nameObject <- deparse(substitute(x))
@@ -88,7 +87,7 @@ setMethod(
     }
     ## rimuovo i tempedges perche' li ho appena inseriti
     if(name %in% hash::keys(x@edges)) {
-      suppressWarnings(del(name, x@edges))
+      suppressWarnings(hash::del(name, x@edges))
     }
     
     checkDAG(network)

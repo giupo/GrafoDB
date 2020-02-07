@@ -9,7 +9,6 @@
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
 #' @include persistence.r sqlhelper.r
-#' @importFrom hash hash
 #' @importFrom R.utils System
 #' @include db.r persistence_utils.r
 
@@ -331,12 +330,11 @@ getdb <- function(x, name) {
 #'         di un solo elemento, ritorna direttamente la serie storica
 #'         (questo e' un side-effect, non mi piace)
 #' @note se i e' un singolo nome e non esiste nel DB, la funzione termina con errore
-#' @importFrom hash keys
 
 .getdata <- function(x,i) {
   ## check if changed, then load internal changes
   data <- x@data
-  in.data <- intersect(keys(data), i)
+  in.data <- intersect(hash::keys(data), i)
   da.caricare.db <- setdiff(i, in.data)
   tag <- x@tag
   from.db <- if(length(da.caricare.db)) {

@@ -81,7 +81,6 @@
 #' @return il grafo con i dati correttamente valutato
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
 #' @importFrom foreach foreach %dopar%
-#' @importFrom hash keys
 #' @rdname evaluate-internal
 
 .evaluate <- function(object, v_start=NULL, ...) {
@@ -147,8 +146,8 @@
     sources <- V(network)[sources_id]$name
     sprimitive <- intersect(sources, primitive)
     i <- i + length(sprimitive)
-    prim_non_in_data <- setdiff(sprimitive, keys(data))
-    prim_non_in_data <- setdiff(prim_non_in_data, keys(functions))
+    prim_non_in_data <- setdiff(sprimitive, hash::keys(data))
+    prim_non_in_data <- setdiff(prim_non_in_data, hash::keys(functions))
     if(length(prim_non_in_data)) {
       datip <- object[prim_non_in_data]
       for(n in names(datip)) {
@@ -220,6 +219,6 @@ evaluate_plain <- function(x, i=names(x)) {
     g@data[[name]] <- .evaluateSingle(name, g)
   }
 
-  g@touched <- sort(unique(c(g@touched, keys(data))))
+  g@touched <- sort(unique(c(g@touched, hash::keys(data))))
   invisible(g)
 }

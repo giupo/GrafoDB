@@ -41,7 +41,7 @@
         helper, "DELETE_DATI_TAG_NAME", tag=tag, name=name))
     }
 
-    suppressWarnings(del(da.eliminare, graph@data))
+    suppressWarnings(hash::del(da.eliminare, graph@data))
 
     network <- graph@network
     ## eliminare i vertici dal grafo
@@ -52,7 +52,7 @@
         helper, "DELETE_FORMULE_TAG_NAME", tag=tag, name=name))
     }
 
-    suppressWarnings(del(da.eliminare, graph@functions))
+    suppressWarnings(hash::del(da.eliminare, graph@functions))
     ## eliminare gli archi
     for(name in da.eliminare) {
       DBI::dbExecute(con, getSQLbyKey(

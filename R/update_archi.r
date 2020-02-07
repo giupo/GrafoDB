@@ -26,7 +26,7 @@
   da.inserire <- setdiff(in.memory, in.db)
   da.eliminare <- setdiff(in.db, in.memory)
 
-  df <- if(length(keys(data))) {
+  df <- if(length(hash::keys(data))) {
     ## cerco archi aggiunti di recente.
     DBI::dbGetQuery(con, getSQLbyKey(
       helper, "ARCHI_TAG_LAST_UPDATED",

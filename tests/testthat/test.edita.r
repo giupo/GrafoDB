@@ -62,7 +62,7 @@ test_that("nothing changes if I don't modify a formula", {
     write("function(A, B)\n{ C = (A + 1) * (B + 2) }", file=file)
   })
   edita(g, "C")
-  expect_true(!"C" %in% keys(g@functions))
+  expect_true(!"C" %in% hash::keys(g@functions))
 })
 
 test_that("If I edit a root, and I do nothing, still keep the node as root and nothing changes", {
@@ -74,5 +74,5 @@ test_that("If I edit a root, and I do nothing, still keep the node as root and n
     write("function() { A = ... # work it\n}", file=file)
     })
   expect_error(edita(g, "A"))
-  expect_true(!"A" %in% keys(g@functions))
+  expect_true(!"A" %in% hash::keys(g@functions))
 })
