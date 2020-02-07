@@ -2,7 +2,6 @@
 #'
 #' @rdname edita-internal
 #' @include functions.r
-#' @importFrom utils file.edit
 
 .edita <- function(x, name, ...) {
   file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
@@ -32,7 +31,7 @@
   task <- .clutter_with_params(task, name, deps) 
   write(task, file=file)
   on.exit(file.remove(file))
-  file.edit(file, title=name)
+  utils::file.edit(file, title=name)
   txtsrc <- paste(readLines(file), collapse="\n")
   edited <- .declutter_function(txtsrc)
   
