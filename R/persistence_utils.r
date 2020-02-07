@@ -82,7 +82,7 @@ loadGrafi <- function(con=NULL) {
 
 
 createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
-  autore <- whoami()
+  autore <- rutils::whoami()
   # FIXME: Devo usare i timestamp di R o del DBMS?
   x@timestamp <- time.in.millis()
   helper <- x@helper

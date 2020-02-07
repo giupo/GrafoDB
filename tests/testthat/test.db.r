@@ -6,7 +6,7 @@ test_that("dbSettings can return custom home made ini settings", {
   expected <- list(A=1, B=1)
   options(dbSettings=NULL)
   stub(dbSettings, 'file.exists', function (...) TRUE)
-  stub(dbSettings, 'ini_parse', function(...) expected)
+  stub(dbSettings, 'rutils::ini_parse', function(...) expected)
   expect_equal(dbSettings(TRUE), expected)
 })
 

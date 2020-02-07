@@ -159,8 +159,6 @@
     })
 }
 
-
-#' @importFrom rutils whoami
 #' @include db.r sqlhelper.r
 
 .setMeta <- function(x, name, key, value) {
@@ -188,7 +186,7 @@
   } else {
     tag <- x@tag
     helper <- x@helper
-    autore <- whoami()
+    autore <- rutils::whoami()
 
     sql <- getSQLbyKey(
       helper, "INSERT_META",

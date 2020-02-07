@@ -1,5 +1,4 @@
 #' @include expr.r
-#' @importFrom rutils slice
 
 .evaluateSingle1 <- function(name, graph) {
   tsformula <- .expr(graph, name, echo=FALSE)

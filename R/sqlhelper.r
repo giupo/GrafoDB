@@ -15,7 +15,6 @@
 #' @title SQLHelper
 #' @export SQLHelper
 #' @exportClass SQLHelper
-#' @importFrom rutils ini_parse
 #' @importFrom futile.logger flog.error flog.trace flog.info
 #' @importFrom methods representation
 
@@ -47,7 +46,7 @@ setMethod(
   
   .Object@type <- type
   flog.trace("SQLHeleperType: %s", type, name="GrafoDB.sqlhelper" )
-  .Object@sqlContainer <- ini_parse(
+  .Object@sqlContainer <- rutils::ini_parse(
     file.path(system.file(package="GrafoDB", mustWork=T),
               "ini/sql.ini"))[[.Object@type]]
   

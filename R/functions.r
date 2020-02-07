@@ -289,7 +289,6 @@ from.data.frame <- function(df) {
 #' @param name nome serie
 #' @param tag id del grafo (default su `cf10`)
 #' @return una serie o una lista di serie
-#' @importFrom rutils whoami flypwd
 #' @importFrom foreach %do% %dopar%
 #' @export
 

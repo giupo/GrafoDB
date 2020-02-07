@@ -1,5 +1,4 @@
 #' @importFrom gdata drop.levels
-#' @importFrom rutils whoami
 #' @importFrom futile.logger flog.info
 #' @include checkDAG.r
 
@@ -14,7 +13,7 @@
   helper <- x@helper
   network <- x@network
   in.memory <- as.data.frame(igraph::get.edgelist(network), stringsAsFactors = F)
-  autore <- whoami()
+  autore <- rutils::whoami()
   names(in.memory) <- c("partenza", "arrivo")
   in.db <- dbGetQuery(con, getSQLbyKey(helper, "ARCHI_TAG", tag=tag))
   

@@ -24,7 +24,7 @@
   autore <- if('autore' %in% names(param_list)) {
     param_list[["autore"]]
   } else {
-    whoami()
+    rutils::whoami()
   }
 
   params <- cbind(to, autore, from)

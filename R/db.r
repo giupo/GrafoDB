@@ -9,7 +9,6 @@
 #' @param flush if `TRUE` removes any option saved in the current
 #'              session and reloads the settings
 #' @return a list containing the infos used to connect via DBI
-#' @importFrom rutils ini_parse
 #' @importFrom futile.logger flog.info flog.debug flog.trace
 #' @export
 
@@ -28,7 +27,7 @@ dbSettings <- function(flush=FALSE) {
     flog.debug("Ini file: %s", home_ini_file, name=ln)
     if(file.exists(home_ini_file)) {
       flog.debug("%s esiste! lo parso", home_ini_file)
-      home_settings <- ini_parse(home_ini_file)
+      home_settings <- rutils::ini_parse(home_ini_file)
       options(dbSettings=home_settings)
       flog.debug("settings: %s", home_settings, name=ln, capture=TRUE)
       return(home_settings)
@@ -37,7 +36,7 @@ dbSettings <- function(flush=FALSE) {
     flog.debug("Reverting to system wide INI", name=ln)
     filename <- file.path(system.file(package="GrafoDB"), "ini/GrafoDB.ini")
     flog.debug("File path for system wide INI: %s%", filename, name=ln)
-    settings <- ini_parse(filename)
+    settings <- rutils::ini_parse(filename)
     flog.debug("Settings: %s", settings, name=ln, capture=TRUE)
     options(dbSettings=settings)
   }

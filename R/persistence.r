@@ -171,7 +171,7 @@
   .updateArchi(x, con=con, tag=tag)
   DBI::dbExecute(con, getSQLbyKey(
     helper, "UPDATE_GRAFO_LAST_UPDATED",
-    autore=whoami(),
+    autore=rutils::whoami(),
     tag=tag,
     last_updated=time.in.millis()))
 }
@@ -186,7 +186,6 @@
 #' @param con connessione al DB
 #' @usage .createGraph(g, tag)
 #' @importFrom foreach %do%
-#' @importFrom rutils whoami
 
 .createGraph <- function(x, tag, con, ...) {
   param_list <- list(...)
@@ -200,7 +199,7 @@
     }
   }
 
-  autore <- whoami()
+  autore <- rutils::whoami()
   helper <- x@helper
 
   if(length(names(x))) {
@@ -344,13 +343,12 @@ nextRollingNameFor <- function(x, con) {
 #' @seealso saveGraph updateGraph
 #' @importFrom rprogressbar ProgressBar updateProgressBar kill
 #' @importFrom foreach %do% %dopar%
-#' @importFrom rutils slice
 
 doHistory <- function(x, tag, con) {
   ril <- rilasci(tag)
   autore <- ril[ril$tag == x@tag, ]$autore
   if(length(autore) == 0) {
-    autore <- whoami()
+    autore <- rutils::whoami()
   }
 
   dest <- nextRollingNameFor(x, con)

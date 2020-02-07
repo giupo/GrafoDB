@@ -254,7 +254,7 @@ getOuterDataNames <- function(x, con = NULL) {
   } else {
     con
   }
-  autore <- whoami()
+  autore <- rutils::whoami()
   tag <- x@tag
   timestamp <- x@timestamp
   helper <- x@helper
@@ -273,7 +273,7 @@ getOuterFormulaNames <- function(x, con = NULL) {
     con
   }
 
-  autore <- whoami()
+  autore <- rutils::whoami()
   tag <- x@tag
   timestamp <- x@timestamp
   helper <- x@helper
@@ -335,7 +335,6 @@ checkConflicts <- function(x, con = NULL) {
   x
 }
 
-#' @importFrom rutils whoami
 #' @importFrom foreach %do%
 #' @include db.r persistence_utils.r
 
@@ -349,7 +348,7 @@ creaConflittoDati <- function(x, nomi, con = NULL) {
   }
 
   tag <- x@tag
-  autore <- whoami()
+  autore <- rutils::whoami()
   helper <- x@helper
   timestamp <- time.in.millis()
   dati <- foreach::foreach(name = iterators::iter(nomi), .combine = rbind) %do% {
@@ -392,7 +391,7 @@ creaConflittoFormule <- function(x, nomi, formula.db, con = NULL) {
     con
   }
 
-  autore <- whoami()
+  autore <- rutils::whoami()
   tag <- x@tag
   helper <- x@helper
 
