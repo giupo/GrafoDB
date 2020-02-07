@@ -331,7 +331,7 @@ setMethod(
     }
 
     names(data) <- common
-    result@data <- hash(data)
+    result@data <- hash::hash(data)
     result
   })
 

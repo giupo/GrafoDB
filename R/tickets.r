@@ -24,6 +24,6 @@ ticket <- function(id) {
   base_url <- paste0(settings$WebApp$base_url, "/tickets/get")
   url <- paste0(base_url, "/", id)
   res <- RCurl::getURL(url, .opts=list(ssl.verifypeer=F))
-  fromJSON(res)
+  jsonlite::fromJSON(res)
 }
 
