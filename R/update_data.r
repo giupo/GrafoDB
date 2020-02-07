@@ -1,5 +1,4 @@
 #' @include redis.r conflicts.r
-#' @importFrom R.utils System
 #' @importFrom futile.logger flog.info
 
 .updateData <- function(x, con, tag=x@tag, notes="") {

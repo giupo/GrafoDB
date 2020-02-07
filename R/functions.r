@@ -9,7 +9,6 @@
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
 #' @include persistence.r sqlhelper.r
-#' @importFrom R.utils System
 #' @include db.r persistence_utils.r
 
 .init <- function(.Object, tag="cf10", con = NULL) {

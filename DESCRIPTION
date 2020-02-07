@@ -23,7 +23,6 @@ Imports:
     iterators,
     gdata,
     rredis,
-    R.utils,
     rdataset,
     RCurl,
     zoo,

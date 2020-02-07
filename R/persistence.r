@@ -187,7 +187,6 @@
 #' @usage .createGraph(g, tag)
 #' @importFrom foreach foreach %do%
 #' @importFrom rutils whoami
-#' @importFrom R.utils System
 
 .createGraph <- function(x, tag, con, ...) {
   param_list <- list(...)

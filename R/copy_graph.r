@@ -1,5 +1,4 @@
 #' @include redis.r sqlhelper.r
-#' @importFrom R.utils System
 #' @include persistence_utils.r
 
 .copyGraph <- function(from, to, con, ...) {
