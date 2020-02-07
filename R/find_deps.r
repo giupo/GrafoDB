@@ -17,13 +17,12 @@ isError <- function(cond=NULL) {
 #' @param cond error obtained in tryCatch
 #' @seealso find_deps
 #' @return single name of missing object blamed in `cond`, NA if not found
-#' @importFrom stringr str_match
 
 find_dep_from_error <- function(cond=NULL) {
   if(! isError(cond) ) {
     stop("`cond` is not an error: ", cond, ", class: ", class(cond))
   }
-  match <- str_match(as.character(cond), "object '(\\w+)' not found")
+  match <- stringr::str_match(as.character(cond), "object '(\\w+)' not found")
   match[, 2]
 }
 

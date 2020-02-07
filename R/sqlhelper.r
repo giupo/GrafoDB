@@ -17,7 +17,6 @@
 #' @exportClass SQLHelper
 #' @importFrom rutils ini_parse
 #' @importFrom futile.logger flog.error flog.trace flog.info
-#' @importFrom stringr str_locate_all
 #' @importFrom methods representation
 
 SQLHelper <- setClass(
@@ -80,7 +79,7 @@ setMethod(
 
   ## check if any params is left behind
 
-  idx <- str_locate_all(sql, "--[A-Z|a-z|0-9]*--")[[1]]
+  idx <- stringr::str_locate_all(sql, "--[A-Z|a-z|0-9]*--")[[1]]
   if(length(idx) > 0) {
     for(irow in 1:nrow(idx)) {
       start <- idx[irow, 1]

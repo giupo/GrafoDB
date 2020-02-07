@@ -9,7 +9,6 @@
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
 #' @include persistence.r sqlhelper.r
-#' @importFrom stringr str_match
 #' @importFrom hash hash
 #' @importFrom R.utils System
 #' @include db.r persistence_utils.r
@@ -188,7 +187,6 @@ from.data.frame <- function(df) {
 #' @name .declutter_function
 #' @usage .declutter_function(f)
 #' @param f formula in formato testo
-#' @importFrom stringr str_locate str_trim
 #' @rdname declutter-function-internal
 
 .declutter_function <- function(f) {
@@ -201,12 +199,12 @@ from.data.frame <- function(df) {
     f
   }
 
-  idx_inizio <- str_locate(f, "\\{")[[1]]
+  idx_inizio <- stringr::str_locate(f, "\\{")[[1]]
   idx_fine <- sapply(gregexpr("\\}", f), tail, 1)
 
   f <- substring(f, idx_inizio + 1, idx_fine - 1)
   f <- gsub("^\n(.*)\n$", "\\1", f)
-  str_trim(f)
+  stringr::str_trim(f)
 }
 
 #' Questa funzione orla le funzioni del grafo con `proxy <-function() {` e `}` finale.

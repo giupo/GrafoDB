@@ -97,7 +97,6 @@ schemaFileFromEnv <- function(env = getenv()) {
   file
 }
 
-#' @importFrom stringr str_split str_trim
 #' @importFrom futile.logger flog.debug flog.error flog.info flog.warn
 
 initdb <- function(con, env=getenv()) {
@@ -125,12 +124,12 @@ initdbSQLite <- function(con, env=getenv()) {
   file <- schemaFileFromEnv(env=env)
   sql <- paste(readLines(file), collapse="\n")
 
-  statements <- str_split(sql, ";")[[1]]
+  statements <- stringr::str_split(sql, ";")[[1]]
 
   tryCatch({
     DBI::dbBegin(con)
     for(stm in statements) {
-      stm <- str_trim(as.character(stm))
+      stm <- stringr::str_trim(as.character(stm))
       if(nchar(stm) > 0) {
         flog.trace("%s", stm, name=ln)
         DBI::dbExecute(con, stm)

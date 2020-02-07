@@ -1,5 +1,4 @@
 #' @importFrom gdata drop.levels
-#' @importFrom stringr str_split
 #' @importFrom rutils whoami
 #' @importFrom futile.logger flog.info
 #' @include checkDAG.r
@@ -49,7 +48,7 @@
   
   if(length(da.inserire)) {
     params <- if(length(da.inserire) == 1) {
-      tokens <- str_split(da.inserire, sep)[[1]]
+      tokens <- stringr::str_split(da.inserire, sep)[[1]]
       df <- as.data.frame(
         list(
           partenza = tokens[[1]],
@@ -58,7 +57,7 @@
       names(df) <- c("partenza", "arrivo")
       df
     } else {
-      splitted <- unlist(str_split(da.inserire, sep))
+      splitted <- unlist(stringr::str_split(da.inserire, sep))
       df <- as.data.frame(matrix(splitted, nrow=length(da.inserire), byrow=T),
                           stringsAsFactors = F)
       names(df) <- c("partenza", "arrivo")

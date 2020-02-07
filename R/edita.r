@@ -3,7 +3,6 @@
 #' @rdname edita-internal
 #' @include functions.r
 #' @importFrom utils file.edit
-#' @importFrom stringr str_trim
 
 .edita <- function(x, name, ...) {
   file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
@@ -41,7 +40,7 @@
   tryCatch({
     f <- eval(parse(text=txtsrc))
     dep <- names(as.list(formals(f)))
-    if(str_trim(edited) == str_trim(old_task) && identical(sort(dep), sort(old_deps))) {
+    if(stringr::str_trim(edited) == stringr::str_trim(old_task) && identical(sort(dep), sort(old_deps))) {
       ## non sono cambiati archi: non faccio niente
       return(invisible(x))
     }
@@ -55,7 +54,7 @@
     invisible(x)
   }, error = function(cond) {
     ## la risetto per poterla editare
-    if(str_trim(edited) != str_trim(old_task)) {
+    if(stringr::str_trim(edited) != stringr::str_trim(old_task)) {
       x@functions[name] <- edited
     }
     stop(cond)
