@@ -5,7 +5,7 @@
 .updateArchi <- function(x, con, tag=x@tag) {
   ln <- "GrafoDB::updateArchi"
   
-  if(interactive()) flog.info("Update Archi ...", name=ln)
+  if(interactive()) flog.info("Update Edges ...", name=ln)
 
   data <- x@data
   functions <- x@functions
@@ -40,7 +40,7 @@
     wood <- igraph::graph.data.frame(df, directed=TRUE)
     network_aux <- igraph::graph.union(network, wood)
     if(any(hash::keys(functions) %in% df$arrivo)) {
-      warning("Ci sono conflitti sugli archi, continuo su dati e formule")    
+      warning("There are conflicts on edges, keep working on data and formula")    
     }
     checkDAG(network_aux)    
   }
