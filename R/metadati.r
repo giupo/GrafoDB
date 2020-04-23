@@ -84,7 +84,7 @@
 #' @return lista di valori per metadato
 #' @include db.r
 
-.values <- function(x, key=NULL) {
+.values_by_key <- function(x, key=NULL) {
   con <- buildConnection()
   on.exit(disconnect(con))
   tag <- x@tag
@@ -99,6 +99,38 @@
   as.character(df[,1])
 }
 
+
+#' Ritorna i valore del lmetadato per ogni singola serie
+#'
+#' @name .values
+#' @usage .values(x, name, key)
+#' @rdname values-internal
+#' @param x istanza di grafo
+#' @param key chiave del metadato
+#' @return lista di valori per metadato
+#' @include db.r
+#' @export
+
+values_for <- function(x, name=names(x), key=keys(x)) {
+  if (is.null(name)) {
+    stop("name cannot be null")
+  }
+  if (is.null(key)) {
+    stop("key cannot be null")
+  }
+  con <- buildConnection()
+  on.exit(disconnect(con))
+  tag <- x@tag
+  helper <- x@helper
+  sql <- getSQLbyKey(helper, "VALUES_BY_NAME_AND_KEY")
+  sql <- whisker::whisker.render(sql, list(
+    nomi=paste(shQuote(name), collapse=", "),
+    chiavi=paste(shQuote(key), collapse=", "),
+    tag=tag
+  ))
+
+  DBI::dbGetQuery(con, sql)
+}
 
 #' elimina un metadato dal DBI
 #'

@@ -667,15 +667,15 @@ setMethod(
 setMethod(
   "values",
   signature("GrafoDB"),
-  function(x, ...) {
-    nomemetadato <- list(...)
-    key <- if(length(nomemetadato) == 1) {
-      nomemetadato[[1]]
+  function(x, key) {
+    key <- if(length(key) == 1) {
+      key[[1]]
     } else {
       NULL
     }
-    .values(x, key=key)
+    .values_by_key(x, key=key)
   })
+
 
 #' Rinomina una serie del grafo
 #'

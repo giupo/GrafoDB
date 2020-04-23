@@ -28,7 +28,8 @@ Imports:
     zoo,
     futile.logger,
     crayon,
-    progress
+    progress,
+    whisker
 Suggests:
     devtools,
     rstudioapi,

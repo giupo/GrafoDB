@@ -43,13 +43,13 @@ setMethod(
       "PostgreSQL"
     }
   }
-  
+
   .Object@type <- type
   flog.trace("SQLHeleperType: %s", type, name="GrafoDB.sqlhelper" )
   .Object@sqlContainer <- rutils::ini_parse(
     file.path(system.file(package="GrafoDB", mustWork=T),
               "ini/sql.ini"))[[.Object@type]]
-  
+
   .Object
 }
 

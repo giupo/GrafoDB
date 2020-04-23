@@ -10,7 +10,7 @@ setup <- function(tag) {
     C = (A + 1) * (B + 2)
   }
   saveGraph(g)
-  
+
   setMeta(g, "A", "KEY", "VALUE1")
   setMeta(g, "A", "KEY", "VALUE2")
   setMeta(g, "B", "KEY", "VALUE1")
@@ -33,7 +33,7 @@ test_that("posso caricare tutti i metadati del grafo", {
 
 test_that("posso ottenere i metadati per una serie", {
   on.exit({
-    elimina("test") 
+    elimina("test")
   })
   g <- setup("test")
   with_mock(
@@ -62,7 +62,7 @@ test_that("Posso cercare i numeri direttamente nel grafo", {
     elimina("test")
   })
   g <- setup("test")
-  
+
   ret <- lookup(g, 2)
   expect_true("C" %in% ret)
   expect_true(! "A" %in% ret)
@@ -155,11 +155,11 @@ test_that(".values returns values of all metadata, or per key basis", {
   g <- setup("test")
   on.exit(elimina("test"))
 
-  v <- GrafoDB:::.values(g)
+  v <- GrafoDB:::.values_by_key(g)
   expect_is(v, "character")
   expect_equal(v, c("VALUE1", "VALUE2"))
 
-  v <- GrafoDB:::.values(g, key="KEY")
+  v <- GrafoDB:::.values_by_key(g, key="KEY")
   expect_is(v, "character")
   expect_equal(v, c("VALUE1", "VALUE2"))
 })
@@ -189,11 +189,43 @@ test_that("I can remove all metadata with a single key entry", {
         for(tag in rilasci("test")$tag) elimina(tag)
     })
 
-    
+
     deleteMeta(g, "A", "KEY")
     with_mock(
       'RCurl::getURL' = function(...) "{}", {
         v <- getMeta(g, "A")
         expect_equal(nrow(v), 0)
-    })    
+      })
+})
+
+
+test_that("I can search for metadata values from names and keys", {
+  g <- setup("test")
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+
+
+  x <- values_for(g, c("A", "B"), "KEY")
+  expect_equal(nrow(x), 3)
+})
+
+
+test_that("values_for returns all metadata without params",{
+  g <- setup("test")
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  x <- values_for(g)
+  expect_equal(nrow(x), 3)
+})
+
+
+test_that("values_for raise an error if any of the params are NULL",{
+  g <- setup("test")
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  expect_error(values_for(g, name=NULL), "name cannot be null")
+  expect_error(values_for(g, key=NULL), "key cannot be null")
 })
