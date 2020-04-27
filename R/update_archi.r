@@ -4,7 +4,7 @@
 
 .updateArchi <- function(x, con, tag=x@tag) {
   ln <- "GrafoDB::updateArchi"
-  
+
   if(interactive()) flog.info("Update Edges ...", name=ln)
 
   data <- x@data
@@ -12,16 +12,17 @@
   timestamp <- x@timestamp
   helper <- x@helper
   network <- x@network
-  in.memory <- as.data.frame(igraph::get.edgelist(network), stringsAsFactors = F)
+  in.memory <- as.data.frame(igraph::get.edgelist(network),
+                             stringsAsFactors = F)
   autore <- rutils::whoami()
   names(in.memory) <- c("partenza", "arrivo")
   in.db <- DBI::dbGetQuery(con, getSQLbyKey(helper, "ARCHI_TAG", tag=tag))
-  
+
   sep <- "-"
   in.db <- gdata::drop.levels(in.db)
   in.db <- paste(in.db$partenza, in.db$arrivo, sep=sep)
   in.memory <- paste(in.memory$partenza, in.memory$arrivo, sep=sep)
-  
+
   da.inserire <- setdiff(in.memory, in.db)
   da.eliminare <- setdiff(in.db, in.memory)
 
@@ -33,18 +34,18 @@
   } else {
     data.frame(partenza=character(0), arrivo=character(0))
   }
-  
+
   if(nrow(df) > 0) {
     ## controllo che i nuovi archi non siano tra le serie che ho modificato e
     ## che non creino un anello
     wood <- igraph::graph.data.frame(df, directed=TRUE)
     network_aux <- igraph::graph.union(network, wood)
     if(any(hash::keys(functions) %in% df$arrivo)) {
-      warning("There are conflicts on edges, keep working on data and formula")    
+      warning("There are conflicts on edges, keep working on data and formula")
     }
-    checkDAG(network_aux)    
+    checkDAG(network_aux)
   }
-  
+
   if(length(da.inserire)) {
     params <- if(length(da.inserire) == 1) {
       tokens <- stringr::str_split(da.inserire, sep)[[1]]
@@ -57,13 +58,14 @@
       df
     } else {
       splitted <- unlist(stringr::str_split(da.inserire, sep))
-      df <- as.data.frame(matrix(splitted, nrow=length(da.inserire), byrow=T),
-                          stringsAsFactors = F)
+      df <- as.data.frame(
+        matrix(splitted, nrow=length(da.inserire), byrow=T),
+        stringsAsFactors = F)
       names(df) <- c("partenza", "arrivo")
       df
     }
     params <- c(tag, df, autore)
-    
+
     foreach::foreach(row=iterators::iter(df, by='row')) %do% {
       from <- row$partenza
       to <- row$arrivo
@@ -91,7 +93,7 @@
       df
     }
     params <- c(tag, df, autore)
-    
+
     foreach::foreach(row=iterators::iter(df, by='row')) %do% {
       from <- row$partenza
       to <- row$arrivo
@@ -99,6 +101,6 @@
         helper, "DELETE_ARCHI", tag=tag, from=from, to=to))
     }
   }
-  
-  if(interactive()) flog.info("Update Archi done.", name=ln)
+
+  if(interactive()) flog.info("Update Edges done.", name=ln)
 }
