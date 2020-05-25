@@ -1,5 +1,4 @@
 
-
 context("isError")
 test_that("test that isError works", {
     tryCatch({
@@ -67,4 +66,9 @@ test_that("find_deps works as expected", {
     formula <- "dd = x"
     expect_equal(find_deps(data, formula), "x")
     expect_false("dd" %in% find_deps(data, formula))
+})
+
+test_that("if formula is NULL, deps are NULL", {
+   data <- list(x=1, y=2)
+   expect_null(find_deps(data, NULL))
 })
