@@ -45,6 +45,10 @@ find_deps <- function(g, formula) {
   env <- new.env()
   deps <- c()
 
+  if(is.null(formula)) {
+    return(NULL)
+  }
+
   ret <- NULL
   while(is.null(ret) || isError(ret)) {
     ret <- tryCatch({
