@@ -4,14 +4,98 @@ Changelog
 
 (unreleased)
 ------------
+- Updates NAMESPACE/docs. [Giuseppe Acito]
+
+
+v1.35.10 (2020-06-10)
+---------------------
+- Bump version: 1.35.9 → 1.35.10. [Giuseppe Acito]
+- Fix #9. DRY is not possible due flaky desing from R. [MasterOfPuppets]
+- If formula is NULL, deps are NULL. [MasterOfPuppets]
+- If formula is NULL, deps are NULL. [MasterOfPuppets]
+- Minor fix. [Giuseppe Acito]
+
+
+v1.35.9 (2020-04-23)
+--------------------
+- Bump version: 1.35.8 → 1.35.9. [Giuseppe Acito]
+- Updates NAMESPACE. [Giuseppe Acito]
+- Adds order by to value_for. [Giuseppe Acito]
+
+
+v1.35.8 (2020-04-23)
+--------------------
+- Bump version: 1.35.7 → 1.35.8. [Giuseppe Acito]
+- Fix https://osiride-gitlab-dev.utenze.bankit.it/cfin/rcf/issues/82.
+  [Giuseppe Acito]
+
+
+v1.35.7 (2020-03-12)
+--------------------
+- Bump version: 1.35.6 → 1.35.7. [Giuseppe Acito]
+- Missing alias su UPDATE_WITH_STAGE. [Giuseppe Acito]
+
+
+v1.35.6 (2020-03-12)
+--------------------
+- Bump version: 1.35.5 → 1.35.6. [Giuseppe Acito]
+- Fix query performance on update with stage. [Giuseppe Acito]
+
+
+v1.35.5 (2020-03-12)
+--------------------
+- Bump version: 1.35.4 → 1.35.5. [Giuseppe Acito]
+- Trying to fix bottlenecks on sql for uneeded fulltable scans.
+  [Giuseppe Acito]
+- Merge branch 'master' of https://github.com/giupo/GrafoDB into
+  develop. [Giuseppe Acito]
+- Merge branch 'release/removeLocalized' [Giuseppe Acito]
+- Merge branch 'hotfix/missingStringr0' [Giuseppe Acito]
+- Merge branch 'release/removeLocalized' into develop. [Giuseppe Acito]
+
+
+v1.35.4 (2020-02-17)
+--------------------
+- Bump version: 1.35.3 → 1.35.4. [Giuseppe Acito]
+- Remove localized messages. [Giuseppe Acito]
+- Merge branch 'hotfix/missingStringr0' into develop. [Giuseppe Acito]
+- Fix wrong mocking operation in test. [Giuseppe Acito]
+
+
+v1.35.3 (2020-02-07)
+--------------------
+- Bump version: 1.35.2 → 1.35.3. [Giuseppe Acito]
+- Fix missing namespaces. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
+- Bump version: 1.35.1 → 1.35.2. [Giuseppe Acito]
+- Fixed namespaces. [Giuseppe Acito]
+- Updates renv.lock. [Giuseppe Acito]
+
+
+v1.35.2 (2020-02-07)
+--------------------
+- Bump version: 1.35.1 → 1.35.2. [Giuseppe Acito]
+- Fixed namespaces. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
 - Merge branch 'hotfix/missingDBI' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/missingDBI' [Giuseppe Acito]
 - Fix in fix: stringr namespace missing. [Giuseppe Acito]
 - Fix in fix: RCurl namespace missing. [Giuseppe Acito]
 - Fix in fix: rdataset namespace missing. [Giuseppe Acito]
 - Fix missing namespace for DBI::dbGetQuery. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Merge branch 'hotfix/fix8' [Giuseppe Acito]
+
+
+v1.35.1 (2020-02-07)
+--------------------
 - Bump version: 1.35.0 → 1.35.1. [Giuseppe Acito]
 - Merge branch 'hotfix/fix8' into develop. [Giuseppe Acito]
 - Fix #8. [Giuseppe Acito]
+
+
+v1.35.0 (2020-02-07)
+--------------------
 - Bump version: 1.34.12 → 1.35.0. [Giuseppe Acito]
 - Primo rilascio senza importFrom. [Giuseppe Acito]
 - Remove improtFrom zoo. [Giuseppe Acito]
@@ -41,8 +125,16 @@ Changelog
 - Remove importFrom stringr. [Giuseppe Acito]
 - Remove improtFrom igraph. [Giuseppe Acito]
 - Remove importFrom DBI from code. [Giuseppe Acito]
+
+
+v1.34.12 (2020-02-07)
+---------------------
 - Bump version: 1.34.11 → 1.34.12. [Giuseppe Acito]
 - Restore NAMESPACE. [Giuseppe Acito]
+
+
+v1.34.11 (2020-02-07)
+---------------------
 - Bump version: 1.34.10 → 1.34.11. [Giuseppe Acito]
 - Windows fai pena. [Giuseppe Acito]
 - Windows, sei un cesso. [Giuseppe Acito]
@@ -54,8 +146,16 @@ Changelog
 - Patching, patching like there's no tomorrow. [Giuseppe Acito]
 - Patch per callr@3.3.0 in travis-ci. [Giuseppe Acito]
 - Minor change to check travis-ci. [Giuseppe Acito]
+
+
+v1.34.10 (2020-01-15)
+---------------------
 - Bump version: 1.34.9 → 1.34.10. [Giuseppe Acito]
 - Downgrade callr to 3.3.0. [Giuseppe Acito]
+
+
+v1.34.9 (2020-01-14)
+--------------------
 - Bump version: 1.34.8 → 1.34.9. [Giuseppe Acito]
 - Fix bug on last_updated. [Giuseppe Acito]
 - Checks pass. [giupo]
@@ -68,12 +168,13 @@ Changelog
   Acito]
 - Updates dockerignore. [Giuseppe Acito]
 - Align repo. [Giuseppe Acito]
-- Updates changelog. [Giuseppe Acito]
+
+
+v1.34.8 (2019-12-31)
+--------------------
 - Bump version: 1.34.7 → 1.34.8. [Giuseppe Acito]
-- Update changelog. [Giuseppe Acito]
 - Fix #5. [Giuseppe Acito]
 - Fix #6, adds evaluate_plain, adds utils/exponent. [Giuseppe Acito]
-- Update changelog. [Giuseppe Acito]
 - Adds grafodb alias for Diego. [Giuseppe Acito]
 - Fix missing version. [Giuseppe Acito]
 - Errors, errors everywhere. [Giuseppe Acito]
@@ -94,27 +195,50 @@ Changelog
 - Damn CR/LF. [Giuseppe Acito]
 - Fix typo in gitlab-ci.yml. [Giuseppe]
 - Merge branch 'master' of https://github.com/giupo/GrafoDB. [Giuseppe]
-- Bump version: 1.34.4 → 1.34.5. [giupo]
-- Windows I hate you. [giupo]
 - Reorder gilab ci stages. [Giuseppe]
 - Stringi. [Giuseppe]
+
+
+v1.34.5 (2019-12-03)
+--------------------
+- Bump version: 1.34.4 → 1.34.5. [giupo]
+- Windows I hate you. [giupo]
 - Fix #17. [Giuseppe]
-- Updated changelog. [Giuseppe]
+
+
+v1.34.4 (2019-11-29)
+--------------------
 - Bump version: 1.34.3 → 1.34.4. [giupo]
 - Updated .Rbuildignore with .vscode, .circleci and .dockerignore.
   [giupo]
+
+
+v1.34.3 (2019-11-29)
+--------------------
 - Bump version: 1.34.2 → 1.34.3. [giupo]
 - Forced devtools dep. [giupo]
 - Adds devtools to renv.lock. [giupo]
 - Gitlab 9.x.x non supporta junit reports upload. [giupo]
+
+
+v1.34.2 (2019-11-28)
+--------------------
 - Bump version: 1.34.1 → 1.34.2. [giupo]
 - Let's try junit. [giupo]
+
+
+v1.34.1 (2019-11-28)
+--------------------
 - Bump version: 1.34.0 → 1.34.1. [giupo]
 - Remove from NAMESPACE compiled reference to dynlib. [giupo]
 - Remove RcppExports.R. [Giuseppe]
 - Remove Rcpp from Imports. [Giuseppe]
 - Remove any reference to linking in DESCRIPTION. [Giuseppe]
 - Remove unused file for Rcpp. [Giuseppe]
+
+
+v1.34.0 (2019-11-28)
+--------------------
 - Bump version: 1.33.3 → 1.34.0. [giupo]
 - Removes dependency to compiled code. [giupo]
 - Update docs. [giupo]
@@ -127,44 +251,88 @@ Changelog
 - Fix typo. [Giuseppe]
 - Merging with remote. [giupo]
 - Remove native compilation, not used anymore. [Giuseppe]
+
+
+v1.33.3 (2019-11-19)
+--------------------
 - Bump version: 1.33.2 → 1.33.3. [Giuseppe Acito]
 - Update travis. [Giuseppe Acito]
+
+
+v1.33.2 (2019-11-19)
+--------------------
 - Bump version: 1.33.1 → 1.33.2. [Giuseppe Acito]
 - Remove dbDisconnect from tests. [Giuseppe Acito]
+
+
+v1.33.1 (2019-11-19)
+--------------------
 - Bump version: 1.33.0 → 1.33.1. [Giuseppe Acito]
 - Proxy disconect for dbDisconnect. [Giuseppe Acito]
+
+
+v1.33.0 (2019-11-19)
+--------------------
 - Bump version: 1.32.2 → 1.33.0. [Giuseppe Acito]
 - Works with SQLite. [Giuseppe Acito]
+
+
+v1.32.2 (2019-11-19)
+--------------------
 - Bump version: 1.32.1 → 1.32.2. [Giuseppe Acito]
 - Renv ok. [Giuseppe Acito]
 - Merge branch 'master' of https://github.com/giupo/GrafoDB into
   develop. [Giuseppe Acito]
+- Merge branch 'hotfix/shouldCreateSchemaOutOfBuildConnection' into
+  develop. [Giuseppe Acito]
+
+
+v1.32.1 (2019-11-19)
+--------------------
 - Bump version: 1.32.0 → 1.32.1. [giupo]
 - Nothing important. [giupo]
 - Update on .gitlab-ci.yml. [giupo]
 - Fixes on .gitlab-ci.yml. [giupo]
 - Moves to renv. [giupo]
+
+
+v1.32.0 (2019-11-19)
+--------------------
 - Bump version: 1.31.0 → 1.32.0. [giupo]
 - Bump version: 1.30.8 → 1.31.0. [giupo]
 - Passing to renv. [giupo]
 - Merge branch 'hotfix/shouldCreateSchemaOutOfBuildConnection' [Giuseppe
   Acito]
-- Merge branch 'hotfix/shouldCreateSchemaOutOfBuildConnection' into
-  develop. [Giuseppe Acito]
 - Removes initdb from buildConnection and other amenities. [Giuseppe
   Acito]
 - Updated packrat. [Giuseppe Acito]
 - Updated packrat. [Giuseppe Acito]
+
+
+v1.30.8 (2019-10-31)
+--------------------
 - Bump version: 1.30.7 → 1.30.8. [Giuseppe Acito]
 - Remove CMD since it get inherited from rocker/rstudio. [Giuseppe
   Acito]
 - Updates on Dockerfile. [Giuseppe Acito]
 - Updates rprogressbar deps. [Giuseppe Acito]
 - Changes from r to rstudio. [Giuseppe Acito]
+
+
+v1.30.7 (2019-09-05)
+--------------------
 - Bump version: 1.30.6 → 1.30.7. [Giuseppe Acito]
 - Dumb me: I forgot a file path calbled in code. [Giuseppe Acito]
+
+
+v1.30.6 (2019-09-05)
+--------------------
 - Bump version: 1.30.5 → 1.30.6. [Giuseppe Acito]
 - Adds checks on library RPostgreSQL. [Giuseppe Acito]
+
+
+v1.30.5 (2019-09-03)
+--------------------
 - Bump version: 1.30.4 → 1.30.5. [Giuseppe Acito]
 - Removes packrat from Dockerfile. [Giuseppe Acito]
 - Merge branch 'master' of https://github.com/giupo/GrafoDB into
@@ -173,6 +341,16 @@ Changelog
 - Adds Dockerfile. [Giuseppe Acito]
 - Refactor of buildConnection. [Giuseppe Acito]
 - Trying to build some structure to schema creation. [Giuseppe Acito]
+
+
+v1.31.0 (2019-08-07)
+--------------------
+- Bump version: 1.30.4 → 1.31.0. [Giuseppe Acito]
+- Adds some shit. [Giuseppe Acito]
+
+
+v1.30.4 (2019-07-30)
+--------------------
 - Bump version: 1.30.3 → 1.30.4. [Giuseppe Acito]
 - Remove unused external dep. [Giuseppe Acito]
 - Update packrat.lock. [Giuseppe Acito]
@@ -180,25 +358,73 @@ Changelog
 - Nothing important. [Giuseppe Acito]
 - Linting... [Giuseppe Acito]
 - Docs created. [Giuseppe Acito]
+
+
+v1.30.3 (2019-07-02)
+--------------------
 - Bump version: 1.30.2 → 1.30.3. [Giuseppe Acito]
 - Fixed bug single obs timeseries. [Giuseppe Acito]
+
+
+v1.30.2 (2019-07-02)
+--------------------
 - Bump version: 1.30.1 → 1.30.2. [Giuseppe Acito]
+
+
+v1.30.1 (2019-07-02)
+--------------------
 - Bump version: 1.30.0 → 1.30.1. [Giuseppe Acito]
 - Adds checks for single obs timeseries. [Giuseppe Acito]
 - Packrat snapshot. [Giuseppe Acito]
 - Cosmetics. [Giuseppe Acito]
+
+
+v1.30.0 (2019-06-12)
+--------------------
 - Bump version: 1.29.14 → 1.30.0. [Giuseppe Acito]
+
+
+v1.29.14 (2019-06-12)
+---------------------
 - Bump version: 1.29.13 → 1.29.14. [Giuseppe Acito]
 - Fix mess in DESCRIPTION. [Giuseppe Acito]
+
+
+v1.29.13 (2019-06-12)
+---------------------
 - Bump version: 1.29.12 → 1.29.13. [Giuseppe Acito]
 - Fix missing tag in UPDATE_WITH_STAGE. [Giuseppe Acito]
 - Merge fix. [Giuseppe Acito]
+- Fix merge. [Giuseppe Acito]
+
+
+v1.29.12 (2019-06-12)
+---------------------
 - Bump version: 1.29.11 → 1.29.12. [Giuseppe Acito]
 - Adds selective support for CHANGED_SERIES on tags. [Giuseppe Acito]
 - Adds .gitignore su packrat. [m024000]
 - Merge branch 'hotfix/missingdbWriteTable' [Giuseppe Acito]
 - Added roxygen metatag for importing dbWriteTablewq. [Giuseppe Acito]
+
+
+v1.29.9 (2019-06-12)
+--------------------
+- Bump version: 1.29.8 → 1.29.9. [Giuseppe Acito]
+
+
+v1.29.8 (2019-06-12)
+--------------------
+- Bump version: 1.29.7 → 1.29.8. [Giuseppe Acito]
+- Adds selective support for CHANGED_SERIES on tags. [Giuseppe Acito]
+
+
+v1.29.11 (2019-04-05)
+---------------------
 - Bump version: 1.29.10 → 1.29.11. [Giuseppe Acito]
+
+
+v1.29.10 (2019-04-04)
+---------------------
 - Bump version: 1.29.9 → 1.29.10. [Giuseppe Acito]
 - Merge branch 'develop' [Giuseppe Acito]
 - Update packrat with rdataset 0.4. [Giuseppe Acito]
@@ -217,33 +443,57 @@ Changelog
 - Bump version: 1.29.7 → 1.29.8. [Giuseppe Acito]
 - Merge branch 'master' of osiride-gitlab-
   dev.utenze.bankit.it:m024000/GrafoDB into develop. [Giuseppe Acito]
-- Updated to packrat 0.5. [Giuseppe Acito]
-- Merge branch 'master' into develop. [Giuseppe Acito]
-- Merge branch 'master' into develop. [Giuseppe Acito]
-- Ignore restore_packrate where it's not needed. [Giuseppe Acito]
-- Fix merge. [Giuseppe Acito]
-- Bump version: 1.29.8 → 1.29.9. [Giuseppe Acito]
-- Bump version: 1.29.7 → 1.29.8. [Giuseppe Acito]
-- Adds selective support for CHANGED_SERIES on tags. [Giuseppe Acito]
 - Merge branch 'develop' [Giuseppe Acito]
 - Fix merge. [Giuseppe Acito]
+- Merge branch 'hotfix/fixTs' into develop. [Giuseppe Acito]
+- Merge branch 'hotfix/fixTs' [Giuseppe Acito]
+- Updated to packrat 0.5. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
 - Bump version: 1.29.6 → 1.29.7. [Giuseppe Acito]
 - Fixing conflicts. [Giuseppe Acito]
 - Update .gitlab-ci.yml. [m024000]
 - Update .gitlab-ci.yml. [m024000]
+
+
+v1.29.3 (2019-04-01)
+--------------------
+- Bump version: 1.29.2 → 1.29.3. [Giuseppe Acito]
+- Replace freq= to frequency= in building ts() [Giuseppe Acito]
+
+
+v1.29.7 (2019-01-21)
+--------------------
+- Bump version: 1.29.6 → 1.29.7. [Giuseppe Acito]
+- Merge branch 'master' into develop. [Giuseppe Acito]
 - Bump version: 1.29.5 → 1.29.6. [Giuseppe Acito]
 - Bump version: 1.29.4 → 1.29.5. [Giuseppe Acito]
 - Ignore restore_packrate where it's not needed. [Giuseppe Acito]
 - Update .gitlab-ci.yml. [m024000]
 - Update .gitlab-ci.yml. [m024000]
 - Update .gitlab-ci.yml. [m024000]
+
+
+v1.29.6 (2019-01-21)
+--------------------
+- Bump version: 1.29.5 → 1.29.6. [Giuseppe Acito]
+- Merge branch 'develop' [Giuseppe Acito]
+- Ignore restore_packrate where it's not needed. [Giuseppe Acito]
+
+
+v1.29.5 (2019-01-21)
+--------------------
+- Bump version: 1.29.4 → 1.29.5. [Giuseppe Acito]
 - Update .gitlab-ci.yml. [m024000]
 - Update .gitlab-ci.yml adds some failures and artifacts management.
   [m024000]
 - Update README.md. [m024000]
 - Part coverage from testing. [Giuseppe Acito]
 - Fix merge. [Giuseppe Acito]
-- Updates changelog. [Giuseppe Acito]
+- Adds nonesense. [Giuseppe Acito]
+
+
+v1.29.4 (2019-01-18)
+--------------------
 - Bump version: 1.29.3 → 1.29.4. [Giuseppe Acito]
 - Fix type error in g .gitlab-ci.yml. [Giuseppe Acito]
 - Remove .gitlab-ci.yml from package build. [Giuseppe Acito]
@@ -253,7 +503,6 @@ Changelog
 - Let's cache packrat so we don't stress out filesystem/proxy/every
   shithole in town... [m024000]
 - Adds nonesense. [Giuseppe Acito]
-- Adds changelog. [Giuseppe Acito]
 - Check must follow a build. [m024000]
 - Update .gitlab-ci.yml: refactored with some organization. [m024000]
 - Update .gitignore, adds packrat.opts to accepted files in this dir...
@@ -265,57 +514,127 @@ Changelog
 - Fix malformed before_script node. [m024000]
 - Update .gitlab-ci.yml. [m024000]
 - Add .gitlab-ci.yml. [m024000]
-- Adds nonesense. [Giuseppe Acito]
-- Adds changelog. [Giuseppe Acito]
-- Merge branch 'hotfix/fixTs' into develop. [Giuseppe Acito]
-- Merge branch 'hotfix/fixTs' [Giuseppe Acito]
-- Bump version: 1.29.2 → 1.29.3. [Giuseppe Acito]
-- Replace freq= to frequency= in building ts() [Giuseppe Acito]
+
+
+v1.29.2 (2018-08-28)
+--------------------
 - Bump version: 1.29.1 → 1.29.2. [Giuseppe Acito]
 - Methods added to autotest.r, 3.3.3 doesn't like not having it.
   [Giuseppe Acito]
+
+
+v1.29.1 (2018-08-28)
+--------------------
 - Bump version: 1.29.0 → 1.29.1. [Giuseppe Acito]
 - Remove warning from .getdata to restore the behaviour. [Giuseppe
   Acito]
+
+
+v1.29.0 (2018-08-28)
+--------------------
 - Bump version: 1.28.15 → 1.29.0. [Giuseppe Acito]
 - Preparo il rilascio. [Giuseppe Acito]
 - Save with stage works on postgres. [Giuseppe Acito]
+
+
+v1.28.15 (2018-08-27)
+---------------------
 - Bump version: 1.28.14 → 1.28.15. [Giuseppe Acito]
 - Oh crap, I hate myself. [Giuseppe Acito]
+
+
+v1.28.14 (2018-08-27)
+---------------------
 - Bump version: 1.28.13 → 1.28.14. [Giuseppe Acito]
 - Oh crap. [Giuseppe Acito]
+
+
+v1.28.13 (2018-08-27)
+---------------------
 - Bump version: 1.28.12 → 1.28.13. [Giuseppe Acito]
 - Oh crap. [Giuseppe Acito]
+
+
+v1.28.12 (2018-08-27)
+---------------------
 - Bump version: 1.28.11 → 1.28.12. [Giuseppe Acito]
 - Fix su SQL. [Giuseppe Acito]
+
+
+v1.28.11 (2018-08-27)
+---------------------
 - Bump version: 1.28.10 → 1.28.11. [Giuseppe Acito]
 - Oh crap, still typos. [Giuseppe Acito]
+
+
+v1.28.10 (2018-08-27)
+---------------------
 - Bump version: 1.28.9 → 1.28.10. [Giuseppe Acito]
 - Oh crap, typos everywhere. [Giuseppe Acito]
 - I will test. Promise. [Giuseppe Acito]
+
+
+v1.28.9 (2018-08-27)
+--------------------
 - Bump version: 1.28.8 → 1.28.9. [Giuseppe Acito]
 - Updates query for update_with_stage with tag. [Giuseppe Acito]
+
+
+v1.28.8 (2018-08-24)
+--------------------
 - Bump version: 1.28.7 → 1.28.8. [Giuseppe Acito]
 - Remove warning in assign [<- [Giuseppe Acito]
+
+
+v1.28.7 (2018-08-24)
+--------------------
 - Bump version: 1.28.6 → 1.28.7. [Giuseppe Acito]
 - Fixing errors for data inconsistencies. still missing test for lack of
   a beter mock library. [Giuseppe Acito]
+
+
+v1.28.6 (2018-08-24)
+--------------------
 - Bump version: 1.28.5 → 1.28.6. [Giuseppe Acito]
 - Removed unused code, added check on retrieved data. [Giuseppe Acito]
+
+
+v1.28.5 (2018-08-24)
+--------------------
 - Bump version: 1.28.4 → 1.28.5. [Giuseppe Acito]
 - Remove DROP STAGE. [Giuseppe Acito]
+
+
+v1.28.4 (2018-08-24)
+--------------------
 - Bump version: 1.28.3 → 1.28.4. [Giuseppe Acito]
 - Adds random stage name. [Giuseppe Acito]
+
+
+v1.28.3 (2018-08-24)
+--------------------
 - Bump version: 1.28.2 → 1.28.3. [Giuseppe Acito]
 - Merge branch 'master' into develop. [Giuseppe Acito]
-- Bump version: 1.28.1 → 1.28.2. [Giuseppe Acito]
 - Still some sql statements missing, dumb me. [Giuseppe Acito]
+
+
+v1.28.2 (2018-08-24)
+--------------------
+- Bump version: 1.28.1 → 1.28.2. [Giuseppe Acito]
+
+
+v1.28.1 (2018-08-24)
+--------------------
 - Bump version: 1.28.0 → 1.28.1. [Giuseppe Acito]
 - Bypass on data partition on PostgreSQL. [Giuseppe Acito]
 - Merge branch 'develop' [Giuseppe Acito]
 - Adds getenv docs. [Giuseppe Acito]
 - Merge branch 'release/performances' into develop. [Giuseppe Acito]
 - Merge branch 'release/performances' [Giuseppe Acito]
+
+
+v1.28.0 (2018-07-10)
+--------------------
 - Bump version: 1.27.3 → 1.28.0. [Giuseppe Acito]
 - Looks ok. [Giuseppe Acito]
 - Merge branch 'develop' [Giuseppe Acito]
@@ -325,16 +644,36 @@ Changelog
 - Merge branch 'hotfix/conflictsWithPerformances' [Giuseppe Acito]
 - Fixed. [Giuseppe Acito]
 - Minor fixes, no fixes. [Giuseppe Acito]
+
+
+v1.27.3 (2018-07-10)
+--------------------
 - Bump version: 1.27.2 → 1.27.3. [Giuseppe Acito]
+
+
+v1.27.2 (2018-07-10)
+--------------------
 - Bump version: 1.27.1 → 1.27.2. [Giuseppe Acito]
 - Fix typo on time.in.millis. [Giuseppe Acito]
 - Merge branch 'develop' [Giuseppe Acito]
+- Merge branch 'release/performanceRelease' [Giuseppe Acito]
+
+
+v1.27.1 (2018-07-09)
+--------------------
 - Bump version: 1.27.0 → 1.27.1. [Giuseppe Acito]
 - Fix typo. [Giuseppe Acito]
 - Merge branch 'release/performanceRelease' into develop. [Giuseppe
   Acito]
-- Merge branch 'release/performanceRelease' [Giuseppe Acito]
+
+
+v1.27.0 (2018-07-09)
+--------------------
 - Bump version: 1.26.3 → 1.27.0. [Giuseppe Acito]
+
+
+v1.26.3 (2018-07-09)
+--------------------
 - Bump version: 1.26.2 → 1.26.3. [Giuseppe Acito]
 - Adds time.in.mills. [Giuseppe Acito]
 - Merge branch 'feature/bulkUpsert' into develop. [Giuseppe Acito]
