@@ -1,5 +1,4 @@
 
-
 setMethod(
   "[",
   c("GrafoDB", "character", "missing", "ANY"),
@@ -143,8 +142,8 @@ setMethod(
   "[[<-",
   signature("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., value) {
-    x <- .subsetting(x, i, value)
     nameObject <- deparse(substitute(x))
+    x <- .subsetting(x, i, value)
     #TODO(giupo): this causes a warning, fix me.
     assign(nameObject, x, envir=parent.frame())
     invisible(x)
