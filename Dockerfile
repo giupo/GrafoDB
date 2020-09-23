@@ -1,4 +1,4 @@
-FROM rocker/rstudio
+FROM rocker/rstudio:3.5.3
 
 RUN apt-get -qq update && apt-get -yqq upgrade
 RUN apt-get -yqq install libxml2-dev libgit2-dev libcurl4-gnutls-dev postgresql-client libssl-dev libpq-dev
