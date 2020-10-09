@@ -36,7 +36,7 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
     con,
     "update dati set dati=replace(dati, 'null', '\"NaN\"') where tag='test'")
 
-  saveGraph(g)
+  g <- saveGraph(g)
   g1 <- GrafoDB("test")
   expect_true( any( is.na(g[["D"]] )))
   expect_true( length(g[["D"]]) > 0 )
@@ -66,10 +66,10 @@ test_that("I can save a graph over another existing graph", {
   ga <- setup(tagA)
   gb <- setup(tagB)
  
-  saveGraph(ga)
-  saveGraph(gb)
+  ga <- saveGraph(ga)
+  gb <- saveGraph(gb)
 
-  saveGraph(ga, tagB)
+  ga <- saveGraph(ga, tagB)
   
   g <- GrafoDB(tagB)
   expect_true(all(g$B == gb$B))
@@ -108,12 +108,12 @@ test_that("need_resync returns true if GrafoNeeds a resync", {
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   
-  saveGraph(g)
+  g <- saveGraph(g)
 
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
   g2["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  saveGraph(g2)
+  g2 <- saveGraph(g2)
   expect_true(need_resync(g1))
 })
 
@@ -125,7 +125,7 @@ test_that("doHistory preserves last_updated", {
   g1 <- saveGraph(g)
   Sys.sleep(0.1)
   g1["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  saveGraph(g1)
+  g1 <- saveGraph(g1)
   p <- GrafoDB("testp1")
   expect_true("A" %in% names(p))
   expect_false(g1@timestamp == g@timestamp)

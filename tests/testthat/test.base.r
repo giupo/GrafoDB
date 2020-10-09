@@ -324,7 +324,7 @@ test_that("posso memorizzare stringhe", {
     C <- A + B
   }
   g["archivio"] = "cippalippa"
-  saveGraph(g)
+  g <- saveGraph(g)
 
   g1 <- GrafoDB("test")
   expect_equal(g1[["archivio"]], "cippalippa")
@@ -682,7 +682,7 @@ test_that("I can evaluate multiple series on a single evaluate call", {
     D <- C - B
   }
 
-  saveGraph(g) # to clean internal structures
+  g <- saveGraph(g) # to clean internal structures
   g <- evaluate(g, c("D", "C")) # just for codecov
   expect_equal(hash::keys(g@functions), character(0))
   expect_equal(hash::keys(g@data), c("C","D"))

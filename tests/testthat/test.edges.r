@@ -23,13 +23,13 @@ test_that("I get to remove arcs", {
   g <- setup("test")
   on.exit(elimina("test"))
 
-  saveGraph(g)
+  g <- saveGraph(g)
 
   g["C"] <- function(A) {
     C <- A
   }
 
-  saveGraph(g)
+  g <- saveGraph(g)
 
   expect_true(!"B" %in% upgrf(g, "C", livello=1))
 })

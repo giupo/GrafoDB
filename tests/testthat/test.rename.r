@@ -9,7 +9,7 @@ test_that("I can rename a series before saving it", {
   g["D"] <- function(A, C) {
     D = A + C
   }
-  saveGraph(g)
+  g <- saveGraph(g)
   g <- rename(g, "A", "A1")
 
   expect_true(!"A" %in% names(g))

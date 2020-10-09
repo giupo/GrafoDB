@@ -9,7 +9,7 @@ setup <- function(tag) {
   g["C"] <- function(A, B) {
     C = (A + 1) * (B + 2)
   }
-  saveGraph(g)
+  g <- saveGraph(g)
 
   setMeta(g, "A", "KEY", "VALUE1")
   setMeta(g, "A", "KEY", "VALUE2")

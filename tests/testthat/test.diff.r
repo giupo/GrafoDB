@@ -41,14 +41,14 @@ test_that("I get a dataframe with the difference in formulas", {
     elimina("test")
     elimina("test2")
   })
-  saveGraph(g)
-  saveGraph(g1)
+  g <-saveGraph(g)
+  g1 <- saveGraph(g1)
 
   g1["C"] <- function(A, B) {
     C = A - B
   }
 
-  saveGraph(g1)
+  g1 <- saveGraph(g1)
   expect_equal(nrow(diff.GrafoDB(g, g1)), 1)
 })
 
@@ -61,13 +61,13 @@ test_that("I get authors in each data.frame", {
     elimina("test2")
   })
 
-  saveGraph(g)
-  saveGraph(g1)
+  g <- saveGraph(g)
+  g1 <- saveGraph(g1)
 
   g1["C"] <- function(A, B) {
     C = A - B
   }
-  saveGraph(g1)
+  g1 <- saveGraph(g1)
   
   dd <- diff.GrafoDB(g, g1)
   expect_true("test_autore" %in% colnames(dd))
