@@ -133,8 +133,6 @@ setMethod(
   function(x, i, j, ..., value) {
     nameObject <- deparse(substitute(x))
     x <- .subsetting(x, i, value)
-    #TODO(giupo): this causes a warning, fix me.
-    assign(nameObject, x, envir=parent.frame())
     invisible(x)
   })
 
@@ -144,7 +142,5 @@ setMethod(
   function(x, i, j, ..., value) {
     nameObject <- deparse(substitute(x))
     x <- .subsetting(x, i, value)
-    #TODO(giupo): this causes a warning, fix me.
-    assign(nameObject, x, envir=parent.frame())
     invisible(x)
   })
