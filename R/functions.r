@@ -523,3 +523,20 @@ rilasci <- function(filtro=NULL) {
   }
   data
 }
+
+
+
+#' @seealso GrafoDB::GrafoDB
+#' @export
+
+grafodb <- function(...) {
+  GrafoDB(...)
+}
+
+
+#' @seealso GrafoDB::GrafoDB
+#' @export
+
+grafo <- function(...) {
+  GrafoDB(...)
+}
