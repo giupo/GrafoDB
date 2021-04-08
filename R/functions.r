@@ -23,9 +23,9 @@
   .Object@data <- hash::hash()
   .Object@functions <- hash::hash()
   .Object@touched <- character(0)
-  .Object@ordinal <- if(grepl("p(\\d+)$", tag)) {
+  .Object@ordinal <- if (grepl("p(\\d+)$", tag)) {
     mth <- stringr::str_match(tag, "p(\\d+)$")
-    as.numeric(mth[1,2])
+    as.numeric(mth[1, 2])
   } else {
     0
   }
@@ -122,7 +122,7 @@ to.data.frame <- function(x, name=NULL) {
   }
 
   # fix per bug su CRCONFAC/PC che assegna names su una serie storica
-  names(x) = NULL
+  names(x) <- NULL
   raw_numbers <- jsonlite::toJSON(x, digits=20, na=NULL)
   raw_numbers <- as.character(raw_numbers)
   raw_numbers <- gsub(" ", "", raw_numbers)
@@ -152,8 +152,8 @@ from.data.frame <- function(df) {
   stopifnot(is.data.frame(df))
   ret <- list()
 
-  for(i in seq(nrow(df))) {
-    row <- df[i,]
+  for (i in seq(nrow(df))) {
+    row <- df[i, ]
     anno <- row$anno
     periodo <- row$periodo
     freq <- row$freq
@@ -298,8 +298,10 @@ getdb <- function(x, name) {
   }
 
 
-  if(length(name) > 1000) {
-    foreach::foreach(row=iterators::iter(df, by='row'), .combine=c, .multicombine=TRUE) %dopar% {
+  if (length(name) > 1000) {
+    foreach::foreach(
+      row=iterators::iter(df, by="row"),
+      .combine=c, .multicombine=TRUE) %dopar% {
       convert_data_frame(row)
     }
   } else {
@@ -347,22 +349,22 @@ getdb <- function(x, name) {
   }
 
   ret <- list()
-  for(name in names(from.db)) {
+  for (name in names(from.db)) {
     ret[[name]] <- from.db[[name]]
   }
 
-  for(name in in.data) {
+  for (name in in.data) {
     ret[[name]] <- data[[name]]
   }
 
   ## controllo di avere tutte le serie
-  if(!all(i %in% names(ret))) {
+  if (!all(i %in% names(ret))) {
     non.presenti <- setdiff(i, names(ret))
     warning("le seguenti serie non sono presenti: ",
             paste(non.presenti, collapse=", "))
   }
 
-  if(length(ret) == 1) {
+  if (length(ret) == 1) {
     ret <- ret[[1]]
   }
   ret
@@ -371,7 +373,7 @@ getdb <- function(x, name) {
 #' @include db.r
 
 .tagExists <- function(tag, con=NULL) {
-  con <- if(is.null(con)) {
+  con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
     con
@@ -384,10 +386,10 @@ getdb <- function(x, name) {
 }
 
 
-.copy <- function(x,y, name) {
+.copy <- function(x, y, name) {
   task <- .declutter_function(as.character(getTask(x, name)))
   task <- gsub(paste0("return\\(", name, "\\)$"), "", task)
-  y@functions[[name]] = task
+  y@functions[[name]] <- task
   return(invisible(y))
 }
 

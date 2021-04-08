@@ -182,9 +182,6 @@ GrafoDB <- methods::setClass(
     helper = "SQLHelper"),
   contains = "Dataset")
 
-#' @export
-
-grafodb <- GrafoDB
 
 #' costruttore per la classe GrafoDB
 #'
@@ -761,14 +758,12 @@ setMethod(
   })
 
 .dollar <- function(x, name, value) {
-  #nameObject <- deparse(substitute(x))
   x <- .subsetting(x, name, value)
-  #assign(nameObject, x, envir=parent.frame())
   invisible(x)
 }
 
 methods::setReplaceMethod(
-  '$', c( x="GrafoDB", value="ANY"),
+  "$", c(x="GrafoDB", value="ANY"),
   function(x, name, value) {
     .dollar(x, name, value)
   })
