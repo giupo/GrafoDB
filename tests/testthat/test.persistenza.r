@@ -24,7 +24,7 @@ test_that("Posso salvare e ricaricare da un file", {
   unlink(path)
 })
 
-test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
+test_that("I can handle NaN despite JsonCpp, jsonlite, IEEE754", {
   ## il problema qui e' che quando serializzo python giustamente
   ## usa 'NaN' per i missing. mentre C++/R preferiscono 'null'
   on.exit({

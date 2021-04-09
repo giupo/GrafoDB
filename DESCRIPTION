@@ -28,8 +28,7 @@ Imports:
     crayon,
     progress,
     whisker,
-    glue,
-    jsonlite
+    glue
 Suggests:
     devtools,
     rstudioapi,
