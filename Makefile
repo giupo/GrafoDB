@@ -62,3 +62,6 @@ codecov:
 
 restore:
 	R -e 'renv::restore(); renv::install("callr@3.3.0")'
+
+CHANGELOG.md:
+	gitchangelog | grep -v "git-svn-id" > CHANGELOG.md
