@@ -78,7 +78,6 @@
 #' @usage .evaluate(object)
 #' @usage .evaluate(object, v_start)
 #' @return il grafo con i dati correttamente valutato
-#' @importFrom foreach %dopar%
 #' @rdname evaluate-internal
 
 .evaluate <- function(object, v_start=NULL, ...) {
@@ -156,23 +155,23 @@
     sources <- setdiff(sources, sprimitive)
 
     if(length(sources)) {
-      evaluated <- foreach::foreach(name=sources, .combine=c) %dopar% {
+      evaluated <- foreach::`%dopar%`(foreach::foreach(name=sources, .combine=c), {
         proxy(name, object)
-      }
+      })
 
       i <- i + length(sources)
       if(is.interactive) {
         rprogressbar::updateProgressBar(pb, i, tail(names(evaluated), n=1)) # nocov
       }
 
-      # ignore why %dopar% is loosing data.
+      # ignore why  to_data_frame is loosing data.
       # the following is a patch in the meantime
       motherfucker <- setdiff(sources, names(evaluated))
 
       while(length(motherfucker)) {
-        evaluated0 <- foreach::foreach(name=motherfucker, .combine=c) %dopar% {
+        evaluated0 <- foreach::`%dopar%`(foreach::foreach(name=motherfucker, .combine=c), {
           proxy(name, object)
-        }
+        })
         evaluated <- c(evaluated, evaluated0)
         motherfucker <- setdiff(motherfucker, names(evaluated0))
       }

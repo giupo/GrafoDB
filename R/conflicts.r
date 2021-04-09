@@ -295,34 +295,34 @@ check_conflicts <- function(x, con = NULL) {
   data <- x@data
   functions <- x@functions
 
-  nameData <- hash::keys(x@data)
-  namesFormule <- hash::keys(x@functions)
+  names_data <- hash::keys(x@data)
+  names_formule <- hash::keys(x@functions)
 
-  outerDataNames <- get_outer_data_names(x, con = con)
-  outerFormulaNames <- get_outer_formula_names(x, con = con)
+  outer_names_data <- get_outer_data_names(x, con = con)
+  outer_names_formule <- get_outer_formula_names(x, con = con)
 
-  datiComuni <- intersect(nameData, outerDataNames)
-  if (length(datiComuni) > 0) {
+  common_data <- intersect(names_data, outer_names_data)
+  if (length(common_data) > 0) {
     # trovo solo le root
-    soloRoots <- intersect(.roots(x), datiComuni)
-    if (length(soloRoots) > 0) {
+    only_roots <- intersect(.roots(x), common_data)
+    if (length(only_roots) > 0) {
       # Controllo una ad una le radici e verifico differenze di valori
-      dati.db <- loadDati(tag, con = con)
-      for (name in unique(soloRoots)) {
-        outerTs <- as.character(dati.db[dati.db$name == name, "dati"])
-        innerTs <- as.character(to.data.frame(x[[name]])[1, "dati"])
-        if ( outerTs != innerTs ) {
+      dati_db <- loadDati(tag, con = con)
+      for (name in unique(only_roots)) {
+        outer_ts <- as.character(dati_db[dati_db$name == name, "dati"])
+        inner_ts <- as.character( to_data_frame(x[[name]])[1, "dati"])
+        if ( outer_ts != inner_ts ) {
           create_data_conflicts(x, name, con = con)
         }
       }
     }
   }
 
-  formuleComuni <- intersect(namesFormule, outerFormulaNames)
-  if (length(formuleComuni) > 0) {
+  common_functions <- intersect(names_formule, outer_names_formule)
+  if (length(common_functions) > 0) {
     #controllo ogni nome per verificare differenze.
     formule.db <- loadFormule(tag, con = con)
-    formule.db <- formule.db[formule.db$name %in% formuleComuni, ]
+    formule.db <- formule.db[formule.db$name %in% common_functions, ]
     for (name in unique(as.character(formule.db$name))) {
       formula.db <- formule.db[formule.db$name == name, ]$formula
       if (formula.db != functions[[name]]) {
@@ -354,7 +354,7 @@ create_data_conflicts <- function(x, nomi, con = NULL) {
   dati <- foreach::foreach(name = iterators::iter(nomi), .combine = rbind) %do% {
 
     tt <- x[[name]]
-    df <- to.data.frame(tt, name)
+    df <-  to_data_frame(tt, name)
     anno <- df$anno
     prd <- df$periodo
     freq <- df$freq

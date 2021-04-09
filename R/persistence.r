@@ -201,7 +201,7 @@ create_graph <- function(x, tag, con, ...) {
   if(length(names(x))) {
     dati <- foreach::foreach (name = iterators::iter(names(x)), .combine=rbind) %do% {
       tt <- x[[name]]
-      df <- to.data.frame(tt, name)
+      df <-  to_data_frame(tt, name)
       anno <- as.numeric(df$anno)
       periodo <- as.numeric(df$periodo)
       freq <- as.numeric(df$freq)
@@ -337,7 +337,6 @@ next_rolling_name <- function(x, con) {
 #' @param con connessione al database
 #' @note questa e' una funzione interna del grafo invocata da `update_graph`
 #' @seealso saveGraph update_graph
-#' @importFrom foreach %do% %dopar%
 
 do_history <- function(x, tag, con) {
   ril <- rilasci(tag)

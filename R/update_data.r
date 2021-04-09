@@ -30,27 +30,32 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
     # creo il data.frame dei dati da usare nel DB
     tryCatch({
       last_updated <- time.in.millis()
-      dati <- foreach::foreach(name = iterators::iter(names_updated), .combine=rbind) %dopar% {
-        df <- to.data.frame(data[[name]])
+      dati <- foreach::`%dopar%`(foreach::foreach(
+        name = iterators::iter(names_updated), .combine=rbind), {
+        df <-  to_data_frame(data[[name]])
         cbind(df, name, tag, autore, notes, last_updated)
-      }  # this is quite fast, let's ignore the Progressbar here...
+      }) # this is quite fast, let's ignore the Progressbar here...
 
-      DBI::dbExecute(con, getSQLbyKey(helper, "CREATE_STAGE", stage_name = stage_name))
+      DBI::dbExecute(con, getSQLbyKey(
+        helper, "CREATE_STAGE", stage_name = stage_name))
       on.exit({
         tryCatch({
-          DBI::dbExecute(con, getSQLbyKey(helper, 'DROP_STAGE', stage_name = stage_name))
+          DBI::dbExecute(con,
+            getSQLbyKey(helper, 'DROP_STAGE', stage_name = stage_name))
         }, error=function(cond) {
           flog.warn(cond, name = ln)
         })
       })
+
       DBI::dbWriteTable(con, stage_name, dati,
-                        row.names = FALSE, overwrite = TRUE)
+        row.names = FALSE, overwrite = TRUE)
 
       # aggiorna i record esistenti...
       DBI::dbExecute(con, getSQLbyKey(
         helper, "UPDATE_WITH_STAGE",
         tag=tag,
         stage_name=stage_name))
+
       DBI::dbExecute(con, getSQLbyKey(
         helper, "INSERT_WITH_STAGE",
         tag = tag,

@@ -14,11 +14,11 @@ formule <- function(g, name) {
   on.exit(disconnect(con))
 
   if(isRoot(g, name)) {
-    warning(name, " e' una radice")
+    warning(name, " is a root")
   }
 
   if(!isNode(g, name)) {
-    warning(name, " non e' un oggetto del Grafo ", g@tag)
+    warning(name, " not in this graph", g@tag)
   }
 
   df <- DBi::dbGetQuery(con, getSQLbyKey(helper, "HISTORY_FORMULE", name=name))
