@@ -385,26 +385,6 @@ test_that("isRoot torna true per una serie non foglia", {
 })
 
 
-test_that("Posso editare una serie esistente aggiungendo una dipendenza esistente", {
-  on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
-  })
-  g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
-  }
-  g["D"] <- function(A, C) {
-    D = A + C
-  }
-  g <- saveGraph(g)
-
-  g["D"] <- function(A, B, C) {
-    D = A + B + C
-  }
-})
-
-
 test_that("Posso subsettare con il $ (dollaro)", {
   on.exit({
     for(tag in rilasci("test")$tag) delete_graph(tag)
@@ -614,26 +594,6 @@ test_that("ser in debug fails if name doesn't exist", {
 
   expect_error(ser(g, "NONESISTO", debug=TRUE), "non e' una serie del grafo")
 })
-
-
-test_that("ser in debug executes the formula", {
-  skip("Can't figure out how to stub debug")
-  skip_if_not(require(mockery), "mockery required")
-  for(tag in rilasci("test")$tag) delete_graph(tag)
-  on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
-  })
-
-  g <- GrafoDB("test")
-  g["A"] <- g["B"] <- 0
-  g["C"] <- function(A, B) {
-    C <- A + B
-  }
-
-  stub(ser, 'base::debug', function(...) {})
-  expect_equal(ser(g, "C", debug=TRUE), g[["C"]])
-})
-
 
 
 test_that("an empty graph returns no names", {
