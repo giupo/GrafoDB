@@ -10,7 +10,7 @@
 #' @param column which column of diff_ to apply on Grafo
 #' @note Experimental
 #' @export
-#' @importFrom futile.logger flog.trace flog.debug flog.info
+#' @include logging.r
 
 
 patch <- function(x, diff_, column=NULL) {
