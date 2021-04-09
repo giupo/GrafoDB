@@ -1,7 +1,7 @@
 #' @importFrom futile.logger flog.info
 
-.updateFunctions <- function(x, con, tag=x@tag, msg="") {
-  ln <- "GrafoDB::updateFunctions"
+update_functions <- function(x, con, tag=x@tag, msg="") {
+  ln <- "GrafoDB::update_functions"
   if(interactive()) flog.info("Update Functions ...", name=ln)
 
   ## passo la connessione perche' devono avere la stessa transazione
@@ -44,8 +44,7 @@
           last_updated=time.in.millis()))
       }
     }
-    
-    
+
     foreach::foreach(name = iterators::iter(names.updated)) %do% {
       formula <- expr(x, name, echo=FALSE)
       DBI::dbExecute(con, getSQLbyKey(
@@ -58,7 +57,6 @@
         last_updated=time.in.millis()))
     }
   }
-  removeFromRedis(x, x@touched)
   
   if(interactive()) flog.info("Update Functions done.", name=ln)
 }

@@ -1,7 +1,7 @@
 context("Metadati")
 
 setup <- function(tag) {
-  dbSettings(TRUE)
+  db_settings(TRUE)
   flog.debug("Nome dell'env: %s", Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
 
@@ -23,12 +23,10 @@ test_that("posso caricare tutti i metadati del grafo", {
     elimina("test")
   })
   g <- setup("test")
-  with_mock(
-    'RCurl::getURL' = function(...) "{}", {
-      meta <- getMeta(g)
-      expect_true(is.data.frame(meta))
-      expect_equal(nrow(meta), 3)
-    })
+  meta <- getMeta(g)
+  expect_true(is.data.frame(meta))
+  expect_equal(nrow(meta), 3)
+
 })
 
 test_that("posso ottenere i metadati per una serie", {
@@ -36,25 +34,19 @@ test_that("posso ottenere i metadati per una serie", {
     elimina("test")
   })
   g <- setup("test")
-  with_mock(
-    'RCurl::getURL' = function(...) "{}", {
-      m <- getMeta(g, "A")
-      expect_true(is.data.frame(m))
-      expect_equal(nrow(m), 2)
-    })
+  m <- getMeta(g, "A")
+  expect_true(is.data.frame(m))
+  expect_equal(nrow(m), 2)  
 })
 
 test_that("posso ottenere i valori di un metadato per singola serie", {
-   on.exit({
+  on.exit({
     elimina("test")
   })
   g <- setup("test")
-  with_mock(
-    'RCurl::getURL' = function(...) "{}", {
-      v <- getMeta(g, "A", "KEY")
-      expect_true(is.character(v))
-      expect_true(all(c("VALUE1", "VALUE2") %in% v ))
-    })
+  v <- getMeta(g, "A", "KEY")
+  expect_true(is.character(v))
+  expect_true(all(c("VALUE1", "VALUE2") %in% v ))
 })
 
 test_that("Posso cercare i numeri direttamente nel grafo", {
@@ -78,12 +70,9 @@ test_that("Posso cancellare Metadati", {
   })
   g <- setup("test")
   deleteMeta(g, "A", "KEY", "VALUE1")
-  with_mock(
-    'RCurl::getURL' = function(...) "{}", {
-      v <- getMeta(g, "A", "KEY")
-      expect_true(is.character(v))
-      expect_true(all(c("VALUE2") %in% v ))
-    })
+  v <- getMeta(g, "A", "KEY")
+  expect_true(is.character(v))
+  expect_true(all(c("VALUE2") %in% v ))
 })
 
 test_that("If I get an erro with DB, deleteMeta fails", {
@@ -184,18 +173,15 @@ test_that("I get additional TICKET metadata from issue tracker", {
 })
 
 test_that("I can remove all metadata with a single key entry", {
-    g <- setup("test")
-    on.exit({
-        for(tag in rilasci("test")$tag) elimina(tag)
-    })
-
-
-    deleteMeta(g, "A", "KEY")
-    with_mock(
-      'RCurl::getURL' = function(...) "{}", {
-        v <- getMeta(g, "A")
-        expect_equal(nrow(v), 0)
-      })
+  g <- setup("test")
+  on.exit({
+    for(tag in rilasci("test")$tag) elimina(tag)
+  })
+  
+  
+  deleteMeta(g, "A", "KEY")
+  v <- getMeta(g, "A")
+  expect_equal(nrow(v), 0)
 })
 
 

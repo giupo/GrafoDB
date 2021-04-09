@@ -811,9 +811,9 @@ v1.26.3 (2018-07-09)
 - Make sure to look for the correct error. [Giuseppe Acito]
 - Dear LORD. [Giuseppe Acito]
 - Bump version: 1.19.2 → 1.19.3. [Giuseppe Acito]
-- Added codecoverage for checkDAG. [Giuseppe Acito]
+- Added codecoverage for check_dag. [Giuseppe Acito]
 - Update DESCRIPTION. [Giuseppe Acito]
-- Cambiato checkDAG su update_archi. [Giuseppe Acito]
+- Cambiato check_dag su update_archi. [Giuseppe Acito]
 - Bump version: 1.19.1 → 1.19.2. [Giuseppe Acito]
 - Update resync logic. [Giuseppe Acito]
 - Update docs. [Giuseppe Acito]
@@ -1107,7 +1107,7 @@ v1.26.3 (2018-07-09)
 - Sistemato schema per sqlite, messo un as.POSIXct all'init. [Giuseppe
   Acito]
 - Bump version: 1.6.0 → 1.6.1. [Giuseppe Acito]
-- Cambiato dbSettings per cambiare l'env. [Giuseppe Acito]
+- Cambiato db_settings per cambiare l'env. [Giuseppe Acito]
 - Aggiunte query per SQLite. [Giuseppe Acito]
 - Bump version: 1.5.0 → 1.6.0. [Giuseppe Acito]
 - Spostato le query nel file INI. [Giuseppe Acito]
@@ -1179,7 +1179,7 @@ v1.26.3 (2018-07-09)
 - Aggiunge ignore su file di backup. [Giuseppe Acito]
 - Aggiunge creaConflittoDati/Formule. [Giuseppe Acito]
 - Elimino la parte nativa, non serve piu'; refactoring del codice in
-  piu' file piu' piccoli; aggiunta checkConflicts ancora da completare.
+  piu' file piu' piccoli; aggiunta check_conflicts ancora da completare.
   [Giuseppe Acito]
 - Alcune migliorie sul NAMESPACE. [Giuseppe Acito]
 - TEST OK! [Giuseppe Acito]
@@ -1231,7 +1231,7 @@ v1.26.3 (2018-07-09)
 - Bump version: 0.27.4 → 0.27.5. [Giuseppe Acito]
 - Merge branch 'develop' [Giuseppe Acito]
 - Bump version: 0.27.3 → 0.27.4. [Giuseppe Acito]
-- Corretto bug su dbSettings. [Giuseppe Acito]
+- Corretto bug su db_settings. [Giuseppe Acito]
 - Merge branch 'hotfix/connectionProperties' into develop. [Giuseppe
   Acito]
 - Merge branch 'hotfix/upgrfPiuSerie' into develop. [Giuseppe Acito]

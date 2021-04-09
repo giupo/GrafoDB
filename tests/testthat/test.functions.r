@@ -63,14 +63,14 @@ test_that(".decluter_functions preserves commnets", {
   expect_equal(f, "# comment here\nA")
 })
 
-test_that("checkDAG raises an exception with a cycle in network", {
+test_that("check_dag raises an exception with a cycle in network", {
   g <- igraph::graph.empty(directed=TRUE)
   g <- g + igraph::vertex("A")
   g <- g + igraph::vertex("B")
   g <- g + igraph::edge("A", "B")
-  expect_error(checkDAG(g), NA)
+  expect_error(check_dag(g), NA)
   g <- g + igraph::edge("B", "A")
-  expect_error(checkDAG(g), "Cycles found")
+  expect_error(check_dag(g), "Cycles found")
 })
 
 test_that("elimina deletes a GrafoDB", {
@@ -97,7 +97,7 @@ test_that("elimina handles exceptions", {
 })
 
 test_that("schemaFileFromEnv returns a consistent file", {
-  expect_true(is.list(dbSettings(TRUE)))
+  expect_true(is.list(db_settings(TRUE)))
   test_file <- schemaFileFromEnv("test")
   prod_file <- schemaFileFromEnv("prod")
   collaudo_file <- schemaFileFromEnv("collaudo")

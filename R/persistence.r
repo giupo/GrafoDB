@@ -35,7 +35,7 @@
 #' @name .saveGraph
 #' @usage .saveGraph(x, tag)
 #' @usage .saveGraph(x)
-#' @include conflicts.r copy_graph.r checkDAG.r persistence_utils.r
+#' @include conflicts.r copy_graph.r check_dag.r persistence_utils.r
 #' @rdname saveGraph-internal
 #' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
 #' @importFrom futile.logger flog.trace flog.info flog.debug
@@ -83,7 +83,7 @@
       # risincronizzo i dati del db con la copia nel grafo
       x <- resync(x, con=con)
       # trova serie che necessitano il resync
-      name_to_sync <- getChangedSeries(x, con=con)
+      name_to_sync <- get_changed_series_names(x, con=con)
       # trova serie con conflitti
       name_in_conflicts <- intersect(name_to_sync, union(hash::keys(x@functions), hash::keys(x@data)))
       clean_names <- setdiff(name_to_sync, name_in_conflicts)
@@ -95,12 +95,12 @@
       archi <- archi[, c("partenza", "arrivo")]
       dbnetwork <- igraph::graph.data.frame(as.data.frame(archi), directed=TRUE)
       network <- igraph::graph.union(network, dbnetwork, byname=TRUE)
-      checkDAG(network)
+      check_dag(network)
       x@network <- network
       x <- evaluate(x, clean_names)
     }
 
-    checkConflicts(x, con=con)
+    check_conflicts(x, con=con)
 
     if(.tagExists(tag, con=con)) {
       # se esiste il tag sul DB
@@ -110,42 +110,38 @@
         flog.trace("x@tag ('%s') != tag (%s), execute history, delete tag and recreate a copy of it",
                    x@tag, tag, name=ln)
         # faccio l'history del tag di destinazione
-        doHistory(x, tag, con)
+        do_history(x, tag, con)
         # lo cancello
         .elimina(tag, con, x@helper)
         # copio il grafo in sessione col grafo attuale
-        .copyGraph(x@tag, tag, con=con, mesg=msg, helper=x@helper)
+        copy_graph(x@tag, tag, con=con, mesg=msg, helper=x@helper)
       }
       # aggiorno eventuali cambiamenti in sessione
       flog.trace("update eventual changes in session", name=ln)
-      .updateGraph(x, con=con, msg=msg)
+      update_graph(x, con=con, msg=msg)
     } else {
       if (x@tag == tag) {
         flog.trace('tag as param equals tag as slot: creating a new graph', name=ln)
         # se non esiste il tag sul DB
         # sto creando un nuovo grafo
-        .createGraph(x, tag, con=con, msg=msg)
+        create_graph(x, tag, con=con, msg=msg)
       } else {
         # se i tag sono differenti
         if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
           flog.trace('have no data, simply create an empty graph', name=ln)
           # non ho dati, creo grafo
-          .createGraph(x, tag, con=con, msg=msg)
+          create_graph(x, tag, con=con, msg=msg)
         } else {
           # ho dati, quindi copio il grafo dalla fonte alla
           # destinazione sul DB e...
           flog.trace('have data, so copying graph... ', name=ln)
-          .copyGraph(x@tag, tag, con=con, msg=msg, helper=x@helper)
+          copy_graph(x@tag, tag, con=con, msg=msg, helper=x@helper)
           # Aggiorno eventuali cambiamenti in sessione
           flog.trace('... and update eventual changes in session', name=ln)
-          .updateGraph(x, tag, con=con, msg=msg)
+          update_graph(x, tag, con=con, msg=msg)
         }
       }
     }
-
-    flog.trace("Contacting Redis cache...", name=ln)
-    removeFromRedis(x, x@touched)
-    flog.trace("Redis interaction completed.", name=ln)
 
     DBI::dbCommit(con)
   }, error=function(err) {
@@ -162,13 +158,13 @@
 
 #' @include update_archi.r update_data.r update_functions.r
 
-.updateGraph <- function(x, tag=x@tag, con=NULL, msg="") {
+update_graph <- function(x, tag = x@tag, con = NULL, msg = "") {
   helper <- x@helper
   ## supporto per history
-  doHistory(x, tag=tag, con=con)
-  .updateData(x, con=con, tag=tag, notes=msg)
-  .updateFunctions(x, con=con, tag=tag, msg=msg)
-  .updateArchi(x, con=con, tag=tag)
+  do_history(x, tag = tag, con = con)
+  update_data(x, con = con, tag = tag, notes = msg)
+  update_functions(x, con = con, tag = tag, msg = msg)
+  update_edges(x, con = con, tag = tag)
   DBI::dbExecute(con, getSQLbyKey(
     helper, "UPDATE_GRAFO_LAST_UPDATED",
     autore=rutils::whoami(),
@@ -179,15 +175,15 @@
 
 #' crea ex-novo un istanza di grafo nel databae
 #'
-#' @name .createGraph
-#' @rdname createGraph-internal
+#' @name create_graph
+#' @rdname create_graph-internal
 #' @param x istanza di Grafo
 #' @param tag identificativo della versione
 #' @param con connessione al DB
-#' @usage .createGraph(g, tag)
+#' @usage create_graph(g, tag)
 #' @importFrom foreach %do%
 
-.createGraph <- function(x, tag, con, ...) {
+create_graph <- function(x, tag, con, ...) {
   param_list <- list(...)
   commento <- if ("msg" %in% names(param_list)) {
     param_list[["msg"]]
@@ -266,14 +262,14 @@
 
 #' conta le versioni rolling del grafo con tag `tag`
 #'
-#' @name countRolling
-#' @usage countRolling(x)
+#' @name count_rolling
+#' @usage count_rolling(x)
 #' @param x istanza di grafo
 #' @param con connessione al DB
 #' @return un intero ad indicare il numero di versioni rolling salvate sul DB
 #' @include db.r
 
-countRolling <- function(x, con) {
+count_rolling <- function(x, con) {
   stopifnot(is.grafodb(x))
   tag <- x@tag
  
@@ -292,7 +288,7 @@ countRolling <- function(x, con) {
     } else {
       val <- getMaxP(helper, tag, con) + 1
       DBI::dbExecute(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
-      countRolling(x, con)
+      count_rolling(x, con)
     }
   } else {
     ## se SQLite:
@@ -313,12 +309,12 @@ getMaxP <- function(helper, tag, con) {
 
 #' Costruice il progressivo per il grafo `x`
 #'
-#' @name nextRollingNameFor
-#' @usage nextRollingNameFor(x)
+#' @name next_rolling_name
+#' @usage next_rolling_name(x)
 
-nextRollingNameFor <- function(x, con) {
+next_rolling_name <- function(x, con) {
   tag <- x@tag
-  p <- countRolling(x, con) 
+  p <- count_rolling(x, con) 
   paste0(tag, 'p', p)
 }
 
@@ -335,25 +331,25 @@ nextRollingNameFor <- function(x, con) {
 #'
 #' Il grafo potra' successivamente essere caricato con il nuovo tag.
 #'
-#' @name doHistory
-#' @usage doHistory(x, con)
+#' @name do_history
+#' @usage do_history(x, con)
 #' @param x istanza di `GrafoDB`
 #' @param con connessione al database
-#' @note questa e' una funzione interna del grafo invocata da `updateGraph`
-#' @seealso saveGraph updateGraph
+#' @note questa e' una funzione interna del grafo invocata da `update_graph`
+#' @seealso saveGraph update_graph
 #' @importFrom foreach %do% %dopar%
 
-doHistory <- function(x, tag, con) {
+do_history <- function(x, tag, con) {
   ril <- rilasci(tag)
   autore <- ril[ril$tag == x@tag, ]$autore
   if(length(autore) == 0) {
     autore <- rutils::whoami()
   }
 
-  dest <- nextRollingNameFor(x, con)
+  dest <- next_rolling_name(x, con)
   if(interactive()) message("Saving GrafoDB from ", x@tag, " to ", dest)
-  .copyGraph(x@tag, dest, con=con, autore=autore,
-             helper=x@helper, last_update=x@timestamp)
+  copy_graph(x@tag, dest, con=con, autore=autore,
+            helper=x@helper, last_update=x@timestamp)
   if(interactive()) message("Saving ", dest, " completed")
   0
 }

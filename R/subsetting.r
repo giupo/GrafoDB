@@ -33,7 +33,7 @@ setMethod(
 #' @param value valore settato
 #' @note funzione interna
 #' @rdname subsetting_internal
-#' @include functions.r core.r checkDAG.r find_deps.r
+#' @include functions.r core.r check_dag.r find_deps.r
 
 .subsetting <- function(x, i, value) {
   nameObject <- deparse(substitute(x))
@@ -88,7 +88,7 @@ setMethod(
       suppressWarnings(hash::del(name, x@edges))
     }
     
-    checkDAG(network)
+    check_dag(network)
 
     x@functions[[name]] <- declutted
     x@network <- network

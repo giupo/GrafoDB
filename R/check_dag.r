@@ -2,7 +2,7 @@
 #' 
 #' TODO: dovrebbe tornare una lista di cicli se trovati. con la nuova versione di igraph non funziona.
 
-checkDAG <- function(network) {
+check_dag <- function(network) {
   if (!igraph::is.dag(network)) {
     wrongsort <- try(igraph::topological.sort(network), silent=TRUE)
     network_seq <- igraph::V(network)

@@ -39,7 +39,7 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
     for(tag in rilasci("test")$tag) elimina(tag)
   })
   g <- setup("test")
-  g <-saveGraph(g, "test")
+  g <- saveGraph(g, "test")
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
 
@@ -51,7 +51,7 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
   g1 <- saveGraph(g1)
   # Sys.sleep(2)
   with_mock(
-    'GrafoDB:::getOuterDataNames' = function(...) "A", {
+    'GrafoDB:::get_outer_data_names' = function(...) "A", {
       expect_warning(saveGraph(g2), "Ci sono conflitti")
 
       ## sia g1 che g2, in quanto "test1" devono riportare dei conflitti
@@ -152,7 +152,7 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   ## il side-effect di cambiare g1 nel env del parent.frame, il seguente warning non uscira' mai
   ## expect_warning(saveGraph(g2), "Ci sono conflitti sugli archi")
   with_mock(
-    'GrafoDB:::getOuterFormulaNames' = function(...) "D", {
+    'GrafoDB:::get_outer_formula_names' = function(...) "D", {
       g2 <- expect_warning(saveGraph(g2, msg="test"), "Ci sono conflitti")
       g <- GrafoDB("test")
       expect_true(hasConflicts(g))
@@ -184,7 +184,7 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
   g1 <- saveGraph(g1)
   Sys.sleep(1)
   with_mock(
-    'GrafoDB:::getOuterFormulaNames' = function(...) "C", {
+    'GrafoDB:::get_outer_formula_names' = function(...) "C", {
       g2 <- expect_warning(saveGraph(g2))
       conflicts <- getConflicts(g1)
       lista_nomi <- as.character(conflicts$name)

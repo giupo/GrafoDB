@@ -220,14 +220,14 @@ setMethod(
 
 #' Trova le serie che sono cambiate nel database
 #'
-#' @name getChangedSeries
-#' @usage getChangedSeries(x)
+#' @name get_changed_series_names
+#' @usage get_changed_series_names(x)
 #' @param x istanza di Grafo
 #' @param con eventuale connessione al database (se non presente, ne crea una)
 #' @return lista di nomi di serie cambiate sul database rispetto ad X
 #' @note funzione interna
 
-getChangedSeries <- function(x, con = NULL) {
+get_changed_series_names <- function(x, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -246,7 +246,7 @@ getChangedSeries <- function(x, con = NULL) {
   unique(nomi)
 }
 
-getOuterDataNames <- function(x, con = NULL) {
+get_outer_data_names <- function(x, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -264,7 +264,7 @@ getOuterDataNames <- function(x, con = NULL) {
   as.character(df$name)
 }
 
-getOuterFormulaNames <- function(x, con = NULL) {
+get_outer_formula_names <- function(x, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -289,7 +289,7 @@ getOuterFormulaNames <- function(x, con = NULL) {
 #' @include functions.r
 #' @include db.r persistence_utils.r
 
-checkConflicts <- function(x, con = NULL) {
+check_conflicts <- function(x, con = NULL) {
   tag <- x@tag
 
   data <- x@data
@@ -298,8 +298,8 @@ checkConflicts <- function(x, con = NULL) {
   nameData <- hash::keys(x@data)
   namesFormule <- hash::keys(x@functions)
 
-  outerDataNames <- getOuterDataNames(x, con = con)
-  outerFormulaNames <- getOuterFormulaNames(x, con = con)
+  outerDataNames <- get_outer_data_names(x, con = con)
+  outerFormulaNames <- get_outer_formula_names(x, con = con)
 
   datiComuni <- intersect(nameData, outerDataNames)
   if (length(datiComuni) > 0) {
@@ -312,7 +312,7 @@ checkConflicts <- function(x, con = NULL) {
         outerTs <- as.character(dati.db[dati.db$name == name, "dati"])
         innerTs <- as.character(to.data.frame(x[[name]])[1, "dati"])
         if ( outerTs != innerTs ) {
-          creaConflittoDati(x, name, con = con)
+          create_data_conflicts(x, name, con = con)
         }
       }
     }
@@ -327,7 +327,7 @@ checkConflicts <- function(x, con = NULL) {
       formula.db <- formule.db[formule.db$name == name, ]$formula
       if (formula.db != functions[[name]]) {
         ## crea conflitto su formule per name
-        creaConflittoFormule(x, name, formula.db, con = con)
+        create_function_conflicts(x, name, formula.db, con = con)
       }
     }
   }
@@ -338,7 +338,7 @@ checkConflicts <- function(x, con = NULL) {
 #' @importFrom foreach %do%
 #' @include db.r persistence_utils.r
 
-creaConflittoDati <- function(x, nomi, con = NULL) {
+create_data_conflicts <- function(x, nomi, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -380,7 +380,7 @@ creaConflittoDati <- function(x, nomi, con = NULL) {
     paste(nomi, collapse = ", "))
 }
 
-creaConflittoFormule <- function(x, nomi, formula.db, con = NULL) {
+create_function_conflicts <- function(x, nomi, formula.db, con = NULL) {
 
   conWasNull <- is.null(con)
   con <- if (is.null(con)) {

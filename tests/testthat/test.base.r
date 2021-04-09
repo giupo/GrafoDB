@@ -1,5 +1,5 @@
 context("Basic Operations")
-dbSettings(TRUE)
+db_settings(TRUE)
 
 requireNamespace("devtools")
 
@@ -635,19 +635,6 @@ test_that("ser in debug executes the formula", {
 })
 
 
-test_that("tickets call the correct url", {
-  with_mock(
-    'RCurl::getURL' = function(url, ...) {
-      settings <- dbSettings()
-      expect_equal(url, paste0(settings$WebApp$base_url, "/tickets/get/1"))
-      "[]"
-    }, {
-      x <- ticket(1)
-      expect_is(x, "list")
-      expect_equal(length(x), 0)
-    })
-})
-
 
 test_that("an empty graph returns no names", {
   for(tag in rilasci("test")$tag) elimina(tag)
@@ -707,17 +694,16 @@ test_that("Se imposto una serie per formula senza definirla ho un errore", {
 test_that("Posso usare funzioni complesse nelle formule", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
-    unloadNamespace("tempdisagg")
   })
 
-  if(!require("tempdisagg")) {
+  if(!requireNamespace("tempdisagg")) {
     skip("Tempdisagg not installed")
   }
 
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(runif(100), start=c(1995,1), frequency=4)
   expect_error({g["C"] <- function(A, B) {
-    if(!is.function(td)) {
+    if(!is.function(tempdisagg::td)) {
       fail("td not found")
     }
     C <- A + B

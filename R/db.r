@@ -4,22 +4,22 @@
 #'   - `$HOME/.GrafoDB/GrafoDB.ini` file
 #'   - Internal settings.
 #'
-#' @name dbSettings
-#' @usage dbSettings()
+#' @name db_settings
+#' @usage db_settings()
 #' @param flush if `TRUE` removes any option saved in the current
 #'              session and reloads the settings
 #' @return a list containing the infos used to connect via DBI
 #' @importFrom futile.logger flog.info flog.debug flog.trace
 #' @export
 
-dbSettings <- function(flush=FALSE) {
-  ln <- "GrafoDB.db.dbSettings"
+db_settings <- function(flush=FALSE) {
+  ln <- "GrafoDB.db.db_settings"
   if(flush) {
     flog.trace("Flushing settings", name=ln)
-    options(dbSettings=NULL)
+    options(db_settings=NULL)
   }
 
-  settings <- getOption("dbSettings", NULL)
+  settings <- getOption("db_settings", NULL)
 
   if(is.null(settings)) {
     flog.trace("settings are null", name=ln)
@@ -28,7 +28,7 @@ dbSettings <- function(flush=FALSE) {
     if(file.exists(home_ini_file)) {
       flog.debug("%s esiste! lo parso", home_ini_file)
       home_settings <- rutils::ini_parse(home_ini_file)
-      options(dbSettings=home_settings)
+      options(db_settings=home_settings)
       flog.debug("settings: %s", home_settings, name=ln, capture=TRUE)
       return(home_settings)
     }
@@ -38,11 +38,11 @@ dbSettings <- function(flush=FALSE) {
     flog.debug("File path for system wide INI: %s%", filename, name=ln)
     settings <- rutils::ini_parse(filename)
     flog.debug("Settings: %s", settings, name=ln, capture=TRUE)
-    options(dbSettings=settings)
+    options(db_settings=settings)
   }
   #SQLHelperType_ <- settings[[paste0("ConnectionInfo_", env)]]$driver
 
-  #flog.trace("SQLHelper type in dbSettings: %s", SQLHelperType_, name=ln)
+  #flog.trace("SQLHelper type in db_settings: %s", SQLHelperType_, name=ln)
   #options(SQLHelperType=SQLHelperType_)
 
   settings

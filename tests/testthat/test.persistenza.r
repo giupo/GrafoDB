@@ -117,7 +117,7 @@ test_that("need_resync returns true if GrafoNeeds a resync", {
   expect_true(need_resync(g1))
 })
 
-test_that("doHistory preserves last_updated", {
+test_that("do_history preserves last_updated", {
   on.exit({
     for(tag in rilasci("test")$tag) elimina(tag)
   })

@@ -1,9 +1,9 @@
 
 #' @importFrom futile.logger flog.info
-#' @include checkDAG.r
+#' @include check_dag.r
 
-.updateArchi <- function(x, con, tag=x@tag) {
-  ln <- "GrafoDB::updateArchi"
+update_edges <- function(x, con, tag=x@tag) {
+  ln <- "GrafoDB::update_edges"
 
   if(interactive()) flog.info("Update Edges ...", name=ln)
 
@@ -43,7 +43,7 @@
     if(any(hash::keys(functions) %in% df$arrivo)) {
       warning("There are conflicts on edges, keep working on data and formula")
     }
-    checkDAG(network_aux)
+    check_dag(network_aux)
   }
 
   if(length(da.inserire)) {
