@@ -609,13 +609,6 @@
       "Repository": "CRAN",
       "Hash": "249d8cd1e74a8f6a26194a91b47f21d1"
     },
-    "rredis": {
-      "Package": "rredis",
-      "Version": "1.7.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "4b46a6f2bf6ba99009892d48e402669b"
-    },
     "rstudioapi": {
       "Package": "rstudioapi",
       "Version": "0.13",
@@ -625,15 +618,15 @@
     },
     "rutils": {
       "Package": "rutils",
-      "Version": "0.7.3",
+      "Version": "0.7.4",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "rutils",
       "RemoteUsername": "giupo",
       "RemoteRef": "HEAD",
-      "RemoteSha": "ec6eab34732c83dd0add8b0a47a392130e071842",
-      "Hash": "a7309d896a762e3d39fd429e547b06e7"
+      "RemoteSha": "45c96dd5a22927a3d548f83af6e617fd5350f344",
+      "Hash": "9184288d62c8a80c75a66e14af62b071"
     },
     "rversions": {
       "Package": "rversions",
