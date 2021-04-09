@@ -18,11 +18,10 @@
 #'                                  ## 'TAVOLA_DI_OUTPUT' per 'TETSZ0AC'
 #' }
 #' @exportMethod getMeta
-#' @importFrom methods setGeneric
 #' @export
 
 
-setGeneric(
+methods::setGeneric(
   "getMeta",
   function(x, serie, metadato) {
     standardGeneric("getMeta")
@@ -45,10 +44,9 @@ setGeneric(
 #' }
 #' @rdname lookup_generic
 #' @include lookup.r
-#' @importFrom methods setGeneric
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "lookup",
   function(x, key, value) {
     standardGeneric("lookup")
@@ -73,7 +71,7 @@ setGeneric(
 #' @rdname expr_generic
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "expr",
   function(x, nomi, echo=FALSE) {
     standardGeneric("expr")
@@ -92,7 +90,7 @@ setGeneric(
 #' @return `TRUE` se `name` sono serie senza archi entranti
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "isRoot",
   function(x, name) {
     standardGeneric("isRoot")
@@ -108,10 +106,9 @@ setGeneric(
 #' @param x istanza di GrafoDB
 #' @param name vettore di nomi di serie
 #' @return `TRUE` se `name` sono serie senza archi uscenti
-#' @importFrom methods setGeneric
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "isLeaf",
   function(x, name) {
     standardGeneric("isLeaf")
@@ -127,11 +124,10 @@ setGeneric(
 #' @param x un istanza di GrafoDB
 #' @param name array di nomi di serie
 #' @param livello numero di livelli (ordine) da considerare (di default, tutti)
-#' @importFrom methods setGeneric
 #' @return nomi di serie
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "downgrf",
   function(x, name, livello=.Machine$integer.max) {
     standardGeneric("downgrf")
@@ -156,7 +152,6 @@ setGeneric(
 #' @include sqlhelper.r
 #' @export GrafoDB
 #' @importClassesFrom rdataset Dataset
-#' @importFrom methods setGeneric setOldClass setClass setReplaceMethod new loadMethod
 #' @examples \dontrun{
 #'    g = GrafoDB("cf10") # istanzia il grafo chiamato 'cf10'
 #'                        # in questo caso ordinal e' 0
@@ -168,7 +163,7 @@ methods::setOldClass("igraph")
 
 GrafoDB <- methods::setClass(
   "GrafoDB",
-  representation(
+  methods::representation(
     tag = "character",
     network = "igraph",
     data = "hash",
@@ -188,9 +183,9 @@ GrafoDB <- methods::setClass(
 #' @name initialize
 #' @rdname GraphDB_initialize
 #' @aliases GrafoDB-initialize
-#' @importFrom methods setMethod
 
-setMethod(
+
+methods::setMethod(
   "initialize",
   signature("GrafoDB"),
   function(.Object, tag="cf10") {
@@ -207,20 +202,20 @@ setMethod(
 #' @include navigate.r
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "navigate",
   function(object, nodes=NULL, order=1L, mode="out") {
     standardGeneric("navigate")
   })
 
-setMethod(
+methods::setMethod(
   "navigate",
   signature("GrafoDB", "ANY", "ANY", "ANY"),
   function(object, nodes=NULL, order=1L, mode="out") {
     .navigate(object, nodes=nodes, order=order, mode=mode)
   })
 
-setMethod(
+methods::setMethod(
   "show",
   signature("GrafoDB"),
   function(object) {
@@ -229,6 +224,7 @@ setMethod(
     tag <- object@tag
     num <- length(names(object))
     timestamp <- object@timestamp
+
     msg <- paste0("GrafoDB [",tag,"] with ", num, " series, ",
                   as.character(as.POSIXct(timestamp/1000, origin="1970/01/01")))
     if(length(data)) {
@@ -259,21 +255,21 @@ setMethod(
 #' @export
 #' @include lookup.r
 
-setMethod(
+methods::setMethod(
   "lookup",
   c("GrafoDB", "character", "character"),
   function(x, key, value) {
     .lookup(x, key, value)
   })
 
-setMethod(
+methods::setMethod(
   "lookup",
   c("GrafoDB", "numeric", "missing"),
   function(x, key, value) {
     .lookup_dati(x, key)
   })
 
-setMethod(
+methods::setMethod(
   "lookup",
   c("GrafoDB", "character", "missing"),
   function(x, key, value) {
@@ -283,10 +279,9 @@ setMethod(
 
 #' Esegue la differenza tra due grafi
 #'
-#' @importFrom foreach %dopar%
 # TODO: test me!!!
 
-setMethod(
+methods::setMethod(
   "-",
   c("GrafoDB", "GrafoDB"),
   function(e1, e2) {
@@ -306,7 +301,8 @@ setMethod(
     }
 
     result <- rdataset::Dataset()
-    data <- foreach::foreach(name=iterators::iter(common), .combine=append) %dopar% {
+    data <- foreach::`%dopar%`(foreach::foreach(
+        name=iterators::iter(common), .combine=append), {
       ret <- list()
       ret[[name]] <- tryCatch({
         e11 <- e1[[name]]
@@ -325,14 +321,14 @@ setMethod(
           stop(name, ": ", err, " ", class(e11), ",", class(e22))
         })
       ret
-    }
+    })
 
     names(data) <- common
     result@data <- hash::hash(data)
     result
   })
 
-setMethod(
+methods::setMethod(
   "names",
   c("GrafoDB"),
   function(x) {
@@ -377,10 +373,10 @@ setMethod(
 #' }
 #' @export
 
-setMethod(
+methods::setMethod(
   "expr",
   c("GrafoDB", "character", "ANY"),
-  function(x, nomi, echo=FALSE) {
+  function(x, nomi, echo = FALSE) {
     .expr(x, nomi, echo)
   })
 
@@ -406,39 +402,39 @@ setMethod(
 #' @exportMethod evaluate
 
 
-setGeneric(
+methods::setGeneric(
   "evaluate",
   function(object, v_start=NULL, deep=F, ...) {
     standardGeneric("evaluate")
   })
 
-setMethod(
+methods::setMethod(
   "evaluate",
   signature("GrafoDB", "ANY", "ANY"),
   function(object, v_start=NULL, deep=F, ...) {
     .evaluate(object, v_start, deep, ...)
   })
 
-setGeneric(
+methods::setGeneric(
   "isRoot",
   function(x, name) {
     standardGeneric("isRoot")
   })
 
-setMethod(
+methods::setMethod(
   "isRoot",
   signature("GrafoDB", "character"),
   function(x, name) {
     .isRoot(x, name)
   })
 
-setGeneric(
+methods::setGeneric(
   "isLeaf",
   function(x, name) {
     standardGeneric("isLeaf")
   })
 
-setMethod(
+methods::setMethod(
   "isLeaf",
   signature("GrafoDB", "character"),
   function(x, name) {
@@ -453,13 +449,13 @@ setMethod(
 #' @seealso `grafo::describe`
 #' @exportMethod describe
 
-setGeneric(
+methods::setGeneric(
   "describe",
   function(object, nodes=NULL, order=1L, mode="out") {
     standardGeneric("describe")
   })
 
-setMethod(
+methods::setMethod(
   "describe",
   signature("GrafoDB", "ANY", "ANY", "ANY"),
   function(object, nodes = NULL, order = 1L, mode = "out") {
@@ -470,13 +466,13 @@ setMethod(
 
 #' @exportMethod downgrf
 
-setGeneric(
+methods::setGeneric(
   "downgrf",
   function(x, name, livello=.Machine$integer.max) {
     standardGeneric("downgrf")
   })
 
-setMethod(
+methods::setMethod(
   "downgrf",
   signature("GrafoDB", "character", "ANY"),
   function(x, name, livello=.Machine$integer.max) {
@@ -486,13 +482,13 @@ setMethod(
 #' @include metadati.r
 #' @exportMethod getMetadata
 
-setGeneric(
+methods::setGeneric(
   "getMetadata",
   function(object, tsName, full = FALSE) {
     standardGeneric("getMetadata")
   })
 
-setMethod(
+methods::setMethod(
   "getMetadata",
   signature("GrafoDB", "character", "ANY"),
   function(object, tsName, full = FALSE) {
@@ -509,24 +505,13 @@ setMethod(
 #' @include functions.r
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "edita",
   function(x, name, ...) {
     standardGeneric("edita")
   })
 
-
-#' Edita un la formula di una serie storica.
-#'
-#' @name edita
-#' @usage edita(x, name)
-#' @param x istanza di grafo
-#' @param name nome della serie storica
-#' @return il grafo con la formula modificata
-#' @include functions.r
-#' @export
-
-setMethod(
+methods::setMethod(
   "edita",
   signature("GrafoDB", "character"),
   function(x, name, ...) {
@@ -536,7 +521,7 @@ setMethod(
     invisible(x)
   })
 
-setMethod(
+methods::setMethod(
   "as.list",
   signature("GrafoDB"),
   function(x) {
@@ -553,24 +538,14 @@ setMethod(
 #' @return la serie valutata
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "ser",
   function(x, name, debug=FALSE) {
     standardGeneric("ser")
   })
 
-#' Valuta una singola serie del grafo e ritorna il risultato
-#'
-#' @name ser
-#' @usage ser(x, name)
-#' @param x un istanza di GrafoDB
-#' @param name nome della serie da valutare
-#' @param debug se `TRUE` attiva la modalita' di debugging
-#' @return la serie valutata
-#' @include ser.r
-#' @export
 
-setMethod(
+methods::setMethod(
   "ser",
   signature("GrafoDB", "character"),
   function(x, name, debug=FALSE) {
@@ -590,13 +565,13 @@ setMethod(
 #' @return un character array di nomi, NULL se la serie non ha dipendenze
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "deps",
   function(x, name) {
     standardGeneric("deps")
   })
 
-setMethod(
+methods::setMethod(
   "deps",
   signature("GrafoDB", "character"),
   function(x, name) {
@@ -605,14 +580,14 @@ setMethod(
 
 #' @importMethodsFrom rdataset as.dataset
 
-setMethod(
+methods::setMethod(
   "as.dataset",
   signature("GrafoDB"),
   function(x, ...) {
     x[names(x)]
   })
 
-setMethod(
+methods::setMethod(
   "as.list",
   signature("GrafoDB"),
   function(x, ...) {
@@ -621,21 +596,21 @@ setMethod(
 
 #' @include metadati.r
 
-setMethod(
+methods::setMethod(
   "getMeta",
   signature("GrafoDB", "character", "character"),
   function (x, serie, metadato){
     .getMeta(x, serie, metadato)
   })
 
-setMethod(
+methods::setMethod(
   "getMeta",
   signature("GrafoDB", "character", "ANY"),
   function (x, serie, metadato){
     getMetadata(x, serie)
   })
 
-setMethod(
+methods::setMethod(
   "getMeta",
   signature("GrafoDB", "missing", "missing"),
   function(x) {
@@ -650,7 +625,7 @@ setMethod(
 #' @importMethodsFrom hash keys
 #' @exportMethod keys
 
-setMethod(
+methods::setMethod(
   "keys",
   signature("GrafoDB"),
   function(x) {
@@ -661,7 +636,7 @@ setMethod(
 #' @importMethodsFrom hash values
 #' @exportMethod values
 
-setMethod(
+methods::setMethod(
   "values",
   signature("GrafoDB"),
   function(x, key) {
@@ -692,13 +667,13 @@ setMethod(
 #' }
 #' @include rename.r
 
-setGeneric(
+methods::setGeneric(
   "rename",
   function(x, vecchio, nuovo) {
     standardGeneric("rename")
   })
 
-setMethod(
+methods::setMethod(
   "rename",
   signature("GrafoDB", "character", "character"),
   function(x, vecchio, nuovo){
@@ -715,13 +690,13 @@ setMethod(
 #' @include functions.r
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "roots",
   function(x, ...) {
     standardGeneric("roots")
   })
 
-setMethod(
+methods::setMethod(
   "roots",
   signature("GrafoDB"),
   function (x)  {
@@ -737,20 +712,20 @@ setMethod(
 #' @include functions.r
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "leaves",
   function(x, ...) {
     standardGeneric("leaves")
   })
 
-setMethod(
+methods::setMethod(
   "leaves",
   signature("GrafoDB"),
   function (x)  {
     .leaves(x)
   })
 
-setMethod(
+methods::setMethod(
   "$",
   signature("GrafoDB"),
   function(x, name) {

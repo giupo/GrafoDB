@@ -1,5 +1,5 @@
 #' @include conflicts.r
-#' @importFrom futile.logger flog.info
+#' @include logging.r
 
 update_data <- function(x, con, tag = x@tag, notes = "") {
   ln <- "GrafoDB::update_data"

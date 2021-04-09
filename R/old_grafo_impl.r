@@ -10,13 +10,13 @@
 #' @include core.r
 #' @exportMethod isNode
 
-setGeneric(
+methods::setGeneric(
   "isNode",
   function(graph, tsName) {
     standardGeneric("isNode")
   })
 
-setMethod(
+methods::setMethod(
   "isNode",
   signature("GrafoDB", "character"),
   function(graph, tsName) {
@@ -31,13 +31,13 @@ setMethod(
 #' @seealso `grafo::isPrimitive`
 #' @exportMethod isPrimitive
 
-setGeneric(
+methods::setGeneric(
   "isPrimitive",
   function(graph, tsName) {
     standardGeneric("isPrimitive")
   })
 
-setMethod(
+methods::setMethod(
   "isPrimitive",
   signature("GrafoDB", "character"),
   function(graph, tsName) {
@@ -52,13 +52,13 @@ setMethod(
 #' @seealso `grafo::isAggregate`
 #' @exportMethod isAggregate
 
-setGeneric(
+methods::setGeneric(
   "isAggregate",
   function(graph, tsName) {
     standardGeneric("isAggregate")
   })
 
-setMethod(
+methods::setMethod(
   "isAggregate",
   signature("GrafoDB", "character"),
   function(graph, tsName) {
@@ -75,13 +75,13 @@ setMethod(
 #'       Quindi per compliance ritorna sempre `FALSE`, ma il metodo non ha senso
 #' @exportMethod isElementary
 
-setGeneric(
+methods::setGeneric(
   "isElementary",
   function(graph, tsName) {
     standardGeneric("isElementary")
   })
 
-setMethod(
+methods::setMethod(
   "isElementary",
   signature("GrafoDB", "character"),
   function(graph, tsName) {
@@ -96,13 +96,13 @@ setMethod(
 #' @seealso `grafo::listAggregates`
 #' @exportMethod listAggregates
 
-setGeneric(
+methods::setGeneric(
   "listAggregates",
   function(graph) {
     standardGeneric("listAggregates")
   })
 
-setMethod(
+methods::setMethod(
   "listAggregates",
   signature("GrafoDB"),
   function(graph) {
@@ -121,13 +121,13 @@ setMethod(
 #' @seealso `grafo::listElementaries`
 #' @exportMethod listElementaries
 
-setGeneric(
+methods::setGeneric(
   "listElementaries",
   function(graph) {
     standardGeneric("listElementaries")
   })
 
-setMethod(
+methods::setMethod(
   "listElementaries",
   signature("GrafoDB"),
   function(graph) {
@@ -146,13 +146,13 @@ setMethod(
 #' @seealso `grafo::listPrimitives`
 #' @exportMethod listPrimitives
 
-setGeneric(
+methods::setGeneric(
   "listPrimitives",
   function(graph) {
       standardGeneric("listPrimitives")
   })
 
-setMethod(
+methods::setMethod(
   "listPrimitives",
   signature("GrafoDB"),
   function(graph) {
@@ -170,13 +170,13 @@ setMethod(
 #' @seealso `grafo::listNodes`
 #' @exportMethod listNodes
 
-setGeneric(
+methods::setGeneric(
   "listNodes",
   function(graph) {
     standardGeneric("listNodes")
   })
 
-setMethod(
+methods::setMethod(
   "listNodes",
   signature("GrafoDB"),
   function(graph) {
@@ -235,13 +235,13 @@ setMethod(
 #' @include persistence.r
 #' @exportMethod saveGraph
 
-setGeneric(
+methods::setGeneric(
   "saveGraph",
   function(object, path=object@tag, ...) {
     standardGeneric("saveGraph")
   })
 
-setMethod(
+methods::setMethod(
   "saveGraph",
   signature("GrafoDB", "ANY"),
   function(object, path=object@tag, ...) {
@@ -261,13 +261,13 @@ setMethod(
 #' @param attrValue value of the attributes
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "deleteMeta",
   function(object, tsName, attrName, attrValue=NULL) {
     standardGeneric("deleteMeta")
   })
 
-setMethod(
+methods::setMethod(
   "deleteMeta",
   signature("GrafoDB", "character", "character", "ANY"),
   function(object, tsName, attrName, attrValue=NULL) {
@@ -283,13 +283,13 @@ setMethod(
 #' @seealso `grafo::getDependencies`
 #' @exportMethod getDependencies
 
-setGeneric(
+methods::setGeneric(
   "getDependencies",
   function(object, tsName) {
     standardGeneric("getDependencies")
   })
 
-setMethod(
+methods::setMethod(
   "getDependencies",
   signature("GrafoDB", "character"),
   function(object, tsName) {
@@ -312,13 +312,13 @@ setMethod(
 #' @seealso `grafo::getTask`
 #' @exportMethod getTask
 
-setGeneric(
+methods::setGeneric(
   "getTask",
   function(object, tsName) {
     standardGeneric("getTask")
   })
 
-setMethod(
+methods::setMethod(
   "getTask",
   signature("GrafoDB", "character"),
   function(object, tsName) {
@@ -333,13 +333,13 @@ setMethod(
 #' @seealso `grafo::getData`
 #' @exportMethod getData
 
-setGeneric(
+methods::setGeneric(
   "getData",
   function(graph, tsNames) {
     standardGeneric("getData")
   })
 
-setMethod(
+methods::setMethod(
   "getData",
   signature("GrafoDB", "character"),
   function (graph, tsNames) {
@@ -355,13 +355,13 @@ setMethod(
 #' @exportMethod searchNode
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "searchNode",
   function(graph, attrName, attrValue) {
     standardGeneric("searchNode")
   })
 
-setMethod(
+methods::setMethod(
   "searchNode",
   signature("GrafoDB", "character", "character"),
   function(graph, attrName, attrValue) {
@@ -389,13 +389,13 @@ setMethod(
 #' @exportMethod setMeta
 #' @include metadati.r
 
-setGeneric(
+methods::setGeneric(
   "setMeta",
   function(object, tsName, attrName, value) {
     standardGeneric("setMeta")
   })
 
-setMethod(
+methods::setMethod(
   "setMeta",
   signature("GrafoDB", "character", "character", "character"),
   function(object, tsName, attrName, value) {
@@ -424,13 +424,13 @@ setMethod(
 #' @exportMethod rmNode
 #' @export 
 
-setGeneric(
+methods::setGeneric(
   "rmNode",
   function(graph, tsName, recursive=FALSE) {
     standardGeneric("rmNode")
   })
 
-setMethod(
+methods::setMethod(
   "rmNode",
   signature("GrafoDB", "character", "ANY"),
   function(graph, tsName, recursive=FALSE) {

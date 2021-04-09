@@ -70,7 +70,8 @@ test_that("check_dag raises an exception with a cycle in network", {
   g <- g + igraph::edge("A", "B")
   expect_error(check_dag(g), NA)
   g <- g + igraph::edge("B", "A")
-  expect_error(check_dag(g), "Cycles found")
+  expect_warning(expect_error(check_dag(g), "Cycles found"),
+    "partial result is returned")
 })
 
 test_that("delete deletes a GrafoDB", {

@@ -92,7 +92,6 @@ test_that("Ottengo un errore se accade un errore sul DB nella lettura di Metadat
   on.exit({
     delete_graph("test")
   })
-  require(futile.logger)
   g <- setup("test")
   stub(.getMeta, 'getSQLbyKey', function(...) stop("error"))
   expect_error(.getMeta(g, "A", "KEY"), "error")

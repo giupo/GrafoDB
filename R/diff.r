@@ -6,7 +6,7 @@
 #' 
 #' @export
 #' @method diff GrafoDB
-#' @importFrom futile.logger flog.trace
+#' @include logging.r
 
 diff.GrafoDB <- function(x, ...) {
   y <- list(...)[[1]]

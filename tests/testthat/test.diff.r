@@ -30,7 +30,7 @@ test_that("I get a warning for uncommon names between graphs", {
     D = A * 2
   }
   expect_warning(diff.GrafoDB(g, g1))
-  expect_equal(nrow(diff.GrafoDB(g, g1)), 0)
+  expect_warning(expect_equal(nrow(diff.GrafoDB(g, g1)), 0))
 })
 
 test_that("I get a dataframe with the difference in formulas", {

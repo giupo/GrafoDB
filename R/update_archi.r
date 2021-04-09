@@ -1,5 +1,5 @@
 
-#' @importFrom futile.logger flog.info
+#' @include logging.r
 #' @include check_dag.r
 
 update_edges <- function(x, con, tag=x@tag) {
@@ -66,13 +66,13 @@ update_edges <- function(x, con, tag=x@tag) {
     }
     params <- c(tag, df, autore)
 
-    foreach::foreach(row=iterators::iter(df, by='row')) %do% {
+    foreach::`%do%`(foreach::foreach(row=iterators::iter(df, by='row')), {
       from <- row$partenza
       to <- row$arrivo
       DBI::dbExecute(con, getSQLbyKey(
         helper, "INSERT_ARCHI", tag=tag, from=from, to=to,
         autore=autore, last_updated=time.in.millis()))
-    }
+    })
   }
 
   if(length(da.eliminare)) {
@@ -94,12 +94,12 @@ update_edges <- function(x, con, tag=x@tag) {
     }
     params <- c(tag, df, autore)
 
-    foreach::foreach(row=iterators::iter(df, by='row')) %do% {
+    foreach::`%do%`(foreach::foreach(row=iterators::iter(df, by='row')), {
       from <- row$partenza
       to <- row$arrivo
       DBI::dbExecute(con, getSQLbyKey(
         helper, "DELETE_ARCHI", tag=tag, from=from, to=to))
-    }
+    })
   }
 
   if(interactive()) flog.info("Update Edges done.", name=ln)

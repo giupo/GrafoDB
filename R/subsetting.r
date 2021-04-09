@@ -1,5 +1,5 @@
 
-setMethod(
+methods::setMethod(
   "[",
   c("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., drop = TRUE) {
@@ -17,7 +17,7 @@ setMethod(
   })
 
 
-setMethod(
+methods::setMethod(
   "[[",
   c("GrafoDB", "character", "missing"),
   function(x, i, j, ...) {
@@ -127,7 +127,7 @@ setMethod(
   invisible(x)
 }
 
-setMethod(
+methods::setMethod(
   "[<-",
   signature("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., value) {
@@ -136,7 +136,7 @@ setMethod(
     invisible(x)
   })
 
-setMethod(
+methods::setMethod(
   "[[<-",
   signature("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., value) {

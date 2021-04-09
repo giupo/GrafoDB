@@ -9,7 +9,7 @@
 #' @param flush if `TRUE` removes any option saved in the current
 #'              session and reloads the settings
 #' @return a list containing the infos used to connect via DBI
-#' @importFrom futile.logger flog.info flog.debug flog.trace
+#' @include logging.r
 #' @export
 
 db_settings <- function(flush=FALSE) {
@@ -96,7 +96,7 @@ schemaFileFromEnv <- function(env = getenv()) {
   file
 }
 
-#' @importFrom futile.logger flog.debug flog.error flog.info flog.warn
+#' @include logging.r
 
 initdb <- function(con, env=getenv()) {
   if (env == "test") {
@@ -146,8 +146,7 @@ initdbSQLite <- function(con, env=getenv()) {
 #' @name buildConnection
 #' @note Funzione interna
 #' @rdname buildConnection-internal
-#' @importFrom futile.logger flog.error
-
+#' @include logging.r
 buildConnection <- function(env = getenv(), con = NULL) {
   if (!is.null(con)) return(con)
 

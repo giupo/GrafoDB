@@ -38,8 +38,7 @@
 #' @include conflicts.r copy_graph.r check_dag.r persistence_utils.r
 #' @rdname saveGraph-internal
 #' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
-#' @importFrom futile.logger flog.trace flog.info flog.debug
-#' @importFrom futile.logger flog.warn flog.error flog.fatal
+#' @include logging.r
 # FIXME: https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 
 .saveGraph <- function(x, tag = x@tag, ...) {
@@ -181,7 +180,6 @@ update_graph <- function(x, tag = x@tag, con = NULL, msg = "") {
 #' @param tag identificativo della versione
 #' @param con connessione al DB
 #' @usage create_graph(g, tag)
-#' @importFrom foreach %do%
 
 create_graph <- function(x, tag, con, ...) {
   param_list <- list(...)
@@ -199,7 +197,7 @@ create_graph <- function(x, tag, con, ...) {
   helper <- x@helper
 
   if(length(names(x))) {
-    dati <- foreach::foreach (name = iterators::iter(names(x)), .combine=rbind) %do% {
+    dati <- foreach::`%do%`(foreach::foreach (name = iterators::iter(names(x)), .combine=rbind), {
       tt <- x[[name]]
       df <-  to_data_frame(tt, name)
       anno <- as.numeric(df$anno)
@@ -217,7 +215,7 @@ create_graph <- function(x, tag, con, ...) {
         dati=dati,
         autore=autore,
         last_updated=time.in.millis()))
-    }
+    })
   } else {
     stop("Non ci sono dati da salvare.")
   }
@@ -225,7 +223,7 @@ create_graph <- function(x, tag, con, ...) {
   archi <- as.data.frame(igraph::get.edgelist(x@network))
 
   if(nrow(archi)) {
-    foreach::foreach(row = iterators::iter(archi, 'row')) %do% {
+    foreach::`%do%`(foreach::foreach(row = iterators::iter(archi, 'row')), {
       partenza <- row[,1]
       arrivo <- row[,2]
       DBI::dbExecute(con, getSQLbyKey(
@@ -235,10 +233,11 @@ create_graph <- function(x, tag, con, ...) {
         arrivo=arrivo,
         autore=autore,
         last_updated=time.in.millis()))
-    }
+    })
   }
 
-  foreach::foreach(name = iterators::iter(names(x)), .combine=rbind) %do% {
+  foreach::`%do%`(foreach::foreach(
+    name = iterators::iter(names(x)), .combine=rbind), {
     formula <- expr(x, name, echo=FALSE)
     if(!is.null(formula)) {
       DBI::dbExecute(con, getSQLbyKey(
@@ -249,7 +248,7 @@ create_graph <- function(x, tag, con, ...) {
         autore=autore,
         last_updated=time.in.millis()))
     }
-  }
+  })
 
   DBI::dbExecute(con, getSQLbyKey(
     helper, "INSERT_GRAFI", 

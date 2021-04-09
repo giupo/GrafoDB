@@ -45,7 +45,7 @@
 #' @export
 #' @include core.r
 
-setGeneric(
+methods::setGeneric(
   "has_conflicts",
   function(x, name = NULL, con = NULL) {
     standardGeneric("has_conflicts")
@@ -71,7 +71,7 @@ setGeneric(
 #' @export
 #' @include db.r
 
-setMethod(
+methods::setMethod(
   "has_conflicts",
   signature("GrafoDB", "ANY"),
   function(x, name = NULL, con = NULL) {
@@ -92,13 +92,13 @@ setMethod(
 #' @return un data.frame con le informazioni del conflitto
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "getConflicts",
   function(x, name = NULL, con = NULL) {
     standardGeneric("getConflicts")
   })
 
-setMethod(
+methods::setMethod(
   "getConflicts",
   signature("GrafoDB", "ANY"),
   function(x, name = NULL, con = NULL) {
@@ -122,13 +122,13 @@ setMethod(
   })
 
 
-setGeneric(
+methods::setGeneric(
   "getDataConflicts",
   function(x, name = NULL) {
     standardGeneric("getDataConflicts")
   })
 
-setMethod(
+methods::setMethod(
   "getDataConflicts",
   signature("GrafoDB", "ANY"),
   function(x, name = NULL) {
@@ -136,7 +136,7 @@ setMethod(
     if (nrow(df)) {
       ret <- list()
       lista <- as.character(df$name)
-        foreach::foreach(name = iterators::iter(lista), .combine = rbind) %do% {
+        foreach::`%do%`(foreach::foreach(name = iterators::iter(lista), .combine = rbind), {
         autore <- df[df$name == name, "autore"]
         current_autore <- df[df$name == name, "old_autore"]
 
@@ -165,18 +165,18 @@ setMethod(
         }
 
         ret[[name]] <- cbind(nuova, autore, current, current_autore, differenza)
-      }
+      })
       ret
     }
   })
 
-setGeneric(
+methods::setGeneric(
   "getFormulaConflicts",
   function(x, name = NULL) {
     standardGeneric("getFormulaConflicts")
   })
 
-setMethod(
+methods::setMethod(
   "getFormulaConflicts",
   signature("GrafoDB", "ANY"),
   function(x, name = NULL) {
@@ -205,13 +205,13 @@ setMethod(
 #' @param name nome della serie da cui eliminare un conflitto
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "fixConflicts",
   function(x, name = NULL) {
     standardGeneric("fixConflicts")
   })
 
-setMethod(
+methods::setMethod(
   "fixConflicts",
   signature("GrafoDB"),
   function(x, name = NULL) {
@@ -335,7 +335,6 @@ check_conflicts <- function(x, con = NULL) {
   x
 }
 
-#' @importFrom foreach %do%
 #' @include db.r persistence_utils.r
 
 create_data_conflicts <- function(x, nomi, con = NULL) {
@@ -351,7 +350,8 @@ create_data_conflicts <- function(x, nomi, con = NULL) {
   autore <- rutils::whoami()
   helper <- x@helper
   timestamp <- time.in.millis()
-  dati <- foreach::foreach(name = iterators::iter(nomi), .combine = rbind) %do% {
+  dati <- foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi), 
+    .combine = rbind), {
 
     tt <- x[[name]]
     df <-  to_data_frame(tt, name)
@@ -374,7 +374,8 @@ create_data_conflicts <- function(x, nomi, con = NULL) {
     }, error = function(cond) {
       stop(cond)
     })
-  }
+  })
+
   warning(
     "Ci sono conflitti sui dati per le serie: ",
     paste(nomi, collapse = ", "))
@@ -396,7 +397,7 @@ create_function_conflicts <- function(x, nomi, formula.db, con = NULL) {
   helper <- x@helper
 
   timestamp <- time.in.millis()
-  foreach::foreach(name = iterators::iter(nomi)) %do% {
+  foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi)), {
     sql1 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE1",
       formula = formula.db,
@@ -415,7 +416,7 @@ create_function_conflicts <- function(x, nomi, formula.db, con = NULL) {
       tag = tag,
       last_updated = timestamp)
     DBI::dbExecute(con, sql2)
-  }
+  })
 
   warning(
     "Ci sono conflitti sulle formule per le serie: ",
