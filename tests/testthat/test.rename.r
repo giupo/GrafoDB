@@ -20,7 +20,7 @@ test_that("I can rename a series before saving it", {
   expect_true("A1" %in% upgrf(g, "C", livello=1))
 })
 
-elimina("test")
+delete_graph("test")
 
 test_that("I cannot rename a series being modified", {
   g <- GrafoDB("test")
@@ -36,7 +36,7 @@ test_that("I cannot rename a series being modified", {
   expect_true("A1" %in% names(g))
 })
 
-elimina("test")
+delete_graph("test")
 
 test_that("I cannot rename a series into an existing series", {
   g <- GrafoDB("test")
@@ -49,7 +49,7 @@ test_that("I cannot rename a series into an existing series", {
   expect_error(rename(g, "A", "B"))
 })
 
-elimina("test")
+delete_graph("test")
 
 test_that("I cannot rename a non existing series", {
   g <- GrafoDB("test")
@@ -62,4 +62,4 @@ test_that("I cannot rename a non existing series", {
   expect_error(rename(g, "D", "D1"))
 })
 
-elimina("test")
+delete_graph("test")

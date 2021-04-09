@@ -28,7 +28,7 @@ test_that("I can handle NaN despite JsonCpp, RJSONIO, IEEE754", {
   ## il problema qui e' che quando serializzo python giustamente
   ## usa 'NaN' per i missing. mentre C++/R preferiscono 'null'
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
   con <- buildConnection()
   on.exit(disconnect(con))
@@ -59,7 +59,7 @@ setup <- function(tag) {
 
 test_that("I can save a graph over another existing graph", {
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
   tagA <- "test2"
   tagB <- "test3"
@@ -75,7 +75,7 @@ test_that("I can save a graph over another existing graph", {
   expect_true(all(g$B == gb$B))
 })
 
-elimina("test")
+delete_graph("test")
 
 context("Funzioni per la persistenza [internal functions]")
 
@@ -105,7 +105,7 @@ test_that("Load* yields an empy dataframe in case of error", {
 test_that("need_resync returns true if GrafoNeeds a resync", {
   g <- setup("test")
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
   
   g <- saveGraph(g)
@@ -119,7 +119,7 @@ test_that("need_resync returns true if GrafoNeeds a resync", {
 
 test_that("do_history preserves last_updated", {
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
   g1 <- saveGraph(g)

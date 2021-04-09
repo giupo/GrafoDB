@@ -501,14 +501,14 @@ tsdiff <- function(a, b, thr = .0000001) {
 #' }
 #' @return data.frame con tutti i rilasci
 
-rilasci <- function(filtro=NULL) {
+rilasci <- function(filtro = NULL) {
   con <- buildConnection()
   on.exit(disconnect(con))
   helper <- SQLHelper()
   sql <- if(is.null(filtro)) {
     getSQLbyKey(helper, "TUTTI_RILASCI")
   } else {
-    getSQLbyKey(helper, "TUTTI_RILASCI_FILTERED", filtro=filtro)
+    getSQLbyKey(helper, "TUTTI_RILASCI_FILTERED", filtro = filtro)
   }
 
   data <- DBI::dbGetQuery(con, sql)
@@ -517,7 +517,7 @@ rilasci <- function(filtro=NULL) {
   if(nrow(data) > 1) {
     time_col <- as.POSIXct(
       as.numeric(data$last_updated)/1000,
-      origin=as.Date("1970-01-01"))
+      origin = as.Date("1970-01-01"))
 
     data <- cbind(data, time_col)
     nomicol <- c(nomicol, "date")

@@ -131,7 +131,7 @@ test_that("to.data.frame correctly converts a single obs timeseries produced by 
   dati <- 1
 
   g <- GrafoDB("test")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
 
   g["A"] <- g["B"] <- ts(c(1,2,3), start=c(anno, period), frequency=freq)
   g["C"] <- function(A, B) {

@@ -73,26 +73,26 @@ test_that("check_dag raises an exception with a cycle in network", {
   expect_error(check_dag(g), "Cycles found")
 })
 
-test_that("elimina deletes a GrafoDB", {
-  for(tag in rilasci("test")$tag) elimina(tag)
+test_that("delete deletes a GrafoDB", {
+  for(tag in rilasci("test")$tag) delete_graph(tag)
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   df <- rilasci("test")
   expect_equal(nrow(df), 1)
 })
 
-test_that("elimina handles exceptions", {
+test_that("delete handles exceptions", {
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")
   with_mock(
     'DBI::dbCommit'= function(...) stop("error test"), {
-      expect_error(elimina(g), "error test")
-      expect_error(elimina("test"), "error test")
+      expect_error(delete_graph(g), "error test")
+      expect_error(delete_graph("test"), "error test")
     })
 })
 

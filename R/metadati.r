@@ -112,7 +112,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
   DBI::dbGetQuery(con, sql)
 }
 
-#' elimina un metadato dal DBI
+#' delete un metadato dal DBI
 #'
 #' @name .deleteMeta
 #' @usage .deleteMeta(x, name, key, value)

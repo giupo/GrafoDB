@@ -21,7 +21,7 @@ setup <- function(tag) {
 
 test_that("isPrimitive returns true if a series is primitive (only numbers, no function)", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
   expect_true(isPrimitive(g, "A"))
@@ -32,7 +32,7 @@ test_that("isPrimitive returns true if a series is primitive (only numbers, no f
 
 test_that("isElementary returns true if a series is elementary (numbers and formula, no parents)", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
   expect_false(isElementary(g, "A"))
@@ -44,7 +44,7 @@ test_that("isElementary returns true if a series is elementary (numbers and form
 
 test_that("isAggregate returns true if a series is elementary (numbers and formula and parents)", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
   expect_false(isAggregate(g, "A"))
@@ -55,7 +55,7 @@ test_that("isAggregate returns true if a series is elementary (numbers and formu
 
 test_that("listNodes returns all the names of the Graph", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
   expect_equal(listNodes(g), names(g))
@@ -64,7 +64,7 @@ test_that("listNodes returns all the names of the Graph", {
 
 test_that("getDependencies return parents of an aggregate", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
   expect_equal(getDependencies(g, "C"), deps(g, "C"))
@@ -73,7 +73,7 @@ test_that("getDependencies return parents of an aggregate", {
 
 test_that("getTask returns the formula of the aggregate", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
 
@@ -84,7 +84,7 @@ test_that("getTask returns the formula of the aggregate", {
 
 test_that("searchNode returns a list of nodes matching search criteria", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
 
@@ -96,7 +96,7 @@ test_that("searchNode returns a list of nodes matching search criteria", {
 
 test_that("describe is equal to navigate", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
 

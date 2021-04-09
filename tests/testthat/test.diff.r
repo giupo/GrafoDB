@@ -12,7 +12,7 @@ setup <- function(tag) {
 
 test_that("I get no diff on the same Graph", {
   g <- setup("test")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
   
   expect_equal(nrow(diff.GrafoDB(g, g)), 0)
 })
@@ -22,8 +22,8 @@ test_that("I get a warning for uncommon names between graphs", {
   g1 <- setup("test2")
 
   on.exit({
-    elimina("test")
-    elimina("test2")
+    delete_graph("test")
+    delete_graph("test2")
   })
   
   g1["D"] <- function(A) {
@@ -38,8 +38,8 @@ test_that("I get a dataframe with the difference in formulas", {
   g1 <- setup("test2")
 
   on.exit({
-    elimina("test")
-    elimina("test2")
+    delete_graph("test")
+    delete_graph("test2")
   })
   g <-saveGraph(g)
   g1 <- saveGraph(g1)
@@ -57,8 +57,8 @@ test_that("I get authors in each data.frame", {
   g1 <- setup("test2")
 
   on.exit({
-    elimina("test")
-    elimina("test2")
+    delete_graph("test")
+    delete_graph("test2")
   })
 
   g <- saveGraph(g)

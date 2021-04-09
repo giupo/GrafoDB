@@ -774,7 +774,7 @@ v1.26.3 (2018-07-09)
 - Aggiungo mod insignificante per testare Devops. [Giuseppe Acito]
 - Adds slack notifications. [Giuseppe]
 - Update man and NAMESPACE. [Giuseppe Acito]
-- Abilita elimina anche a cf10. [Giuseppe Acito]
+- Abilita delete anche a cf10. [Giuseppe Acito]
 - Nothing important. [Giuseppe Acito]
 - Merge branch 'develop' [Giuseppe Acito]
 - Bump version: 1.20.7 → 1.20.8. [Giuseppe Acito]
@@ -1094,7 +1094,7 @@ v1.26.3 (2018-07-09)
 - C'e' un problema con queste maledette options e testthat. [Giuseppe
   Acito]
 - Test fatti male per SQLHelper. [Giuseppe Acito]
-- Quasi ok su SQLite, c'era bug grosso come una casa su elimina e la
+- Quasi ok su SQLite, c'era bug grosso come una casa su delete e la
   gestione delle tabelle partizionate nel codice: e' un ERRORE.
   [Giuseppe Acito]
 - .to e to diverse tra 1.1.0 e 1.0.1 di igraph. [Giuseppe Acito]
@@ -1448,7 +1448,7 @@ v1.26.3 (2018-07-09)
 - Bump version: 0.8.8 → 0.8.9. [Giuseppe Acito]
 - Bump version: 0.8.7 → 0.8.8. [Giuseppe Acito]
 - Aggiunto test sulla copia del grafo; aggiunte modifiche alla funzione
-  elimina. [Giuseppe Acito]
+  delete. [Giuseppe Acito]
 - Merge branch 'develop' [Giuseppe Acito]
 - Added todataframe.Rd. [Giuseppe Acito]
 - Merge branch 'hotfix/additionalParams' into develop. [Giuseppe Acito]
@@ -1476,7 +1476,7 @@ v1.26.3 (2018-07-09)
 - Merge branch 'develop' [Giuseppe Acito]
 - Fix #3 ? I dunno even if #3 was a real problem or a misuse of GrafoDB.
   [Giuseppe Acito]
-- Aggiunti incancellabili da elimina. [Giuseppe Acito]
+- Aggiunti incancellabili da delete. [Giuseppe Acito]
 - Merge branch 'release/fixedHistory' into develop. [Giuseppe Acito]
 - Merge branch 'release/fixedHistory' [Giuseppe Acito]
 - Bump version: 0.8.0 → 0.8.1. [Giuseppe Acito]

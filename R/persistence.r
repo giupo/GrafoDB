@@ -74,7 +74,7 @@
     flog.trace("beginning transaction", name=ln)
     DBI::dbBegin(con)
 
-    if(hasConflicts(x, con=con)) {
+    if(has_conflicts(x, con=con)) {
       stop("Il grafo ", tag, " ha conflitti, risolverli prima di salvare")
     }
 
@@ -112,7 +112,7 @@
         # faccio l'history del tag di destinazione
         do_history(x, tag, con)
         # lo cancello
-        .elimina(tag, con, x@helper)
+        .delete_graph(tag, con, x@helper)
         # copio il grafo in sessione col grafo attuale
         copy_graph(x@tag, tag, con=con, mesg=msg, helper=x@helper)
       }

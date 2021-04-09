@@ -1,5 +1,5 @@
 
-.hasConflicts <- function(x, name=NULL, con=NULL) {
+.has_conflicts <- function(x, name=NULL, con=NULL) {
   nrow(getConflicts(x, name = name, con = con)) > 0
 }
 
@@ -27,55 +27,55 @@
 
 #' Ritorna `TRUE` se il grafo ha conflitti
 #'
-#' @name hasConflicts
-#' @usage hasConflicts(x)
-#' @usage hasConflicts(x, name)
+#' @name has_conflicts
+#' @usage has_conflicts(x)
+#' @usage has_conflicts(x, name)
 #' @param x oggetto R
 #' @param name character array di nomi (puo' essere omesso)
 #' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE`
 #'         altrimenti
 #' @examples \dontrun{
 #' g <- GrafoDB(...)
-#' hasConflicts(g) # dovrebbe essere FALSE
+#' has_conflicts(g) # dovrebbe essere FALSE
 #' ...             # eseguo operazioni come modificare la stessa serie
-#' hasConflicts(g) # TRUE
-#' hasConflicts(g, SERIE_CON_CONFLITTO) # TRUE
-#' hasConflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
+#' has_conflicts(g) # TRUE
+#' has_conflicts(g, SERIE_CON_CONFLITTO) # TRUE
+#' has_conflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
 #' }
 #' @export
 #' @include core.r
 
 setGeneric(
-  "hasConflicts",
+  "has_conflicts",
   function(x, name = NULL, con = NULL) {
-    standardGeneric("hasConflicts")
+    standardGeneric("has_conflicts")
   })
 
 #' Ritorna `TRUE` se il grafo ha conflitti
 #'
-#' @name hasConflicts
-#' @usage hasConflicts(x)
-#' @usage hasConflicts(x, name)
+#' @name has_conflicts
+#' @usage has_conflicts(x)
+#' @usage has_conflicts(x, name)
 #' @param x oggetto R
 #' @param name character array di nomi (puo' essere omesso)
 #' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti,
 #'         `FALSE` altrimenti
 #' @examples \dontrun{
 #' g <- GrafoDB(...)
-#' hasConflicts(g) # dovrebbe essere FALSE
+#' has_conflicts(g) # dovrebbe essere FALSE
 #' ...             # eseguo operazioni come modificare la stessa serie
-#' hasConflicts(g) # TRUE
-#' hasConflicts(g, SERIE_CON_CONFLITTO) # TRUE
-#' hasConflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
+#' has_conflicts(g) # TRUE
+#' has_conflicts(g, SERIE_CON_CONFLITTO) # TRUE
+#' has_conflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
 #' }
 #' @export
 #' @include db.r
 
 setMethod(
-  "hasConflicts",
+  "has_conflicts",
   signature("GrafoDB", "ANY"),
   function(x, name = NULL, con = NULL) {
-    .hasConflicts(x, name = name, con = con)
+    .has_conflicts(x, name = name, con = con)
   })
 
 
