@@ -2,18 +2,18 @@ context("Misc functions")
 
 test_that("conversione da ts a data.frame", {
   tt <- ts(runif(10), start=c(1990,1), frequency=1)
-  df <- to.data.frame(tt, "test")
+  df <-  to_data_frame(tt, "test")
   expect_true(is.data.frame(df))
   expect_true(all(c("name", "anno", "periodo", "freq", "dati") %in% names(df)))
 
   tt <- ts(runif(10), start=c(1990,1), frequency=4)
-  df <- to.data.frame(tt, "test")
+  df <-  to_data_frame(tt, "test")
   expect_true(is.data.frame(df))
   expect_true(all(c("name", "anno", "periodo", "freq", "dati") %in% names(df)))
 
 
   tt <- ts(runif(10), start=c(1990,1), frequency=12)
-  df <- to.data.frame(tt, "test")
+  df <-  to_data_frame(tt, "test")
   expect_true(is.data.frame(df))
   expect_true(all(c("name", "anno", "periodo", "freq", "dati") %in% names(df)))
 })
@@ -109,13 +109,13 @@ test_that("tsdiff returns TRUE if two timeseries have different dimensions",  {
 })
 
 
-test_that("to.data.frame correctly converts a single obs timeseries", {
+test_that(" to_data_frame correctly converts a single obs timeseries", {
   anno <- 1990
   period <- 1
   freq <- 4
   dati <- 1
   tt <- ts(dati, start=c(anno, period), frequency=freq)
-  x <- to.data.frame(tt)
+  x <-  to_data_frame(tt)
 
   expect_equal(x[, "anno"], anno)
   expect_equal(x[, "freq"], freq)
@@ -124,21 +124,21 @@ test_that("to.data.frame correctly converts a single obs timeseries", {
 
 })
 
-test_that("to.data.frame correctly converts a single obs timeseries produced by formula", {
+test_that(" to_data_frame correctly converts a single obs timeseries produced by formula", {
   anno <- 1990
   period <- 1
   freq <- 4
   dati <- 1
 
   g <- GrafoDB("test")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
 
   g["A"] <- g["B"] <- ts(c(1,2,3), start=c(anno, period), frequency=freq)
   g["C"] <- function(A, B) {
     C <- window(A+B, start=c(1990, 1+2)) # voglio solo l'ultimo periodo
   }
 
-  x <- to.data.frame(g$C)
+  x <-  to_data_frame(g$C)
   expect_equal(x[, "anno"], anno)
   expect_equal(x[, "freq"], freq)
   expect_equal(x[, "periodo"], period + 2)

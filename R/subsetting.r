@@ -1,5 +1,5 @@
 
-setMethod(
+methods::setMethod(
   "[",
   c("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., drop = TRUE) {
@@ -17,7 +17,7 @@ setMethod(
   })
 
 
-setMethod(
+methods::setMethod(
   "[[",
   c("GrafoDB", "character", "missing"),
   function(x, i, j, ...) {
@@ -33,7 +33,7 @@ setMethod(
 #' @param value valore settato
 #' @note funzione interna
 #' @rdname subsetting_internal
-#' @include functions.r core.r checkDAG.r find_deps.r
+#' @include functions.r core.r check_dag.r find_deps.r
 
 .subsetting <- function(x, i, value) {
   nameObject <- deparse(substitute(x))
@@ -88,7 +88,7 @@ setMethod(
       suppressWarnings(hash::del(name, x@edges))
     }
     
-    checkDAG(network)
+    check_dag(network)
 
     x@functions[[name]] <- declutted
     x@network <- network
@@ -127,7 +127,7 @@ setMethod(
   invisible(x)
 }
 
-setMethod(
+methods::setMethod(
   "[<-",
   signature("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., value) {
@@ -136,7 +136,7 @@ setMethod(
     invisible(x)
   })
 
-setMethod(
+methods::setMethod(
   "[[<-",
   signature("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., value) {

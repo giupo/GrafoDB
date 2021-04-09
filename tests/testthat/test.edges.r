@@ -13,7 +13,7 @@ setup <- function(tag) {
 
 test_that("I get a warning if deps are more than needed", {
   g <- setup("test")
-  on.exit(elimina(g))
+  on.exit(delete_graph(g))
   expect_warning(g["D"] <- function(A, B, C) {
     D <- C * 2
   })
@@ -21,7 +21,7 @@ test_that("I get a warning if deps are more than needed", {
 
 test_that("I get to remove arcs", {
   g <- setup("test")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
 
   g <- saveGraph(g)
 

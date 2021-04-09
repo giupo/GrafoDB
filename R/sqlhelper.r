@@ -15,19 +15,18 @@
 #' @title SQLHelper
 #' @export SQLHelper
 #' @exportClass SQLHelper
-#' @importFrom futile.logger flog.error flog.trace flog.info
-#' @importFrom methods representation
+#' @include logging.r
 
 SQLHelper <- setClass(
   "SQLHelper",
-  representation(
+  methods::representation(
     sqlContainer="list",
     type="character"
   ))
 
 
 
-setMethod(
+methods::setMethod(
   "initialize",
   signature("SQLHelper"),
   function(.Object, path=NULL, type=NULL) {
@@ -114,13 +113,13 @@ setMethod(
 #' @export
 #' @exportMethod getSQLbyKey
 
-setGeneric(
+methods::setGeneric(
   "getSQLbyKey",
   function(x, .key, ...) {
     standardGeneric("getSQLbyKey")
   })
 
-setMethod(
+methods::setMethod(
   "getSQLbyKey",
   signature("SQLHelper"),
   function(x, .key, ...) {

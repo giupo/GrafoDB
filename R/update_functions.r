@@ -1,7 +1,7 @@
-#' @importFrom futile.logger flog.info
+#' @include logging.r
 
-.updateFunctions <- function(x, con, tag=x@tag, msg="") {
-  ln <- "GrafoDB::updateFunctions"
+update_functions <- function(x, con, tag=x@tag, msg="") {
+  ln <- "GrafoDB::update_functions"
   if(interactive()) flog.info("Update Functions ...", name=ln)
 
   ## passo la connessione perche' devono avere la stessa transazione
@@ -23,14 +23,14 @@
   
   names.updated <- setdiff(hash::keys(x@functions), names.with.conflicts)
   if(length(names.updated)) {
-    formule <- foreach::foreach (name = iterators::iter(names.updated), .combine=rbind) %dopar% {
+    formule <- foreach::`%dopar%`(foreach::foreach(name = iterators::iter(names.updated), .combine=rbind), {
       formula <- expr(x, name, echo=FALSE)
       cbind(formula, autore, name, tag)
-    }
+    })
 
     if(DBI::dbExistsTable(con, paste0("formule_", tag)) ||
          class(con) == "SQLiteConnection") {
-      foreach::foreach(row = iterators::iter(formule, 'row')) %do% {
+      foreach::`%do%`(foreach::foreach(row = iterators::iter(formule, 'row')), {
         formularow <- row[,1]
         namerow <- row[,3]
        
@@ -42,11 +42,10 @@
           name=namerow,
           msg=msg,
           last_updated=time.in.millis()))
-      }
+      })
     }
-    
-    
-    foreach::foreach(name = iterators::iter(names.updated)) %do% {
+
+    foreach::`%do%`(foreach::foreach(name = iterators::iter(names.updated)), {
       formula <- expr(x, name, echo=FALSE)
       DBI::dbExecute(con, getSQLbyKey(
         helper, "UPSERT_FORMULE",
@@ -56,9 +55,8 @@
         tag=tag,
         msg=msg,
         last_updated=time.in.millis()))
-    }
+    })
   }
-  removeFromRedis(x, x@touched)
   
   if(interactive()) flog.info("Update Functions done.", name=ln)
 }

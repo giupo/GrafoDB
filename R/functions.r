@@ -100,15 +100,15 @@ is.grafodb <- function(x) {
 #' o un generico scalare in un data.frame.
 #' funzione utilizzata per convertire il dato in una forma accettabile dal DB
 #'
-#' @name to.data.frame
-#' @usage to.data.frame(x)
+#' @name  to_data_frame
+#' @usage  to_data_frame(x)
 #' @param x una timeseries `ts` o uno scalare
 #' @param name nome da dare alla timeseries
 #' @return una rappresentazione a data.frame della serie `x`
 #' @note funzione interna
 #' @rdname todataframe
 
-to.data.frame <- function(x, name=NULL) {
+ to_data_frame <- function(x, name=NULL) {
   ## questa funzione converte a dataframe la timeseries,
   ## utile per l'inserimento nel DB
   if(is.ts(x)) {
@@ -286,7 +286,6 @@ from.data.frame <- function(df) {
 #' @param name nome serie
 #' @param tag id del grafo (default su `cf10`)
 #' @return una serie o una lista di serie
-#' @importFrom foreach %do% %dopar%
 #' @export
 
 getdb <- function(x, name) {
@@ -299,11 +298,11 @@ getdb <- function(x, name) {
 
 
   if (length(name) > 1000) {
-    foreach::foreach(
-      row=iterators::iter(df, by="row"),
-      .combine=c, .multicombine=TRUE) %dopar% {
+    foreach::`%dopar%`(foreach::foreach(
+      row = iterators::iter(df, by = "row"),
+      .combine=c, .multicombine=TRUE), {
       convert_data_frame(row)
-    }
+    })
   } else {
     convert_data_frame(df)
   }
@@ -501,14 +500,14 @@ tsdiff <- function(a, b, thr = .0000001) {
 #' }
 #' @return data.frame con tutti i rilasci
 
-rilasci <- function(filtro=NULL) {
+rilasci <- function(filtro = NULL) {
   con <- buildConnection()
   on.exit(disconnect(con))
   helper <- SQLHelper()
   sql <- if(is.null(filtro)) {
     getSQLbyKey(helper, "TUTTI_RILASCI")
   } else {
-    getSQLbyKey(helper, "TUTTI_RILASCI_FILTERED", filtro=filtro)
+    getSQLbyKey(helper, "TUTTI_RILASCI_FILTERED", filtro = filtro)
   }
 
   data <- DBI::dbGetQuery(con, sql)
@@ -517,7 +516,7 @@ rilasci <- function(filtro=NULL) {
   if(nrow(data) > 1) {
     time_col <- as.POSIXct(
       as.numeric(data$last_updated)/1000,
-      origin=as.Date("1970-01-01"))
+      origin = as.Date("1970-01-01"))
 
     data <- cbind(data, time_col)
     nomicol <- c(nomicol, "date")

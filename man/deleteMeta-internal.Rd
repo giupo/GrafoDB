@@ -2,7 +2,7 @@
 % Please edit documentation in R/metadati.r
 \name{.deleteMeta}
 \alias{.deleteMeta}
-\title{elimina un metadato dal DBI}
+\title{delete un metadato dal DBI}
 \usage{
 .deleteMeta(x, name, key, value)
 }
@@ -17,5 +17,5 @@
 con la chiave specificata)}
 }
 \description{
-elimina un metadato dal DBI
+delete un metadato dal DBI
 }

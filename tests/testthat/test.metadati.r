@@ -1,7 +1,7 @@
 context("Metadati")
 
 setup <- function(tag) {
-  dbSettings(TRUE)
+  db_settings(TRUE)
   flog.debug("Nome dell'env: %s", Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
 
@@ -20,46 +20,38 @@ setup <- function(tag) {
 
 test_that("posso caricare tutti i metadati del grafo", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
-  with_mock(
-    'RCurl::getURL' = function(...) "{}", {
-      meta <- getMeta(g)
-      expect_true(is.data.frame(meta))
-      expect_equal(nrow(meta), 3)
-    })
+  meta <- getMeta(g)
+  expect_true(is.data.frame(meta))
+  expect_equal(nrow(meta), 3)
+
 })
 
 test_that("posso ottenere i metadati per una serie", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
-  with_mock(
-    'RCurl::getURL' = function(...) "{}", {
-      m <- getMeta(g, "A")
-      expect_true(is.data.frame(m))
-      expect_equal(nrow(m), 2)
-    })
+  m <- getMeta(g, "A")
+  expect_true(is.data.frame(m))
+  expect_equal(nrow(m), 2)  
 })
 
 test_that("posso ottenere i valori di un metadato per singola serie", {
-   on.exit({
-    elimina("test")
+  on.exit({
+    delete_graph("test")
   })
   g <- setup("test")
-  with_mock(
-    'RCurl::getURL' = function(...) "{}", {
-      v <- getMeta(g, "A", "KEY")
-      expect_true(is.character(v))
-      expect_true(all(c("VALUE1", "VALUE2") %in% v ))
-    })
+  v <- getMeta(g, "A", "KEY")
+  expect_true(is.character(v))
+  expect_true(all(c("VALUE1", "VALUE2") %in% v ))
 })
 
 test_that("Posso cercare i numeri direttamente nel grafo", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
 
@@ -74,21 +66,18 @@ test_that("Posso cercare i numeri direttamente nel grafo", {
 
 test_that("Posso cancellare Metadati", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
   deleteMeta(g, "A", "KEY", "VALUE1")
-  with_mock(
-    'RCurl::getURL' = function(...) "{}", {
-      v <- getMeta(g, "A", "KEY")
-      expect_true(is.character(v))
-      expect_true(all(c("VALUE2") %in% v ))
-    })
+  v <- getMeta(g, "A", "KEY")
+  expect_true(is.character(v))
+  expect_true(all(c("VALUE2") %in% v ))
 })
 
 test_that("If I get an erro with DB, deleteMeta fails", {
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- setup("test")
@@ -101,16 +90,15 @@ test_that("If I get an erro with DB, deleteMeta fails", {
 test_that("Ottengo un errore se accade un errore sul DB nella lettura di Metadati", {
   skip_if_not(require(mockery), "mockery required")
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
-  require(futile.logger)
   g <- setup("test")
   stub(.getMeta, 'getSQLbyKey', function(...) stop("error"))
   expect_error(.getMeta(g, "A", "KEY"), "error")
 })
 
 test_that("I get nothing if there are no metadata values for a key", {
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
   g <- setup("test")
   expect_equal(length(getMeta(g, "A", "NONESISTO")), 0)
 })
@@ -118,7 +106,7 @@ test_that("I get nothing if there are no metadata values for a key", {
 test_that("setMeta has a warning each time you set an already existing meta", {
   skip_if_not(require(mockery), "mockery required")
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
   stub(.setMeta, 'warning', function(...) stop("dc"))
@@ -128,7 +116,7 @@ test_that("setMeta has a warning each time you set an already existing meta", {
 
 test_that("setMeta su una serie inesistente produce un errore", {
   on.exit({
-    elimina("test")
+    delete_graph("test")
   })
   g <- setup("test")
   expect_error(setMeta(g, "NONESISTO", "KEY", "VALUE1"))
@@ -138,14 +126,14 @@ context("Metadati [internal functions]")
 
 test_that(".lookupFormula works as expected", {
   g <- setup("test")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
   expect_equal(length(.lookup_formula(g, "*")), 1)
   expect_equal(.lookup_formula(g, "*"), "C")
 })
 
 test_that(".keys returns keys of metadata", {
   g <- setup("test")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
   x <- GrafoDB:::.keys(g)
   expect_is(x, "data.frame")
   expect_equal(x$key, "KEY")
@@ -153,7 +141,7 @@ test_that(".keys returns keys of metadata", {
 
 test_that(".values returns values of all metadata, or per key basis", {
   g <- setup("test")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
 
   v <- GrafoDB:::.values_by_key(g)
   expect_is(v, "character")
@@ -167,7 +155,7 @@ test_that(".values returns values of all metadata, or per key basis", {
 test_that("I get additional TICKET metadata from issue tracker", {
   g <- setup("test")
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   require(mockery)
@@ -184,25 +172,22 @@ test_that("I get additional TICKET metadata from issue tracker", {
 })
 
 test_that("I can remove all metadata with a single key entry", {
-    g <- setup("test")
-    on.exit({
-        for(tag in rilasci("test")$tag) elimina(tag)
-    })
-
-
-    deleteMeta(g, "A", "KEY")
-    with_mock(
-      'RCurl::getURL' = function(...) "{}", {
-        v <- getMeta(g, "A")
-        expect_equal(nrow(v), 0)
-      })
+  g <- setup("test")
+  on.exit({
+    for(tag in rilasci("test")$tag) delete_graph(tag)
+  })
+  
+  
+  deleteMeta(g, "A", "KEY")
+  v <- getMeta(g, "A")
+  expect_equal(nrow(v), 0)
 })
 
 
 test_that("I can search for metadata values from names and keys", {
   g <- setup("test")
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
 
 
@@ -214,7 +199,7 @@ test_that("I can search for metadata values from names and keys", {
 test_that("values_for returns all metadata without params",{
   g <- setup("test")
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
   x <- values_for(g)
   expect_equal(nrow(x), 3)
@@ -224,7 +209,7 @@ test_that("values_for returns all metadata without params",{
 test_that("values_for raise an error if any of the params are NULL",{
   g <- setup("test")
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
   expect_error(values_for(g, name=NULL), "name cannot be null")
   expect_error(values_for(g, key=NULL), "key cannot be null")

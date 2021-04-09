@@ -16,7 +16,7 @@ test_that("posso avere serie con funzione senza padri", {
   expect_true(all(g[["A"]] == g[["B"]]))
   expect_true(isElementary(g, "B"))
   expect_true(!isElementary(g, "A"))
-  elimina(g)
+  delete_graph(g)
 })
 
 
@@ -34,5 +34,5 @@ test_that("posso creare una serie elementare, che esista o meno nel DB",{
       }
       g[["NONESISTO"]][1]
   }, 1)
-  elimina(g)
+  delete_graph(g)
 })

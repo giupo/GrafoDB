@@ -17,23 +17,23 @@ proxytest <- function(numero) {
   expect_true(is.ts(expected))  
   expect_equal(expected[1], numero)
   ser(g, "B")  
-  elimina("test")
+  delete_graph("test")
 }
 
 test_that("A single series can have > 100 deps", {
   proxytest(101)
 })
 
-elimina("test")
+delete_graph("test")
 
 test_that("A single series can have > 200 deps", {
   proxytest(201)
 })
-elimina("test")
+delete_graph("test")
 
 
 test_that("A single series can have > 300 deps", {
   proxytest(301)
 })
 
-elimina("test")
+delete_graph("test")

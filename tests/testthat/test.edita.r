@@ -18,7 +18,7 @@ setup <- function(tag) {
 test_that("I can edit a function", {
   skip("mockery can't stub a S4 generic implementation")
   skip_if_not(require(mockery), "mockery required")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
   g <- setup("test")
 
   stub(edita, 'utils::file.edit', function(file, title) {
@@ -43,7 +43,7 @@ test_that("I can edit a function", {
 test_that("I can edit a root, making it a formula", {
   skip("mockery can't stub a S4 generic implementation")    
   skip_if_not(require(mockery), "mockery required")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
   g <- setup("test")
   stub(edita, 'utils::file.edit', function(file, title) {
     write("function()\n{ A = 1 }", file=file)
@@ -56,7 +56,7 @@ test_that("I can edit a root, making it a formula", {
 test_that("nothing changes if I don't modify a formula", {
   skip("mockery can't stub a S4 generic implementation")    
   skip_if_not(require(mockery), "mockery required")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
   g <- setup("test")
   stub(edita, 'utils::file.edit', function(file, title) {
     write("function(A, B)\n{ C = (A + 1) * (B + 2) }", file=file)
@@ -68,7 +68,7 @@ test_that("nothing changes if I don't modify a formula", {
 test_that("If I edit a root, and I do nothing, still keep the node as root and nothing changes", {
   skip("mockery can't stub a S4 generic implementation")    
   skip_if_not(require(mockery), "mockery required")
-  on.exit(elimina("test"))
+  on.exit(delete_graph("test"))
   g <- setup("test")
   stub(edita, 'utils::file.edit', function(file, title) {
     write("function() { A = ... # work it\n}", file=file)
