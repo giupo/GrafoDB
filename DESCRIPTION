@@ -1,9 +1,9 @@
 Package: GrafoDB
 Title: simple ETL for timeseries in R
-Version: 1.35.13
+Version: 1.36.0
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
 Description: Complete rewrite of the grafo package: Adds DB backend to Grafo,
-    async operations via Redis and support for microservices authentication.
+    it implements a Graph ETL.
 Depends:
     R (>= 3.3.3),
 License: BSD_2_clause + file LICENSE
@@ -22,14 +22,14 @@ Imports:
     foreach,
     iterators,
     gdata,
-    rredis,
     rdataset,
-    RCurl,
     zoo,
     futile.logger,
     crayon,
     progress,
-    whisker
+    whisker,
+    glue,
+    jsonlite
 Suggests:
     devtools,
     rstudioapi,
@@ -43,20 +43,18 @@ Suggests:
     RPostgreSQL,
     RSQLite
 Collate:
-    'checkDAG.r'
+    'check_dag.r'
+    'logging.r'
     'db.r'
     'persistence_utils.r'
     'sqlhelper.r'
     'update_functions.r'
-    'redis.r'
     'update_data.r'
     'update_archi.r'
     'copy_graph.r'
     'persistence.r'
     'functions.r'
     'rename.r'
-    'ser.r'
-    'tickets.r'
     'metadati.r'
     'expr.r'
     'evaluate.r'
@@ -65,20 +63,20 @@ Collate:
     'core.r'
     'conflicts.r'
     'create_time_series.r'
+    'delete_graph.r'
     'diff.r'
     'edita.r'
-    'elimina.r'
     'find_deps.r'
     'utils.r'
     'formule.r'
     'life_cycle.r'
-    'logging.r'
     'old_grafo_impl.r'
     'patch.r'
     'rmNode.r'
+    'ser.r'
     'subsetting.r'
     'upgrf.r'
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Remotes: github::giupo/rutils,
     github::giupo/rprogressbar,
     github::giupo/rdataset

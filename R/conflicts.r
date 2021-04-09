@@ -1,5 +1,5 @@
 
-.hasConflicts <- function(x, name=NULL, con=NULL) {
+.has_conflicts <- function(x, name=NULL, con=NULL) {
   nrow(getConflicts(x, name = name, con = con)) > 0
 }
 
@@ -27,55 +27,55 @@
 
 #' Ritorna `TRUE` se il grafo ha conflitti
 #'
-#' @name hasConflicts
-#' @usage hasConflicts(x)
-#' @usage hasConflicts(x, name)
+#' @name has_conflicts
+#' @usage has_conflicts(x)
+#' @usage has_conflicts(x, name)
 #' @param x oggetto R
 #' @param name character array di nomi (puo' essere omesso)
 #' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE`
 #'         altrimenti
 #' @examples \dontrun{
 #' g <- GrafoDB(...)
-#' hasConflicts(g) # dovrebbe essere FALSE
+#' has_conflicts(g) # dovrebbe essere FALSE
 #' ...             # eseguo operazioni come modificare la stessa serie
-#' hasConflicts(g) # TRUE
-#' hasConflicts(g, SERIE_CON_CONFLITTO) # TRUE
-#' hasConflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
+#' has_conflicts(g) # TRUE
+#' has_conflicts(g, SERIE_CON_CONFLITTO) # TRUE
+#' has_conflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
 #' }
 #' @export
 #' @include core.r
 
-setGeneric(
-  "hasConflicts",
+methods::setGeneric(
+  "has_conflicts",
   function(x, name = NULL, con = NULL) {
-    standardGeneric("hasConflicts")
+    standardGeneric("has_conflicts")
   })
 
 #' Ritorna `TRUE` se il grafo ha conflitti
 #'
-#' @name hasConflicts
-#' @usage hasConflicts(x)
-#' @usage hasConflicts(x, name)
+#' @name has_conflicts
+#' @usage has_conflicts(x)
+#' @usage has_conflicts(x, name)
 #' @param x oggetto R
 #' @param name character array di nomi (puo' essere omesso)
 #' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti,
 #'         `FALSE` altrimenti
 #' @examples \dontrun{
 #' g <- GrafoDB(...)
-#' hasConflicts(g) # dovrebbe essere FALSE
+#' has_conflicts(g) # dovrebbe essere FALSE
 #' ...             # eseguo operazioni come modificare la stessa serie
-#' hasConflicts(g) # TRUE
-#' hasConflicts(g, SERIE_CON_CONFLITTO) # TRUE
-#' hasConflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
+#' has_conflicts(g) # TRUE
+#' has_conflicts(g, SERIE_CON_CONFLITTO) # TRUE
+#' has_conflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
 #' }
 #' @export
 #' @include db.r
 
-setMethod(
-  "hasConflicts",
+methods::setMethod(
+  "has_conflicts",
   signature("GrafoDB", "ANY"),
   function(x, name = NULL, con = NULL) {
-    .hasConflicts(x, name = name, con = con)
+    .has_conflicts(x, name = name, con = con)
   })
 
 
@@ -92,13 +92,13 @@ setMethod(
 #' @return un data.frame con le informazioni del conflitto
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "getConflicts",
   function(x, name = NULL, con = NULL) {
     standardGeneric("getConflicts")
   })
 
-setMethod(
+methods::setMethod(
   "getConflicts",
   signature("GrafoDB", "ANY"),
   function(x, name = NULL, con = NULL) {
@@ -122,13 +122,13 @@ setMethod(
   })
 
 
-setGeneric(
+methods::setGeneric(
   "getDataConflicts",
   function(x, name = NULL) {
     standardGeneric("getDataConflicts")
   })
 
-setMethod(
+methods::setMethod(
   "getDataConflicts",
   signature("GrafoDB", "ANY"),
   function(x, name = NULL) {
@@ -136,7 +136,7 @@ setMethod(
     if (nrow(df)) {
       ret <- list()
       lista <- as.character(df$name)
-        foreach::foreach(name = iterators::iter(lista), .combine = rbind) %do% {
+        foreach::`%do%`(foreach::foreach(name = iterators::iter(lista), .combine = rbind), {
         autore <- df[df$name == name, "autore"]
         current_autore <- df[df$name == name, "old_autore"]
 
@@ -165,18 +165,18 @@ setMethod(
         }
 
         ret[[name]] <- cbind(nuova, autore, current, current_autore, differenza)
-      }
+      })
       ret
     }
   })
 
-setGeneric(
+methods::setGeneric(
   "getFormulaConflicts",
   function(x, name = NULL) {
     standardGeneric("getFormulaConflicts")
   })
 
-setMethod(
+methods::setMethod(
   "getFormulaConflicts",
   signature("GrafoDB", "ANY"),
   function(x, name = NULL) {
@@ -205,13 +205,13 @@ setMethod(
 #' @param name nome della serie da cui eliminare un conflitto
 #' @export
 
-setGeneric(
+methods::setGeneric(
   "fixConflicts",
   function(x, name = NULL) {
     standardGeneric("fixConflicts")
   })
 
-setMethod(
+methods::setMethod(
   "fixConflicts",
   signature("GrafoDB"),
   function(x, name = NULL) {
@@ -220,14 +220,14 @@ setMethod(
 
 #' Trova le serie che sono cambiate nel database
 #'
-#' @name getChangedSeries
-#' @usage getChangedSeries(x)
+#' @name get_changed_series_names
+#' @usage get_changed_series_names(x)
 #' @param x istanza di Grafo
 #' @param con eventuale connessione al database (se non presente, ne crea una)
 #' @return lista di nomi di serie cambiate sul database rispetto ad X
 #' @note funzione interna
 
-getChangedSeries <- function(x, con = NULL) {
+get_changed_series_names <- function(x, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -246,7 +246,7 @@ getChangedSeries <- function(x, con = NULL) {
   unique(nomi)
 }
 
-getOuterDataNames <- function(x, con = NULL) {
+get_outer_data_names <- function(x, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -264,7 +264,7 @@ getOuterDataNames <- function(x, con = NULL) {
   as.character(df$name)
 }
 
-getOuterFormulaNames <- function(x, con = NULL) {
+get_outer_formula_names <- function(x, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -289,45 +289,45 @@ getOuterFormulaNames <- function(x, con = NULL) {
 #' @include functions.r
 #' @include db.r persistence_utils.r
 
-checkConflicts <- function(x, con = NULL) {
+check_conflicts <- function(x, con = NULL) {
   tag <- x@tag
 
   data <- x@data
   functions <- x@functions
 
-  nameData <- hash::keys(x@data)
-  namesFormule <- hash::keys(x@functions)
+  names_data <- hash::keys(x@data)
+  names_formule <- hash::keys(x@functions)
 
-  outerDataNames <- getOuterDataNames(x, con = con)
-  outerFormulaNames <- getOuterFormulaNames(x, con = con)
+  outer_names_data <- get_outer_data_names(x, con = con)
+  outer_names_formule <- get_outer_formula_names(x, con = con)
 
-  datiComuni <- intersect(nameData, outerDataNames)
-  if (length(datiComuni) > 0) {
+  common_data <- intersect(names_data, outer_names_data)
+  if (length(common_data) > 0) {
     # trovo solo le root
-    soloRoots <- intersect(.roots(x), datiComuni)
-    if (length(soloRoots) > 0) {
+    only_roots <- intersect(.roots(x), common_data)
+    if (length(only_roots) > 0) {
       # Controllo una ad una le radici e verifico differenze di valori
-      dati.db <- loadDati(tag, con = con)
-      for (name in unique(soloRoots)) {
-        outerTs <- as.character(dati.db[dati.db$name == name, "dati"])
-        innerTs <- as.character(to.data.frame(x[[name]])[1, "dati"])
-        if ( outerTs != innerTs ) {
-          creaConflittoDati(x, name, con = con)
+      dati_db <- loadDati(tag, con = con)
+      for (name in unique(only_roots)) {
+        outer_ts <- as.character(dati_db[dati_db$name == name, "dati"])
+        inner_ts <- as.character( to_data_frame(x[[name]])[1, "dati"])
+        if ( outer_ts != inner_ts ) {
+          create_data_conflicts(x, name, con = con)
         }
       }
     }
   }
 
-  formuleComuni <- intersect(namesFormule, outerFormulaNames)
-  if (length(formuleComuni) > 0) {
+  common_functions <- intersect(names_formule, outer_names_formule)
+  if (length(common_functions) > 0) {
     #controllo ogni nome per verificare differenze.
     formule.db <- loadFormule(tag, con = con)
-    formule.db <- formule.db[formule.db$name %in% formuleComuni, ]
+    formule.db <- formule.db[formule.db$name %in% common_functions, ]
     for (name in unique(as.character(formule.db$name))) {
       formula.db <- formule.db[formule.db$name == name, ]$formula
       if (formula.db != functions[[name]]) {
         ## crea conflitto su formule per name
-        creaConflittoFormule(x, name, formula.db, con = con)
+        create_function_conflicts(x, name, formula.db, con = con)
       }
     }
   }
@@ -335,10 +335,9 @@ checkConflicts <- function(x, con = NULL) {
   x
 }
 
-#' @importFrom foreach %do%
 #' @include db.r persistence_utils.r
 
-creaConflittoDati <- function(x, nomi, con = NULL) {
+create_data_conflicts <- function(x, nomi, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -351,10 +350,11 @@ creaConflittoDati <- function(x, nomi, con = NULL) {
   autore <- rutils::whoami()
   helper <- x@helper
   timestamp <- time.in.millis()
-  dati <- foreach::foreach(name = iterators::iter(nomi), .combine = rbind) %do% {
+  dati <- foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi), 
+    .combine = rbind), {
 
     tt <- x[[name]]
-    df <- to.data.frame(tt, name)
+    df <-  to_data_frame(tt, name)
     anno <- df$anno
     prd <- df$periodo
     freq <- df$freq
@@ -374,13 +374,14 @@ creaConflittoDati <- function(x, nomi, con = NULL) {
     }, error = function(cond) {
       stop(cond)
     })
-  }
+  })
+
   warning(
     "Ci sono conflitti sui dati per le serie: ",
     paste(nomi, collapse = ", "))
 }
 
-creaConflittoFormule <- function(x, nomi, formula.db, con = NULL) {
+create_function_conflicts <- function(x, nomi, formula.db, con = NULL) {
 
   conWasNull <- is.null(con)
   con <- if (is.null(con)) {
@@ -396,7 +397,7 @@ creaConflittoFormule <- function(x, nomi, formula.db, con = NULL) {
   helper <- x@helper
 
   timestamp <- time.in.millis()
-  foreach::foreach(name = iterators::iter(nomi)) %do% {
+  foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi)), {
     sql1 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE1",
       formula = formula.db,
@@ -415,7 +416,7 @@ creaConflittoFormule <- function(x, nomi, formula.db, con = NULL) {
       tag = tag,
       last_updated = timestamp)
     DBI::dbExecute(con, sql2)
-  }
+  })
 
   warning(
     "Ci sono conflitti sulle formule per le serie: ",

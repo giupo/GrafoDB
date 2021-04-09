@@ -12,8 +12,8 @@
 
 .expr <- function(x, nomi, echo=FALSE) {
   functions <- x@functions
-  in.functions <- intersect(hash::keys(functions), nomi)
-  da.caricare.db <- setdiff(nomi, in.functions)
+  in_functions <- intersect(hash::keys(functions), nomi)
+  da.caricare.db <- setdiff(nomi, in_functions)
   from.db <- if(length(da.caricare.db)) {
     dbformule <- x@dbformule
     dbformule[dbformule$name %in% nomi, c("name", "formula")]
@@ -21,13 +21,13 @@
     data.frame(name=character(), formula=character())
   }
    
-  in.functions <- foreach::foreach(
-    row=iterators::iter(in.functions, by='row'),
-    .combine=rbind) %do% {
+  in_functions <- foreach::`%do%`(foreach::foreach(
+    row=iterators::iter(in_functions, by='row'),
+    .combine=rbind), {
       data.frame(name=row, formula=functions[[row]])
-    }
+    })
   
-  formule <- rbind(in.functions, from.db)
+  formule <- rbind(in_functions, from.db)
   
   if(nrow(formule) == 0) {
     NULL

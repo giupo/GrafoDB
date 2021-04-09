@@ -12,9 +12,9 @@ setup <- function(x) {
 test_that("if I apply a patch I get a new GrafoDB with new formulas", {
   g <- setup("test")
   on.exit({
-    elimina("test")
-    elimina("primo")
-    elimina("secondo")
+    delete_graph("test")
+    delete_graph("primo")
+    delete_graph("secondo")
   })
 
   saveGraph(g)
@@ -45,9 +45,9 @@ test_that("if I apply a patch I get a new GrafoDB with new formulas", {
 test_that("If no column from diff is specified, it gets the most recent", {
   g <- setup("test")
   on.exit({
-    elimina("test")
-    elimina("primo")
-    elimina("secondo")
+    delete_graph("test")
+    delete_graph("primo")
+    delete_graph("secondo")
   })
 
   saveGraph(g)

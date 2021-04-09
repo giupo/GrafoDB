@@ -5,34 +5,34 @@ identicalts <- function(x, y, toll=0.000001) {
   all(x-y < toll)
 }
 
-test_that("to.data.frame converte correttamente una serie", {
+test_that(" to_data_frame converte correttamente una serie", {
   tt <- ts(runif(10), start=c(1990,1), frequency=4)
-  df <- to.data.frame(tt, "TEST")
+  df <-  to_data_frame(tt, "TEST")
   expect_true(identicalts(tt, from.data.frame(df)[[df$name]]))
 })
 
-test_that("to.data.frame converte correttamente vettori", {
+test_that(" to_data_frame converte correttamente vettori", {
   tt <- runif(10)
-  df <- to.data.frame(tt, "TEST")
+  df <-  to_data_frame(tt, "TEST")
   expect_true(identicalts(tt, from.data.frame(df)$TEST))
 })
 
-test_that("to.data.frame converte correttamente scalari", {
+test_that(" to_data_frame converte correttamente scalari", {
   tt <- 1
-  df <- to.data.frame(tt, "TEST")
+  df <-  to_data_frame(tt, "TEST")
   expect_true(identicalts(tt, from.data.frame(df)$TEST))
 })
 
 
-test_that("to.data.frame converte correttamente missing", {
+test_that(" to_data_frame converte correttamente missing", {
   tt <- NA
-  df <- to.data.frame(tt, "TEST")
+  df <-  to_data_frame(tt, "TEST")
   expect_true(identical(tt, from.data.frame(df)$TEST))
 })
 
-test_that("to.data.frame converte correttamente vettori di missing", {
+test_that(" to_data_frame converte correttamente vettori di missing", {
   tt <- c(NA, NA)
-  df <- to.data.frame(tt, "TEST")
+  df <-  to_data_frame(tt, "TEST")
   expect_true(identical(tt, from.data.frame(df)$TEST))
 })
 
@@ -63,41 +63,42 @@ test_that(".decluter_functions preserves commnets", {
   expect_equal(f, "# comment here\nA")
 })
 
-test_that("checkDAG raises an exception with a cycle in network", {
+test_that("check_dag raises an exception with a cycle in network", {
   g <- igraph::graph.empty(directed=TRUE)
   g <- g + igraph::vertex("A")
   g <- g + igraph::vertex("B")
   g <- g + igraph::edge("A", "B")
-  expect_error(checkDAG(g), NA)
+  expect_error(check_dag(g), NA)
   g <- g + igraph::edge("B", "A")
-  expect_error(checkDAG(g), "Cycles found")
+  expect_warning(expect_error(check_dag(g), "Cycles found"),
+    "partial result is returned")
 })
 
-test_that("elimina deletes a GrafoDB", {
-  for(tag in rilasci("test")$tag) elimina(tag)
+test_that("delete deletes a GrafoDB", {
+  for(tag in rilasci("test")$tag) delete_graph(tag)
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   df <- rilasci("test")
   expect_equal(nrow(df), 1)
 })
 
-test_that("elimina handles exceptions", {
+test_that("delete handles exceptions", {
   on.exit({
-    for(tag in rilasci("test")$tag) elimina(tag)
+    for(tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")
   with_mock(
     'DBI::dbCommit'= function(...) stop("error test"), {
-      expect_error(elimina(g), "error test")
-      expect_error(elimina("test"), "error test")
+      expect_error(delete_graph(g), "error test")
+      expect_error(delete_graph("test"), "error test")
     })
 })
 
 test_that("schemaFileFromEnv returns a consistent file", {
-  expect_true(is.list(dbSettings(TRUE)))
+  expect_true(is.list(db_settings(TRUE)))
   test_file <- schemaFileFromEnv("test")
   prod_file <- schemaFileFromEnv("prod")
   collaudo_file <- schemaFileFromEnv("collaudo")

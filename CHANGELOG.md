@@ -2,8 +2,44 @@ Changelog
 =========
 
 
-(unreleased)
-------------
+v1.36.0 (2021-04-09)
+--------------------
+- Bump version: 1.35.13 → 1.36.0. [giupo]
+- Updates deps in renv.lock. [giupo]
+- Merge branch 'feature/updateDeps' into develop. [giupo]
+- Update NAMESPACE. [giupo]
+- Remove unused code. [giupo]
+- Yay no warnings. [giupo]
+- Yay no warnings. [giupo]
+- Several code reviews. [giupo]
+- Several name changes accourdin to standard. [giupo]
+- Several changes, fixed deps. [giupo]
+- Cosmetics. [giupo]
+
+
+v1.35.13 (2020-12-23)
+---------------------
+- Bump version: 1.35.12 → 1.35.13. [giupo]
+- Bump version: 1.35.12 → 1.35.12. [giupo]
+- Adds grafo() [giupo]
+- Adds function for creating GrafoDB. [giupo]
+- Fix #7 and cfin/ContiFinanziari#60. [giupo]
+- Execute perm on autotest.r. [giupo]
+- Trying to work around ContiFinanziari#60. [giupo]
+- Specify version in Dockerfile. [giupo]
+- Excludes renv from watchlist. [giupo]
+
+
+v1.35.12 (2020-07-02)
+---------------------
+- Bump version: 1.35.11 → 1.35.12. [Giuseppe Acito]
+- Fix missing /1000 on diff query. [Giuseppe Acito]
+
+
+v1.35.11 (2020-07-02)
+---------------------
+- Bump version: 1.35.10 → 1.35.11. [Giuseppe Acito]
+- To_timestamp. [Giuseppe Acito]
 - Updates NAMESPACE/docs. [Giuseppe Acito]
 
 

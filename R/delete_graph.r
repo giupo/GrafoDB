@@ -1,5 +1,5 @@
 
-.elimina <- function(tag, con, helper) {
+.delete_graph <- function(tag, con, helper) {
   DBI::dbExecute(con, getSQLbyKey(helper, "DELETE_GRAFI", tag=tag))
   DBI::dbExecute(con, getSQLbyKey(helper, "DELETE_CONFLITTI", tag=tag))
   orig_tables <- c("archi", "dati", "metadati", "formule")
@@ -14,21 +14,20 @@
   }
 }
 
-#' Elimina un edizione del grafo
+#' Deletes a Graph from the DB
 #'
-#' Cancella dal database un edizione del grafo partendo dal suo `tag`
+#' Deletes a graph by its tag
 #'
-#' @name elimina
-#' @usage elimina(tag)
-#' @param tag `tag` che distingue in modo univoco il grafo ed i suoi dati
+#' @name delete_graph
+#' @usage delete_graph(tag)
+#' @param tag `tag` as the primary key of the Graph
 #' @export
 #' @include functions.r
 #' @include db.r
 #' @include sqlhelper.r
 
-elimina <- function(tag) {
-
-  if(is.grafodb(tag)) {
+delete_graph <- function(tag) {
+  tag <- if(is.grafodb(tag)) {
     tag <- tag@tag
   } else {
     tag <- tolower(tag)
@@ -40,7 +39,7 @@ elimina <- function(tag) {
 
   tryCatch({
     DBI::dbBegin(con)
-    .elimina(tag, con, helper)
+    .delete_graph(tag, con, helper)
     DBI::dbCommit(con)
   }, error = function(err) {
     DBI::dbRollback(con)

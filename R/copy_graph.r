@@ -1,7 +1,7 @@
-#' @include redis.r sqlhelper.r
+#' @include sqlhelper.r
 #' @include persistence_utils.r
 
-.copyGraph <- function(from, to, con, ...) {
+copy_graph <- function(from, to, con, ...) {
   param_list <- list(...)
   commento <- if('msg' %in% names(param_list)) {
     param_list[["msg"]]
@@ -30,20 +30,23 @@
   params <- cbind(to, autore, from)
 
   ## copia archi
-  DBI::dbExecute(con, getSQLbyKey(helper, "COPY_DATI", to=to, from=from))
+  DBI::dbExecute(con, getSQLbyKey(
+    helper, "COPY_DATI", to = to, from = from))
 
   ## copia archi
-  DBI::dbExecute(con, getSQLbyKey(helper, "COPY_ARCHI", to=to, from=from))
-  
+  DBI::dbExecute(con, getSQLbyKey(
+    helper, "COPY_ARCHI", to = to, from = from))
+
   ## copia formule
-  DBI::dbExecute(con, getSQLbyKey(helper, "COPY_FORMULE", to=to, from=from))
+  DBI::dbExecute(con, getSQLbyKey(
+    helper, "COPY_FORMULE", to = to, from = from))
 
   ## copio metadati
-  DBI::dbExecute(con, getSQLbyKey(helper, "COPY_METADATI", to=to, from=from))
-  
-  ## copia asincrona metadati 
-  ## sendCopyMetadati(from, to)
   DBI::dbExecute(con, getSQLbyKey(
-    helper, "INSERT_GRAFI", tag=to, commento=commento, autore=autore,
+    helper, "COPY_METADATI", to = to, from = from))
+
+  DBI::dbExecute(con, getSQLbyKey(
+    helper, "INSERT_GRAFI", tag = to,
+    commento = commento, autore = autore,
     last_updated=time.in.millis()))
 }

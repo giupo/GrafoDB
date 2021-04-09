@@ -8,19 +8,18 @@
 #' @param x un istanza di GrafoDB
 #' @param name array di nomi di serie
 #' @param livello numero di livelli (ordine) da considerare (di default, tutti)
-#' @importFrom methods setGeneric
 #' @return nomi di serie
 #' @export
 #' @exportMethod upgrf
 #' @include navigate.r
 
-setGeneric(
+methods::setGeneric(
   "upgrf",
   function(x, name, livello=.Machine$integer.max) {
     standardGeneric("upgrf")
   })
 
-setMethod(
+methods::setMethod(
   "upgrf",
   signature("GrafoDB", "character", "ANY"),
   function(x, name, livello=.Machine$integer.max) {
