@@ -5,8 +5,6 @@
 \title{Edita un la formula di una serie storica.}
 \usage{
 edita(x, name)
-
-edita(x, name)
 }
 \arguments{
 \item{x}{istanza di grafo}
@@ -15,11 +13,7 @@ edita(x, name)
 }
 \value{
 il grafo con la formula modificata
-
-il grafo con la formula modificata
 }
 \description{
-Edita un la formula di una serie storica.
-
 Edita un la formula di una serie storica.
 }

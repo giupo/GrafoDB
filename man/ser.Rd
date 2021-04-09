@@ -5,23 +5,17 @@
 \title{Valuta una singola serie del grafo e ritorna il risultato}
 \usage{
 ser(x, name)
-
-ser(x, name)
 }
 \arguments{
 \item{x}{un istanza di GrafoDB}
 
 \item{name}{nome della serie da valutare}
 
-\item{debug}{se `TRUE` attiva la modalita' di debugging}
+\item{debug}{debug mode (`FALSE` default)}
 }
 \value{
 la serie valutata
-
-la serie valutata
 }
 \description{
-Valuta una singola serie del grafo e ritorna il risultato
-
 Valuta una singola serie del grafo e ritorna il risultato
 }

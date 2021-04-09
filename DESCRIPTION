@@ -44,6 +44,7 @@ Suggests:
     RSQLite
 Collate:
     'check_dag.r'
+    'logging.r'
     'db.r'
     'persistence_utils.r'
     'sqlhelper.r'
@@ -54,7 +55,6 @@ Collate:
     'persistence.r'
     'functions.r'
     'rename.r'
-    'ser.r'
     'metadati.r'
     'expr.r'
     'evaluate.r'
@@ -70,10 +70,10 @@ Collate:
     'utils.r'
     'formule.r'
     'life_cycle.r'
-    'logging.r'
     'old_grafo_impl.r'
     'patch.r'
     'rmNode.r'
+    'ser.r'
     'subsetting.r'
     'upgrf.r'
 RoxygenNote: 7.1.1

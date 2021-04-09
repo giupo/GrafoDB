@@ -537,6 +537,7 @@ methods::setMethod(
 #' @param debug debug mode (`FALSE` default)
 #' @return la serie valutata
 #' @export
+#' @exportMethod ser
 
 methods::setGeneric(
   "ser",
