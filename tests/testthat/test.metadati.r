@@ -152,25 +152,6 @@ test_that(".values returns values of all metadata, or per key basis", {
   expect_equal(v, c("VALUE1", "VALUE2"))
 })
 
-test_that("I get additional TICKET metadata from issue tracker", {
-  g <- setup("test")
-  on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
-  })
-
-  require(mockery)
-  stub(.getMetadata, 'get_tickets_urls_for_name', function(x, name) {
-    expect_equal(name, "A")
-    "http://unusedhost/ticket/1"
-  })
-  stub(.getMetadata, 'ticket', function(id) {
-    expect_equal(id, 2)
-    "[1,2,3,{'status':'open'}]"
-    df <- .getMetadata(g, "A") # qui si solleva un warning
-    expect_true("TICKET" %in% df$key)
-  })
-})
-
 test_that("I can remove all metadata with a single key entry", {
   g <- setup("test")
   on.exit({
