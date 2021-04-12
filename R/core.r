@@ -734,12 +734,12 @@ methods::setMethod(
   })
 
 .dollar <- function(x, name, value) {
-  x <- .subsetting(x, name, value)
+  x <- subsetting(x, name, value)
   invisible(x)
 }
 
 methods::setReplaceMethod(
-  "$", c(x="GrafoDB", value="ANY"),
+  "$", c(x = "GrafoDB", value = "ANY"),
   function(x, name, value) {
     .dollar(x, name, value)
   })

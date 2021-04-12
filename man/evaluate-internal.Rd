@@ -2,6 +2,7 @@
 % Please edit documentation in R/evaluate.r
 \name{.evaluate}
 \alias{.evaluate}
+\alias{.evaluate00}
 \title{Implementazione del generic `evaluate` definito nel package `grafo`
 per la classe `GrafoDB`}
 \usage{
@@ -13,5 +14,6 @@ per la classe `GrafoDB`}
 il grafo con i dati correttamente valutato
 }
 \description{
-Questa funzione valuta i nodi del grafo in parallelo
+Implementazione del generic `evaluate` definito nel package `grafo`
+per la classe `GrafoDB`
 }
