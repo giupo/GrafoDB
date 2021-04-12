@@ -4,7 +4,7 @@
 update_data <- function(x, con, tag = x@tag, notes = "") {
   ln <- "GrafoDB::update_data"
 
-  if (interactive()) flog.info("Update Data ...", name = ln)
+  if (interactive()) info("Update Data ...", name = ln)
 
   data <- x@data
   helper <- x@helper
@@ -64,7 +64,5 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
       stop(cond)
     })
   }
-  if (interactive()) {
-    flog.info("Update Data done.", name = ln)
-  }
+  if (interactive()) info("Update Data done.", name = ln)
 }

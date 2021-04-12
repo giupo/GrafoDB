@@ -6,7 +6,7 @@ setup <- function(tag) {
   g["C"] <- function(A, B) {
     C = (A + 1) * (B + 2)
   }
-  saveGraph(g)
+  g <- saveGraph(g)
   
   setMeta(g, "A", "KEY", "VALUE1")
   setMeta(g, "A", "KEY", "VALUE2")
@@ -15,64 +15,69 @@ setup <- function(tag) {
 }
 
 
-test_that("I can edit a function", {
-  skip("mockery can't stub a S4 generic implementation")
+test_that("I can edit a function 1", {
   skip_if_not(require(mockery), "mockery required")
   on.exit(delete_graph("test"))
   g <- setup("test")
 
-  stub(edita, 'utils::file.edit', function(file, title) {
-    write("function(A, B)\n{ C = A/B }", file=file)
+  stub(.edita, 'utils::file.edit', function(file, title = title) {
+    message(file)
+    task <- "C = A / B"
+    deps <- c("A", "B")
+    name <- "C"
+    write(.clutter_with_params(task, name, deps) , file = file)
   })
-  edita(g, "C")
+
+  g <- .edita(g, "C")
   expect_equal(g@functions[["C"]], "C = A/B")
-  stub(edita, 'file.edit', function(file, title) {
-    write("function(A, B)\n{ D = A - B }", file=file)
+})
+
+test_that("I can edit a function 2", {
+  skip_if_not(require(mockery), "mockery required")
+  on.exit(delete_graph("test"))
+  g <- setup("test")
+
+  stub(.edita, 'utils::file.edit', function(file, title=title) {
+    task <- "D = A - B"
+    deps <- c("A", "B")
+    name <- "D"
+    write(.clutter_with_params(task, name, deps) , file = file)
   })
-  edita(g, "D")
+  g <- .edita(g, "D")
   expect_equal(g@functions[["D"]], "D = A - B")
-  expect_true("D" %in% igraph::V(g@network)$name)
-
-  stub(edita, 'utils::file.edit', function(file, title) {
-    write("function(A, B)\n{ C = A /// B }", file=file)
-  })
-  expect_error(edita(g, "C"))
-  expect_equal(g@functions[["C"]], "C = A /// B")
 })
 
-test_that("I can edit a root, making it a formula", {
-  skip("mockery can't stub a S4 generic implementation")    
+test_that("I can replace a function", {
   skip_if_not(require(mockery), "mockery required")
   on.exit(delete_graph("test"))
   g <- setup("test")
-  stub(edita, 'utils::file.edit', function(file, title) {
-    write("function()\n{ A = 1 }", file=file)
+
+  stub(.edita, 'utils::file.edit', function(file, title=title) {
+    task <- "C = A - B"
+    deps <- c("A", "B")
+    name <- "C"
+    write(.clutter_with_params(task, name, deps) , file = file)
   })
-  expect_equal(deps(g, "A"), c())
-  edita(g, "A")
-  expect_equal(g@functions[["A"]], "A = 1")
+  g <- .edita(g, "C")
+  expect_equal(g@functions[["C"]], "C = A - B")
 })
 
-test_that("nothing changes if I don't modify a formula", {
-  skip("mockery can't stub a S4 generic implementation")    
+
+test_that("nothing changes if I don't modify a formula", { 
   skip_if_not(require(mockery), "mockery required")
   on.exit(delete_graph("test"))
   g <- setup("test")
-  stub(edita, 'utils::file.edit', function(file, title) {
-    write("function(A, B)\n{ C = (A + 1) * (B + 2) }", file=file)
+
+  mock_edita <- mock(function(file, title=title) {
+    task <- "C = (A + 1) * (B + 2)"
+    name <- "C"
+    deps <- c("A", "B")
+    write(.clutter_with_params(task, name, deps) , file = file)
   })
-  edita(g, "C")
+
+  stub(.edita, "utils::file.edit", mock_edita)
+  g <- .edita(g, "C")
+
   expect_true(!"C" %in% hash::keys(g@functions))
-})
-
-test_that("If I edit a root, and I do nothing, still keep the node as root and nothing changes", {
-  skip("mockery can't stub a S4 generic implementation")    
-  skip_if_not(require(mockery), "mockery required")
-  on.exit(delete_graph("test"))
-  g <- setup("test")
-  stub(edita, 'utils::file.edit', function(file, title) {
-    write("function() { A = ... # work it\n}", file=file)
-    })
-  expect_error(edita(g, "A"))
-  expect_true(!"A" %in% hash::keys(g@functions))
+  expect_called(mock_edita, 1)
 })

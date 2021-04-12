@@ -44,7 +44,7 @@ methods::setMethod(
   }
 
   .Object@type <- type
-  flog.trace("SQLHeleperType: %s", type, name="GrafoDB.sqlhelper" )
+  trace("SQLHeleperType: %s", type, name="GrafoDB.sqlhelper" )
   .Object@sqlContainer <- rutils::ini_parse(
     file.path(system.file(package="GrafoDB", mustWork=T),
               "ini/sql.ini"))[[.Object@type]]
@@ -89,7 +89,7 @@ methods::setMethod(
   }
 
 
-  flog.trace("Query for key '%s' = %s", .key, sql, name='GrafoDB.sqlhelper')
+  trace("Query for key '%s' = %s", .key, sql, name='GrafoDB.sqlhelper')
   sql
 }
 

@@ -546,7 +546,8 @@
       "RemoteRef": "HEAD",
       "RemoteSha": "36f957e2c9979a514b57df6dfdd9e310bdcf4e00",
       "Remotes.1": "github::giupo/rutils",
-      "Hash": "c67638a5053328125298a5b6fe0dece4"
+      "Remotes.2": "github::giupo/rutils",
+      "Hash": "ca93cdb4f11214d8416ea1884115518f"
     },
     "rematch2": {
       "Package": "rematch2",
@@ -622,11 +623,11 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "rutils",
       "RemoteUsername": "giupo",
-      "RemoteRef": "HEAD",
+      "RemoteRepo": "rutils",
+      "RemoteRef": "master",
       "RemoteSha": "45c96dd5a22927a3d548f83af6e617fd5350f344",
-      "Hash": "9184288d62c8a80c75a66e14af62b071"
+      "Hash": "74764e0f6bba4074a96c1728e7506ba8"
     },
     "rversions": {
       "Package": "rversions",
