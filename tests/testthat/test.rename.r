@@ -1,4 +1,4 @@
-context("Rename serie")
+context("Rename nodes")
 
 test_that("I can rename a series before saving it", {
   g <- GrafoDB("test")

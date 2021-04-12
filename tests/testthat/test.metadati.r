@@ -1,4 +1,4 @@
-context("Metadati")
+context("Metadata")
 
 setup <- function(tag) {
   db_settings(TRUE)
@@ -122,7 +122,7 @@ test_that("setMeta su una serie inesistente produce un errore", {
   expect_error(setMeta(g, "NONESISTO", "KEY", "VALUE1"))
 })
 
-context("Metadati [internal functions]")
+context("Metadata [internal functions]")
 
 test_that(".lookupFormula works as expected", {
   g <- setup("test")

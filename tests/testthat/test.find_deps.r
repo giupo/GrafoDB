@@ -1,5 +1,6 @@
 
 context("isError")
+
 test_that("test that isError works", {
     tryCatch({
         stop("hello!")
@@ -17,6 +18,7 @@ test_that("test that isError works", {
 })
 
 context("find_dep_from_error")
+
 test_that("find_dep_from_error doesn't work with anything but errors", {
     
     tryCatch({
@@ -50,6 +52,7 @@ test_that("find_dep_from_error doesn't work with anything but errors", {
 
 
 context("find_deps")
+
 test_that("find_deps throws an error if objects are not found", {
     data <- list(x=1, y=2)
     formula <- "dd = x + y + b"

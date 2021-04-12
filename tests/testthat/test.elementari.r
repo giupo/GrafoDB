@@ -1,4 +1,4 @@
-context("Serie Elementari")
+context("Elementary objects")
 
 setup <- function() {
   g <- GrafoDB("test")

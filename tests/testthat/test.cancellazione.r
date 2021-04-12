@@ -1,4 +1,4 @@
-context("Cancellazione serie")
+context("Deleting objects")
 
 setup <- function(tag) {
   options(SQLHelperType="SQLite")

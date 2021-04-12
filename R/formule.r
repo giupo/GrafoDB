@@ -23,17 +23,15 @@ formule <- function(g, name) {
 
   df <- DBI::dbGetQuery(con, getSQLbyKey(helper, "HISTORY_FORMULE", name=name))
   if(nrow(df) == 0) {
-    data.frame(formula=character(0), tag=character(0), 
-       autore=character(0), last_updated=character(0))
-  } else {
-    normalizeTo9 <- function(x) {
-      if(exponent(x) == 12) x / 1000
-      else x
-    }
-
-    date <- as.POSIXct(mapply(normalizeTo9, df$last_updated), origin="1970-01-01")
-    df$last_updated <- date
-    df <- df[!duplicated(df[, c("formula")]),]
-    df[order(df$last_updated), ]
+    return(data.frame(formula=character(0), tag=character(0), 
+                      autore=character(0), last_updated=character(0)))
   }
+
+  normalize_to_9 <- function(x) rutils::ifelse(exponent(x) == 12, x / 1000, x)
+
+  date <- as.POSIXct(mapply(normalize_to_9, df$last_updated),
+                     origin = "1970-01-01")
+  df$last_updated <- date
+  df <- df[!duplicated(df[, c("formula")]), ]
+  df[order(df$last_updated), ]
 }

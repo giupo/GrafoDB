@@ -1,4 +1,4 @@
-context("Util functions")
+context("Utils functions")
 
 
 identicalts <- function(x, y, toll=0.000001) {

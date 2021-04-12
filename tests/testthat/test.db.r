@@ -1,4 +1,4 @@
-context("DB related functions")
+context("DB interface")
 
 test_that("db_settings can return custom home made ini settings", {
   skip_if_not(require(mockery), "mockery required")

@@ -1,4 +1,4 @@
-context("Funzioni per la persistenza")
+context("Persistence functions")
 
 setup <- function(name) {
   g <- GrafoDB(name)

@@ -1,4 +1,4 @@
-context("SQL helper")
+context("SQLHelper functions")
 
 test_that("I can init an sql helper", {
   sqlHelper <- SQLHelper()

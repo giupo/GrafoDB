@@ -1,4 +1,4 @@
-context("Old API")
+context("Old APIs")
 
 
 setup <- function(tag) {
