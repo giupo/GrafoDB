@@ -20,7 +20,7 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
   }
 
   names.with.conflicts <- intersect(x@touched, as.character(df$name))
-  
+
   names.updated <- setdiff(hash::keys(x@functions), names.with.conflicts)
   if(length(names.updated)) {
     formule <- foreach::`%dopar%`(foreach::foreach(name = iterators::iter(names.updated), .combine=rbind), {
@@ -33,7 +33,7 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
       foreach::`%do%`(foreach::foreach(row = iterators::iter(formule, 'row')), {
         formularow <- row[,1]
         namerow <- row[,3]
-       
+
         DBI::dbExecute(con, getSQLbyKey(
           helper, "UPDATE_FORMULE",
           tag=tag,
