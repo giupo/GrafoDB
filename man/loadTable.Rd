@@ -4,12 +4,12 @@
 \alias{loadTable}
 \title{Legge tutta la tabella dei dati per un determinato tag}
 \usage{
-loadTable(tableName, tag)
+loadTable(table_name, tag)
 
-loadTable(tableName, tag, con)
+loadTable(table_name, tag, con)
 }
 \arguments{
-\item{tableName}{nome della tabella}
+\item{table_name}{nome della tabella}
 
 \item{tag}{nome del tag}
 }

@@ -275,27 +275,27 @@ methods::setMethod(
   })
 
 
-#' implementazione di getDependencies di `package::grafo`
+#' implementazione di get_deps di `package::grafo`
 #'
-#' @name getDependencies
+#' @name get_deps
 #' @title Funzioni del package `grafo`
-#' @usage getDependencies(graph, tsName)
-#' @seealso `grafo::getDependencies`
-#' @exportMethod getDependencies
+#' @usage get_deps(graph, tsName)
+#' @seealso `grafo::get_deps`
+#' @exportMethod get_deps
 
 methods::setGeneric(
-  "getDependencies",
+  "get_deps",
   function(object, tsName) {
-    standardGeneric("getDependencies")
+    standardGeneric("get_deps")
   })
 
 methods::setMethod(
-  "getDependencies",
+  "get_deps",
   signature("GrafoDB", "character"),
   function(object, tsName) {
     ret <- list()
     for(name in tsName) {
-      ret[[name]] <- navigate(object, name, order=1, mode="in")
+      ret[[name]] <- navigate(object, name, order=1, mode = "in")
     }
     
     if(length(ret) == 1) {

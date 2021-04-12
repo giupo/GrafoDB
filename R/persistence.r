@@ -90,7 +90,7 @@
       # senza problemi
       # aggiungo gli archi del DB al presente grafo
       network <- x@network
-      archi <- loadArchi(tag, con=con)
+      archi <- load_edges(tag, con=con)
       archi <- archi[, c("partenza", "arrivo")]
       dbnetwork <- igraph::graph.data.frame(as.data.frame(archi), directed=TRUE)
       network <- igraph::graph.union(network, dbnetwork, byname=TRUE)

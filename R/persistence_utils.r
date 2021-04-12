@@ -1,15 +1,15 @@
 #' Legge tutta la tabella dei dati per un determinato tag
 #'
-#' @name loadTable
-#' @usage loadTable(tableName, tag)
-#' @usage loadTable(tableName, tag, con)
+#' @name load_table
+#' @usage load_table(table_name, tag)
+#' @usage load_table(table_name, tag, con)
 #' @return un data.frame con i dati delle serie storiche
-#' @param tableName nome della tabella
+#' @param table_name nome della tabella
 #' @param tag nome del tag
 #' @note funzione interna
 #' @include db.r
 
-loadTable <- function(tableName, tag, con=NULL) {
+load_table <- function(table_name, tag, con = NULL) {
   con <- if(is.null(con)) {
     cc <- buildConnection()
     on.exit(disconnect(cc))
@@ -17,29 +17,26 @@ loadTable <- function(tableName, tag, con=NULL) {
   } else {
     con
   }
-  
-  fullTableName <- if(class(con) != "SQLiteConnection") {
-    paste0(tableName, '_', tag) # nocov # e' valido solo su Postgres con table partition
-  } else {
-    tableName
-  }
-  
-  df <- if(DBI::dbExistsTable(con, fullTableName)) {
-    ## FIXME: not really smart to load the whole table in memory when you need just a tag
-    ## BUT it's only valid for test environments running SQLite.
-    DBI::dbReadTable(con, fullTableName)
-  } else {
-    stop(fullTableName, " non esiste")
-  }
+
+  full_table_name <- rutils::ifelse(
+    class(con) != "SQLiteConnection",
+    paste0(table_name, '_', tag),
+    table_name)
+
+  df <- rutils::ifelse(
+    DBI::dbExistsTable(con, full_table_name),
+    DBI::dbReadTable(con, full_table_name),
+    stop(full_table_name, " doesn't exist"))
+
 
   # filter out in case of RSQLite
   df <- df[df$tag == tag, ]
-  
+
   unique(df)
 }
 
-loadDati <- function(tag, con=NULL) tryCatch({
-  loadTable('dati', tag, con=con)
+load_data <- function(tag, con=NULL) tryCatch({
+  load_table('dati', tag, con=con)
 }, error=function(cond) {
   data.frame(
     name=character(),
@@ -52,15 +49,16 @@ loadDati <- function(tag, con=NULL) tryCatch({
     autore=character())
 })
 
-loadArchi <- function(tag, con=NULL) tryCatch({
-  loadTable('archi', tag, con=con)
+load_edges <- function(tag, con=NULL) tryCatch({
+  load_table('archi', tag, con=con)
 }, error=function(cond) {
   data.frame(partenza=character(), arrivo=character())
 })
 
-loadMetadati <- function(tag, con=NULL) loadTable('metadati', tag, con=con)
-loadFormule <- function(tag, con=NULL) tryCatch({
-  loadTable('formule', tag, con=con)
+load_metadata <- function(tag, con=NULL) load_table('metadati', tag, con=con)
+
+load_formulas <- function(tag, con=NULL) tryCatch({
+  load_table('formule', tag, con=con)
 }, error=function(cond) {
   data.frame(
     name=character(),
@@ -69,7 +67,7 @@ loadFormule <- function(tag, con=NULL) tryCatch({
     autore=character())
 })
 
-loadGrafi <- function(con=NULL) {
+load_grafi <- function(con=NULL) {
   con <- if(is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -81,7 +79,7 @@ loadGrafi <- function(con=NULL) {
 }
 
 
-createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
+create_new_grafo <- function(x, tag, con = NULL, msg=paste0('Grafo per ', tag)) {
   autore <- rutils::whoami()
   # FIXME: Devo usare i timestamp di R o del DBMS?
   x@timestamp <- time.in.millis()
@@ -116,7 +114,7 @@ createNewGrafo <- function(x, tag, con=NULL, msg=paste0('Grafo per ', tag)) {
 }
 
 
-resync <- function(x, con=NULL) {
+resync <- function(x, con = NULL) {
   if(is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -126,8 +124,8 @@ resync <- function(x, con=NULL) {
   }
   
   tag <- x@tag
-  x@dbdati <- loadDati(tag, con=con)
-  x@dbformule <- loadFormule(tag, con=con)
+  x@dbdati <- load_data(tag, con=con)
+  x@dbformule <- load_formulas(tag, con=con)
   ## e gli archi :?? :)
   x
 }

@@ -307,10 +307,10 @@ check_conflicts <- function(x, con = NULL) {
     only_roots <- intersect(.roots(x), common_data)
     if (length(only_roots) > 0) {
       # Controllo una ad una le radici e verifico differenze di valori
-      dati_db <- loadDati(tag, con = con)
+      dati_db <- load_data(tag, con = con)
       for (name in unique(only_roots)) {
         outer_ts <- as.character(dati_db[dati_db$name == name, "dati"])
-        inner_ts <- as.character( to_data_frame(x[[name]])[1, "dati"])
+        inner_ts <- as.character(to_data_frame(x[[name]])[1, "dati"])
         if ( outer_ts != inner_ts ) {
           create_data_conflicts(x, name, con = con)
         }
@@ -321,7 +321,7 @@ check_conflicts <- function(x, con = NULL) {
   common_functions <- intersect(names_formule, outer_names_formule)
   if (length(common_functions) > 0) {
     #controllo ogni nome per verificare differenze.
-    formule.db <- loadFormule(tag, con = con)
+    formule.db <- load_formulas(tag, con = con)
     formule.db <- formule.db[formule.db$name %in% common_functions, ]
     for (name in unique(as.character(formule.db$name))) {
       formula.db <- formule.db[formule.db$name == name, ]$formula

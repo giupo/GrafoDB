@@ -39,7 +39,7 @@
     on.exit(disconnect(con))
   }
 
-  archi <- loadArchi(tag, con=con)
+  archi <- load_edges(tag, con=con)
   .Object <- resync(.Object, con=con)
 
   network <- if(nrow(archi) > 0) {
@@ -58,7 +58,7 @@
 
   .Object@network <- network
 
-  df <- loadGrafi(con)
+  df <- load_grafi(con)
   dftag <- df[df$tag == tag,]
   if(nrow(dftag)) {
     ## il grafo esiste nel DB
@@ -68,7 +68,7 @@
     }
   } else {
     ## il grafo non esiste nel DB
-    .Object <- createNewGrafo(.Object, tag, con=con)
+    .Object <- create_new_grafo(.Object, tag, con=con)
   }
 
   .Object

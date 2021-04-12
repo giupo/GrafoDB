@@ -44,6 +44,13 @@
       "Repository": "CRAN",
       "Hash": "5465553c5320701393a2daaa42ed58f9"
     },
+    "RPostgreSQL": {
+      "Package": "RPostgreSQL",
+      "Version": "0.6-2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "82cb7737c081ed6b5e528a37f536d864"
+    },
     "RSQLite": {
       "Package": "RSQLite",
       "Version": "2.2.5",
@@ -642,6 +649,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "308013098befe37484df72c39cf90d6e"
+    },
+    "sourcetools": {
+      "Package": "sourcetools",
+      "Version": "0.1.7",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "947e4e02a79effa5d512473e10f41797"
     },
     "stringi": {
       "Package": "stringi",

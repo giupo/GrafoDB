@@ -15,7 +15,7 @@
       task <- new_task
     }
   } else {
-    deps <- getDependencies(x, name)
+    deps <- get_deps(x, name)
     task <- expr(x, name, echo=FALSE)
     if(is.null(task)) {
       warning("la serie ", name, " e' una serie primitiva")

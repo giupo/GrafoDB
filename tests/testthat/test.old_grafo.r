@@ -62,13 +62,13 @@ test_that("listNodes returns all the names of the Graph", {
   expect_true(all(listNodes(g) %in% c("A", "B", "C", "D")))
 })
 
-test_that("getDependencies return parents of an aggregate", {
+test_that("get_deps return parents of an aggregate", {
   on.exit({
     delete_graph("test")
   })
   g <- setup("test")
-  expect_equal(getDependencies(g, "C"), deps(g, "C"))
-  expect_true(all(getDependencies(g, "C") %in% c("A", "B")))
+  expect_equal(get_deps(g, "C"), deps(g, "C"))
+  expect_true(all(get_deps(g, "C") %in% c("A", "B")))
 })
 
 test_that("getTask returns the formula of the aggregate", {

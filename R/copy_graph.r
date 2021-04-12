@@ -27,8 +27,6 @@ copy_graph <- function(from, to, con, ...) {
     rutils::whoami()
   }
 
-  params <- cbind(to, autore, from)
-
   ## copia archi
   DBI::dbExecute(con, getSQLbyKey(
     helper, "COPY_DATI", to = to, from = from))
