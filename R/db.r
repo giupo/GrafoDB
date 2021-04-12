@@ -15,29 +15,29 @@
 db_settings <- function(flush=FALSE) {
   ln <- "GrafoDB.db.db_settings"
   if(flush) {
-    flog.trace("Flushing settings", name=ln)
+    trace("Flushing settings", name=ln)
     options(db_settings=NULL)
   }
 
   settings <- getOption("db_settings", NULL)
 
   if(is.null(settings)) {
-    flog.trace("settings are null", name=ln)
+    trace("settings are null", name=ln)
     home_ini_file <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
-    flog.debug("Ini file: %s", home_ini_file, name=ln)
+    debug("Ini file: %s", home_ini_file, name=ln)
     if(file.exists(home_ini_file)) {
-      flog.debug("%s esiste! lo parso", home_ini_file)
+      debug("%s esiste! lo parso", home_ini_file)
       home_settings <- rutils::ini_parse(home_ini_file)
       options(db_settings=home_settings)
-      flog.debug("settings: %s", home_settings, name=ln, capture=TRUE)
+      debug("settings: %s", home_settings, name=ln, capture=TRUE)
       return(home_settings)
     }
 
-    flog.debug("Reverting to system wide INI", name=ln)
+    debug("Reverting to system wide INI", name=ln)
     filename <- file.path(system.file(package="GrafoDB"), "ini/GrafoDB.ini")
-    flog.debug("File path for system wide INI: %s%", filename, name=ln)
+    debug("File path for system wide INI: %s%", filename, name=ln)
     settings <- rutils::ini_parse(filename)
-    flog.debug("Settings: %s", settings, name=ln, capture=TRUE)
+    debug("Settings: %s", settings, name=ln, capture=TRUE)
     options(db_settings=settings)
   }
   #SQLHelperType_ <- settings[[paste0("ConnectionInfo_", env)]]$driver
@@ -59,7 +59,7 @@ db_settings <- function(flush=FALSE) {
 getenv <- function() {
   ln <- "GrafoDB.db.getenv"
   xx <- Sys.getenv("GRAFODB_ENV", "prod")
-  flog.debug("enviroment setting: %s", xx, name=ln)
+  debug("enviroment setting: %s", xx, name=ln)
   xx
 }
 
@@ -86,13 +86,13 @@ schemaFileFromEnv <- function(env = getenv()) {
   }
 
   schemaFileName <- paste0("schema-", driver, ".sql")
-  flog.debug("Schema file name: %s", schemaFileName, name=ln)
+  debug("Schema file name: %s", schemaFileName, name=ln)
   file <- file.path(system.file(package="GrafoDB"), "sql", schemaFileName)
     if(!file.exists(file)) {
-    flog.error("Schema file doesn't exists: %s", file, name=ln)
+    error("Schema file doesn't exists: %s", file, name=ln)
     stop("Schema file doesn't exists: ", file)
   }
-  flog.debug("Schema filename full path: %s", file, name=ln)
+  debug("Schema filename full path: %s", file, name=ln)
   file
 }
 
@@ -119,7 +119,7 @@ initdbPostgreSQL <- function(env=getenv()) {
 
 initdbSQLite <- function(con, env=getenv()) {
   ln <- "GrafoDB.db.initdbSQLite"
-  flog.debug("Current env is '%s'", env, name=ln)
+  debug("Current env is '%s'", env, name=ln)
   file <- schemaFileFromEnv(env=env)
   sql <- paste(readLines(file), collapse="\n")
 
@@ -130,7 +130,7 @@ initdbSQLite <- function(con, env=getenv()) {
     for(stm in statements) {
       stm <- stringr::str_trim(as.character(stm))
       if(nchar(stm) > 0) {
-        flog.trace("%s", stm, name=ln)
+        trace("%s", stm, name=ln)
         DBI::dbExecute(con, stm)
       }
     }
@@ -163,7 +163,7 @@ buildConnection <- function(env = getenv(), con = NULL) {
   } else if (env == "prod") {
     PostgresConnect()
   } else {
-    flog.error("Unknown env: %s, set GRAFODB_ENV variable to the correct value (prod/test)", env, name=ln)
+    error("Unknown env: %s, set GRAFODB_ENV variable to the correct value (prod/test)", env, name=ln)
     stop("Unknown env: ", env)
   }
 
@@ -193,7 +193,7 @@ SQLiteConnect <- function() {
 # nocov start
 .dbBeginPG <- function(conn) {
   ln <- "GrafoDB.db"
-  flog.trace("start transaction", name=ln)
+  trace("start transaction", name=ln)
   DBI::dbExecute(conn, "START TRANSACTION")
   TRUE
 }
@@ -201,7 +201,7 @@ SQLiteConnect <- function() {
 
 .dbBeginSQLite <- function(conn) {
   ln <- "GrafoDB.db"
-  flog.trace("start transaction", name=ln)
+  trace("start transaction", name=ln)
   DBI::dbExecute(conn, "BEGIN")
   TRUE
 }

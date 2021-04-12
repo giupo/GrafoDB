@@ -43,10 +43,10 @@
 
 .saveGraph <- function(x, tag = x@tag, ...) {
   ln <- "GrafoDB.persistence"
-  flog.trace(".saveGraph started", name=ln)
+  trace(".saveGraph started", name=ln)
 
   ln <- "GrafoDB.persistence.saveGraph"
-  flog.trace(".saveGraph started", name=ln)
+  trace(".saveGraph started", name=ln)
 
   param_list <- list(...)
 
@@ -57,20 +57,20 @@
   }
 
   con <- if('con' %in% names(param_list)) {
-    flog.debug('connection context provided', name=ln)
+    debug('connection context provided', name=ln)
     param_list[['con']]
   }  else {
-    flog.debug('connection has to be created...', name=ln)
+    debug('connection has to be created...', name=ln)
     con <- buildConnection()
     on.exit(disconnect(con))
-    flog.debug('connection created and set to be closed on.exit', name=ln)
+    debug('connection created and set to be closed on.exit', name=ln)
     con
   }
 
-  flog.debug("Message used for saving: %s", msg, name=ln)
+  debug("Message used for saving: %s", msg, name=ln)
 
   tryCatch({
-    flog.trace("beginning transaction", name=ln)
+    trace("beginning transaction", name=ln)
     DBI::dbBegin(con)
 
     if(has_conflicts(x, con=con)) {
@@ -78,7 +78,7 @@
     }
 
     if (need_resync(x)) {
-      flog.info("Resync started", name=ln)
+      info("Resync started", name=ln)
       # risincronizzo i dati del db con la copia nel grafo
       x <- resync(x, con=con)
       # trova serie che necessitano il resync
@@ -104,9 +104,9 @@
     if(.tagExists(tag, con=con)) {
       # se esiste il tag sul DB
       # sto aggiornando il grafo tag
-      flog.trace("'%s' exists on DB, I'm updating it...", tag, name=ln)
+      trace("'%s' exists on DB, I'm updating it...", tag, name=ln)
       if(x@tag != tag) {
-        flog.trace("x@tag ('%s') != tag (%s), execute history, delete tag and recreate a copy of it",
+        trace("x@tag ('%s') != tag (%s), execute history, delete tag and recreate a copy of it",
                    x@tag, tag, name=ln)
         # faccio l'history del tag di destinazione
         do_history(x, tag, con)
@@ -116,27 +116,27 @@
         copy_graph(x@tag, tag, con=con, mesg=msg, helper=x@helper)
       }
       # aggiorno eventuali cambiamenti in sessione
-      flog.trace("update eventual changes in session", name=ln)
+      trace("update eventual changes in session", name=ln)
       update_graph(x, con=con, msg=msg)
     } else {
       if (x@tag == tag) {
-        flog.trace('tag as param equals tag as slot: creating a new graph', name=ln)
+        trace('tag as param equals tag as slot: creating a new graph', name=ln)
         # se non esiste il tag sul DB
         # sto creando un nuovo grafo
         create_graph(x, tag, con=con, msg=msg)
       } else {
         # se i tag sono differenti
         if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
-          flog.trace('have no data, simply create an empty graph', name=ln)
+          trace('have no data, simply create an empty graph', name=ln)
           # non ho dati, creo grafo
           create_graph(x, tag, con=con, msg=msg)
         } else {
           # ho dati, quindi copio il grafo dalla fonte alla
           # destinazione sul DB e...
-          flog.trace('have data, so copying graph... ', name=ln)
+          trace('have data, so copying graph... ', name=ln)
           copy_graph(x@tag, tag, con=con, msg=msg, helper=x@helper)
           # Aggiorno eventuali cambiamenti in sessione
-          flog.trace('... and update eventual changes in session', name=ln)
+          trace('... and update eventual changes in session', name=ln)
           update_graph(x, tag, con=con, msg=msg)
         }
       }

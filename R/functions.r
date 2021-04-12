@@ -30,7 +30,7 @@
     0
   }
 
-  flog.debug("GRAFODB_ENV: %s", getenv(), name=ln)
+  debug("GRAFODB_ENV: %s", getenv(), name=ln)
   .Object@tag <- tag
   .Object@helper <- SQLHelper()
 

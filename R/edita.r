@@ -4,9 +4,10 @@
 #' @include functions.r
 
 .edita <- function(x, name, ...) {
-  file <- tempfile(pattern=paste0(name, "-"), fileext=".R")
+  file <- tempfile(pattern = paste0(name, "-"), fileext = ".R")
   new_task <- paste0(name, " = ... # work it")
-  if(!isNode(x, name)) {
+  is_node <- isNode(x, name)
+  if(! is_node) {
     deps <- c()
     if(name %in% hash::keys(x@functions)) {
       task <- x@functions[[name]]
@@ -39,7 +40,13 @@
   tryCatch({
     f <- eval(parse(text=txtsrc))
     dep <- names(as.list(formals(f)))
-    if(stringr::str_trim(edited) == stringr::str_trim(old_task) && identical(sort(dep), sort(old_deps))) {
+
+    is_same_function <- stringr::str_trim(edited) ==
+      stringr::str_trim(old_task)
+
+    has_same_edges <- identical(sort(dep), sort(old_deps))
+
+    if (is_same_function && has_same_edges) {
       ## non sono cambiati archi: non faccio niente
       return(invisible(x))
     }

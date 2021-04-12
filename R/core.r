@@ -516,7 +516,7 @@ methods::setMethod(
   signature("GrafoDB", "character"),
   function(x, name, ...) {
     nameObject <- deparse(substitute(x))
-    x <- .edita(x, name, ...)
+    x <- .edita(x, name)
     assign(nameObject, x, envir=parent.frame())
     invisible(x)
   })

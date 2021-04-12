@@ -2,7 +2,7 @@ context("Metadati")
 
 setup <- function(tag) {
   db_settings(TRUE)
-  flog.debug("Nome dell'env: %s", Sys.getenv("GRAFODB_ENV"))
+  debug("Nome dell'env: %s", Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
 
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=1)
@@ -150,25 +150,6 @@ test_that(".values returns values of all metadata, or per key basis", {
   v <- GrafoDB:::.values_by_key(g, key="KEY")
   expect_is(v, "character")
   expect_equal(v, c("VALUE1", "VALUE2"))
-})
-
-test_that("I get additional TICKET metadata from issue tracker", {
-  g <- setup("test")
-  on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
-  })
-
-  require(mockery)
-  stub(.getMetadata, 'get_tickets_urls_for_name', function(x, name) {
-    expect_equal(name, "A")
-    "http://unusedhost/ticket/1"
-  })
-  stub(.getMetadata, 'ticket', function(id) {
-    expect_equal(id, 2)
-    "[1,2,3,{'status':'open'}]"
-    df <- .getMetadata(g, "A") # qui si solleva un warning
-    expect_true("TICKET" %in% df$key)
-  })
 })
 
 test_that("I can remove all metadata with a single key entry", {
