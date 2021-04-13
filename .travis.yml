@@ -2,12 +2,6 @@
 
 language: r
 
-cache:
-  directories:
-    - $HOME/.local/share/renv
-    - $TRAVIS_BUILD_DIR/renv
-  packages: true
-  
 sudo: false
 
 addons:
@@ -28,12 +22,15 @@ r:
 # this has to be removed as soon as possible (I know it will last forever :( )  
 warnings_are_errors: false
 
+pandoc: false
+
+latex: false
+
 repos:
   CRAN: http://cran.rstudio.com
 
 r_github_packages:
   - jimhester/covr
-
 
 after_success:
   - make test
