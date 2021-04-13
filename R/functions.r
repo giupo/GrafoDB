@@ -214,7 +214,7 @@ declutter_function <- function(func_string) {
 #' @usage to_function_as_string(f)
 #' @param func_string character array che rappresenta la funzione
 #' @param name name of the object to be returned
-#' @param funcName name of the function (`proxy` default)
+#' @param func_name name of the function (`proxy` default)
 #' @return un character array della funzione orlata
 #' @note funzione interna
 
@@ -454,7 +454,8 @@ exists_tag <- function(tag, con = NULL) {
 #' \item index(a) != index(b)
 #' }
 #' @name tsdiff
-#' @usage tsdiff()
+#' @usage tsdiff(a, b)
+#' @usage tsdiff(a, b, thr)
 #' @param a timeseries
 #' @param b timeseries
 #' @return `TRUE` if `a`!=`b`, `FALSE` otherwise

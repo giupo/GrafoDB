@@ -2,14 +2,12 @@
 % Please edit documentation in R/functions.r
 \name{clutter_with_params}
 \alias{clutter_with_params}
-\title{questa funzione orla la formula del grafo come una funzione}
+\title{questa funzione orla la formula del grafo come una funzione oon parametri}
 \usage{
-clutter_with_params(f, name, deps)
+clutter_with_params(f, deps)
 }
 \arguments{
-\item{f}{function task to be converted as function}
-
-\item{name}{task name}
+\item{func_string}{function task to be converted as function}
 
 \item{deps}{character array di dipendenze}
 }

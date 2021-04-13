@@ -7,7 +7,7 @@
 clutter_with_params_and_return(f, name, deps, funcName)
 }
 \arguments{
-\item{f}{function task to be converted as function}
+\item{func_string}{function task to be converted as function}
 
 \item{name}{task name}
 

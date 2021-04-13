@@ -15,5 +15,6 @@ getdb(name, tag)
 una serie o una lista di serie
 }
 \description{
-Carica i dati direttamente dal DB senza necessita' d'inizializzare un `GrafoDB`
+Carica i dati direttamente dal DB senza necessita' d'inizializzare 
+un `GrafoDB`
 }

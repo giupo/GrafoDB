@@ -2,12 +2,12 @@
 % Please edit documentation in R/functions.r
 \name{to_function_as_string}
 \alias{to_function_as_string}
-\title{Questa funzione orla le funzioni del grafo con `proxy <-function() {` e `}` finale.}
+\title{Orla le formule del grafo in funzioni}
 \usage{
 to_function_as_string(f)
 }
 \arguments{
-\item{f}{character array che rappresenta la funzione}
+\item{func_string}{character array che rappresenta la funzione}
 
 \item{name}{name of the object to be returned}
 
@@ -17,8 +17,13 @@ to_function_as_string(f)
 un character array della funzione orlata
 }
 \description{
+Questa funzione orla le funzioni del grafo con 
+`proxy <-function() {` e `}` finale.
+}
+\details{
 Le istruzioni vengono incapsulate in una funzione generica chiamata proxy.
-gli argomenti devono essere definiti prima nella ambiente per la corretta esecuzione
+gli argomenti devono essere definiti prima nella ambiente per la 
+corretta esecuzione
 }
 \note{
 funzione interna
