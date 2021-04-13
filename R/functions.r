@@ -11,9 +11,9 @@
 #' @include persistence.r sqlhelper.r
 #' @include db.r persistence_utils.r
 
-.init <- function(.Object, tag="cf10", con = NULL) {
+.init <- function(.Object, tag = "cf10", con = NULL) {
   ln <- "GrafoDB.functions.init"
-  if(is.null(tag)) {
+  if (is.null(tag)) {
     tag <- "cf10"
   } else {
     tag <- tolower(tag)
@@ -30,7 +30,7 @@
     0
   }
 
-  debug("GRAFODB_ENV: %s", getenv(), name=ln)
+  debug("GRAFODB_ENV: %s", getenv(), name = ln)
   .Object@tag <- tag
   .Object@helper <- SQLHelper()
 
@@ -39,36 +39,36 @@
     on.exit(disconnect(con))
   }
 
-  archi <- load_edges(tag, con=con)
-  .Object <- resync(.Object, con=con)
+  archi <- load_edges(tag, con = con)
+  .Object <- resync(.Object, con = con)
 
-  network <- if(nrow(archi) > 0) {
+  network <- if (nrow(archi) > 0) {
     archi <- archi[, c("partenza", "arrivo")]
-    igraph::graph.data.frame(as.data.frame(archi), directed=TRUE)
+    igraph::graph.data.frame(as.data.frame(archi), directed = TRUE)
   } else {
-    igraph::graph.empty(directed=TRUE)
+    igraph::graph.empty(directed = TRUE)
   }
 
   .Object@network <- network
   nomi <- names(.Object)
-  if(length(nomi) >0 ) {
-    pending.names <- setdiff(nomi, igraph::V(network)$name)
-    network <- network + igraph::vertex(pending.names)
+  if (length(nomi) > 0) {
+    pending_names <- setdiff(nomi, igraph::V(network)$name)
+    network <- network + igraph::vertex(pending_names)
   }
 
   .Object@network <- network
 
   df <- load_grafi(con)
-  dftag <- df[df$tag == tag,]
-  if(nrow(dftag)) {
+  dftag <- df[df$tag == tag, ]
+  if (nrow(dftag)) {
     ## il grafo esiste nel DB
     .Object@timestamp <- as.numeric(dftag$last_updated)
-    if(interactive()) {
+    if (interactive()) {
       message(dftag$comment)
     }
   } else {
     ## il grafo non esiste nel DB
-    .Object <- create_new_grafo(.Object, tag, con=con)
+    .Object <- create_new_grafo(.Object, tag, con = con)
   }
 
   .Object
@@ -127,15 +127,15 @@ is.grafodb <- function(x) {
   raw_numbers <- as.character(raw_numbers)
   raw_numbers <- gsub(" ", "", raw_numbers)
 
-  if(is.null(name)) {
+  if (is.null(name)) {
     as.data.frame(
-      list(anno=anno, periodo=prd,
-           freq=freq, dati=raw_numbers),
+      list(anno = anno, periodo = prd,
+           freq = freq, dati = raw_numbers),
       stringsAsFactors = FALSE)
   } else {
     as.data.frame(
-      list(name=name, anno=anno, periodo=prd,
-           freq=freq, dati=raw_numbers),
+      list(name = name, anno = anno, periodo = prd,
+           freq = freq, dati = raw_numbers),
       stringAsFactors = FALSE)
   }
 }

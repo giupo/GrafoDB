@@ -131,3 +131,44 @@ test_that("do_history preserves last_updated", {
   expect_false(g1@timestamp == g@timestamp)
   expect_equal(g@timestamp, p@timestamp)
 })
+
+
+test_that("load_metadati calls load_table", {
+  skip_if_not_installed("mockery")
+  mock_load_table <- mockery::mock(TRUE)
+  mockery::stub(load_metadata, "load_table", mock_load_table)
+  expect_error(load_metadata("x"), NA)
+  expect_called(mock_load_table, 1)
+})
+
+test_that("load_grafi handles when con is NULL", {
+  skip_if_not_installed("mockery")
+  build_connection_mock <- mock(TRUE)
+  disconnect_mock <- mock(TRUE)
+  db_read_table_mock <- mock(TRUE)
+
+  mockery::stub(load_grafi, "buildConnection", build_connection_mock)
+  mockery::stub(load_grafi, "disconnect", disconnect_mock)
+  mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
+
+  expect_error(load_grafi(), NA)
+  expect_called(build_connection_mock, 1)
+  expect_called(disconnect_mock, 1)
+  expect_called(db_read_table_mock, 1)
+})
+
+test_that("load_grafi handles when con is not NULL", {
+  skip_if_not_installed("mockery")
+  build_connection_mock <- mock(TRUE)
+  disconnect_mock <- mock(TRUE)
+  db_read_table_mock <- mock(TRUE)
+
+  mockery::stub(load_grafi, "buildConnection", build_connection_mock)
+  mockery::stub(load_grafi, "disconnect", disconnect_mock)
+  mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
+
+  expect_error(load_grafi(con = 1), NA)
+  expect_called(build_connection_mock, 0)
+  expect_called(disconnect_mock, 0)
+  expect_called(db_read_table_mock, 1)
+})
