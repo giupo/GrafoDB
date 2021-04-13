@@ -138,9 +138,9 @@ need_resync <- function(x) {
   on.exit(disconnect(con))
   tag <- x@tag
   df <- DBI::dbGetQuery(con, getSQLbyKey(
-    helper, "NEED_RESYNC", tag=tag,
-    last_updated=as.character(timeStamp)))
-  
+    helper, "NEED_RESYNC", tag = tag,
+    last_updated = as.character(timeStamp)))
+
   df[[1]] > 0
 }
 

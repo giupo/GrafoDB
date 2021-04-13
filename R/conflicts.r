@@ -321,13 +321,13 @@ check_conflicts <- function(x, con = NULL) {
   common_functions <- intersect(names_formule, outer_names_formule)
   if (length(common_functions) > 0) {
     #controllo ogni nome per verificare differenze.
-    formule.db <- load_formulas(tag, con = con)
-    formule.db <- formule.db[formule.db$name %in% common_functions, ]
-    for (name in unique(as.character(formule.db$name))) {
-      formula.db <- formule.db[formule.db$name == name, ]$formula
-      if (formula.db != functions[[name]]) {
+    func_in_db <- load_formulas(tag, con = con)
+    func_in_db <- func_in_db[func_in_db$name %in% common_functions, ]
+    for (name in unique(as.character(func_in_db$name))) {
+      formula_db <- func_in_db[func_in_db$name == name, ]$formula
+      if (formula_db != functions[[name]]) {
         ## crea conflitto su formule per name
-        create_function_conflicts(x, name, formula.db, con = con)
+        create_function_conflicts(x, name, formula_db, con = con)
       }
     }
   }
@@ -381,7 +381,7 @@ create_data_conflicts <- function(x, nomi, con = NULL) {
     paste(nomi, collapse = ", "))
 }
 
-create_function_conflicts <- function(x, nomi, formula.db, con = NULL) {
+create_function_conflicts <- function(x, nomi, formula_db, con = NULL) {
 
   conWasNull <- is.null(con)
   con <- if (is.null(con)) {
@@ -400,7 +400,7 @@ create_function_conflicts <- function(x, nomi, formula.db, con = NULL) {
   foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi)), {
     sql1 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE1",
-      formula = formula.db,
+      formula = formula_db,
       autore = autore,
       name = name,
       tag = tag,
@@ -410,7 +410,7 @@ create_function_conflicts <- function(x, nomi, formula.db, con = NULL) {
 
     sql2 <- getSQLbyKey(
       helper, "CREA_CONFLITTO_FORMULE2",
-      formula = formula.db,
+      formula = formula_db,
       autore = autore,
       name = name,
       tag = tag,
