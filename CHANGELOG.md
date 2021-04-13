@@ -2,6 +2,58 @@ Changelog
 =========
 
 
+v1.36.5 (2021-04-13)
+--------------------
+- Bump version: 1.36.4 → 1.36.5. [giupo]
+- Fix cfin/rcf#116. [giupo]
+- Code linting. [giupo]
+- Simplify travis-ci build. [giupo]
+
+
+v1.36.4 (2021-04-13)
+--------------------
+- Bump version: 1.36.3 → 1.36.4. [giupo]
+- Major code review, adoption of glue. [giupo]
+- Massive revision of code. usage of glue. [giupo]
+- Cosmetics. [giupo]
+- Cosmetics. [giupo]
+- Remove italian. [giupo]
+- Remove describe as is another generic. [giupo]
+
+
+v1.36.3 (2021-04-13)
+--------------------
+- Bump version: 1.36.2 → 1.36.3. [giupo]
+- Merge branch 'develop' [giupo]
+- Remove renv. [giupo]
+
+
+v1.36.2 (2021-04-12)
+--------------------
+- Bump version: 1.36.1 → 1.36.2. [giupo]
+- Several changes in code, code review. [giupo]
+- Switching to english. [giupo]
+- Renaming a bunch of methods. [giupo]
+- Fix merge. [giupo]
+- No skips. [giupo]
+- Several code review and coverage of edita. [giupo]
+- Nothing really. [giupo]
+- Merge branch 'master' of https://github.com/giupo/GrafoDB into
+  develop. [giupo]
+- Updates rstudio. [Giuseppe Acito]
+- Update Dockerfile with latest version (and libgit2) [Giuseppe Acito]
+- Merge branch 'release/bigoverhaul' into develop. [giupo]
+
+
+v1.36.1 (2021-04-09)
+--------------------
+- Bump version: 1.36.0 → 1.36.1. [giupo]
+- Updates RJSONIO. [giupo]
+- Updates rstudio. [Giuseppe Acito]
+- Update Dockerfile with latest version (and libgit2) [Giuseppe Acito]
+- Merge branch 'release/bigoverhaul' [giupo]
+
+
 v1.36.0 (2021-04-09)
 --------------------
 - Bump version: 1.35.13 → 1.36.0. [giupo]
@@ -562,7 +614,7 @@ v1.29.2 (2018-08-28)
 v1.29.1 (2018-08-28)
 --------------------
 - Bump version: 1.29.0 → 1.29.1. [Giuseppe Acito]
-- Remove warning from get_data to restore the behaviour. [Giuseppe
+- Remove warning from .getdata to restore the behaviour. [Giuseppe
   Acito]
 
 
@@ -1208,7 +1260,7 @@ v1.26.3 (2018-07-09)
 - Bump version: 1.2.0 → 1.2.1. [Giuseppe Acito]
 - Sposto rcf, bimets e grafo in Depends. [Giuseppe Acito]
 - Bump version: 1.1.0 → 1.2.0. [Giuseppe Acito]
-- Aggiunto il from_data_frame nativo. [Giuseppe Acito]
+- Aggiunto il from.data.frame nativo. [Giuseppe Acito]
 - Elimino build tools per componenti nativi non piu' usati. [Giuseppe
   Acito]
 - Bump version: 1.0.5 → 1.1.0. [Giuseppe Acito]

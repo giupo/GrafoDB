@@ -9,7 +9,7 @@ R_FILES := $(wildcard R/*.[R|r])
 SRC_FILES := $(wildcard src/*) $(addprefix src/, $(COPY_SRC))
 PKG_FILES := DESCRIPTION NAMESPACE $(R_FILES) $(SRC_FILES)
 
-.PHONY: tarball install check clean build
+.PHONY: tarball install check clean build CHANGELOG.md
 
 tarball: $(PKG_NAME)_$(PKG_VERSION).tar.gz 
 $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
@@ -62,3 +62,5 @@ codecov:
 
 CHANGELOG.md:
 	gitchangelog | grep -v "git-svn-id" > CHANGELOG.md
+
+changelog: CHANGELOG.md
