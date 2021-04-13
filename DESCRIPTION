@@ -1,6 +1,6 @@
 Package: GrafoDB
 Title: simple ETL for timeseries in R
-Version: 1.36.3
+Version: 1.36.4
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
 Description: Complete rewrite of the grafo package: Adds DB backend to Grafo,
     it implements a Graph ETL.
