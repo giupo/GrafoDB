@@ -24,16 +24,6 @@ jobs:
             - deps1-
 
       - run:
-          name: renv
-          command: |
-            R -e 'renv::restore()'
-
-      - save_cache:
-          key: deps1-{{ .Branch }}-{{ checksum "DESCRIPTION" }}
-          paths:
-            - "~/main/renv"
-            - "~/.local/share/renv"
-      - run:
           name: check
           command: |
             R -e 'install.packages("devtools")'

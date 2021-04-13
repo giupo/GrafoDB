@@ -5,13 +5,6 @@ stages:
   - check
   - coverage
 
-cache:
-  paths:
-    - renv/
-
-before_script:
-  - R -e 'renv::restore()'
-
 build:
   stage: build
   tags: 
