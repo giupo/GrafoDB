@@ -53,7 +53,7 @@ methods::setMethod(
 }
 
 
-.getSQLbyKey <- function(x, .key, ...) {
+.sql_by_key <- function(x, .key, ...) {
   sqlContainer <- x@sqlContainer
   if(! .key %in% names(sqlContainer)) {
     stop(.key, " not in query repository")
@@ -101,29 +101,29 @@ methods::setMethod(
 #' Le query hanno una forma "select * from --tab-- where param='--value--'";
 #' Il metodo si occupa di sostiture '--tab--' e '--value--' secondo i valori
 #' passati come argomento: 
-#' Es: `getSQLbyKey(helper, KEYQUERY, tab="A", value="B")`
+#' Es: `sql_by_key(helper, KEYQUERY, tab="A", value="B")`
 #' risultera' in `select * from A where param='B'`
 #' 
-#' @name getSQLbyKey
-#' @usage getSQLbyKey(x, key)
-#' @usage getSQLbyKey(x, key, param=value, param2, value2, ...)
+#' @name sql_by_key
+#' @usage sql_by_key(x, key)
+#' @usage sql_by_key(x, key, param=value, param2, value2, ...)
 #' 
 #' @param x istanza di SQLHelper
 #' @param .key nome della query nel file INI
 #' @return un character array contenente la query SQL
 #' @export
-#' @exportMethod getSQLbyKey
+#' @exportMethod sql_by_key
 
 methods::setGeneric(
-  "getSQLbyKey",
+  "sql_by_key",
   function(x, .key, ...) {
-    standardGeneric("getSQLbyKey")
+    standardGeneric("sql_by_key")
   })
 
 methods::setMethod(
-  "getSQLbyKey",
+  "sql_by_key",
   signature("SQLHelper"),
   function(x, .key, ...) {
-    .getSQLbyKey(x, .key, ...)
+    .sql_by_key(x, .key, ...)
   }
 )

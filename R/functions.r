@@ -492,9 +492,9 @@ rilasci <- function(filtro = NULL) {
   on.exit(disconnect(con))
   helper <- SQLHelper()
   sql <- if(is.null(filtro)) {
-    getSQLbyKey(helper, "TUTTI_RILASCI")
+    sql_by_key(helper, "TUTTI_RILASCI")
   } else {
-    getSQLbyKey(helper, "TUTTI_RILASCI_FILTERED", filtro = filtro)
+    sql_by_key(helper, "TUTTI_RILASCI_FILTERED", filtro = filtro)
   }
 
   data <- DBI::dbGetQuery(con, sql)

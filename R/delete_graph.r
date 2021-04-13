@@ -1,12 +1,12 @@
 
 .delete_graph <- function(tag, con, helper) {
-  DBI::dbExecute(con, getSQLbyKey(helper, "DELETE_GRAFI", tag=tag))
-  DBI::dbExecute(con, getSQLbyKey(helper, "DELETE_CONFLITTI", tag=tag))
+  DBI::dbExecute(con, sql_by_key(helper, "DELETE_GRAFI", tag=tag))
+  DBI::dbExecute(con, sql_by_key(helper, "DELETE_CONFLITTI", tag=tag))
   orig_tables <- c("archi", "dati", "metadati", "formule")
   tables <- paste(orig_tables, tag, sep="_")
   for(table in tables) {
     if(DBI::dbExistsTable(con, table)) {
-      DBI::dbExecute(con, getSQLbyKey(helper, "DROP_TABLE", tab=table)) # nocov      
+      DBI::dbExecute(con, sql_by_key(helper, "DROP_TABLE", tab=table)) # nocov      
     }
   }
   for(table in orig_tables) {

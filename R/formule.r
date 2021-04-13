@@ -21,7 +21,7 @@ formule <- function(g, name) {
     warning(name, " not in this graph", g@tag)
   }
 
-  df <- DBI::dbGetQuery(con, getSQLbyKey(helper, "HISTORY_FORMULE", name=name))
+  df <- DBI::dbGetQuery(con, sql_by_key(helper, "HISTORY_FORMULE", name=name))
   if(nrow(df) == 0) {
     return(data.frame(formula=character(0), tag=character(0), 
                       autore=character(0), last_updated=character(0)))

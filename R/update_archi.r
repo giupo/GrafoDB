@@ -16,7 +16,7 @@ update_edges <- function(x, con, tag=x@tag) {
                              stringsAsFactors = F)
   autore <- rutils::whoami()
   names(in.memory) <- c("partenza", "arrivo")
-  in.db <- DBI::dbGetQuery(con, getSQLbyKey(helper, "ARCHI_TAG", tag=tag))
+  in.db <- DBI::dbGetQuery(con, sql_by_key(helper, "ARCHI_TAG", tag=tag))
 
   sep <- "-"
   in.db <- gdata::drop.levels(in.db)
@@ -28,7 +28,7 @@ update_edges <- function(x, con, tag=x@tag) {
 
   df <- if(length(hash::keys(data))) {
     ## cerco archi aggiunti di recente.
-    DBI::dbGetQuery(con, getSQLbyKey(
+    DBI::dbGetQuery(con, sql_by_key(
       helper, "ARCHI_TAG_LAST_UPDATED",
       tag=tag, last_updated=round(as.numeric(timestamp))))
   } else {
@@ -69,7 +69,7 @@ update_edges <- function(x, con, tag=x@tag) {
     foreach::`%do%`(foreach::foreach(row=iterators::iter(df, by='row')), {
       from <- row$partenza
       to <- row$arrivo
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_ARCHI", tag=tag, from=from, to=to,
         autore=autore, last_updated=time.in.millis()))
     })
@@ -97,7 +97,7 @@ update_edges <- function(x, con, tag=x@tag) {
     foreach::`%do%`(foreach::foreach(row=iterators::iter(df, by='row')), {
       from <- row$partenza
       to <- row$arrivo
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "DELETE_ARCHI", tag=tag, from=from, to=to))
     })
   }

@@ -583,7 +583,7 @@ methods::setMethod(
 methods::setMethod(
   "getMeta",
   signature("GrafoDB", "character", "ANY"),
-  function (x, serie, metadato){
+  function(x, serie, metadato) {
     getMetadata(x, serie)
   })
 
@@ -593,9 +593,9 @@ methods::setMethod(
   function(x) {
     con <- buildConnection()
     on.exit(disconnect(con))
-    DBI::dbGetQuery(con, getSQLbyKey(
+    DBI::dbGetQuery(con, sql_by_key(
       x@helper, "GET_ALL_META",
-      tag=x@tag))
+      tag = x@tag))
   })
 
 #' @include metadati.r

@@ -93,7 +93,7 @@ test_that("Ottengo un errore se accade un errore sul DB nella lettura di Metadat
     delete_graph("test")
   })
   g <- setup("test")
-  stub(.getMeta, 'getSQLbyKey', function(...) stop("error"))
+  stub(.getMeta, 'sql_by_key', function(...) stop("error"))
   expect_error(.getMeta(g, "A", "KEY"), "error")
 })
 
@@ -109,7 +109,7 @@ test_that("setMeta has a warning each time you set an already existing meta", {
     delete_graph("test")
   })
   g <- setup("test")
-  stub(.setMeta, 'warning', function(...) stop("dc"))
+  stub(.setMeta, "warning", function(...) stop("dc"))
 
   expect_error(.setMeta(g, "A", "KEY", "VALUE1"))
 })

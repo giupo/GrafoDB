@@ -17,7 +17,7 @@
   on.exit(disconnect(con))
   tryCatch({
     DBI::dbBegin(con)
-    DBI::dbExecute(con, getSQLbyKey(helper, key, tag = tag, name = name))
+    DBI::dbExecute(con, sql_by_key(helper, key, tag = tag, name = name))
     DBI::dbCommit(con)
   }, error = function(err) {
     DBI::dbRollback(con)
@@ -113,9 +113,9 @@ methods::setMethod(
     tag <- x@tag
     helper <- x@helper
     sql <- if (is.null(name)) {
-      getSQLbyKey(helper, "GET_CONFLICTS", tag = tag)
+      sql_by_key(helper, "GET_CONFLICTS", tag = tag)
     } else {
-      getSQLbyKey(helper, "GET_CONFLICTS_NAME", tag = tag, name = name)
+      sql_by_key(helper, "GET_CONFLICTS_NAME", tag = tag, name = name)
     }
 
     DBI::dbGetQuery(con, sql)
@@ -185,9 +185,9 @@ methods::setMethod(
     con <- buildConnection()
     on.exit(disconnect(con))
     sql <- if (is.null(name)) {
-      getSQLbyKey(helper, "GET_FORMULA_CONFLICTS", tag = tag)
+      sql_by_key(helper, "GET_FORMULA_CONFLICTS", tag = tag)
     } else {
-      getSQLbyKey(helper, "GET_FORMULA_CONFLICTS_NAME", tag = tag, name = name)
+      sql_by_key(helper, "GET_FORMULA_CONFLICTS_NAME", tag = tag, name = name)
     }
     DBI::dbGetQuery(con, sql)
   })
@@ -239,7 +239,7 @@ get_changed_series_names <- function(x, con = NULL) {
   tag <- x@tag
   helper <- x@helper
   timestamp <- x@timestamp
-  df <- DBI::dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "GET_CHANGED_SERIES", tag = tag,
     last_updated = timestamp))
   nomi <- as.character(df$name)
@@ -258,7 +258,7 @@ get_outer_data_names <- function(x, con = NULL) {
   tag <- x@tag
   timestamp <- x@timestamp
   helper <- x@helper
-  df <- DBI::dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "GET_OUTER_DATA_NAMES", tag = tag, last_updated = timestamp,
     autore = autore))
   as.character(df$name)
@@ -278,7 +278,7 @@ get_outer_formula_names <- function(x, con = NULL) {
   timestamp <- x@timestamp
   helper <- x@helper
 
-  df <- DBI::dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "GET_OUTER_FORMULA_NAMES",
     tag = tag, last_updated = timestamp,
     autore = autore))
@@ -361,7 +361,7 @@ create_data_conflicts <- function(x, nomi, con = NULL) {
     dati <- df$dati
 
     tryCatch({
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "CREA_CONFLITTO_DATI",
         tag = tag,
         name = name,
@@ -398,7 +398,7 @@ create_function_conflicts <- function(x, nomi, formula_db, con = NULL) {
 
   timestamp <- time.in.millis()
   foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi)), {
-    sql1 <- getSQLbyKey(
+    sql1 <- sql_by_key(
       helper, "CREA_CONFLITTO_FORMULE1",
       formula = formula_db,
       autore = autore,
@@ -408,7 +408,7 @@ create_function_conflicts <- function(x, nomi, formula_db, con = NULL) {
 
     DBI::dbExecute(con, sql1)
 
-    sql2 <- getSQLbyKey(
+    sql2 <- sql_by_key(
       helper, "CREA_CONFLITTO_FORMULE2",
       formula = formula_db,
       autore = autore,

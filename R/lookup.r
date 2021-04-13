@@ -16,7 +16,7 @@
   ## non ci sono prepared statement funzionanti. maledetti.
   helper <- x@helper
 
-  df <- DBI::dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "LOOKUP_METADATI",
     tag=tag,
     key=key,
@@ -41,7 +41,7 @@
   con <- buildConnection()
   on.exit(disconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
-  df <- DBI::dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "LOOKUP_FORMULA",
     tag=tag,
     key=as.character(key)))
@@ -65,7 +65,7 @@
   con <- buildConnection()
   on.exit(disconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
-  df <- DBI::dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "LOOKUP_DATI",
     tag=tag,
     key=as.character(key)))

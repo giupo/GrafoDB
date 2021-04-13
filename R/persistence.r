@@ -164,7 +164,7 @@ update_graph <- function(x, tag = x@tag, con = NULL, msg = "") {
   update_data(x, con = con, tag = tag, notes = msg)
   update_functions(x, con = con, tag = tag, msg = msg)
   update_edges(x, con = con, tag = tag)
-  DBI::dbExecute(con, getSQLbyKey(
+  DBI::dbExecute(con, sql_by_key(
     helper, "UPDATE_GRAFO_LAST_UPDATED",
     autore=rutils::whoami(),
     tag=tag,
@@ -205,7 +205,7 @@ create_graph <- function(x, tag, con, ...) {
       freq <- as.numeric(df$freq)
       dati <- as.character(df$dati)
 
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_DATI",
         tag=tag,
         name=name,
@@ -226,7 +226,7 @@ create_graph <- function(x, tag, con, ...) {
     foreach::`%do%`(foreach::foreach(row = iterators::iter(archi, 'row')), {
       partenza <- row[,1]
       arrivo <- row[,2]
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_ARCO",
         tag=tag,
         partenza=partenza,
@@ -240,7 +240,7 @@ create_graph <- function(x, tag, con, ...) {
     name = iterators::iter(names(x)), .combine=rbind), {
     formula <- expr(x, name, echo=FALSE)
     if(!is.null(formula)) {
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_FORMULA",
         tag=tag,
         name=name,
@@ -250,7 +250,7 @@ create_graph <- function(x, tag, con, ...) {
     }
   })
 
-  DBI::dbExecute(con, getSQLbyKey(
+  DBI::dbExecute(con, sql_by_key(
     helper, "INSERT_GRAFI", 
     tag=tag,
     commento=commento,
@@ -281,12 +281,12 @@ count_rolling <- function(x, con) {
     ## se PostgreSQL:
     nome_seq <- paste0("grafi_", tag, "_ordinal_seq")
 
-    if(nrow(DBI::dbGetQuery(con, getSQLbyKey(helper, "EXISTS_SEQ", seq=nome_seq))) > 0) {
-      df <- DBI::dbGetQuery(con, getSQLbyKey(helper, "NEXT_VAL", seq=nome_seq))
+    if(nrow(DBI::dbGetQuery(con, sql_by_key(helper, "EXISTS_SEQ", seq=nome_seq))) > 0) {
+      df <- DBI::dbGetQuery(con, sql_by_key(helper, "NEXT_VAL", seq=nome_seq))
       as.numeric(df[[1]])
     } else {
       val <- getMaxP(helper, tag, con) + 1
-      DBI::dbExecute(con, getSQLbyKey(helper, "CREATE_SEQ", seq=nome_seq, val=val))
+      DBI::dbExecute(con, sql_by_key(helper, "CREATE_SEQ", seq=nome_seq, val=val))
       count_rolling(x, con)
     }
   } else {
@@ -296,7 +296,7 @@ count_rolling <- function(x, con) {
 }
 
 getMaxP <- function(helper, tag, con) {
-  df <- DBI::dbGetQuery(con, getSQLbyKey(helper, "COUNT_ROLLING", tag=tag))
+  df <- DBI::dbGetQuery(con, sql_by_key(helper, "COUNT_ROLLING", tag=tag))
   if(nrow(df) == 0) {
     0
   } else {

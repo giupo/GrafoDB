@@ -11,7 +11,7 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
   autore <- rutils::whoami()
 
   df <- if (length(hash::keys(data))) {
-    DBI::dbGetQuery(con, getSQLbyKey(
+    DBI::dbGetQuery(con, sql_by_key(
       helper, "GET_CHANGED_DATA",
       tag=tag,
       last_updated=as.numeric(x@timestamp)))
@@ -36,12 +36,12 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
         cbind(df, name, tag, autore, notes, last_updated)
       }) # this is quite fast, let's ignore the Progressbar here...
 
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "CREATE_STAGE", stage_name = stage_name))
       on.exit({
         tryCatch({
           DBI::dbExecute(con,
-            getSQLbyKey(helper, 'DROP_STAGE', stage_name = stage_name))
+            sql_by_key(helper, 'DROP_STAGE', stage_name = stage_name))
         }, error=function(cond) {
           flog.warn(cond, name = ln)
         })
@@ -51,12 +51,12 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
         row.names = FALSE, overwrite = TRUE)
 
       # aggiorna i record esistenti...
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "UPDATE_WITH_STAGE",
         tag=tag,
         stage_name=stage_name))
 
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_WITH_STAGE",
         tag = tag,
         stage_name=stage_name))

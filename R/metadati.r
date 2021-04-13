@@ -5,7 +5,7 @@
   on.exit(disconnect(con))
   helper <- x@helper
   tag <- x@tag
-  df <- DBI::dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "GET_META", tag=tag, name=serie, key=metadato))
   if(nrow(df)) {
     as.character(df[,1])
@@ -30,8 +30,8 @@
   on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
-  sql <-  getSQLbyKey(helper, "GET_METADATA", tag=tag, name=name)
-  df <- DBI::dbGetQuery(con, sql)
+  sql <-  sql_by_key(helper, "GET_METADATA", tag = tag, name = name)
+  DBI::dbGetQuery(con, sql)
 }
 
 #' Ritorna le chiavi dei metadati
@@ -48,7 +48,7 @@
   on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
-  sql <- getSQLbyKey(helper, "KEYS_METADATA", tag=tag)
+  sql <- sql_by_key(helper, "KEYS_METADATA", tag=tag)
   DBI::dbGetQuery(con, sql)
 }
 
@@ -70,9 +70,9 @@
   tag <- x@tag
   helper <- x@helper
   sql <- if(is.null(key)) {
-    getSQLbyKey(helper, "VALUES_METADATA", tag=tag)
+    sql_by_key(helper, "VALUES_METADATA", tag=tag)
   } else {
-    getSQLbyKey(helper, "VALUES_METADATA_KEY", tag=tag, key=key)
+    sql_by_key(helper, "VALUES_METADATA_KEY", tag=tag, key=key)
   }
 
   df <- DBI::dbGetQuery(con, sql)
@@ -102,7 +102,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
   on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
-  sql <- getSQLbyKey(helper, "VALUES_BY_NAME_AND_KEY")
+  sql <- sql_by_key(helper, "VALUES_BY_NAME_AND_KEY")
   sql <- whisker::whisker.render(sql, list(
     nomi=paste(shQuote(name), collapse=", "),
     chiavi=paste(shQuote(key), collapse=", "),
@@ -135,7 +135,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
 
   DBI::dbBegin(con)
   tryCatch({
-    DBI::dbExecute(con, getSQLbyKey(
+    DBI::dbExecute(con, sql_by_key(
       helper, "DELETE_META_TAG_NAME_KEY_VALUE",
       tag=tag,
       name=name,
@@ -159,7 +159,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
 
     DBI::dbBegin(con)
     tryCatch({
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "DELETE_META_TAG_NAME_KEY",
         tag=tag,
         name=name,
@@ -184,7 +184,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
 
   helper <- x@helper
 
-  df <- DBI::dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "LOOKUP_METADATI",
     tag=x@tag,
     key=key,
@@ -200,7 +200,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
     helper <- x@helper
     autore <- rutils::whoami()
 
-    sql <- getSQLbyKey(
+    sql <- sql_by_key(
       helper, "INSERT_META",
       tag=tag,
       name=name,

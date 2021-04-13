@@ -84,7 +84,7 @@ create_new_grafo <- function(x, tag, con = NULL, msg=paste0('Grafo per ', tag)) 
   # FIXME: Devo usare i timestamp di R o del DBMS?
   x@timestamp <- time.in.millis()
   helper <- x@helper
-  sql <- getSQLbyKey(
+  sql <- sql_by_key(
     helper, "CREATE_NEW_GRAFO", tag=tag,
     commento=msg, autore=autore,
     last_updated=x@timestamp)
@@ -137,7 +137,7 @@ need_resync <- function(x) {
   con <- buildConnection()
   on.exit(disconnect(con))
   tag <- x@tag
-  df <- DBI::dbGetQuery(con, getSQLbyKey(
+  df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "NEED_RESYNC", tag = tag,
     last_updated = as.character(timeStamp)))
 

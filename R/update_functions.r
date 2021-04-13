@@ -11,7 +11,7 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
   autore <- rutils::whoami()
   helper <- x@helper
   df <- if(length(hash::keys(functions))) {
-    DBI::dbGetQuery(con, getSQLbyKey(
+    DBI::dbGetQuery(con, sql_by_key(
       helper, "GET_CHANGED_FORMULE",
       tag=tag,
       last_updated=as.numeric(timestamp)))
@@ -34,7 +34,7 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
         formularow <- row[,1]
         namerow <- row[,3]
 
-        DBI::dbExecute(con, getSQLbyKey(
+        DBI::dbExecute(con, sql_by_key(
           helper, "UPDATE_FORMULE",
           tag=tag,
           autore=autore,
@@ -47,7 +47,7 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
 
     foreach::`%do%`(foreach::foreach(name = iterators::iter(names.updated)), {
       formula <- expr(x, name, echo=FALSE)
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "UPSERT_FORMULE",
         formula=formula,
         autore=autore,

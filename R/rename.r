@@ -39,20 +39,20 @@
   tryCatch({
     DBI::dbBegin(con)
 
-    DBI::dbExecute(con, getSQLbyKey(
+    DBI::dbExecute(con, sql_by_key(
       helper, "RENAME_DATI",
       tag=tag,
       nuovo=nuovo,
       vecchio=vecchio))
     
-    DBI::dbExecute(con, getSQLbyKey(
+    DBI::dbExecute(con, sql_by_key(
       helper, "RENAME_FORMULE",
       tag=tag,
       nuovo=nuovo,
       vecchio=vecchio))
     
     for(figlia in figlie) {
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "RENAME_FORMULA",
         tag=tag,
         vecchio=vecchio,
@@ -60,20 +60,20 @@
         figlia=figlia))
     }
 
-    DBI::dbExecute(con, getSQLbyKey(
+    DBI::dbExecute(con, sql_by_key(
       helper, "RENAME_ARCHI_PARTENZA",
       nuovo=nuovo,
       vecchio=vecchio,
       tag=tag))
 
-    DBI::dbExecute(con, getSQLbyKey(
+    DBI::dbExecute(con, sql_by_key(
       helper, "RENAME_ARCHI_ARRIVO",
       nuovo=nuovo,
       vecchio=vecchio,
       tag=tag))
     
     if(DBI::dbExistsTable(con, paste0("metadati_",tag))) {
-      DBI::dbExecute(con, getSQLbyKey(
+      DBI::dbExecute(con, sql_by_key(
         helper, "RENAME_METADATI",
         nuovo=nuovo,
         vecchio=vecchio,

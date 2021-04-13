@@ -28,22 +28,22 @@ copy_graph <- function(from, to, con, ...) {
   }
 
   ## copia archi
-  DBI::dbExecute(con, getSQLbyKey(
+  DBI::dbExecute(con, sql_by_key(
     helper, "COPY_DATI", to = to, from = from))
 
   ## copia archi
-  DBI::dbExecute(con, getSQLbyKey(
+  DBI::dbExecute(con, sql_by_key(
     helper, "COPY_ARCHI", to = to, from = from))
 
   ## copia formule
-  DBI::dbExecute(con, getSQLbyKey(
+  DBI::dbExecute(con, sql_by_key(
     helper, "COPY_FORMULE", to = to, from = from))
 
   ## copio metadati
-  DBI::dbExecute(con, getSQLbyKey(
+  DBI::dbExecute(con, sql_by_key(
     helper, "COPY_METADATI", to = to, from = from))
 
-  DBI::dbExecute(con, getSQLbyKey(
+  DBI::dbExecute(con, sql_by_key(
     helper, "INSERT_GRAFI", tag = to,
     commento = commento, autore = autore,
     last_updated=time.in.millis()))
