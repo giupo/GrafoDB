@@ -9,6 +9,3 @@ navugate(graph, nodes, order, mode)
 \description{
 naviga nel grafo
 }
-\seealso{
-`grafo::describe`
-}

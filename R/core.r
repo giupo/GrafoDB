@@ -198,7 +198,6 @@ methods::setMethod(
 #' @name navigate
 #' @title Funzioni del package `grafo`
 #' @usage navugate(graph, nodes, order, mode)
-#' @seealso `grafo::describe`
 #' @include navigate.r
 #' @export
 
@@ -440,29 +439,6 @@ methods::setMethod(
   function(x, name) {
     .isLeaf(x, name)
   })
-
-#' implementazione di describe di `package::grafo`
-#'
-#' @name describe
-#' @title Funzioni del package `grafo`
-#' @usage describe(graph, nodes, order, mode)
-#' @seealso `grafo::describe`
-#' @exportMethod describe
-
-methods::setGeneric(
-  "describe",
-  function(object, nodes=NULL, order=1L, mode="out") {
-    standardGeneric("describe")
-  })
-
-methods::setMethod(
-  "describe",
-  signature("GrafoDB", "ANY", "ANY", "ANY"),
-  function(object, nodes = NULL, order = 1L, mode = "out") {
-    navigate(object, nodes, order, mode)
-  })
-
-
 
 #' @exportMethod downgrf
 
