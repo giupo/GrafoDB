@@ -77,7 +77,7 @@ test_that("I can save a graph over another existing graph", {
 
 delete_graph("test")
 
-context("Funzioni per la persistenza [internal functions]")
+context("Persistence functions [internal functions]")
 
 test_that("load_table stops if table_name doesn't exists", {
   expect_error(load_table("nonesisto", "nonesisto"))
@@ -87,7 +87,7 @@ test_that("Load* yields an empy dataframe in case of error", {
   ## I don't like this at all.
 
   with_mock(
-    'GrafoDB:::load_table' = function(...) stop("my error") , {
+    "GrafoDB:::load_table" = function(...) stop("my error"), {
       x <- load_data("nonsense")
       expect_is(x, "data.frame")
       expect_equal(nrow(x), 0)
