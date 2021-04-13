@@ -36,7 +36,6 @@ r_github_packages:
 
 
 after_success:
-  - make restore
   - make test
   - make codecov
   
