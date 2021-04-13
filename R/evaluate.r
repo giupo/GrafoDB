@@ -31,7 +31,7 @@
     assign(name, tt)
   }
 
-  cmd <- .clutter_with_params_and_return(tsformula, name, nomi_padri)
+  cmd <- clutter_with_params_and_return(tsformula, name, nomi_padri)
   tryCatch({
     env <- as.environment(padri)
     # defines the proxy

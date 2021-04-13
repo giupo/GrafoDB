@@ -21,7 +21,7 @@ methods::setMethod(
   "[[",
   c("GrafoDB", "character", "missing"),
   function(x, i, j, ...) {
-    .getdata(x,i)
+    get_data(x,i)
   })
 
 #' implementazione per GrafoDB del subsetting '[<-'
@@ -55,7 +55,7 @@ subsetting <- function(x, i, value) {
   ## this piece of code smeels like shit.
   if (is.function(value)) {
     ## assert all dependencies
-    declutted <- .declutter_function(value)
+    declutted <- declutter_function(value)
     declared_dependencies <- names(as.list(formals(value)))
     dependencies <- c()
     if (length(declared_dependencies) > 0) {

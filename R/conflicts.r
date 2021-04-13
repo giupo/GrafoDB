@@ -148,7 +148,7 @@ methods::setMethod(
         colnames(current) <- c("name", "anno", "periodo",
                                "freq", "dati")
 
-        current <- from.data.frame(current)[[name]]
+        current <- from_data_frame(current)[[name]]
 
         nuova <- df[
           df$name == name,
@@ -156,7 +156,7 @@ methods::setMethod(
         ]
 
         colnames(nuova) <- c("name", "anno", "periodo", "freq", "dati")
-        nuova <- from.data.frame(nuova)[[name]]
+        nuova <- from_data_frame(nuova)[[name]]
 
         differenza <- if (stats::frequency(nuova) == stats::frequency(current)) {
           nuova - current

@@ -111,7 +111,7 @@ is.grafodb <- function(x) {
  to_data_frame <- function(x, name=NULL) {
   ## questa funzione converte a dataframe la timeseries,
   ## utile per l'inserimento nel DB
-  if(is.ts(x)) {
+  if (is.ts(x)) {
     anno <- stats::start(x)[[1]]
     prd  <- stats::start(x)[[2]]
     freq <- stats::frequency(x)
@@ -142,13 +142,13 @@ is.grafodb <- function(x) {
 
 #' converte un dataframe (caricato dal Database) in una timeseries `ts`
 #'
-#' @name from.data.frame
-#' @usage from.data.frame(df)
+#' @name from_data_frame
+#' @usage from_data_frame(df)
 #' @param df data.frame compilato dal database
 #' @note i dati dal db sono memorizzati come stringhe JSON
 #' @rdname fromdataframe
 
-from.data.frame <- function(df) {
+from_data_frame <- function(df) {
   stopifnot(is.data.frame(df))
   ret <- list()
 
@@ -158,18 +158,20 @@ from.data.frame <- function(df) {
     periodo <- row$periodo
     freq <- row$freq
     params <- c(anno, periodo, freq)
-    name <- as.character(if(is.null(row$name)) {
-      i
-    } else {
-      row$name
-    })
-    if(any(params == 0)) {
+    name <- as.character(if (is.null(row$name)) {
+        i
+      } else {
+        row$name
+      })
+
+    if (any(params == 0)) {
       ret[[name]] <- jsonlite::fromJSON(as.character(row$dati))
     } else {
       dati <- ts(
         jsonlite::fromJSON(as.character(row$dati)),
-        start=c(anno, periodo),
-        frequency=freq)
+        start = c(anno, periodo),
+        frequency = freq)
+
       ret[[name]] <- dati
     }
   }
@@ -179,73 +181,66 @@ from.data.frame <- function(df) {
 
 #' funzione per eliminare le definizione 'function' dalle formule per il GrafoDB
 #'
-#' @name .declutter_function
-#' @usage .declutter_function(f)
-#' @param f formula in formato testo
-#' @rdname declutter-function-internal
+#' @name declutter_function
+#' @usage declutter_function(f)
+#' @param func_string formula in formato testo
+#' @return the function without the "function" and curly braces
 
-.declutter_function <- function(f) {
-  f <- if(is.function(f)) {
-    # f <- paste(deparse(f), collapse="\n")
-    f <- capture.output(f)
-    #f <- f[1:length(f)-1]
-    f <- paste(f, collapse="\n")
-  } else {
-    f
-  }
+declutter_function <- function(func_string) {
+  func_string <- rutils::ifelse(
+    is.function(func_string),
+    paste(capture.output(func_string), collapse = "\n"),
+    func_string)
 
-  idx_inizio <- stringr::str_locate(f, "\\{")[[1]]
-  idx_fine <- sapply(gregexpr("\\}", f), tail, 1)
+  idx_inizio <- stringr::str_locate(func_string, "\\{")[[1]]
+  idx_fine <- sapply(gregexpr("\\}", func_string), tail, 1)
 
-  f <- substring(f, idx_inizio + 1, idx_fine - 1)
-  f <- gsub("^\n(.*)\n$", "\\1", f)
-  stringr::str_trim(f)
+  func_string<- substring(func_string, idx_inizio + 1, idx_fine - 1)
+  func_string <- gsub("^\n(.*)\n$", "\\1", func_string)
+  stringr::str_trim(func_string)
 }
 
-#' Questa funzione orla le funzioni del grafo con `proxy <-function() {` e `}` finale.
+
+#' Orla le formule del grafo in funzioni
+#' 
+#' Questa funzione orla le funzioni del grafo con 
+#' `proxy <-function() {` e `}` finale.
 #'
 #' Le istruzioni vengono incapsulate in una funzione generica chiamata proxy.
-#' gli argomenti devono essere definiti prima nella ambiente per la corretta esecuzione
+#' gli argomenti devono essere definiti prima nella ambiente per la 
+#' corretta esecuzione
 #'
-#' @name .clutter_function
-#' @usage .clutter_function(f)
-#' @param f character array che rappresenta la funzione
+#' @name to_function_as_string
+#' @usage to_function_as_string(f)
+#' @param func_string character array che rappresenta la funzione
 #' @param name name of the object to be returned
 #' @param funcName name of the function (`proxy` default)
 #' @return un character array della funzione orlata
 #' @note funzione interna
-#' @rdname clutter_function
 
-.clutter_function <- function(f, name, funcName="proxy") {
-  template <- "--FUNCNAME-- <- function() {
-  --FUNCTION--
-  --NAME--
-}"
-  task <- gsub("--FUNCNAME--", funcName, template)
-  task <- gsub("--FUNCTION--", f, task)
-  task <- gsub("--NAME--", name, task)
-  task
+to_function_as_string <- function(func_string, name, func_name = "proxy") {
+  glue::glue("{func_name} <- function() {{
+    {func_string}
+    {name}
+  }}")
 }
 
 
-#' questa funzione orla la formula del grafo come una funzione
+#' questa funzione orla la formula del grafo come una funzione oon parametri
 #'
 #' I parametri della funzione ritornata sono le dipendenze della serie
-#' @name .clutter_with_params
-#' @usage .clutter_with_params(f, name, deps)
-#' @param f function task to be converted as function
-#' @param name task name
+#' 
+#' @name clutter_with_params
+#' @usage clutter_with_params(f, deps)
+#' @param func_string function task to be converted as function
 #' @param deps character array di dipendenze
 #' @return Ritorna una una funzione `is.character(ret) == TRUE`
 #' @rdname clutter_with_params_internal
 
-.clutter_with_params <- function(f, name, deps) {
-  template <- "proxy <- function(--DEPS--) {
-  --FUNCTION--
-}"
-  task <- gsub("--DEPS--", paste(deps, collapse = ", "), template)
-  task <- gsub("--FUNCTION--", f, task)
-  task
+clutter_with_params <- function(func_string, name, deps) {
+  glue::glue("proxy <- function( {paste(deps, collapse = ', ')} ) {{
+  {func_string}
+  }}")
 }
 
 #' questa funzione orla la formula del grafo come una funzione
@@ -254,32 +249,29 @@ from.data.frame <- function(df) {
 #' ed aggiunge il nome della funzione al termine per dichiarare il
 #' dato ritornato
 #'
-#' @name .clutter_with_params_and_return
-#' @usage .clutter_with_params_and_return(f, name, deps, funcName)
-#' @param f function task to be converted as function
+#' @name clutter_with_params_and_return
+#' @usage clutter_with_params_and_return(f, name, deps, funcName)
+#' @param func_string function task to be converted as function
 #' @param name task name
 #' @param deps array di dipendenze
 #' @param funcName nome della funzione definita
 #' @return Ritorna un character array `is.character(ret) == TRUE`
 #' @rdname clutter_with_params_and_return_internal
 
-.clutter_with_params_and_return <- function(f, name, deps, funcName="proxy") {
-  template <- "--FUNCNAME-- <- function(--DEPS--) {
-  --FUNCTION--
-  --NAME--
-}"
-
-  task <- gsub("--DEPS--", paste(deps, collapse=", "), template)
-  task <- gsub("--FUNCTION--", f, task)
-  task <- gsub("--FUNCNAME--", funcName, task)
-  task <- gsub("--NAME--", name, task)
-  task
+clutter_with_params_and_return <- function(func_string, name,
+  deps, func_name = "proxy") {
+  glue::glue("{func_name} <- function( {paste(deps, collapse = ', ')} ) {{
+    {func_string}
+    {name}
+  }}")
 }
+
 
 
 #' Carica i dati dal DB
 #'
-#' Carica i dati direttamente dal DB senza necessita' d'inizializzare un `GrafoDB`
+#' Carica i dati direttamente dal DB senza necessita' d'inizializzare 
+#' un `GrafoDB`
 #'
 #' @name getdb
 #' @usage getdb(name, tag)
@@ -292,15 +284,12 @@ getdb <- function(x, name) {
   dbdati <- x@dbdati
   df <- dbdati[dbdati$name %in% name, ]
 
-  if (nrow(df) == 0) {
-    return(list())
-  }
-
+  if (nrow(df) == 0) return(list())
 
   if (length(name) > 1000) {
     foreach::`%dopar%`(foreach::foreach(
       row = iterators::iter(df, by = "row"),
-      .combine=c, .multicombine=TRUE), {
+      .combine = c, .multicombine = TRUE), {
       convert_data_frame(row)
     })
   } else {
@@ -311,56 +300,51 @@ getdb <- function(x, name) {
 
 #' Ottiene i dati dal GrafoDB
 #'
-#' I dati possono provenire direttamente dal Database se non modificati nella sessione
-#' corrente; altriumenti vengono restituiti i dati che l'utente ha appena modificato
-#' ma non ancora reso persistenti
+#' I dati possono provenire direttamente dal Database se non modificati
+#' nella sessione corrente; altriumenti vengono restituiti i dati che
+#' l'utente ha appena modificato ma non ancora reso persistenti
 #'
-#' @name .getdata
+#' @name get_data
 #' @rdname getdata_internal
-#' @usage .getdata(x, i)
+#' @usage get_data(x, ids)
 #' @include db.r
 #' @param x istanza di `GrafoDB`
-#' @param i character array di nomi di serie storiche
-#' @return ritorna una named list con all'interno le serie storiche. Se l'array e'
-#'         di un solo elemento, ritorna direttamente la serie storica
-#'         (questo e' un side-effect, non mi piace)
-#' @note se i e' un singolo nome e non esiste nel DB, la funzione termina con errore
+#' @param ids character array di nomi di serie storiche
+#' @return ritorna una named list con all'interno le serie storiche.
+#'         Se l'array e' di un solo elemento, ritorna direttamente la serie
+#'         storica (questo e' un side-effect, non mi piace)
+#' @note se ids e' un singolo nome e non esiste nel DB, la funzione termina
+#'  con errore
 
-.getdata <- function(x,i) {
+get_data <- function(x, ids) {
   ## check if changed, then load internal changes
   data <- x@data
-  in.data <- intersect(hash::keys(data), i)
-  da.caricare.db <- setdiff(i, in.data)
+  in_data <- intersect(hash::keys(data), ids)
+  to_be_loaded_from_db <- setdiff(ids, in_data)
   tag <- x@tag
-  from.db <- if(length(da.caricare.db)) {
+  from_db <- if (length(to_be_loaded_from_db)) {
     if(x@ordinal != 0) {
       tag <- paste0(tag, "p", x@ordinal)
     }
-    da.db <- getdb(x, da.caricare.db)
-    #if(length(names(ret)) != length(da.caricare.db)) {
-    #  stop("You asked for ", paste(da.caricare.db, collapse=", "),
-    #       "but I only got ", paste(names(ret), collapse=", "),
-    #       " from DB: check your data now!")
-    #}
-    da.db
+    getdb(x, to_be_loaded_from_db)
   } else {
     list()
   }
 
   ret <- list()
-  for (name in names(from.db)) {
-    ret[[name]] <- from.db[[name]]
+  for (name in names(from_db)) {
+    ret[[name]] <- from_db[[name]]
   }
 
-  for (name in in.data) {
+  for (name in in_data) {
     ret[[name]] <- data[[name]]
   }
 
   ## controllo di avere tutte le serie
-  if (!all(i %in% names(ret))) {
-    non.presenti <- setdiff(i, names(ret))
-    warning("le seguenti serie non sono presenti: ",
-            paste(non.presenti, collapse=", "))
+  if (!all(ids %in% names(ret))) {
+    not_found <- setdiff(ids, names(ret))
+    warning("cannot find the following objects: ",
+            paste(not_found, collapse = ", "))
   }
 
   if (length(ret) == 1) {
@@ -371,7 +355,7 @@ getdb <- function(x, name) {
 
 #' @include db.r
 
-.tagExists <- function(tag, con=NULL) {
+exists_tag <- function(tag, con = NULL) {
   con <- if (is.null(con)) {
     con <- buildConnection()
     on.exit(disconnect(con))
@@ -380,13 +364,14 @@ getdb <- function(x, name) {
     con
   }
 
-  df <- DBI::dbGetQuery(con, paste0("select * from grafi where tag='", tag,"'"))
+  sql <- glue::glue_sql("select * from grafi where tag = {tag}", .con = con)
+  df <- DBI::dbGetQuery(con, sql)
   nrow(df) > 0
 }
 
 
 .copy <- function(x, y, name) {
-  task <- .declutter_function(as.character(getTask(x, name)))
+  task <- declutter_function(as.character(getTask(x, name)))
   task <- gsub(paste0("return\\(", name, "\\)$"), "", task)
   y@functions[[name]] <- task
   return(invisible(y))
@@ -406,7 +391,7 @@ getdb <- function(x, name) {
 
 .roots <- function(x) {
   n <- x@network
-  igraph::V(n)[igraph::degree(n, mode="in") == 0]$name
+  igraph::V(n)[igraph::degree(n, mode = "in") == 0]$name
 }
 
 #' Ritorna le figlie del GrafoDB
@@ -428,7 +413,8 @@ getdb <- function(x, name) {
 #' Controlla se un nodo e' una foglia
 #'
 #' Ritorna un array di `logical` uno per ogni elemento in `i`: `TRUE`
-#' se l'i-esimo elemento e' una foglia (non ha archi uscenti), altrimenti `FALSE`
+#' se l'i-esimo elemento e' una foglia (non ha archi uscenti), 
+#' altrimenti `FALSE`
 #'
 #' @name .isLeaf
 #' @usage .isLeaf(x, i)
@@ -445,7 +431,8 @@ getdb <- function(x, name) {
 #' Controlla se un nodo e' una radice
 #'
 #' Ritorna un array di `logical` uno per ogni elemento in `i`: `TRUE`
-#' se l'i-esimo elemento e' una radice (non ha archi uscenti), altrimenti `FALSE`
+#' se l'i-esimo elemento e' una radice (non ha archi uscenti), 
+#' altrimenti `FALSE`
 #'
 #' @name .isRoot
 #' @usage .isRoot(x, i)
@@ -474,16 +461,16 @@ getdb <- function(x, name) {
 #' @export
 
 tsdiff <- function(a, b, thr = .0000001) {
-  if(length(a) != length(b)) {
+  if (length(a) != length(b)) {
     return(TRUE)
   }
 
   idiff <- suppressWarnings(zoo::index(a) - zoo::index(b))
-  if(!all(idiff == 0)) {
+  if (!all(idiff == 0)) {
     return(TRUE)
   }
 
-  any(a-b > thr) 
+  any(a - b > thr)
 }
 
 
@@ -515,7 +502,7 @@ rilasci <- function(filtro = NULL) {
   nomicol <- colnames(data)
   if(nrow(data) > 1) {
     time_col <- as.POSIXct(
-      as.numeric(data$last_updated)/1000,
+      as.numeric(data$last_updated) / 1000,
       origin = as.Date("1970-01-01"))
 
     data <- cbind(data, time_col)

@@ -101,7 +101,7 @@
 
     check_conflicts(x, con=con)
 
-    if(.tagExists(tag, con=con)) {
+    if(exists_tag(tag, con=con)) {
       # se esiste il tag sul DB
       # sto aggiornando il grafo tag
       trace("'%s' exists on DB, I'm updating it...", tag, name=ln)

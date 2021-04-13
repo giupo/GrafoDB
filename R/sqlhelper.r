@@ -78,7 +78,7 @@ methods::setMethod(
   ## check if any params is left behind
 
   idx <- stringr::str_locate_all(sql, "--[A-Z|a-z|0-9]*--")[[1]]
-  if(length(idx) > 0) {
+  if (length(idx) > 0) {
     for(irow in 1:nrow(idx)) {
       start <- idx[irow, 1]
       end <- idx[irow, 2]
@@ -89,7 +89,7 @@ methods::setMethod(
   }
 
 
-  trace("Query for key '%s' = %s", .key, sql, name='GrafoDB.sqlhelper')
+  trace("Query for key '%s' = %s", .key, sql, name = 'GrafoDB.sqlhelper')
   sql
 }
 
@@ -100,7 +100,8 @@ methods::setMethod(
 #'
 #' Le query hanno una forma "select * from --tab-- where param='--value--'";
 #' Il metodo si occupa di sostiture '--tab--' e '--value--' secondo i valori
-#' passati come argomento: Es: `getSQLbyKey(helper, KEYQUERY, tab="A", value="B")`
+#' passati come argomento: 
+#' Es: `getSQLbyKey(helper, KEYQUERY, tab="A", value="B")`
 #' risultera' in `select * from A where param='B'`
 #' 
 #' @name getSQLbyKey

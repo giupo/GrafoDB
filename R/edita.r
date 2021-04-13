@@ -16,29 +16,29 @@
     }
   } else {
     deps <- get_deps(x, name)
-    task <- expr(x, name, echo=FALSE)
+    task <- expr(x, name, echo = FALSE)
     if(is.null(task)) {
       warning("la serie ", name, " e' una serie primitiva")
       task <- new_task
-    }    
+    }
   }
 
   old_deps <- deps
   old_task <- task
   if(name %in% hash::keys(x@edges)) {
     deps <- x@edges[[name]]
-  }  
-  
-  task <- .clutter_with_params(task, name, deps) 
-  write(task, file=file)
+  }
+
+  task <- clutter_with_params(task, name, deps)
+  write(task, file = file)
   on.exit(file.remove(file))
-  utils::file.edit(file, title=name)
-  txtsrc <- paste(readLines(file), collapse="\n")
-  edited <- .declutter_function(txtsrc)
-  
+  utils::file.edit(file, title = name)
+  txtsrc <- paste(readLines(file), collapse = "\n")
+  edited <- declutter_function(txtsrc)
+
   params <- list(...)
   tryCatch({
-    f <- eval(parse(text=txtsrc))
+    f <- eval(parse(text = txtsrc))
     dep <- names(as.list(formals(f)))
 
     is_same_function <- stringr::str_trim(edited) ==

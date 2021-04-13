@@ -562,7 +562,7 @@ v1.29.2 (2018-08-28)
 v1.29.1 (2018-08-28)
 --------------------
 - Bump version: 1.29.0 → 1.29.1. [Giuseppe Acito]
-- Remove warning from .getdata to restore the behaviour. [Giuseppe
+- Remove warning from get_data to restore the behaviour. [Giuseppe
   Acito]
 
 
@@ -1208,7 +1208,7 @@ v1.26.3 (2018-07-09)
 - Bump version: 1.2.0 → 1.2.1. [Giuseppe Acito]
 - Sposto rcf, bimets e grafo in Depends. [Giuseppe Acito]
 - Bump version: 1.1.0 → 1.2.0. [Giuseppe Acito]
-- Aggiunto il from.data.frame nativo. [Giuseppe Acito]
+- Aggiunto il from_data_frame nativo. [Giuseppe Acito]
 - Elimino build tools per componenti nativi non piu' usati. [Giuseppe
   Acito]
 - Bump version: 1.0.5 → 1.1.0. [Giuseppe Acito]

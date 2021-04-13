@@ -13,8 +13,8 @@
 .expr <- function(x, nomi, echo=FALSE) {
   functions <- x@functions
   in_functions <- intersect(hash::keys(functions), nomi)
-  da.caricare.db <- setdiff(nomi, in_functions)
-  from.db <- if(length(da.caricare.db)) {
+  to_be_loaded_from_db <- setdiff(nomi, in_functions)
+  from_db <- if(length(to_be_loaded_from_db)) {
     dbformule <- x@dbformule
     dbformule[dbformule$name %in% nomi, c("name", "formula")]
   } else {
@@ -27,7 +27,7 @@
       data.frame(name=row, formula=functions[[row]])
     })
   
-  formule <- rbind(in_functions, from.db)
+  formule <- rbind(in_functions, from_db)
   
   if(nrow(formule) == 0) {
     NULL

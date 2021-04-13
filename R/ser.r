@@ -16,7 +16,7 @@
       }
     }
     funcName <- paste0(name, "_func")
-    f <- .clutter_function(task, name, funcName=funcName)
+    f <- to_function_as_string(task, name, funcName=funcName)
     filetmp <- tempfile(pattern=name, fileext=".R")
     write(f, file=filetmp)
 
