@@ -19,3 +19,5 @@ lib
 \.dockerignore
 \.circleci
 \.gitchangelog.rc
+CHANGELOG.md
+Dockerfile

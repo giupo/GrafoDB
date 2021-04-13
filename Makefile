@@ -9,15 +9,16 @@ R_FILES := $(wildcard R/*.[R|r])
 SRC_FILES := $(wildcard src/*) $(addprefix src/, $(COPY_SRC))
 PKG_FILES := DESCRIPTION NAMESPACE $(R_FILES) $(SRC_FILES)
 
-.PHONY: tarball install check clean build CHANGELOG.md
+.PHONY: tarball clean CHANGELOG.md
 
 tarball: $(PKG_NAME)_$(PKG_VERSION).tar.gz 
 $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
 	R CMD build .
 
 
-check: $(PKG_NAME)_$(PKG_VERSION).tar.gz
-	R CMD check $(PKG_NAME)_$(PKG_VERSION).tar.gz
+check: tarball
+	## R CMD check --no-build-vignettes $(PKG_NAME)_$(PKG_VERSION).tar.gz
+	R -e 'devtools::check(error_on="error")'
 
 build: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 	R --vanilla CMD INSTALL --build $(PKG_NAME)_$(PKG_VERSION).tar.gz

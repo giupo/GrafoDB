@@ -458,6 +458,7 @@ exists_tag <- function(tag, con = NULL) {
 #' @usage tsdiff(a, b, thr)
 #' @param a timeseries
 #' @param b timeseries
+#' @param thr threshold for difference
 #' @return `TRUE` if `a`!=`b`, `FALSE` otherwise
 #' @export
 

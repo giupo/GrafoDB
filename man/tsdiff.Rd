@@ -4,12 +4,16 @@
 \alias{tsdiff}
 \title{Checks if a TimeSeries is different from another}
 \usage{
-tsdiff()
+tsdiff(a, b)
+
+tsdiff(a, b, thr)
 }
 \arguments{
 \item{a}{timeseries}
 
 \item{b}{timeseries}
+
+\item{thr}{threshold for difference}
 }
 \value{
 `TRUE` if `a`!=`b`, `FALSE` otherwise
