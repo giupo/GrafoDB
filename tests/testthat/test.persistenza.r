@@ -28,30 +28,30 @@ test_that("I can handle NaN despite JsonCpp, jsonlite, IEEE754", {
   ## il problema qui e' che quando serializzo python giustamente
   ## usa 'NaN' per i missing. mentre C++/R preferiscono 'null'
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   con <- buildConnection()
   on.exit(disconnect(con))
   DBI::dbExecute(
     con,
-    "update dati set dati=replace(dati, 'null', '\"NaN\"') where tag='test'")
+    "update dati set dati = replace(dati, 'null', '\"NaN\"') where tag='test'")
 
   g <- saveGraph(g)
   g1 <- GrafoDB("test")
-  expect_true( any( is.na(g[["D"]] )))
-  expect_true( length(g[["D"]]) > 0 )
+  expect_true(any(is.na(g[["D"]])))
+  expect_true(length(g[["D"]]) > 0)
 })
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
-  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["B"] <- ts(1:10, start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
+  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(1:10, start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) {
     C = A + B
   }
-  
+
   g["D"] <- function(B) {
-    D =  B * 2
+    D = B * 2
   }
 
   g
@@ -65,12 +65,12 @@ test_that("I can save a graph over another existing graph", {
   tagB <- "test3"
   ga <- setup(tagA)
   gb <- setup(tagB)
- 
+
   ga <- saveGraph(ga)
   gb <- saveGraph(gb)
 
   ga <- saveGraph(ga, tagB)
-  
+
   g <- GrafoDB(tagB)
   expect_true(all(g$B == gb$B))
 })
@@ -105,26 +105,26 @@ test_that("Load* yields an empy dataframe in case of error", {
 test_that("need_resync returns true if GrafoNeeds a resync", {
   g <- setup("test")
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
-  
+
   g <- saveGraph(g)
 
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
-  g2["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
+  g2["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   g2 <- saveGraph(g2)
   expect_true(need_resync(g1))
 })
 
 test_that("do_history preserves last_updated", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
-  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
+  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g)
-  Sys.sleep(0.1)
-  g1["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
+  # Sys.sleep(0.1)
+  g1["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g1)
   p <- GrafoDB("testp1")
   expect_true("A" %in% names(p))
