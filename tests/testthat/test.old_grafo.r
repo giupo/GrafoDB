@@ -79,7 +79,7 @@ test_that("getTask returns the formula of the aggregate", {
   g <- setup("test")
 
   expect_equal(getTask(g, "C"), expr(g, "C"))
-  expect_equal(getTask(g, "C"), "C = A + B")
+  expect_equal(getTask(g, "C"), "C <- A + B")
   expect_equal(getTask(g, "A"), expr(g, "A"))
 })
 
