@@ -7,7 +7,7 @@ methods::setMethod(
       return(rdataset::Dataset())
     }
     raw <- x[[i]]
-    if (length(i)==1) {
+    if (length(i) == 1) {
       ret <- list()
       ret[[i]] <- raw
     } else {
@@ -21,7 +21,7 @@ methods::setMethod(
   "[[",
   c("GrafoDB", "character", "missing"),
   function(x, i, j, ...) {
-    get_data(x,i)
+    get_data(x, i)
   })
 
 #' implementazione per GrafoDB del subsetting '[<-'
@@ -93,9 +93,9 @@ subsetting <- function(x, i, value) {
     elementari <- listElementaries(x)
     tt <- intersect(name, c(aggregate, elementari))
 
-    ci.sono.formule <- length(tt) != 0
+    are_there_funcs <- length(tt) != 0
 
-    if (ci.sono.formule) {
+    if (are_there_funcs) {
       stop("Non puoi impostare una serie con formula con uno scalare: ",
            paste(tt, collapse = ", "))
     }
