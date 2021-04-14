@@ -193,7 +193,7 @@ set_meta_impl <- function(x, name, key, value) {
 
   if (any(name %in% domain)) {
     already <- intersect(domain, name)
-    warning("Ha gia' un metadato ", key, " = ", value, " :", 
+    warning("Ha gia' un metadato ", key, " = ", value, " :",
       paste(already, collapse = ", "))
   } else {
     tag <- x@tag

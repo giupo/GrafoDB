@@ -415,10 +415,9 @@ methods::setMethod(
 #' @param graph istanza di `GrafoDB`
 #' @param ts_name nomi di serie da eliminare
 #' @param recursive `TRUE` se l'eliminazione deve essere rivorsiva sugli archi
-#'                  uscenti di ogni serie nel parametro `ts_name`.
-#'                  `FALSE` altrimenti. Se il parametro e' impostato a `FALSE` e'
-#'                  condizione necessaria che le serie in `ts_name` siano tutte
-#'                  foglie, ovvero serie senza archi uscenti
+#'   uscenti di ogni serie nel parametro `ts_name`, `FALSE` altrimenti. Se il
+#'   parametro e' impostato a `FALSE` e' condizione necessaria che le serie in
+#'   `ts_name` siano tutte foglie, ovvero serie senza archi uscenti
 #' @note Metodo interno
 #' @seealso .rmNode
 #' @return il grafo modificato
