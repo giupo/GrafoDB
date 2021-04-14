@@ -40,7 +40,7 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
           autore=autore,
           formula=formularow,
           name=namerow,
-          msg=msg,
+          msg = msg,
           last_updated=time_in_nano()))
       })
     }
@@ -53,7 +53,7 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
         autore=autore,
         name=name,
         tag = tag,
-        msg=msg,
+        msg = msg,
         last_updated=time_in_nano()))
     })
   }
