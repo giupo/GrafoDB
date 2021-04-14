@@ -29,7 +29,7 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
 
     # creo il data.frame dei dati da usare nel DB
     tryCatch({
-      last_updated <- time.in.millis()
+      last_updated <- time_in_nano()
       dati <- foreach::`%dopar%`(foreach::foreach(
         name = iterators::iter(names_updated), .combine=rbind), {
         df <-  to_data_frame(data[[name]])

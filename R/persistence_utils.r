@@ -36,35 +36,35 @@ load_table <- function(table_name, tag, con = NULL) {
 }
 
 load_data <- function(tag, con=NULL) tryCatch({
-  load_table('dati', tag, con=con)
-}, error=function(cond) {
+  load_table("dati", tag, con = con)
+}, error = function(cond) {
   data.frame(
-    name=character(),
-    year=integer(),
-    period=integer(),
-    freq=integer(),
-    dati=character(),
-    stato=integer(),
-    notes=character(),
-    autore=character())
+    name = character(),
+    year = integer(),
+    period = integer(),
+    freq = integer(),
+    dati = character(),
+    stato = integer(),
+    notes = character(),
+    autore = character())
 })
 
 load_edges <- function(tag, con=NULL) tryCatch({
-  load_table('archi', tag, con=con)
-}, error=function(cond) {
-  data.frame(partenza=character(), arrivo=character())
+  load_table("archi", tag, con = con)
+}, error = function(cond) {
+  data.frame(partenza = character(), arrivo = character())
 })
 
-load_metadata <- function(tag, con=NULL) load_table('metadati', tag, con=con)
+load_metadata <- function(tag, con=NULL) load_table("metadati", tag, con = con)
 
 load_formulas <- function(tag, con=NULL) tryCatch({
-  load_table('formule', tag, con=con)
+  load_table("formule", tag, con = con)
 }, error=function(cond) {
   data.frame(
-    name=character(),
-    tag=character(),
-    formula=character(),
-    autore=character())
+    name = character(),
+    tag = character(),
+    formula = character(),
+    autore = character())
 })
 
 load_grafi <- function(con=NULL) {
@@ -75,20 +75,23 @@ load_grafi <- function(con=NULL) {
   } else {
     con
   }
-  DBI::dbReadTable(con, 'grafi')
+  DBI::dbReadTable(con, "grafi")
 }
 
 
-create_new_grafo <- function(x, tag, con = NULL, msg=paste0('Grafo per ', tag)) {
+create_new_grafo <- function(x, tag, con = NULL,
+  msg = paste0("Grafo per ", tag)) {
   autore <- rutils::whoami()
   # FIXME: Devo usare i timestamp di R o del DBMS?
-  x@timestamp <- time.in.millis()
+  x@timestamp <- time_in_nano()
   helper <- x@helper
   sql <- sql_by_key(
-    helper, "CREATE_NEW_GRAFO", tag = tag,
-    commento=msg, autore=autore,
-    last_updated=x@timestamp)
-  
+    helper, "CREATE_NEW_GRAFO",
+    tag = tag,
+    commento = msg,
+    autore = autore,
+    last_updated = x@timestamp)
+
 
   con <- if (is.null(con)) {
     con <- build_connection()
@@ -105,7 +108,7 @@ create_new_grafo <- function(x, tag, con = NULL, msg=paste0('Grafo per ', tag)) 
     DBI::dbExecute(con, sql)
     DBI::dbCommit(con)
   }, error = function(cond) {
-    tryCatch(DBI::dbRollback(con), error= function(cx) {
+    tryCatch(DBI::dbRollback(con), error = function(cx) {
       stop(cx, ", Root: ", cond)
     })
     stop(cond)
@@ -122,26 +125,26 @@ resync <- function(x, con = NULL) {
   } else {
     con
   }
-  
+
   tag <- x@tag
-  x@dbdati <- load_data(tag, con=con)
-  x@dbformule <- load_formulas(tag, con=con)
+  x@dbdati <- load_data(tag, con = con)
+  x@dbformule <- load_formulas(tag, con = con)
   ## e gli archi :?? :)
   x
 }
 
 
 need_resync <- function(x) {
-  timeStamp <- x@timestamp
+  timestamp <- x@timestamp
   helper <- x@helper
   con <- build_connection()
   on.exit(disconnect(con))
   tag <- x@tag
   df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "NEED_RESYNC", tag = tag,
-    last_updated = as.character(timeStamp)))
+    last_updated = as.character(timestamp)))
 
   df[[1]] > 0
 }
 
-time.in.millis <- function() as.numeric(Sys.time()) * 1000
+time_in_nano <- function() as.numeric(Sys.time()) * 1000

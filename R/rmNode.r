@@ -74,5 +74,5 @@ rm_node_impl <- function(graph, ts_name, recursive=FALSE) {
     stop(cond)
   })
 
-  resync(graph, con=con)
+  resync(graph, con = con)
 }

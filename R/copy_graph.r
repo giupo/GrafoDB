@@ -13,7 +13,7 @@ copy_graph <- function(from, to, con, ...) {
 
   last_updated <- rutils::ifelse("last_updated" %in% names(param_list),
     param_list[["last_updated"]],
-    time.in.millis())
+    time_in_nano())
 
   autore <- rutils::ifelse("autore" %in% names(param_list),
     param_list[["autore"]],
@@ -38,5 +38,5 @@ copy_graph <- function(from, to, con, ...) {
   DBI::dbExecute(con, sql_by_key(
     helper, "INSERT_GRAFI", tag = to,
     commento = commento, autore = autore,
-    last_updated = time.in.millis()))
+    last_updated = time_in_nano()))
 }

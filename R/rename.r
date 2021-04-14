@@ -83,7 +83,7 @@
     nomiarchi <- igraph::get.vertex.attribute(x@network, "name")
     nomiarchi[nomiarchi == vecchio] <- nuovo
     x@network <- igraph::set.vertex.attribute(x@network, "name", value=nomiarchi)
-    x <- resync(x, con=con)    
+    x <- resync(x, con = con)    
     DBI::dbCommit(con)
     x
   }, error = function(cond) {

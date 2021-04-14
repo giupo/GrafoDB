@@ -71,7 +71,7 @@ update_edges <- function(x, con, tag=x@tag) {
       to <- row$arrivo
       DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_ARCHI", tag = tag, from=from, to=to,
-        autore=autore, last_updated=time.in.millis()))
+        autore=autore, last_updated=time_in_nano()))
     })
   }
 

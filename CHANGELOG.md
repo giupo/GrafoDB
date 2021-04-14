@@ -742,7 +742,7 @@ v1.27.3 (2018-07-10)
 v1.27.2 (2018-07-10)
 --------------------
 - Bump version: 1.27.1 → 1.27.2. [Giuseppe Acito]
-- Fix typo on time.in.millis. [Giuseppe Acito]
+- Fix typo on time_in_nano. [Giuseppe Acito]
 - Merge branch 'develop' [Giuseppe Acito]
 - Merge branch 'release/performanceRelease' [Giuseppe Acito]
 

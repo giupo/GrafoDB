@@ -73,16 +73,16 @@
     trace("beginning transaction", name = ln)
     DBI::dbBegin(con)
 
-    if (has_conflicts(x, con=con)) {
+    if (has_conflicts(x, con = con)) {
       stop("Il grafo ", tag, " ha conflitti, risolverli prima di salvare")
     }
 
     if (need_resync(x)) {
       info("Resync started", name = ln)
       # risincronizzo i dati del db con la copia nel grafo
-      x <- resync(x, con=con)
+      x <- resync(x, con = con)
       # trova serie che necessitano il resync
-      name_to_sync <- get_changed_series_names(x, con=con)
+      name_to_sync <- get_changed_series_names(x, con = con)
       # trova serie con conflitti
       name_in_conflicts <- intersect(name_to_sync, union(hash::keys(x@functions), hash::keys(x@data)))
       clean_names <- setdiff(name_to_sync, name_in_conflicts)
@@ -90,7 +90,7 @@
       # senza problemi
       # aggiungo gli archi del DB al presente grafo
       network <- x@network
-      archi <- load_edges(tag, con=con)
+      archi <- load_edges(tag, con = con)
       archi <- archi[, c("partenza", "arrivo")]
       dbnetwork <- igraph::graph.data.frame(as.data.frame(archi), directed=TRUE)
       network <- igraph::graph.union(network, dbnetwork, byname=TRUE)
@@ -99,9 +99,9 @@
       x <- evaluate(x, clean_names)
     }
 
-    check_conflicts(x, con=con)
+    check_conflicts(x, con = con)
 
-    if (exists_tag(tag, con=con)) {
+    if (exists_tag(tag, con = con)) {
       # se esiste il tag sul DB
       # sto aggiornando il grafo tag
       trace("'%s' exists on DB, I'm updating it...", tag, name = ln)
@@ -113,31 +113,31 @@
         # lo cancello
         delete_graph_impl(tag, con, x@helper)
         # copio il grafo in sessione col grafo attuale
-        copy_graph(x@tag, tag, con=con, mesg=msg, helper=x@helper)
+        copy_graph(x@tag, tag, con = con, mesg=msg, helper=x@helper)
       }
       # aggiorno eventuali cambiamenti in sessione
       trace("update eventual changes in session", name = ln)
-      update_graph(x, con=con, msg=msg)
+      update_graph(x, con = con, msg=msg)
     } else {
       if (x@tag == tag) {
         trace('tag as param equals tag as slot: creating a new graph', name = ln)
         # se non esiste il tag sul DB
         # sto creando un nuovo grafo
-        create_graph(x, tag, con=con, msg=msg)
+        create_graph(x, tag, con = con, msg=msg)
       } else {
         # se i tag sono differenti
         if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
           trace('have no data, simply create an empty graph', name = ln)
           # non ho dati, creo grafo
-          create_graph(x, tag, con=con, msg=msg)
+          create_graph(x, tag, con = con, msg=msg)
         } else {
           # ho dati, quindi copio il grafo dalla fonte alla
           # destinazione sul DB e...
           trace('have data, so copying graph... ', name = ln)
-          copy_graph(x@tag, tag, con=con, msg=msg, helper=x@helper)
+          copy_graph(x@tag, tag, con = con, msg=msg, helper=x@helper)
           # Aggiorno eventuali cambiamenti in sessione
           trace('... and update eventual changes in session', name = ln)
-          update_graph(x, tag, con=con, msg=msg)
+          update_graph(x, tag, con = con, msg=msg)
         }
       }
     }
@@ -168,7 +168,7 @@ update_graph <- function(x, tag = x@tag, con = NULL, msg = "") {
     helper, "UPDATE_GRAFO_LAST_UPDATED",
     autore=rutils::whoami(),
     tag = tag,
-    last_updated=time.in.millis()))
+    last_updated=time_in_nano()))
 }
 
 
@@ -214,7 +214,7 @@ create_graph <- function(x, tag, con, ...) {
         freq=freq,
         dati=dati,
         autore=autore,
-        last_updated=time.in.millis()))
+        last_updated=time_in_nano()))
     })
   } else {
     stop("Non ci sono dati da salvare.")
@@ -232,7 +232,7 @@ create_graph <- function(x, tag, con, ...) {
         partenza=partenza,
         arrivo=arrivo,
         autore=autore,
-        last_updated=time.in.millis()))
+        last_updated=time_in_nano()))
     })
   }
 
@@ -246,7 +246,7 @@ create_graph <- function(x, tag, con, ...) {
         name=name,
         formula=formula,
         autore=autore,
-        last_updated=time.in.millis()))
+        last_updated=time_in_nano()))
     }
   })
 
@@ -255,7 +255,7 @@ create_graph <- function(x, tag, con, ...) {
     tag = tag,
     commento=commento,
     autore=autore,
-    last_updated=time.in.millis()))
+    last_updated=time_in_nano()))
 }
 
 
@@ -346,7 +346,7 @@ do_history <- function(x, tag, con) {
 
   dest <- next_rolling_name(x, con)
   if (interactive()) message("Saving GrafoDB from ", x@tag, " to ", dest)
-  copy_graph(x@tag, dest, con=con, autore=autore,
+  copy_graph(x@tag, dest, con = con, autore=autore,
             helper=x@helper, last_update=x@timestamp)
   if (interactive()) message("Saving ", dest, " completed")
   0

@@ -349,7 +349,7 @@ create_data_conflicts <- function(x, nomi, con = NULL) {
   tag <- x@tag
   autore <- rutils::whoami()
   helper <- x@helper
-  timestamp <- time.in.millis()
+  timestamp <- time_in_nano()
   dati <- foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi), 
     .combine = rbind), {
 
@@ -394,7 +394,7 @@ create_function_conflicts <- function(x, nomi, formula_db, con = NULL) {
   tag <- x@tag
   helper <- x@helper
 
-  timestamp <- time.in.millis()
+  timestamp <- time_in_nano()
   foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi)), {
     sql1 <- sql_by_key(
       helper, "CREA_CONFLITTO_FORMULE1",
