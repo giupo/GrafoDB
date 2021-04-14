@@ -1,12 +1,12 @@
 context("Scalability tests")
 
-tt <- ts(c(1,1,1,1,1), start = c(1990, 1), frequency = 4)
+tt <- ts(rep(1, 5), start = c(1990, 1), frequency = 4)
 
 proxytest <- function(numero) {
   g <- GrafoDB("test")
   deps <- paste0("A", seq(numero))
-  formula_B <- paste0("B = ", paste0(deps, collapse=" + "))
-  g@functions["B"] <- formula_B
+  formula_b <- paste0("B = ", paste0(deps, collapse = " + "))
+  g@functions["B"] <- formula_b
   for (nome in deps) {
     g[nome] <- tt
   }
@@ -14,9 +14,9 @@ proxytest <- function(numero) {
   g <- evaluate(g, "B")
   expect_true("B" %in% names(g))
   expected <- g[["B"]]
-  expect_true(is.ts(expected))  
+  expect_true(is.ts(expected))
   expect_equal(expected[1], numero)
-  ser(g, "B")  
+  ser(g, "B")
   delete_graph("test")
 }
 

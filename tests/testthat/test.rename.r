@@ -2,12 +2,12 @@ context("Rename nodes")
 
 test_that("I can rename a series before saving it", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start = c(1990, 1), frequency = 4)
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C = A + B # nolint
   }
-  g["D"] <- function(A, C) {
-    D = A + C
+  g["D"] <- function(A, C) { # nolint
+    D = A + C # nolint
   }
   g <- saveGraph(g)
   g <- rename(g, "A", "A1")
@@ -24,10 +24,10 @@ delete_graph("test")
 
 test_that("I cannot rename a series being modified", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start = c(1990, 1), frequency = 4)
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
   expect_error(rename(g, "A", "A1"))
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["C"] <- function(A, B) { # nolint
+    C = A + B # nolint
   }
   expect_error(rename(g, "A", "A1"))
   g <- saveGraph(g)
@@ -40,9 +40,9 @@ delete_graph("test")
 
 test_that("I cannot rename a series into an existing series", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start = c(1990, 1), frequency = 4)
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C = A + B # nolint
   }
   expect_error(rename(g, "A", "B"))
   g <- saveGraph(g)
@@ -53,9 +53,9 @@ delete_graph("test")
 
 test_that("I cannot rename a non existing series", {
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start = c(1990, 1), frequency = 4)
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C = A + B # nolint
   }
   expect_error(rename(g, "D", "D1"))
   g <- saveGraph(g)
