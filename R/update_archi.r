@@ -24,7 +24,7 @@ update_edges <- function(x, con, tag=x@tag) {
   in.memory <- paste(in.memory$partenza, in.memory$arrivo, sep=sep)
 
   da.inserire <- setdiff(in.memory, in.db)
-  da.eliminare <- setdiff(in.db, in.memory)
+  to_be_deleted <- setdiff(in.db, in.memory)
 
   df <- if (length(hash::keys(data))) {
     ## cerco archi aggiunti di recente.
@@ -75,9 +75,9 @@ update_edges <- function(x, con, tag=x@tag) {
     })
   }
 
-  if (length(da.eliminare)) {
-    params <- if (length(da.eliminare) == 1) {
-      tokens <- stringr::str_split(da.eliminare, sep)[[1]]
+  if (length(to_be_deleted)) {
+    params <- if (length(to_be_deleted) == 1) {
+      tokens <- stringr::str_split(to_be_deleted, sep)[[1]]
       df <- as.data.frame(
         list(
           partenza = tokens[[1]],
@@ -86,8 +86,8 @@ update_edges <- function(x, con, tag=x@tag) {
       names(df) <- c("partenza", "arrivo")
       df
     } else {
-      splitted <- unlist(stringr::str_split(da.eliminare, sep))
-      df <- as.data.frame(matrix(splitted, nrow=length(da.eliminare), byrow=T),
+      splitted <- unlist(stringr::str_split(to_be_deleted, sep))
+      df <- as.data.frame(matrix(splitted, nrow=length(to_be_deleted), byrow=T),
                           stringsAsFactors = F)
       names(df) <- c("partenza", "arrivo")
       df
