@@ -82,7 +82,7 @@ test_that("valori null passati a from_data_frame vengono convertiti in NA", {
   tt <- from_data_frame(df)
   expect_true(is.list(tt))
   tt <- tt[["TEST"]]
-  expect_true(stats::stats::is.ts(tt))
+  expect_true(stats::is.ts(tt))
   expect_true(is.na(xts::last(tt)))
   expect_true(is.na(xts::first(tt)))
 })

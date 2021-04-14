@@ -68,12 +68,11 @@ methods::setGeneric(
 #' g <- GrafoDB(...)
 #' expr(g, "TETSZ0AC") # ritorna list(TETSZ0AC = "TETSZ0AC = ASTSZ0AC...")
 #' }
-#' @rdname expr_generic
 #' @export
 
 methods::setGeneric(
   "expr",
-  function(x, nomi, echo=FALSE) {
+  function(x, nomi, echo = FALSE) {
     standardGeneric("expr")
   })
 
@@ -134,8 +133,6 @@ methods::setGeneric(
   })
 
 
-## Definizione della classe GrafoDB
-
 #' Classe per accedere ai dati immagazzinati in PostgreSQL del Grafo CF
 #'
 #' @name GrafoDB
@@ -152,6 +149,7 @@ methods::setGeneric(
 #' @include sqlhelper.r
 #' @export GrafoDB
 #' @importClassesFrom rdataset Dataset
+#' @importFrom methods new
 #' @examples \dontrun{
 #'    g = GrafoDB("cf10") # istanzia il grafo chiamato 'cf10'
 #'                        # in questo caso ordinal e' 0
@@ -161,7 +159,7 @@ methods::setGeneric(
 
 methods::setOldClass("igraph")
 
-GrafoDB <- methods::setClass(
+GrafoDB <- methods::setClass( # nolint
   "GrafoDB",
   methods::representation(
     tag = "character",
@@ -188,7 +186,7 @@ GrafoDB <- methods::setClass(
 methods::setMethod(
   "initialize",
   signature("GrafoDB"),
-  function(.Object, tag="cf10") {
+  function(.Object, tag="cf10") { # nolint
     init_grafo_impl(.Object, tag)
   })
 
@@ -211,7 +209,10 @@ methods::setMethod(
   "navigate",
   signature("GrafoDB", "ANY", "ANY", "ANY"),
   function(object, nodes=NULL, order=1L, mode="out") {
-    navigate_impl(object, nodes=nodes, order=order, mode=mode)
+    navigate_impl(object,
+      nodes = nodes,
+      order = order,
+      mode = mode)
   })
 
 methods::setMethod(
@@ -224,8 +225,9 @@ methods::setMethod(
     num <- length(names(object))
     timestamp <- object@timestamp
 
-    msg <- paste0("GrafoDB [",tag,"] with ", num, " series, ",
-                  as.character(as.POSIXct(timestamp/1000, origin="1970/01/01")))
+    msg <- paste0("GrafoDB [", tag, "] with ", num, " series, ",
+      as.character(as.POSIXct(timestamp / 1000, origin = "1970/01/01")))
+
     if (length(data)) {
       msg <- paste0(msg, ", ", length(data), " data changes")
     }
@@ -235,24 +237,6 @@ methods::setMethod(
 
     message(msg)
   })
-
-#' ricerca nei metadati del `GrafoDB`
-#'
-#' @name lookup
-#' @usage lookup(x, key, value)
-#' @param x istanza di `GrafoDB`
-#' @param key `character` che specifica la chiave del metadato
-#' @param value `character` che specifica il valore del metadato
-#' @return un character array di nomi di serie che rispettano la
-#'         clausola `key` = `value`. Se non esistono ritorna un
-#'         character(0) (array vuoto)
-#' @examples \dontrun{
-#' g = GrafoDB(...) # istanzia il grafo
-#' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie
-#'                                      # che hanno TAVOLA_DI_OUTPUT=BRI
-#' }
-#' @export
-#' @include lookup.r
 
 methods::setMethod(
   "lookup",
@@ -285,8 +269,8 @@ methods::setMethod(
   c("GrafoDB", "GrafoDB"),
   function(e1, e2) {
 
-    is.scalar <- function(e) {
-      is.numeric(e) & length(e) == 1 & !is.ts(e)
+    is_scalar <- function(e) {
+      is.numeric(e) & length(e) == 1 & !stats::is.ts(e)
     }
 
     nomi1 <- names(e1)
@@ -300,8 +284,9 @@ methods::setMethod(
     }
 
     result <- rdataset::Dataset()
+    name <- NULL
     data <- foreach::`%dopar%`(foreach::foreach(
-        name=iterators::iter(common), .combine=append), {
+        name = iterators::iter(common), .combine = append), {
       ret <- list()
       ret[[name]] <- tryCatch({
         e11 <- e1[[name]]
@@ -310,8 +295,8 @@ methods::setMethod(
         stopifnot(is.numeric(e11))
         stopifnot(is.numeric(e22))
 
-        if (is.scalar(e11) && is.ts(e22) ||
-             is.ts(e11) && is.scalar(e22)) {
+        if (is_scalar(e11) && stats::is.ts(e22) ||
+             stats::is.ts(e11) && is_scalar(e22)) {
           stop("Different object classes")
         }
         e11 - e22
@@ -355,22 +340,6 @@ methods::setMethod(
     }
   })
 
-
-#' Formule del `GrafoDB`
-#'
-#' Ritorna come named list le formule per ogni serie specificata in `nomi`
-#'
-#' @name expr
-#' @usage expr(x, nomi)
-#' @param x istanza di oggetto R
-#' @param nomi character array di nomi di serie storiche
-#' @return `list` con nomi (i nomi sono gli stess del parametro `nomi`)
-#'         con le formule
-#' @examples \dontrun{
-#' g <- GrafoDB(...)
-#' expr(g, "TETSZ0AC") # ritorna list(TETSZ0AC = "TETSZ0AC = ASTSZ0AC...")
-#' }
-#' @export
 
 methods::setMethod(
   "expr",
@@ -455,6 +424,16 @@ methods::setMethod(
     navigate(x, name, order = livello, mode = "out")
   })
 
+
+
+#' get Metadata for object
+#'
+#' @name getMetadata
+#' @usage getMetadata(object, ts_name)
+#' @usage getMetadata(object, ts_name, full)
+#' @param object GrafoDB instance
+#' @param ts_name object name
+#' @param full boolean, triggers full report
 #' @include metadati.r
 #' @exportMethod getMetadata
 
@@ -493,7 +472,7 @@ methods::setMethod(
   function(x, name, ...) {
     object_name <- deparse(substitute(x))
     x <- .edita(x, name)
-    assign(object_name, x, envir=parent.frame())
+    assign(object_name, x, envir = parent.frame())
     invisible(x)
   })
 
@@ -526,7 +505,7 @@ methods::setMethod(
   "ser",
   signature("GrafoDB", "character"),
   function(x, name, debug=FALSE) {
-    ser_impl(x, name, debug=debug)
+    ser_impl(x, name, debug = debug)
   }
 )
 
@@ -573,7 +552,7 @@ methods::setMethod(
 methods::setMethod(
   "getMeta",
   signature("GrafoDB", "character", "character"),
-  function (x, serie, metadato){
+  function(x, serie, metadato) {
     get_meta_impl(x, serie, metadato)
   })
 
@@ -650,7 +629,7 @@ methods::setGeneric(
 methods::setMethod(
   "rename",
   signature("GrafoDB", "character", "character"),
-  function(x, vecchio, nuovo){
+  function(x, vecchio, nuovo) {
     rename_impl(x, vecchio, nuovo)
   })
 

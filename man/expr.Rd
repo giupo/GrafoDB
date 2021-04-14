@@ -10,6 +10,9 @@ expr(x, nomi)
 \item{x}{istanza di oggetto R}
 
 \item{nomi}{character array di nomi di serie storiche}
+
+\item{echo}{stampa con un messaggio su standard output il
+valore della formula}
 }
 \value{
 `list` con nomi (i nomi sono gli stess del parametro `nomi`)

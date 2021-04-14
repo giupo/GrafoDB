@@ -193,7 +193,7 @@ declutter_function <- function(func_string) {
     func_string)
 
   idx_inizio <- stringr::str_locate(func_string, "\\{")[[1]]
-  idx_fine <- sapply(gregexpr("\\}", func_string), tail, 1)
+  idx_fine <- sapply(gregexpr("\\}", func_string), utils::tail, 1)
 
   func_string <- substring(func_string, idx_inizio + 1, idx_fine - 1)
   func_string <- gsub("^\n(.*)\n$", "\\1", func_string)
@@ -515,7 +515,11 @@ rilasci <- function(filtro = NULL) {
 }
 
 
-
+#' Alias constructor for GrafoDB
+#' 
+#' @name grafodb <- 
+#' @param ... params passed to GrafoDB
+#' @return instance of GrafoDB
 #' @seealso GrafoDB::GrafoDB
 #' @export
 
@@ -523,7 +527,11 @@ grafodb <- function(...) {
   GrafoDB(...)
 }
 
-
+#' Alias constructor for GrafoDB
+#' 
+#' @name grafo
+#' @param ... params passed to GrafoDB
+#' @return instance of GrafoDB
 #' @seealso GrafoDB::GrafoDB
 #' @export
 

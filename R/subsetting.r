@@ -45,8 +45,9 @@ subsetting <- function(x, i, value) {
     to_be_added <- setdiff(name, all_names)
     network + igraph::vertex(to_be_added)
   } else {
-      if (!rdataset::is.dataset(value) && length(igraph::E(network)) > 0) {
-        network - igraph::E(network)[.to(name)]  # nocov
+    if (!rdataset::is.dataset(value) && length(igraph::E(network)) > 0) {
+      to <- NULL
+      network - igraph::E(network)[to(name)]  # nocov
     } else {
       network
     }

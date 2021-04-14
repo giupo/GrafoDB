@@ -35,6 +35,7 @@ evaluate_single_1 <- function(name, graph) {
   tryCatch({
     env <- as.environment(padri)
     # defines the proxy
+    proxy <- NULL
     eval(parse(text = cmd))
     # executes the call
     env$proxy <- proxy
@@ -146,6 +147,7 @@ evaluate_impl <- function(object, v_start = NULL, ...) { # nolint
     sources <- setdiff(sources, sprimitive)
 
     if (length(sources)) {
+      name <- NULL
       evaluated <- foreach::`%dopar%`(
         foreach::foreach(name = sources, .combine = c), {
         proxy(name, object)
@@ -154,7 +156,7 @@ evaluate_impl <- function(object, v_start = NULL, ...) { # nolint
       i <- i + length(sources)
       if (is_interactive) {
         rprogressbar::updateProgressBar(
-          pb, i, tail(names(evaluated), n = 1)) # nocov
+          pb, i, utils::tail(names(evaluated), n = 1)) # nocov
       }
 
       if (length(evaluated) != length(sources)) {

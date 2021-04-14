@@ -54,9 +54,9 @@ keys_impl <- function(x) {
 
 #' Ritorna i valori dei metadati (o per singolo metadato)
 #'
-#' @name .values
-#' @usage .values(x)
-#' @usage .values(x, key)
+#' @name values_by_key_impl
+#' @usage values_by_key_impl(x)
+#' @usage values_by_key_impl(x, key)
 #' @param x istanza di grafo
 #' @param key chiave del metadato
 #' @return lista di valori per metadato
@@ -78,12 +78,12 @@ values_by_key_impl <- function(x, key = NULL) {
 }
 
 
-#' Ritorna i valore del lmetadato per ogni singola serie
+#' Ritorna i valore del metadato per ogni singola serie
 #'
-#' @name .values
-#' @usage .values(x, name, key)
-#' @rdname values-internal
+#' @name values_for
+#' @usage values_for(x, name, key)
 #' @param x istanza di grafo
+#' @param name nomi di oggetti 
 #' @param key chiave del metadato
 #' @return lista di valori per metadato
 #' @include db.r

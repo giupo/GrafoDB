@@ -23,6 +23,7 @@ update_functions <- function(x, con, tag = x@tag, msg = "") {
 
   names_updated <- setdiff(hash::keys(x@functions), names_with_conflicts)
   if (length(names_updated)) {
+    name <- NULL
     formule <- foreach::`%dopar%`(foreach::foreach(
       name = iterators::iter(names_updated), .combine = rbind), {
       formula <- expr(x, name, echo = FALSE)
@@ -31,6 +32,7 @@ update_functions <- function(x, con, tag = x@tag, msg = "") {
 
     if (DBI::dbExistsTable(con, paste0("formule_", tag)) ||
          class(con) == "SQLiteConnection") {
+      row <- NULL
       foreach::`%do%`(foreach::foreach(row = iterators::iter(formule, "row")), {
         formularow <- row[, 1]
         namerow <- row[, 3]
@@ -45,7 +47,7 @@ update_functions <- function(x, con, tag = x@tag, msg = "") {
           last_updated = time_in_nano()))
       })
     }
-
+    name <- NULL
     foreach::`%do%`(foreach::foreach(name = iterators::iter(names_updated)), {
       formula <- expr(x, name, echo = FALSE)
       DBI::dbExecute(con, sql_by_key(

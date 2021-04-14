@@ -193,6 +193,7 @@ create_graph <- function(x, tag, con, ...) {
   helper <- x@helper
 
   if (length(names(x))) {
+    name <- NULL
     dati <- foreach::`%do%`(foreach::foreach(
       name = iterators::iter(names(x)), .combine = rbind), {
       tt <- x[[name]]
@@ -220,6 +221,7 @@ create_graph <- function(x, tag, con, ...) {
   archi <- as.data.frame(igraph::get.edgelist(x@network))
 
   if (nrow(archi)) {
+    row <- NULL
     foreach::`%do%`(foreach::foreach(row = iterators::iter(archi, "row")), {
       partenza <- row[, 1]
       arrivo <- row[, 2]
@@ -233,6 +235,7 @@ create_graph <- function(x, tag, con, ...) {
     })
   }
 
+  name <- NULL
   foreach::`%do%`(foreach::foreach(
     name = iterators::iter(names(x)), .combine = rbind), {
     formula <- expr(x, name, echo = FALSE)

@@ -311,7 +311,7 @@ check_conflicts <- function(x, con = NULL) {
       for (name in unique(only_roots)) {
         outer_ts <- as.character(dati_db[dati_db$name == name, "dati"])
         inner_ts <- as.character(to_data_frame(x[[name]])[1, "dati"])
-        if ( outer_ts != inner_ts ) {
+        if (outer_ts != inner_ts) {
           create_data_conflicts(x, name, con = con)
         }
       }
@@ -350,7 +350,8 @@ create_data_conflicts <- function(x, nomi, con = NULL) {
   autore <- rutils::whoami()
   helper <- x@helper
   timestamp <- time_in_nano()
-  dati <- foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi), 
+  name <- NULL # for checks
+  dati <- foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi),
     .combine = rbind), {
 
     tt <- x[[name]]
@@ -395,6 +396,7 @@ create_function_conflicts <- function(x, nomi, formula_db, con = NULL) {
   helper <- x@helper
 
   timestamp <- time_in_nano()
+  name <- NULL # for checks
   foreach::`%do%`(foreach::foreach(name = iterators::iter(nomi)), {
     sql1 <- sql_by_key(
       helper, "CREA_CONFLITTO_FORMULE1",
