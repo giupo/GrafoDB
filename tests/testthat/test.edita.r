@@ -2,12 +2,12 @@ context("edit functions")
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
-  g["A"] <- g["B"] <- ts(c(0,0,0), start = c(1990, 1), frequency = 1)
-  g["C"] <- function(A, B) {
-    C = (A + 1) * (B + 2)
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 1)
+  g["C"] <- function(A, B) { # nolint
+    C = (A + 1) * (B + 2) # nolint
   }
   g <- saveGraph(g)
-  
+
   setMeta(g, "A", "KEY", "VALUE1")
   setMeta(g, "A", "KEY", "VALUE2")
   setMeta(g, "B", "KEY", "VALUE1")
@@ -20,7 +20,7 @@ test_that("I can edit a function 1", {
   on.exit(delete_graph("test"))
   g <- setup("test")
 
-  stub(.edita, 'utils::file.edit', function(file, title = title) {
+  stub(.edita, "utils::file.edit", function(file, title = title) {
     message(file)
     task <- "C = A / B"
     deps <- c("A", "B")
@@ -37,7 +37,7 @@ test_that("I can edit a function 2", {
   on.exit(delete_graph("test"))
   g <- setup("test")
 
-  stub(.edita, 'utils::file.edit', function(file, title=title) {
+  stub(.edita, "utils::file.edit", function(file, title=title) {
     task <- "D = A - B"
     deps <- c("A", "B")
     name <- "D"
@@ -52,7 +52,7 @@ test_that("I can replace a function", {
   on.exit(delete_graph("test"))
   g <- setup("test")
 
-  stub(.edita, 'utils::file.edit', function(file, title=title) {
+  stub(.edita, "utils::file.edit", function(file, title=title) {
     task <- "C = A - B"
     deps <- c("A", "B")
     name <- "C"
@@ -63,7 +63,7 @@ test_that("I can replace a function", {
 })
 
 
-test_that("nothing changes if I don't modify a formula", { 
+test_that("nothing changes if I don't modify a formula", {
   skip_if_not(require(mockery), "mockery required")
   on.exit(delete_graph("test"))
   g <- setup("test")
