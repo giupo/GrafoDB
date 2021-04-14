@@ -18,7 +18,7 @@ futile.logger::flog.info("GRAFODB_ENV: %s", Sys.getenv("GRAFODB_ENV"))
 
 invisible(futile.logger::flog.threshold(futile.logger::WARN, name='GrafoDB.sqlhelper'))
 invisible(futile.logger::flog.threshold(futile.logger::WARN, name='GrafoDB.db'))
-invisible(futile.logger::flog.threshold(futile.logger::WARN, name='GrafoDB.persistence.saveGraph'))
+invisible(futile.logger::flog.threshold(futile.logger::WARN, name='GrafoDB.persistencesave_graph_impl'))
 invisible(futile.logger::flog.threshold(futile.logger::WARN, name='GrafoDB.patch'))
 
 ## options(warn=2)

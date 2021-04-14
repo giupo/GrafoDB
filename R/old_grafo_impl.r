@@ -226,14 +226,14 @@ methods::setMethod(
 #' occorre incontrarsi e decidere quale "formula" o quale versione dei dati
 #' sia da preferire.
 #'
-#' @seealso .saveGraph
+#' @seealso save_graph_impl
 #' @name saveGraph
 #' @usage saveGraph(object)
 #' @usage saveGraph(object, path)
 #' @param object istanza di `GrafoDB`
 #' @param path erroneamente, dovuta al generic su `grafo` questo sarebbe il
 #'  "tag" da dare al grafo. Non c'e' modo di ovviare questo problema. Vedere
-#'   il prototipo di funzione di `.saveGraph`, e' sicuramente piu' chiaro.
+#'   il prototipo di funzione di `save_graph_impl`, e' sicuramente piu' chiaro.
 #' @param ... Parametri aggiuntivi alla `saveGraph`
 #' @include persistence.r
 #' @exportMethod saveGraph
@@ -249,7 +249,7 @@ methods::setMethod(
   signature("GrafoDB", "ANY"),
   function(object, path=object@tag, ...) {
     object_name <- deparse(substitute(object))
-    .saveGraph(object, path, ...)
+    save_graph_impl(object, path, ...)
     object <- GrafoDB(path)
     invisible(object)
   })

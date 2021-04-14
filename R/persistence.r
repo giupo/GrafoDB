@@ -32,21 +32,18 @@
 #' sia da preferire.
 #'
 #' @seealso saveGraph
-#' @name .saveGraph
-#' @usage .saveGraph(x, tag)
-#' @usage .saveGraph(x)
+#' @name save_graph_impl
+#' @usage save_graph_impl(x, tag)
+#' @usage save_graph_impl(x)
 #' @include conflicts.r copy_graph.r assert_dag.r persistence_utils.r
-#' @rdname saveGraph-internal
-#' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
 #' @include logging.r
-# FIXME: https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849
 
-.saveGraph <- function(x, tag = x@tag, ...) {
+save_graph_impl <- function(x, tag = x@tag, ...) {
   ln <- "GrafoDB.persistence"
-  trace(".saveGraph started", name = ln)
+  trace("save_graph_impl started", name = ln)
 
-  ln <- "GrafoDB.persistence.saveGraph"
-  trace(".saveGraph started", name = ln)
+  ln <- "GrafoDB.persistencesave_graph_impl"
+  trace("save_graph_impl started", name = ln)
 
   param_list <- list(...)
 

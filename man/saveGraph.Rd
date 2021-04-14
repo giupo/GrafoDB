@@ -13,7 +13,7 @@ saveGraph(object, path)
 
 \item{path}{erroneamente, dovuta al generic su `grafo` questo sarebbe il "tag" da
 dare al grafo. Non c'e' modo di ovviare questo problema. Vedere il
-prototipo di funzione di `.saveGraph`, e' sicuramente piu' chiaro.}
+prototipo di funzione di `save_graph_impl`, e' sicuramente piu' chiaro.}
 
 \item{...}{Parametri aggiuntivi alla `saveGraph`}
 }
@@ -60,5 +60,5 @@ sia da preferire.
 R sucks sometimes. \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
 }
 \seealso{
-.saveGraph
+save_graph_impl
 }
