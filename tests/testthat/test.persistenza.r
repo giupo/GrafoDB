@@ -4,11 +4,11 @@ setup <- function(name) {
   g <- GrafoDB(name)
   g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["C"] <- function(A, B) { # nolint
+    C = A + B # nolint
   }
 
-  g["D"] <- ts(c(NA,1,NA), start = c(1990, 1), frequency = 4)
+  g["D"] <- ts(c(NA, 1, NA), start = c(1990, 1), frequency = 4)
 
   g <- saveGraph(g)
   g
@@ -46,12 +46,12 @@ setup <- function(tag) {
   g <- GrafoDB(tag)
   g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   g["B"] <- ts(1:10, start = c(1990, 1), frequency = 4)
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["C"] <- function(A, B) { # nolint
+    C = A + B # nolint
   }
 
-  g["D"] <- function(B) {
-    D = B * 2
+  g["D"] <- function(B) { # nolint
+    D = B * 2 # nolint
   }
 
   g
@@ -61,17 +61,17 @@ test_that("I can save a graph over another existing graph", {
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
-  tagA <- "test2"
-  tagB <- "test3"
-  ga <- setup(tagA)
-  gb <- setup(tagB)
+  tag_a <- "test2"
+  tag_b <- "test3"
+  ga <- setup(tag_a)
+  gb <- setup(tag_b)
 
   ga <- saveGraph(ga)
   gb <- saveGraph(gb)
 
-  ga <- saveGraph(ga, tagB)
+  ga <- saveGraph(ga, tag_b)
 
-  g <- GrafoDB(tagB)
+  g <- GrafoDB(tag_b)
   expect_true(all(g$B == gb$B))
 })
 
@@ -123,7 +123,7 @@ test_that("do_history preserves last_updated", {
   })
   g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g)
-  # Sys.sleep(0.1)
+
   g1["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g1)
   p <- GrafoDB("testp1")

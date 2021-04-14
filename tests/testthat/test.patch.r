@@ -3,8 +3,8 @@ context("Patch & Diff")
 setup <- function(x) {
   g <- GrafoDB(x)
   g["A"] <- g["B"] <- ts(rep(1, 10), start = c(1990, 1), frequency = 1)
-  g["C"] <- function(A, B) {
-    C <- A + B
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
   g
 }
@@ -21,15 +21,15 @@ test_that("if I apply a patch I get a new GrafoDB with new formulas", {
 
   g1 <- GrafoDB("test")
 
-  g1["C"] <- function(A, B) {
-    C <- A - B
+  g1["C"] <- function(A, B) { # nolint
+    C <- A - B # nolint
   }
 
   g1 <- saveGraph(g1, "primo")
 
   g2 <- GrafoDB("test")
-  g2["C"] <- function(A, B) {
-    C <- A * B
+  g2["C"] <- function(A, B) { # nolint
+    C <- A * B # nolint
   }
 
   g2 <- saveGraph(g2, "secondo")
@@ -53,16 +53,16 @@ test_that("If no column from diff is specified, it gets the most recent", {
   saveGraph(g)
 
   g1 <- GrafoDB("test")
-  g1["C"] <- function(A, B) {
-    C <- A - B
+  g1["C"] <- function(A, B) { # nolint
+    C <- A - B # nolint
   }
   g1 <- saveGraph(g1, "primo")
 
   g2 <- GrafoDB("test")
-  g2["C"] <- function(A, B) {
-    C <- A * B
+  g2["C"] <- function(A, B) { # nolint
+    C <- A * B # nolint
   }
-  
+
   g2 <- saveGraph(g2, "secondo")
 
 
