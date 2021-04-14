@@ -15,16 +15,16 @@
 
 patch <- function(x, diff_, column=NULL) {
   if (!is.null(column)) {
-    patchByColumn(x, diff_, column)
+    patch_by_column(x, diff_, column)
   } else {
-    patchByLastUpdated(x, diff_)
+    patch_by_lastupdated(x, diff_)
   }
   x
 }
 
 
-patchByLastUpdated <- function(x, diff_) {
-  ln <- "GrafoDB.patch.patchByLastUpdated"
+patch_by_lastupdated <- function(x, diff_) {
+  ln <- "GrafoDB.patch.patch_by_lastupdated"
   nomi <- diff_$name
   for (nome in nomi) {
     trace("Patching %s", nome, name = ln)
@@ -40,7 +40,7 @@ patchByLastUpdated <- function(x, diff_) {
       stop("don't know what to pick for ", nome,
            " while patching. Check your diff last_updated fields")
     }
-    
+
     trace("New formula patch: %s", new_formula, name = ln)
     x@functions[[nome]] <- new_formula
   }
@@ -50,8 +50,8 @@ patchByLastUpdated <- function(x, diff_) {
 }
 
 
-patchByColumn <- function(x, diff_, column=NULL) {
-  ln <- "GrafoDB.patch.patchByColumn"
+patch_by_column <- function(x, diff_, column=NULL) {
+  ln <- "GrafoDB.patch.patch_by_column"
   nomi <-  diff_$name
   for (nome in nomi) {
     trace("Patching %s", nome, name = ln)
