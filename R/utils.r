@@ -7,3 +7,8 @@ exponent <- function(x) {
    if (x == 0) 0
    else floor(log10(abs(x)))
 }
+
+
+identicalts <- function(x, y, toll=0.000001) {
+  all(x - y < toll)
+}

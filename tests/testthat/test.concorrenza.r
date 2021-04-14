@@ -1,9 +1,5 @@
 context("Concurrency")
 
-identicalts <- function(x, y, toll = 0.000001) {
-  all(abs(x - y) < toll)
-}
-
 setup <- function(tag) {
   g <- GrafoDB(tag)
   g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
