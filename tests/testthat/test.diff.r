@@ -1,11 +1,11 @@
-context('Diff functions')
+context("Diff functions")
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
   g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["C"] <- function(A, B) { # nolint
+    C = A + B # nolint
   }
   g
 }
@@ -13,7 +13,7 @@ setup <- function(tag) {
 test_that("I get no diff on the same Graph", {
   g <- setup("test")
   on.exit(delete_graph("test"))
-  
+
   expect_equal(nrow(diff.GrafoDB(g, g)), 0)
 })
 
@@ -25,9 +25,9 @@ test_that("I get a warning for uncommon names between graphs", {
     delete_graph("test")
     delete_graph("test2")
   })
-  
-  g1["D"] <- function(A) {
-    D = A * 2
+
+  g1["D"] <- function(A) { # nolint
+    D = A * 2 # nolint
   }
   expect_warning(diff.GrafoDB(g, g1))
   expect_warning(expect_equal(nrow(diff.GrafoDB(g, g1)), 0))
@@ -41,11 +41,11 @@ test_that("I get a dataframe with the difference in formulas", {
     delete_graph("test")
     delete_graph("test2")
   })
-  g <-saveGraph(g)
+  g <- saveGraph(g)
   g1 <- saveGraph(g1)
 
-  g1["C"] <- function(A, B) {
-    C = A - B
+  g1["C"] <- function(A, B) { # nolint
+    C = A - B # nolint
   }
 
   g1 <- saveGraph(g1)
@@ -64,11 +64,11 @@ test_that("I get authors in each data.frame", {
   g <- saveGraph(g)
   g1 <- saveGraph(g1)
 
-  g1["C"] <- function(A, B) {
-    C = A - B
+  g1["C"] <- function(A, B) { # nolint
+    C = A - B # nolint
   }
   g1 <- saveGraph(g1)
-  
+
   dd <- diff.GrafoDB(g, g1)
   expect_true("test_autore" %in% colnames(dd))
   expect_true("test2_autore" %in% colnames(dd))
