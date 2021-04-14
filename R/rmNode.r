@@ -25,7 +25,7 @@
 
   helper <- graph@helper
 
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
 
   tryCatch({

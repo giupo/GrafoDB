@@ -63,14 +63,14 @@ test_that(".decluter_functions preserves commnets", {
   expect_equal(f, "# comment here\nA")
 })
 
-test_that("check_dag raises an exception with a cycle in network", {
+test_that("assert_dag raises an exception with a cycle in network", {
   g <- igraph::graph.empty(directed=TRUE)
   g <- g + igraph::vertex("A")
   g <- g + igraph::vertex("B")
   g <- g + igraph::edge("A", "B")
-  expect_error(check_dag(g), NA)
+  expect_error(assert_dag(g), NA)
   g <- g + igraph::edge("B", "A")
-  expect_warning(expect_error(check_dag(g), "Cycles found"),
+  expect_warning(expect_error(assert_dag(g), "Cycles found"),
     "partial result is returned")
 })
 
@@ -97,11 +97,11 @@ test_that("delete handles exceptions", {
     })
 })
 
-test_that("schemaFileFromEnv returns a consistent file", {
+test_that("schema_from_env returns a consistent file", {
   expect_true(is.list(db_settings(TRUE)))
-  test_file <- schemaFileFromEnv("test")
-  prod_file <- schemaFileFromEnv("prod")
-  collaudo_file <- schemaFileFromEnv("collaudo")
+  test_file <- schema_from_env("test")
+  prod_file <- schema_from_env("prod")
+  collaudo_file <- schema_from_env("collaudo")
 
   expect_equal(basename(test_file), "schema-SQLite.sql")
   expect_equal(basename(prod_file), "schema-PostgreSQL.sql")

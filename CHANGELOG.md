@@ -391,7 +391,7 @@ v1.32.0 (2019-11-19)
 - Passing to renv. [giupo]
 - Merge branch 'hotfix/shouldCreateSchemaOutOfBuildConnection' [Giuseppe
   Acito]
-- Removes initdb from buildConnection and other amenities. [Giuseppe
+- Removes initdb from build_connection and other amenities. [Giuseppe
   Acito]
 - Updated packrat. [Giuseppe Acito]
 - Updated packrat. [Giuseppe Acito]
@@ -427,7 +427,7 @@ v1.30.5 (2019-09-03)
   develop. [Giuseppe Acito]
 - Updated Dockerfile. [Giuseppe Acito]
 - Adds Dockerfile. [Giuseppe Acito]
-- Refactor of buildConnection. [Giuseppe Acito]
+- Refactor of build_connection. [Giuseppe Acito]
 - Trying to build some structure to schema creation. [Giuseppe Acito]
 
 
@@ -849,7 +849,7 @@ v1.26.3 (2018-07-09)
 - Rimosso dbBegin, e' implementato sia in RPostgreSQL che RSQLite.
   [Giuseppe Acito]
 - Bump version: 1.21.0 → 1.21.1. [Giuseppe Acito]
-- Checks in buildConnection and some minor fixes in test fixtures.
+- Checks in build_connection and some minor fixes in test fixtures.
   [Giuseppe Acito]
 - Update NAMESPACE. [Giuseppe Acito]
 - Installed 3.3.3. [Giuseppe Acito]

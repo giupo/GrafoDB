@@ -21,7 +21,7 @@ diff.GrafoDB <- function(x, ...) {
     warning("not common names: ", paste0(not_common, collapse = ", "))
   }
 
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   sql <- sql_by_key(helper, "DIFF_FORMULE", new = x@tag, old = y@tag)
   trace("Diff query: %s", sql, name = "GrafoDB.diff")

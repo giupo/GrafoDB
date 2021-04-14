@@ -33,7 +33,7 @@ methods::setMethod(
 #' @param value valore settato
 #' @note funzione interna
 #' @rdname subsetting
-#' @include functions.r core.r check_dag.r find_deps.r
+#' @include functions.r core.r assert_dag.r find_deps.r
 
 subsetting <- function(x, i, value) {
   network <- x@network
@@ -81,7 +81,7 @@ subsetting <- function(x, i, value) {
       suppressWarnings(hash::del(name, x@edges))
     }
 
-    check_dag(network)
+    assert_dag(network)
 
     x@functions[[name]] <- declutted
     x@network <- network

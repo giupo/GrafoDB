@@ -35,7 +35,7 @@
 #' @name .saveGraph
 #' @usage .saveGraph(x, tag)
 #' @usage .saveGraph(x)
-#' @include conflicts.r copy_graph.r check_dag.r persistence_utils.r
+#' @include conflicts.r copy_graph.r assert_dag.r persistence_utils.r
 #' @rdname saveGraph-internal
 #' @note \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
 #' @include logging.r
@@ -61,7 +61,7 @@
     param_list[['con']]
   }  else {
     debug('connection has to be created...', name=ln)
-    con <- buildConnection()
+    con <- build_connection()
     on.exit(disconnect(con))
     debug('connection created and set to be closed on.exit', name=ln)
     con
@@ -94,7 +94,7 @@
       archi <- archi[, c("partenza", "arrivo")]
       dbnetwork <- igraph::graph.data.frame(as.data.frame(archi), directed=TRUE)
       network <- igraph::graph.union(network, dbnetwork, byname=TRUE)
-      check_dag(network)
+      assert_dag(network)
       x@network <- network
       x <- evaluate(x, clean_names)
     }

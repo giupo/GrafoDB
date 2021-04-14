@@ -35,7 +35,7 @@
   .Object@helper <- SQLHelper()
 
   if (is.null(con)) {
-    con <- buildConnection()
+    con <- build_connection()
     on.exit(disconnect(con))
   }
 
@@ -357,7 +357,7 @@ get_data <- function(x, ids) {
 
 exists_tag <- function(tag, con = NULL) {
   con <- if (is.null(con)) {
-    con <- buildConnection()
+    con <- build_connection()
     on.exit(disconnect(con))
     con
   } else {
@@ -490,7 +490,7 @@ tsdiff <- function(a, b, thr = .0000001) {
 #' @return data.frame con tutti i rilasci
 
 rilasci <- function(filtro = NULL) {
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   helper <- SQLHelper()
   sql <- if(is.null(filtro)) {

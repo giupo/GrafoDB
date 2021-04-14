@@ -591,7 +591,7 @@ methods::setMethod(
   "getMeta",
   signature("GrafoDB", "missing", "missing"),
   function(x) {
-    con <- buildConnection()
+    con <- build_connection()
     on.exit(disconnect(con))
     DBI::dbGetQuery(con, sql_by_key(
       x@helper, "GET_ALL_META",

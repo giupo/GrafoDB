@@ -30,7 +30,7 @@ test_that("I can handle NaN despite JsonCpp, jsonlite, IEEE754", {
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   DBI::dbExecute(
     con,
@@ -147,7 +147,7 @@ test_that("load_grafi handles when con is NULL", {
   disconnect_mock <- mock(TRUE)
   db_read_table_mock <- mock(TRUE)
 
-  mockery::stub(load_grafi, "buildConnection", build_connection_mock)
+  mockery::stub(load_grafi, "build_connection", build_connection_mock)
   mockery::stub(load_grafi, "disconnect", disconnect_mock)
   mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
 
@@ -163,7 +163,7 @@ test_that("load_grafi handles when con is not NULL", {
   disconnect_mock <- mock(TRUE)
   db_read_table_mock <- mock(TRUE)
 
-  mockery::stub(load_grafi, "buildConnection", build_connection_mock)
+  mockery::stub(load_grafi, "build_connection", build_connection_mock)
   mockery::stub(load_grafi, "disconnect", disconnect_mock)
   mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
 

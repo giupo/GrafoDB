@@ -34,7 +34,7 @@ delete_graph <- function(tag) {
   }
 
   helper <- SQLHelper()
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
 
   tryCatch({

@@ -30,7 +30,7 @@
          " sono in modifica. Salvare prima le modifiche ed in seguito rinominare le serie")
   }
   
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   
   tag <- x@tag

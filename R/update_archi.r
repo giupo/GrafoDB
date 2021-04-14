@@ -1,6 +1,6 @@
 
 #' @include logging.r
-#' @include check_dag.r
+#' @include assert_dag.r
 
 update_edges <- function(x, con, tag=x@tag) {
   ln <- "GrafoDB::update_edges"
@@ -43,7 +43,7 @@ update_edges <- function(x, con, tag=x@tag) {
     if(any(hash::keys(functions) %in% df$arrivo)) {
       warning("There are conflicts on edges, keep working on data and formula")
     }
-    check_dag(network_aux)
+    assert_dag(network_aux)
   }
 
   if(length(da.inserire)) {

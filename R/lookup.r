@@ -11,7 +11,7 @@
 
 .lookup <- function(x, key, value) {
   tag <- x@tag
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
   helper <- x@helper
@@ -38,7 +38,7 @@
 .lookup_formula <- function(x, key) {
   tag <- x@tag
   helper <- x@helper
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
   df <- DBI::dbGetQuery(con, sql_by_key(
@@ -62,7 +62,7 @@
 .lookup_dati <- function(x, key) {
   tag <- x@tag
   helper <- x@helper
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   ## non ci sono prepared statement funzionanti. maledetti.
   df <- DBI::dbGetQuery(con, sql_by_key(

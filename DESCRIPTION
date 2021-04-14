@@ -42,7 +42,7 @@ Suggests:
     RPostgreSQL,
     RSQLite
 Collate:
-    'check_dag.r'
+    'assert_dag.r'
     'logging.r'
     'db.r'
     'persistence_utils.r'

@@ -1,7 +1,7 @@
 #' @include db.r
 
 .getMeta <- function(x, serie, metadato) {
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   helper <- x@helper
   tag <- x@tag
@@ -26,7 +26,7 @@
 #' @include db.r
 
 .getMetadata <- function(x, name) {
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
@@ -44,7 +44,7 @@
 #' @include db.r
 
 .keys <- function(x) {
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
@@ -65,7 +65,7 @@
 #' @include db.r
 
 .values_by_key <- function(x, key=NULL) {
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
@@ -98,7 +98,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
   if (is.null(key)) {
     stop("key cannot be null")
   }
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
@@ -128,7 +128,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
   if(is.null(value)) {
     return(.deleteMetaByKey(x, name, key))
   }
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
@@ -151,7 +151,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
 }
 
 .deleteMetaByKey <- function(x, name, key) {
-    con <- buildConnection()
+    con <- build_connection()
     on.exit(disconnect(con))
 
     tag <- x@tag
@@ -179,7 +179,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
     nong <- setdiff(name, nomiobj)
     stop("Non e' una serie del grafo: ", paste(nong, collapse=", "))
   }
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
 
   helper <- x@helper

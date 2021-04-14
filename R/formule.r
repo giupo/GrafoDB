@@ -10,7 +10,7 @@
 
 formule <- function(g, name) {
   helper <- g@helper
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
 
   if(isRoot(g, name)) {

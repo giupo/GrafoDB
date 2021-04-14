@@ -13,7 +13,7 @@
     "REMOVE_CONFLICTS"
   }
 
-  con <- buildConnection()
+  con <- build_connection()
   on.exit(disconnect(con))
   tryCatch({
     DBI::dbBegin(con)
@@ -103,7 +103,7 @@ methods::setMethod(
   signature("GrafoDB", "ANY"),
   function(x, name = NULL, con = NULL) {
     con <- if (is.null(con)) {
-      con <- buildConnection()
+      con <- build_connection()
       on.exit(disconnect(con))
       con
     } else {
@@ -182,7 +182,7 @@ methods::setMethod(
   function(x, name = NULL) {
     tag <- x@tag
     helper <- x@helper
-    con <- buildConnection()
+    con <- build_connection()
     on.exit(disconnect(con))
     sql <- if (is.null(name)) {
       sql_by_key(helper, "GET_FORMULA_CONFLICTS", tag = tag)
@@ -229,7 +229,7 @@ methods::setMethod(
 
 get_changed_series_names <- function(x, con = NULL) {
   con <- if (is.null(con)) {
-    con <- buildConnection()
+    con <- build_connection()
     on.exit(disconnect(con))
     con
   } else {
@@ -248,7 +248,7 @@ get_changed_series_names <- function(x, con = NULL) {
 
 get_outer_data_names <- function(x, con = NULL) {
   con <- if (is.null(con)) {
-    con <- buildConnection()
+    con <- build_connection()
     on.exit(disconnect(con))
     con
   } else {
@@ -266,7 +266,7 @@ get_outer_data_names <- function(x, con = NULL) {
 
 get_outer_formula_names <- function(x, con = NULL) {
   con <- if (is.null(con)) {
-    con <- buildConnection()
+    con <- build_connection()
     on.exit(disconnect(con))
     con
   } else {
@@ -339,7 +339,7 @@ check_conflicts <- function(x, con = NULL) {
 
 create_data_conflicts <- function(x, nomi, con = NULL) {
   con <- if (is.null(con)) {
-    con <- buildConnection()
+    con <- build_connection()
     on.exit(disconnect(con))
     con
   } else {
@@ -385,7 +385,7 @@ create_function_conflicts <- function(x, nomi, formula_db, con = NULL) {
 
   conWasNull <- is.null(con)
   con <- if (is.null(con)) {
-    con <- buildConnection(con = con)
+    con <- build_connection(con = con)
     on.exit(disconnect(con))
     con
   } else {

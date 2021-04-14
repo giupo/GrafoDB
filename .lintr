@@ -1,0 +1,6 @@
+linters: with_defaults(
+    object_usage_linter = NULL
+  )
+exclude: "# nolint"
+exclude_start: "# begin nolint"
+exclude_end: "# end nolint"
