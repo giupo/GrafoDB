@@ -2,6 +2,53 @@ Changelog
 =========
 
 
+v1.36.6 (2021-04-14)
+--------------------
+- Bump version: 1.36.5 → 1.36.6. [giupo]
+- Fixed typo in test.old_grafo.r. [giupo]
+- Linted test.sqlhelper.r. [giupo]
+- Linted test.scale.r. [giupo]
+- Lint test.persistenza.r. [giupo]
+- Lint test.old_grafo.r. [giupo]
+- Linted test.mis.r. [giupo]
+- Updated code with identicalts. [giupo]
+- Several changes, identicalts with toll promoted to utils. [giupo]
+- Linted find_deps.r. [giupo]
+- Linted test.elementari.r. [giupo]
+- Linted test.edita.r. [giupo]
+- Lint test.diff.r. [giupo]
+- Linted test.db. [giupo]
+- Linted test.concorrenza.r. [giupo]
+- Linted test.cancellazione.r. [giupo]
+- Linted the test code. [giupo]
+- Linted update_functions.r. [giupo]
+- Linted update_data. [giupo]
+- Linted update_archi.r. [giupo]
+- Partially linted subsetting.r. [giupo]
+- Lint ser.r. [giupo]
+- Fix missing rename of .rename. [giupo]
+- Linted rmNode.r. [giupo]
+- Linted rename.r. [giupo]
+- Linted persistence.r. [giupo]
+- Fix mesg=msg named error. [giupo]
+- Updates on persistence.r. [giupo]
+- Rename .saveGraph. [giupo]
+- Linted the last thing on persistence_utils.r. [giupo]
+- Several changes, time.in.millis to time_in_nano. [giupo]
+- Lint patch.r. [giupo]
+- Change "name=ln" to "name = ln" [giupo]
+- Rename .rmNode to rm_node_impl. [giupo]
+- Fix tests decriptions fo' logging. [giupo]
+- Adds logging tests. [giupo]
+- Changed in attr_name/value. [giupo]
+- Fix commento. [giupo]
+- Linting, next level. [giupo]
+- Massive linting. [giupo]
+- Added linter ruels, some linting. [giupo]
+- Several changes on checks. [giupo]
+- Fix minor shit. [giupo]
+
+
 v1.36.5 (2021-04-13)
 --------------------
 - Bump version: 1.36.4 → 1.36.5. [giupo]
@@ -391,7 +438,7 @@ v1.32.0 (2019-11-19)
 - Passing to renv. [giupo]
 - Merge branch 'hotfix/shouldCreateSchemaOutOfBuildConnection' [Giuseppe
   Acito]
-- Removes initdb from build_connection and other amenities. [Giuseppe
+- Removes initdb from buildConnection and other amenities. [Giuseppe
   Acito]
 - Updated packrat. [Giuseppe Acito]
 - Updated packrat. [Giuseppe Acito]
@@ -427,7 +474,7 @@ v1.30.5 (2019-09-03)
   develop. [Giuseppe Acito]
 - Updated Dockerfile. [Giuseppe Acito]
 - Adds Dockerfile. [Giuseppe Acito]
-- Refactor of build_connection. [Giuseppe Acito]
+- Refactor of buildConnection. [Giuseppe Acito]
 - Trying to build some structure to schema creation. [Giuseppe Acito]
 
 
@@ -742,7 +789,7 @@ v1.27.3 (2018-07-10)
 v1.27.2 (2018-07-10)
 --------------------
 - Bump version: 1.27.1 → 1.27.2. [Giuseppe Acito]
-- Fix typo on time_in_nano. [Giuseppe Acito]
+- Fix typo on time.in.millis. [Giuseppe Acito]
 - Merge branch 'develop' [Giuseppe Acito]
 - Merge branch 'release/performanceRelease' [Giuseppe Acito]
 
@@ -849,7 +896,7 @@ v1.26.3 (2018-07-09)
 - Rimosso dbBegin, e' implementato sia in RPostgreSQL che RSQLite.
   [Giuseppe Acito]
 - Bump version: 1.21.0 → 1.21.1. [Giuseppe Acito]
-- Checks in build_connection and some minor fixes in test fixtures.
+- Checks in buildConnection and some minor fixes in test fixtures.
   [Giuseppe Acito]
 - Update NAMESPACE. [Giuseppe Acito]
 - Installed 3.3.3. [Giuseppe Acito]
@@ -1508,7 +1555,7 @@ v1.26.3 (2018-07-09)
 - Rimosso changes me, lo odiavo. Fix #8. [Giuseppe Acito]
 - Bump version: 0.11.4 → 0.11.5. [Giuseppe Acito]
 - Merge branch 'hotfix/editExistingNode' [Giuseppe Acito]
-- Fix #6. eseguivo due volte evaluate_single. Ora non ricordo il motivo
+- Fix #6. eseguivo due volte .evaluateSingle. Ora non ricordo il motivo
   ma e' da tenere a mente. [Giuseppe Acito]
 - Bump version: 0.11.3 → 0.11.4. [Giuseppe Acito]
 - Bump version: 0.11.2 → 0.11.3. [Giuseppe Acito]
