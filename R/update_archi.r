@@ -5,7 +5,7 @@
 update_edges <- function(x, con, tag=x@tag) {
   ln <- "GrafoDB::update_edges"
 
-  if (interactive()) info("Update Edges ...", name=ln)
+  if (interactive()) info("Update Edges ...", name = ln)
 
   data <- x@data
   functions <- x@functions
@@ -102,5 +102,5 @@ update_edges <- function(x, con, tag=x@tag) {
     })
   }
 
-  if (interactive()) info("Update Edges done.", name=ln)
+  if (interactive()) info("Update Edges done.", name = ln)
 }

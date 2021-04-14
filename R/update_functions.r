@@ -2,7 +2,7 @@
 
 update_functions <- function(x, con, tag=x@tag, msg="") {
   ln <- "GrafoDB::update_functions"
-  if (interactive()) info("Update Functions ...", name=ln)
+  if (interactive()) info("Update Functions ...", name = ln)
 
   ## passo la connessione perche' devono avere la stessa transazione
   ## non usare controllo di transazione qui
@@ -58,5 +58,5 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
     })
   }
   
-  if (interactive()) info("Update Functions done.", name=ln)
+  if (interactive()) info("Update Functions done.", name = ln)
 }
