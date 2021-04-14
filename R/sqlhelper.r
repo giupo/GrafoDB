@@ -5,7 +5,7 @@
 #'
 #' Le query vengono inizializzate in un file .ini
 #'
-#' @name SQLHelper
+#' @name SQLHelper-class
 #' @usage SQLHelper(type)
 #' @slot sqlContainer a list of key-values for the SQL queries
 #' @slot type the type of syntax
@@ -17,7 +17,6 @@
 #' @title SQLHelper
 #' @export SQLHelper
 #' @exportClass SQLHelper
-#' @docType class
 #' @include logging.r
 
 SQLHelper <- setClass( # nolint

@@ -132,10 +132,17 @@ methods::setGeneric(
     standardGeneric("downgrf")
   })
 
+methods::setOldClass("igraph")
 
-#' Classe per accedere ai dati immagazzinati in PostgreSQL del Grafo CF
+#' Main GrafoDB class
 #'
-#' @title Database Grafo
+#' Class for manipulating data described with formulas and evaluated as 
+#' a topological sorting of nodes in a graph data structure.
+#' This class provides a persistence layer towards generic DBMS
+#' (by now only PostgreSQL) has been implemented
+#'
+#' @export GrafoDB
+#' @name GrafoDB-class
 #' @slot tag edition of this Graph
 #' @slot network \link[igraph]{igraph} containing the DAG
 #' @slot data \link[hash]{hash} containing changed data of this \link{GrafoDB}
@@ -150,7 +157,6 @@ methods::setGeneric(
 #' @slot helper SQLHelper class
 #' @exportClass GrafoDB
 #' @include sqlhelper.r
-#' @docType class
 #' @importClassesFrom rdataset Dataset
 #' @importFrom methods new
 #' @examples \dontrun{
@@ -159,16 +165,12 @@ methods::setGeneric(
 #'    g = GrafoDB("cf10p2") # istanzia il grafo cf10 con provvisorio p2;
 #'                          # in questo caso ordinal e' 2
 #' }
-#' @name GrafoDB
 #' @rdname GrafoDB-class
-#' @docType class
-#' @export
 
-methods::setOldClass("igraph")
 
 GrafoDB <- methods::setClass( # nolint
   "GrafoDB",
-  methods::representation(
+  slots = list(
     tag = "character",
     network = "igraph",
     data = "hash",
