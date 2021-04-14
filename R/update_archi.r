@@ -66,7 +66,7 @@ update_edges <- function(x, con, tag=x@tag) {
     }
     params <- c(tag, df, autore)
 
-    foreach::`%do%`(foreach::foreach(row=iterators::iter(df, by='row')), {
+    foreach::`%do%`(foreach::foreach(row=iterators::iter(df, by="row")), {
       from <- row$partenza
       to <- row$arrivo
       DBI::dbExecute(con, sql_by_key(
@@ -94,7 +94,7 @@ update_edges <- function(x, con, tag=x@tag) {
     }
     params <- c(tag, df, autore)
 
-    foreach::`%do%`(foreach::foreach(row=iterators::iter(df, by='row')), {
+    foreach::`%do%`(foreach::foreach(row=iterators::iter(df, by="row")), {
       from <- row$partenza
       to <- row$arrivo
       DBI::dbExecute(con, sql_by_key(

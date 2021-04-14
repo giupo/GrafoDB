@@ -30,7 +30,7 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
 
     if (DBI::dbExistsTable(con, paste0("formule_", tag)) ||
          class(con) == "SQLiteConnection") {
-      foreach::`%do%`(foreach::foreach(row = iterators::iter(formule, 'row')), {
+      foreach::`%do%`(foreach::foreach(row = iterators::iter(formule, "row")), {
         formularow <- row[,1]
         namerow <- row[,3]
 

@@ -162,9 +162,9 @@ update_graph <- function(x, tag = x@tag, con = NULL, msg = "") {
   update_edges(x, con = con, tag = tag)
   DBI::dbExecute(con, sql_by_key(
     helper, "UPDATE_GRAFO_LAST_UPDATED",
-    autore=rutils::whoami(),
+    autore = rutils::whoami(),
     tag = tag,
-    last_updated=time_in_nano()))
+    last_updated = time_in_nano()))
 }
 
 
@@ -183,7 +183,7 @@ create_graph <- function(x, tag, con, ...) {
     param_list[["msg"]]
   } else {
     if (interactive()) {
-      readline(prompt="Inserisci un commento/nota per: ")
+      readline(prompt = "Inserisci un commento/nota per: ")
     } else {
       paste0("Rilascio per ", tag)
     }
@@ -193,7 +193,8 @@ create_graph <- function(x, tag, con, ...) {
   helper <- x@helper
 
   if (length(names(x))) {
-    dati <- foreach::`%do%`(foreach::foreach (name = iterators::iter(names(x)), .combine=rbind), {
+    dati <- foreach::`%do%`(foreach::foreach(
+      name = iterators::iter(names(x)), .combine = rbind), {
       tt <- x[[name]]
       df <-  to_data_frame(tt, name)
       anno <- as.numeric(df$anno)
@@ -204,54 +205,54 @@ create_graph <- function(x, tag, con, ...) {
       DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_DATI",
         tag = tag,
-        name=name,
-        anno=anno,
-        periodo=periodo,
-        freq=freq,
-        dati=dati,
-        autore=autore,
-        last_updated=time_in_nano()))
+        name = name,
+        anno = anno,
+        periodo = periodo,
+        freq = freq,
+        dati = dati,
+        autore = autore,
+        last_updated = time_in_nano()))
     })
   } else {
-    stop("Non ci sono dati da salvare.")
+    stop("There's no data to save")
   }
 
   archi <- as.data.frame(igraph::get.edgelist(x@network))
 
   if (nrow(archi)) {
-    foreach::`%do%`(foreach::foreach(row = iterators::iter(archi, 'row')), {
-      partenza <- row[,1]
-      arrivo <- row[,2]
+    foreach::`%do%`(foreach::foreach(row = iterators::iter(archi, "row")), {
+      partenza <- row[, 1]
+      arrivo <- row[, 2]
       DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_ARCO",
         tag = tag,
-        partenza=partenza,
-        arrivo=arrivo,
-        autore=autore,
-        last_updated=time_in_nano()))
+        partenza = partenza,
+        arrivo = arrivo,
+        autore = autore,
+        last_updated = time_in_nano()))
     })
   }
 
   foreach::`%do%`(foreach::foreach(
-    name = iterators::iter(names(x)), .combine=rbind), {
-    formula <- expr(x, name, echo=FALSE)
+    name = iterators::iter(names(x)), .combine = rbind), {
+    formula <- expr(x, name, echo = FALSE)
     if (!is.null(formula)) {
       DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_FORMULA",
         tag = tag,
-        name=name,
-        formula=formula,
-        autore=autore,
-        last_updated=time_in_nano()))
+        name = name,
+        formula = formula,
+        autore = autore,
+        last_updated = time_in_nano()))
     }
   })
 
   DBI::dbExecute(con, sql_by_key(
-    helper, "INSERT_GRAFI", 
+    helper, "INSERT_GRAFI",
     tag = tag,
-    commento=commento,
-    autore=autore,
-    last_updated=time_in_nano()))
+    commento = commento,
+    autore = autore,
+    last_updated = time_in_nano()))
 }
 
 
@@ -267,37 +268,43 @@ create_graph <- function(x, tag, con, ...) {
 count_rolling <- function(x, con) {
   stopifnot(is.grafodb(x))
   tag <- x@tag
- 
+
   # controlla che grafi_`tag`_ordinal_seq esista.
   # se esiste, prende il prossimo `p` dalla sequence;
-  # se non esiste, esegue il blocco qui sotto, crea la sequence e aggiorna il valore
+  # se non esiste, esegue il blocco qui sotto, crea la sequence e
+  # aggiorna il valore
 
   helper <- x@helper
   if (helper@type == "PostgreSQL") {
     ## se PostgreSQL:
     nome_seq <- paste0("grafi_", tag, "_ordinal_seq")
-
-    if (nrow(DBI::dbGetQuery(con, sql_by_key(helper, "EXISTS_SEQ", seq=nome_seq))) > 0) {
-      df <- DBI::dbGetQuery(con, sql_by_key(helper, "NEXT_VAL", seq=nome_seq))
+    df <- DBI::dbGetQuery(con, sql_by_key(helper, "EXISTS_SEQ", seq = nome_seq))
+    if (nrow(df) > 0) {
+      df <- DBI::dbGetQuery(con, sql_by_key(helper, "NEXT_VAL", seq = nome_seq))
       as.numeric(df[[1]])
     } else {
-      val <- getMaxP(helper, tag, con) + 1
-      DBI::dbExecute(con, sql_by_key(helper, "CREATE_SEQ", seq=nome_seq, val=val))
+      val <- get_max_provvisorio(helper, tag, con) + 1
+
+      DBI::dbExecute(
+        con,
+        sql_by_key(helper, "CREATE_SEQ", seq = nome_seq, val = val))
+
       count_rolling(x, con)
     }
   } else {
     ## se SQLite:
-    getMaxP(helper, tag, con) + 1
+    get_max_provvisorio(helper, tag, con) + 1
   }
 }
 
-getMaxP <- function(helper, tag, con) {
+get_max_provvisorio <- function(helper, tag, con) {
   df <- DBI::dbGetQuery(con, sql_by_key(helper, "COUNT_ROLLING", tag = tag))
   if (nrow(df) == 0) {
     0
   } else {
-    numeri <- suppressWarnings(as.numeric(gsub("p", "", gsub(tag, "", df[, 1]))))
-    max(numeri, na.rm=TRUE)
+    numeri <- suppressWarnings(
+      as.numeric(gsub("p", "", gsub(tag, "", df[, 1]))))
+    max(numeri, na.rm = TRUE)
   }
 }
 
@@ -308,9 +315,7 @@ getMaxP <- function(helper, tag, con) {
 #' @usage next_rolling_name(x)
 
 next_rolling_name <- function(x, con) {
-  tag <- x@tag
-  p <- count_rolling(x, con) 
-  paste0(tag, 'p', p)
+  glue::glue("{x@tag}p{ count_rolling(x, con) }")
 }
 
 
@@ -342,13 +347,19 @@ do_history <- function(x, tag, con) {
 
   dest <- next_rolling_name(x, con)
   if (interactive()) message("Saving GrafoDB from ", x@tag, " to ", dest)
-  copy_graph(x@tag, dest, con = con, autore=autore,
-            helper=x@helper, last_update=x@timestamp)
+
+  copy_graph(
+    x@tag, dest,
+    con = con,
+    autore = autore,
+    helper = x@helper,
+    last_update = x@timestamp)
+
   if (interactive()) message("Saving ", dest, " completed")
   0
 }
 
-#' Salva un istanza di grafo sul file system 
+#' Salva un istanza di grafo sul file system
 #'
 #' @name saveBinary
 #' @usage saveBinary(x, path)
@@ -357,7 +368,7 @@ do_history <- function(x, tag, con) {
 #' @export
 #' @note il restore si fa con il comando `readBinary`
 
-saveBinary <- function(x, path) {
+saveBinary <- function(x, path) { # nolint
   con <- file(path, "wb")
   on.exit(close(con))
   ret <- serialize(x, con, ascii = TRUE)
@@ -373,7 +384,7 @@ saveBinary <- function(x, path) {
 #' @return GrafoDB contenuto nel file `path`
 #' @export
 
-readBinary <- function(path) {
+readBinary <- function(path) { # nolint
   con <- file(path, "rw")
   on.exit(close(con))
   unserialize(con)
