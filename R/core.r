@@ -526,7 +526,7 @@ methods::setMethod(
   "ser",
   signature("GrafoDB", "character"),
   function(x, name, debug=FALSE) {
-    .ser(x, name, debug=debug)
+    ser_impl(x, name, debug=debug)
   }
 )
 

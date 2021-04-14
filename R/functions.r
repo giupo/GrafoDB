@@ -250,11 +250,11 @@ clutter_with_params <- function(func_string, name, deps) {
 #' dato ritornato
 #'
 #' @name clutter_with_params_and_return
-#' @usage clutter_with_params_and_return(f, name, deps, funcName)
+#' @usage clutter_with_params_and_return(f, name, deps, func_name)
 #' @param func_string function task to be converted as function
 #' @param name task name
 #' @param deps array di dipendenze
-#' @param funcName nome della funzione definita
+#' @param func_name nome della funzione definita
 #' @return Ritorna un character array `is.character(ret) == TRUE`
 #' @rdname clutter_with_params_and_return_internal
 

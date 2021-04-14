@@ -4,7 +4,7 @@
 \alias{clutter_with_params_and_return}
 \title{questa funzione orla la formula del grafo come una funzione}
 \usage{
-clutter_with_params_and_return(f, name, deps, funcName)
+clutter_with_params_and_return(f, name, deps, func_name)
 }
 \arguments{
 \item{func_string}{function task to be converted as function}
@@ -13,7 +13,7 @@ clutter_with_params_and_return(f, name, deps, funcName)
 
 \item{deps}{array di dipendenze}
 
-\item{funcName}{nome della funzione definita}
+\item{func_name}{nome della funzione definita}
 }
 \value{
 Ritorna un character array `is.character(ret) == TRUE`
