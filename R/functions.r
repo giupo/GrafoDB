@@ -189,7 +189,7 @@ from_data_frame <- function(df) {
 declutter_function <- function(func_string) {
   func_string <- rutils::ifelse(
     is.function(func_string),
-    paste(capture.output(func_string), collapse = "\n"),
+    paste(utils::capture.output(func_string), collapse = "\n"),
     func_string)
 
   idx_inizio <- stringr::str_locate(func_string, "\\{")[[1]]

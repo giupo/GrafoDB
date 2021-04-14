@@ -9,7 +9,7 @@ RUN wget https://github.com/libgit2/libgit2/releases/download/v1.1.0/libgit2-1.1
  	mkdir build && cd build && cmake .. && cmake --build . && make install
 
 # install R deps
-RUN R -e 'install.packages(c("devtools", "igraph", "hash", "jsonlite", "stringr", "formatR", "DBI", "stats", "foreach", "iterators", "gdata", "rredis", "R.utils", "Rcpp", "RCurl", "zoo", "futile.logger", "crayon", "stringi", "rstudioapi", "testthat", "roxygen2", "covr", "tis", "sourcetools", "mockery", "tempdisagg", "RPostgreSQL", "RSQLite", "progress"), repos="https://cran.rstudio.com")' && \
+RUN R -e 'install.packages(c("devtools", "igraph", "hash", "jsonlite", "stringr", "formatR", "DBI", "stats", "foreach", "iterators", "gdata", "rredis", "R.utils", "Rcpp", "RCurl", "zoo", "futile.logger", "stringi", "rstudioapi", "testthat", "roxygen2", "covr", "tis", "sourcetools", "mockery", "tempdisagg", "RPostgreSQL", "RSQLite", "progress"), repos="https://cran.rstudio.com")' && \
 	R -e 'devtools::install_github("giupo/rutils")' && \
 	R -e 'devtools::install_github("giupo/rprogressbar")' && \
 	R -e 'devtools::install_github("giupo/rdataset")'

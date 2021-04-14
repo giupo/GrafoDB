@@ -25,7 +25,6 @@ Imports:
     rdataset,
     zoo,
     futile.logger,
-    crayon,
     progress,
     whisker,
     glue
