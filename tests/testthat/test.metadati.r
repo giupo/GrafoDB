@@ -5,7 +5,7 @@ setup <- function(tag) {
   debug("Nome dell'env: %s", Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
 
-  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 1)
+  g["A"] <- g["B"] <- stats::ts(c(0, 0, 0), start = c(1990, 1), frequency = 1)
   g["C"] <- function(A, B) { # nolint
     C = (A + 1) * (B + 2) # nolint
   }

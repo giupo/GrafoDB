@@ -2,7 +2,7 @@ ser_impl <- function(x, name, debug=FALSE) {
   ## that's the dumbest thing in my life, inverting arguments.
   if (!debug) {
     ret <- evaluate_single(name, x)
-    if (!is.ts(ret)) {
+    if (!stats::is.ts(ret)) {
       stop(name, " non e' un oggetto ts")
     }
     ret

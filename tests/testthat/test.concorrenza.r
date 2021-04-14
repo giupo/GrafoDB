@@ -2,8 +2,8 @@ context("Concurrency")
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
-  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
-  g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["A"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
   g["C"] <- function(A, B) { # nolint
     C = A + B # nolint
   }
@@ -22,7 +22,7 @@ test_that("Salvare una serie non crea un conflitto", {
 
   expect_equal(g1@timestamp, g2@timestamp)
 
-  g1["A"] <- new_a_1 <- ts(rep(1, 10), start = c(1990, 1), frequency = 4)
+  g1["A"] <- new_a_1 <- stats::ts(rep(1, 10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g1, msg = "test")
 
   expect_true(g1@timestamp != g2@timestamp)
@@ -40,8 +40,8 @@ test_that("Save same object in two distinct sessions creates a conflict", {
 
   expect_equal(g1@timestamp, g2@timestamp)
 
-  g1["A"] <- new_a_1 <- ts(rep(0, 10), start = c(1990, 1), frequency = 4)
-  g2["A"] <- new_a_2 <- ts(rep(1, 10), start = c(1990, 1), frequency = 4)
+  g1["A"] <- new_a_1 <- stats::ts(rep(0, 10), start = c(1990, 1), frequency = 4)
+  g2["A"] <- new_a_2 <- stats::ts(rep(1, 10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g1)
 
   with_mock(
@@ -75,8 +75,8 @@ test_that("save two different objects doesn't create a conflict", {
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
 
-  new_a <- ts(runif(10), start = c(1990, 1), frequency = 4)
-  new_b <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  new_a <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
+  new_b <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
 
   g1["A"] <- new_a
   g2["B"] <- new_b
@@ -326,9 +326,9 @@ test_that("Series with conflicts with NA don't trigger errors", {
   expect_equal(g1@timestamp, g2@timestamp)
   expect_equal(g1@tag, g2@tag)
 
-  g1["A"] <- ts(rep(1, 10), start = c(1990, 1), frequency = 4)
+  g1["A"] <- stats::ts(rep(1, 10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g1)
-  g2["A"] <- ts(rep(10, 10), start = c(1990, 1), frequency = 4)
+  g2["A"] <- stats::ts(rep(10, 10), start = c(1990, 1), frequency = 4)
 
   expect_true(g1@timestamp != g2@timestamp)
   expect_true(g1@timestamp > g2@timestamp)

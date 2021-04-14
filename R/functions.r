@@ -111,7 +111,7 @@ is.grafodb <- function(x) { # nolint
  to_data_frame <- function(x, name=NULL) {
   ## questa funzione converte a dataframe la timeseries,
   ## utile per l'inserimento nel DB
-  if (is.ts(x)) {
+  if (stats::is.ts(x)) {
     anno <- stats::start(x)[[1]]
     prd  <- stats::start(x)[[2]]
     freq <- stats::frequency(x)
@@ -167,7 +167,7 @@ from_data_frame <- function(df) {
     if (any(params == 0)) {
       ret[[name]] <- jsonlite::fromJSON(as.character(row$dati))
     } else {
-      dati <- ts(
+      dati <- stats::ts(
         jsonlite::fromJSON(as.character(row$dati)),
         start = c(anno, periodo),
         frequency = freq)

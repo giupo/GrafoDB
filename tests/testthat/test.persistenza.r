@@ -2,13 +2,13 @@ context("Persistence functions")
 
 setup <- function(name) {
   g <- GrafoDB(name)
-  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
-  g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["A"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
   g["C"] <- function(A, B) { # nolint
     C = A + B # nolint
   }
 
-  g["D"] <- ts(c(NA, 1, NA), start = c(1990, 1), frequency = 4)
+  g["D"] <- stats::ts(c(NA, 1, NA), start = c(1990, 1), frequency = 4)
 
   g <- saveGraph(g)
   g
@@ -44,8 +44,8 @@ test_that("I can handle NaN despite JsonCpp, jsonlite, IEEE754", {
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
-  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
-  g["B"] <- ts(1:10, start = c(1990, 1), frequency = 4)
+  g["A"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- stats::ts(1:10, start = c(1990, 1), frequency = 4)
   g["C"] <- function(A, B) { # nolint
     C = A + B # nolint
   }
@@ -112,7 +112,7 @@ test_that("need_resync returns true if GrafoNeeds a resync", {
 
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
-  g2["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g2["A"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
   g2 <- saveGraph(g2)
   expect_true(need_resync(g1))
 })
@@ -121,10 +121,10 @@ test_that("do_history preserves last_updated", {
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
-  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["A"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g)
 
-  g1["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g1["B"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g1)
   p <- GrafoDB("testp1")
   expect_true("A" %in% names(p))

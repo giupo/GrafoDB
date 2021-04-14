@@ -1,6 +1,6 @@
 context("Scalability tests")
 
-tt <- ts(rep(1, 5), start = c(1990, 1), frequency = 4)
+tt <- stats::ts(rep(1, 5), start = c(1990, 1), frequency = 4)
 
 proxytest <- function(numero) {
   g <- GrafoDB("test")
@@ -14,7 +14,7 @@ proxytest <- function(numero) {
   g <- evaluate(g, "B")
   expect_true("B" %in% names(g))
   expected <- g[["B"]]
-  expect_true(is.ts(expected))
+  expect_true(stats::is.ts(expected))
   expect_equal(expected[1], numero)
   ser(g, "B")
   delete_graph("test")

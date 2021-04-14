@@ -2,8 +2,8 @@ context("Diff functions")
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
-  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
-  g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["A"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
   g["C"] <- function(A, B) { # nolint
     C = A + B # nolint
   }

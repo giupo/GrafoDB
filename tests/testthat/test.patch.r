@@ -2,7 +2,7 @@ context("Patch & Diff")
 
 setup <- function(x) {
   g <- GrafoDB(x)
-  g["A"] <- g["B"] <- ts(rep(1, 10), start = c(1990, 1), frequency = 1)
+  g["A"] <- g["B"] <- stats::ts(rep(1, 10), start = c(1990, 1), frequency = 1)
   g["C"] <- function(A, B) { # nolint
     C <- A + B # nolint
   }
