@@ -4,13 +4,13 @@
 \alias{setMeta}
 \title{Imposta un metadato per una particolare serie}
 \usage{
-setMeta(object, tsName, attrName, value)
+setMeta(object, ts_name, attrName, value)
 }
 \value{
 il GrafoDB modificato
 }
 \description{
-Imposta un metadato `attrName`=`value` per la serie `tsName`
+Imposta un metadato `attrName`=`value` per la serie `ts_name`
 Se la serie non esiste, va in errore.
 }
 \examples{

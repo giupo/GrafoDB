@@ -4,7 +4,7 @@
 \alias{isPrimitive}
 \title{Funzioni del package `grafo`}
 \usage{
-isPrimitive(graph, tsName)
+isPrimitive(graph, ts_name)
 }
 \description{
 implementazione di isPrimitive di `package::grafo`

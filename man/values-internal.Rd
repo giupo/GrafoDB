@@ -2,7 +2,7 @@
 % Please edit documentation in R/metadati.r
 \name{.values}
 \alias{.values}
-\alias{.values_by_key}
+\alias{values_by_key_impl}
 \alias{values_for}
 \title{Ritorna i valori dei metadati (o per singolo metadato)}
 \usage{

@@ -189,7 +189,7 @@ methods::setMethod(
   "initialize",
   signature("GrafoDB"),
   function(.Object, tag="cf10") {
-    .init(.Object, tag)
+    init_grafo_impl(.Object, tag)
   })
 
 
@@ -211,7 +211,7 @@ methods::setMethod(
   "navigate",
   signature("GrafoDB", "ANY", "ANY", "ANY"),
   function(object, nodes=NULL, order=1L, mode="out") {
-    .navigate(object, nodes=nodes, order=order, mode=mode)
+    navigate_impl(object, nodes=nodes, order=order, mode=mode)
   })
 
 methods::setMethod(
@@ -258,21 +258,21 @@ methods::setMethod(
   "lookup",
   c("GrafoDB", "character", "character"),
   function(x, key, value) {
-    .lookup(x, key, value)
+    lookup_impl(x, key, value)
   })
 
 methods::setMethod(
   "lookup",
   c("GrafoDB", "numeric", "missing"),
   function(x, key, value) {
-    .lookup_dati(x, key)
+    lookup_dati_impl(x, key)
   })
 
 methods::setMethod(
   "lookup",
   c("GrafoDB", "character", "missing"),
   function(x, key, value) {
-    .lookup_formula(x, key)
+    lookup_formula_impl(x, key)
   })
 
 
@@ -376,7 +376,7 @@ methods::setMethod(
   "expr",
   c("GrafoDB", "character", "ANY"),
   function(x, nomi, echo = FALSE) {
-    .expr(x, nomi, echo)
+    expr_impl(x, nomi, echo)
   })
 
 #' Implementazione del generic `evaluate` del package `grafo`
@@ -385,7 +385,7 @@ methods::setMethod(
 #' Esegue il calcolo delle serie storiche presenti in questo Database
 #'
 #' @name evaluate
-#' @seealso .evaluate
+#' @seealso evaluate_impl
 #' @usage evaluate(object)
 #' @usage evaluate(object, v_start)
 #' @include functions.r
@@ -411,7 +411,7 @@ methods::setMethod(
   "evaluate",
   signature("GrafoDB", "ANY", "ANY"),
   function(object, v_start=NULL, deep=F, ...) {
-    .evaluate(object, v_start, deep, ...)
+    evaluate_impl(object, v_start, deep, ...)
   })
 
 methods::setGeneric(
@@ -460,15 +460,15 @@ methods::setMethod(
 
 methods::setGeneric(
   "getMetadata",
-  function(object, tsName, full = FALSE) {
+  function(object, ts_name, full = FALSE) {
     standardGeneric("getMetadata")
   })
 
 methods::setMethod(
   "getMetadata",
   signature("GrafoDB", "character", "ANY"),
-  function(object, tsName, full = FALSE) {
-    .getMetadata(object, tsName)
+  function(object, ts_name, full = FALSE) {
+    get_metadata_impl(object, ts_name)
   })
 
 #' Edita un la formula di una serie storica.
@@ -491,9 +491,9 @@ methods::setMethod(
   "edita",
   signature("GrafoDB", "character"),
   function(x, name, ...) {
-    nameObject <- deparse(substitute(x))
+    object_name <- deparse(substitute(x))
     x <- .edita(x, name)
-    assign(nameObject, x, envir=parent.frame())
+    assign(object_name, x, envir=parent.frame())
     invisible(x)
   })
 
@@ -574,7 +574,7 @@ methods::setMethod(
   "getMeta",
   signature("GrafoDB", "character", "character"),
   function (x, serie, metadato){
-    .getMeta(x, serie, metadato)
+    get_meta_impl(x, serie, metadato)
   })
 
 methods::setMethod(
@@ -603,7 +603,7 @@ methods::setMethod(
   "keys",
   signature("GrafoDB"),
   function(x) {
-    .keys(x)
+    keys_impl(x)
   })
 
 #' @include metadati.r
@@ -619,7 +619,7 @@ methods::setMethod(
     } else {
       NULL
     }
-    .values_by_key(x, key = key)
+    values_by_key_impl(x, key = key)
   })
 
 

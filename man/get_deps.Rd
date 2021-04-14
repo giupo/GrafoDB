@@ -4,7 +4,7 @@
 \alias{get_deps}
 \title{Funzioni del package `grafo`}
 \usage{
-get_deps(graph, tsName)
+get_deps(graph, ts_name)
 }
 \description{
 implementazione di get_deps di `package::grafo`

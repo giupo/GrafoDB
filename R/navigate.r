@@ -1,6 +1,6 @@
 #' @include functions.r
 
-.navigate <- function(object, nodes = NULL, order = 1L, mode = "out") {
+navigate_impl <- function(object, nodes = NULL, order = 1L, mode = "out") {
   network <- object@network
   order <- as.integer(order)
   mmode <- as.character(mode)

@@ -3,20 +3,20 @@
 #' L'eliminazione prevede l'eliminazione dai dati, formule, archi e metadati
 #'
 #' @name .rmNode
-#' @usage .rmNode(graph, tsName, recursive)
+#' @usage .rmNode(graph, ts_name, recursive)
 #' @param graph istanza di `GrafoDB`
-#' @param tsName nomi di serie da eliminare
+#' @param ts_name nomi di serie da eliminare
 #' @param recursive `TRUE` se l'eliminazione deve essere rivorsiva sugli archi
-#'                  uscenti di ogni serie nel parametro `tsName`.
+#'                  uscenti di ogni serie nel parametro `ts_name`.
 #'                  `FALSE` altrimenti. Se il parametro e' impostato a `FALSE` e'
-#'                  condizione necessaria che le serie in `tsName` siano tutte
+#'                  condizione necessaria che le serie in `ts_name` siano tutte
 #'                  foglie, ovvero serie senza archi uscenti
 #' @note Metodo interno
 #' @seealso rmNode
 #' @rdname rmNode-internal
 
-.rmNode <- function(graph, tsName, recursive=FALSE) {
-  sono.tutte.foglie <- isLeaf(graph, tsName)
+.rmNode <- function(graph, ts_name, recursive=FALSE) {
+  sono.tutte.foglie <- isLeaf(graph, ts_name)
   tag <- graph@tag
   if (!recursive && !sono.tutte.foglie) {
     stop(paste("Non posso cancellare serie intermedie senza",
@@ -31,9 +31,9 @@
   tryCatch({
     DBI::dbBegin(con)
 
-    figlie <- downgrf(graph, tsName)
+    figlie <- downgrf(graph, ts_name)
 
-    da.eliminare <- union(figlie, tsName)
+    da.eliminare <- union(figlie, ts_name)
 
     ## eliminare i dati
     for (name in da.eliminare) {

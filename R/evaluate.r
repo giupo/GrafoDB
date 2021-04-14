@@ -1,8 +1,8 @@
 #' @include expr.r
 
-.evaluateSingle1 <- function(name, graph) {
-  tsformula <- .expr(graph, name, echo=FALSE)
-  nomi_padri <- upgrf(graph, name, livello=1)
+evaluate_single_1 <- function(name, graph) {
+  tsformula <- expr_impl(graph, name, echo = FALSE)
+  nomi_padri <- upgrf(graph, name, livello = 1)
   if (length(nomi_padri) == 0 && is.null(tsformula)) {
     return(graph[[name]])
   }
@@ -51,70 +51,31 @@
 }
 
 
-#' Valuta un singolo oggetto del grafo identificato da `name`
+#' Evaluates a single object function identified with `name`
 #'
-#' @name .evaluateSingle
-#' @aliases evaluateSingle
-#' @usage .evaluateSingle(name, object)
-#' @usage evaluateSingle(name, object)
+#' @name evaluate_single
+#' @usage evaluate_single(name, object)
 #' @param name `character` nome della serie
 #' @param graph istanza di `GrafoDB`
 #' @return la serie storica calcolata.
-#' @export
-#' @rdname evaluateSingle-internal
-#' @note la scelta di evaluateSingle ricade su .evaluateSingle1, le altre due
-#'       implementazioni NON SUPPORTANO LE SERIE ELEMENTARI
 
-.evaluateSingle <- .evaluateSingle1
+evaluate_single <- evaluate_single_1
 
 #' Implementazione del generic `evaluate` definito nel package `grafo`
 #' per la classe `GrafoDB`
 #'
-#' @name .evaluate
-#' @usage .evaluate(object)
-#' @usage .evaluate(object, v_start)
+#' @name evaluate_impl
+#' @usage evaluate_impl(object)
+#' @usage evaluate_impl(object, v_start)
 #' @return il grafo con i dati correttamente valutato
 #' @rdname evaluate-internal
 
-
-.evaluate00 <- function(object, v_start = NULL, ...) {
-  names_object <- names(object)
-
-  if (!all(v_start %in% names_object)) {
-    not_in_graph <- setdiff(v_start, names_object)
-    stop("Not in graph: ", paste(not_in_graph, collapse=", "))
-  }
-
-  successors <- downgrf(object, v_start)
-  ordered_successors <- successors[order(match(successors, names_object))]
-
-
-  if (interactive())
-    pb <- progress::progress_bar$new(
-      total = length(ordered_successors),
-      format = ":what [:bar] :current/:total :percent eta: :eta")
-
-  data <- object@data
-
-  for (name in ordered_successors) {
-    if (interactive()) pb$tick(tokens = list(what = name))
-    data[[name]] <- .evaluateSingle(name, object)
-  }
-
-  object@data <- data
-  object@touched <- sort(unique(c(object@touched, hash::keys(data))))
-  invisible(object)
-}
-
-
-.evaluate <- function(object, v_start = NULL, ...) {
+evaluate_impl <- function(object, v_start = NULL, ...) { # nolint
   params <- list(...)
 
-  debug <- if ("debug" %in% names(params)) {
-    as.logical(params[["debug"]]) # nocov used only for debugging
-  } else {
-    FALSE
-  }
+  debug <- rutils::ifelse("debug" %in% names(params),
+    as.logical(params[["debug"]]),
+    FALSE)
 
   tag <- object@tag
   data <- object@data
@@ -124,7 +85,7 @@
 
   if (!all(v_start %in% all_names)) {
     not_in_graph <- setdiff(v_start, all_names)
-    stop("Not in graph: ", paste(not_in_graph, collapse=", "))
+    stop("Not in graph: ", paste(not_in_graph, collapse = ", "))
   }
 
   ## preload primitive
@@ -143,6 +104,7 @@
 
   ## se il network e' vuoto dopo l'eliminazione delle sorgenti,
   ## ritorno senza fare nulla
+
   total <- length(igraph::V(network))
   if (total == 0) {
     return(invisible(object))
@@ -150,17 +112,19 @@
 
   i <- 0
   is_interactive <- interactive()
+
   if (is_interactive) { # nocov start
     pb <- rprogressbar::ProgressBar(min = 0, max = total)
     rprogressbar::updateProgressBar(pb, i, "Starting...")
   } # nocov end
 
-  if (is_interactive) rprogressbar::updateProgressBar(pb, i, "Starting...") # nocov
+  if (is_interactive) rprogressbar::updateProgressBar(
+    pb, i, "Starting...") # nocov
 
   sources_id <- igraph::V(network)[igraph::degree(network, mode = "in") == 0]
 
   proxy <- function(name, object) {
-    serie <- .evaluateSingle(name, object)
+    serie <- evaluate_single(name, object)
     ret <- list()
     ret[[name]] <- serie
     ret
@@ -182,13 +146,15 @@
     sources <- setdiff(sources, sprimitive)
 
     if (length(sources)) {
-      evaluated <- foreach::`%dopar%`(foreach::foreach(name = sources, .combine = c), {
+      evaluated <- foreach::`%dopar%`(
+        foreach::foreach(name = sources, .combine = c), {
         proxy(name, object)
       })
 
       i <- i + length(sources)
       if (is_interactive) {
-        rprogressbar::updateProgressBar(pb, i, tail(names(evaluated), n=1)) # nocov
+        rprogressbar::updateProgressBar(
+          pb, i, tail(names(evaluated), n = 1)) # nocov
       }
 
       if (length(evaluated) != length(sources)) {
@@ -213,25 +179,32 @@
   object
 }
 
-#' patch to evaluate
+#' Patch to evaluate
 #'
 #' @name evaluate_plain
+#' @usage evaluate_plain(x)
+#' @usage evaluate_plain(x, ids)
+#' @param x GrafoDB instance
+#' @param ids object names to be evaluated
+#' @returns GrafoDB with ids evaluated
 #' @export
+#' @note this is useful to evaluate the topological sort
+#'   without multicore
 
-evaluate_plain <- function(x, i = names(x)) {
+evaluate_plain <- function(x, ids = names(x)) {
   if (interactive())
     pb <- progress::progress_bar$new(
-      total = length(i), 
+      total = length(ids),
       format = ":what [:bar] :current/:total :percent eta: :eta")
 
   data <- g@data
 
-  for (name in i) {
-    if (interactive()) pb$tick(tokens = list(what=name))
-    data[[name]] <- .evaluateSingle(name, g)
+  for (name in ids) {
+    if (interactive()) pb$tick(tokens = list(what = name))
+    data[[name]] <- evaluate_single(name, g)
   }
 
   g@data <- data
   g@touched <- sort(unique(c(g@touched, hash::keys(data))))
-  invisible(g)
+  g
 }

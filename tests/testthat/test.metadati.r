@@ -93,8 +93,8 @@ test_that("Ottengo un errore se accade un errore sul DB nella lettura di Metadat
     delete_graph("test")
   })
   g <- setup("test")
-  stub(.getMeta, 'sql_by_key', function(...) stop("error"))
-  expect_error(.getMeta(g, "A", "KEY"), "error")
+  stub(get_meta_impl, 'sql_by_key', function(...) stop("error"))
+  expect_error(get_meta_impl(g, "A", "KEY"), "error")
 })
 
 test_that("I get nothing if there are no metadata values for a key", {
@@ -109,9 +109,9 @@ test_that("setMeta has a warning each time you set an already existing meta", {
     delete_graph("test")
   })
   g <- setup("test")
-  stub(.setMeta, "warning", function(...) stop("dc"))
+  stub(set_meta_impl, "warning", function(...) stop("dc"))
 
-  expect_error(.setMeta(g, "A", "KEY", "VALUE1"))
+  expect_error(set_meta_impl(g, "A", "KEY", "VALUE1"))
 })
 
 test_that("setMeta su una serie inesistente produce un errore", {
@@ -127,14 +127,14 @@ context("Metadata [internal functions]")
 test_that(".lookupFormula works as expected", {
   g <- setup("test")
   on.exit(delete_graph("test"))
-  expect_equal(length(.lookup_formula(g, "*")), 1)
-  expect_equal(.lookup_formula(g, "*"), "C")
+  expect_equal(length(lookup_formula_impl(g, "*")), 1)
+  expect_equal(lookup_formula_impl(g, "*"), "C")
 })
 
-test_that(".keys returns keys of metadata", {
+test_that("keys_impl returns keys of metadata", {
   g <- setup("test")
   on.exit(delete_graph("test"))
-  x <- GrafoDB:::.keys(g)
+  x <- GrafoDB:::keys_impl(g)
   expect_is(x, "data.frame")
   expect_equal(x$key, "KEY")
 })
@@ -143,11 +143,11 @@ test_that(".values returns values of all metadata, or per key basis", {
   g <- setup("test")
   on.exit(delete_graph("test"))
 
-  v <- GrafoDB:::.values_by_key(g)
+  v <- GrafoDB:::values_by_key_impl(g)
   expect_is(v, "character")
   expect_equal(v, c("VALUE1", "VALUE2"))
 
-  v <- GrafoDB:::.values_by_key(g, key="KEY")
+  v <- GrafoDB:::values_by_key_impl(g, key="KEY")
   expect_is(v, "character")
   expect_equal(v, c("VALUE1", "VALUE2"))
 })

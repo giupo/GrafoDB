@@ -20,7 +20,7 @@
     stop(vecchio, " non e' una serie del grafo")
   }
   
-  figlie <- downgrf(x, vecchio, livello=1)
+  figlie <- downgrf(x, vecchio, livello = 1)
   data <- x@data
   functions <- x@functions
   if (vecchio %in% hash::keys(data) || vecchio %in% hash::keys(functions) ||

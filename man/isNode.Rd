@@ -4,7 +4,7 @@
 \alias{isNode}
 \title{Funzioni del package `grafo`}
 \usage{
-isNode(graph, tsName)
+isNode(graph, ts_name)
 }
 \description{
 implementazione di isNode di `package::grafo`

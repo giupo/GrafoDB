@@ -4,7 +4,7 @@
 \alias{isElementary}
 \title{Funzioni del package `grafo`}
 \usage{
-isElementary(graph, tsName)
+isElementary(graph, ts_name)
 }
 \description{
 implementazione di isElementary di `package::grafo`

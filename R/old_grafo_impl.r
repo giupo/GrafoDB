@@ -1,75 +1,76 @@
-# Questo file contiene le implementazioni dei generics specificate nel package `grafo`
+# Questo file contiene le implementazioni dei generics specificate
+# nel package `grafo`
 
 
 #' implementazione di isNode di `package::grafo`
 #'
 #' @name isNode
 #' @title Funzioni del package `grafo`
-#' @usage isNode(graph, tsName)
+#' @usage isNode(graph, ts_name)
 #' @seealso `grafo::isNode`
 #' @include core.r
 #' @exportMethod isNode
 
 methods::setGeneric(
   "isNode",
-  function(graph, tsName) {
+  function(graph, ts_name) {
     standardGeneric("isNode")
   })
 
 methods::setMethod(
   "isNode",
   signature("GrafoDB", "character"),
-  function(graph, tsName) {
-    tsName %in% names(graph)
+  function(graph, ts_name) {
+    ts_name %in% names(graph)
   })
 
 #' implementazione di isPrimitive di `package::grafo`
 #'
 #' @name isPrimitive
 #' @title Funzioni del package `grafo`
-#' @usage isPrimitive(graph, tsName)
+#' @usage isPrimitive(graph, ts_name)
 #' @seealso `grafo::isPrimitive`
 #' @exportMethod isPrimitive
 
 methods::setGeneric(
   "isPrimitive",
-  function(graph, tsName) {
+  function(graph, ts_name) {
     standardGeneric("isPrimitive")
   })
 
 methods::setMethod(
   "isPrimitive",
   signature("GrafoDB", "character"),
-  function(graph, tsName) {
-    all(isRoot(graph, tsName) && is.null(expr(graph, tsName)))
+  function(graph, ts_name) {
+    all(isRoot(graph, ts_name) && is.null(expr(graph, ts_name)))
   })
 
 #' implementazione di isAggregate di `package::grafo`
 #'
 #' @name isAggregate
 #' @title Funzioni del package `grafo`
-#' @usage isAggregate(graph, tsName)
+#' @usage isAggregate(graph, ts_name)
 #' @seealso `grafo::isAggregate`
 #' @exportMethod isAggregate
 
 methods::setGeneric(
   "isAggregate",
-  function(graph, tsName) {
+  function(graph, ts_name) {
     standardGeneric("isAggregate")
   })
 
 methods::setMethod(
   "isAggregate",
   signature("GrafoDB", "character"),
-  function(graph, tsName) {
-    !isRoot(graph, tsName)
+  function(graph, ts_name) {
+    !isRoot(graph, ts_name)
   })
 
 #' implementazione di isElementary di `package::grafo`
 #'
 #' @name isElementary
 #' @title Funzioni del package `grafo`
-#' @usage isElementary(graph, tsName)
+#' @usage isElementary(graph, ts_name)
 #' @seealso `grafo::isElementary`
 #' @note `GrafoDB` non prevede l'utilizzo di serie "elementari" come il `grafo`
 #'       Quindi per compliance ritorna sempre `FALSE`, ma il metodo non ha senso
@@ -77,15 +78,15 @@ methods::setMethod(
 
 methods::setGeneric(
   "isElementary",
-  function(graph, tsName) {
+  function(graph, ts_name) {
     standardGeneric("isElementary")
   })
 
 methods::setMethod(
   "isElementary",
   signature("GrafoDB", "character"),
-  function(graph, tsName) {
-    all(isRoot(graph, tsName) && !is.null(expr(graph, tsName)))
+  function(graph, ts_name) {
+    all(isRoot(graph, ts_name) && !is.null(expr(graph, ts_name)))
   })
 
 #' implementazione di listAggregates di `package::grafo`
@@ -108,7 +109,8 @@ methods::setMethod(
   function(graph) {
     network <- graph@network
     formule <- graph@dbformule$name
-    leaves <- igraph::V(network)[igraph::degree(network, mode="out") == 0]$name
+    leaves <- igraph::V(network)[
+      igraph::degree(network, mode = "out") == 0]$name
     setdiff(formule, leaves)
   })
 
@@ -134,7 +136,8 @@ methods::setMethod(
     network <- graph@network
     tag <- graph@tag
     formule <- union(graph@dbformule$name, hash::keys(graph@functions))
-    sources <- igraph::V(network)[igraph::degree(network, mode="in") == 0]$name
+    sources <- igraph::V(network)[
+      igraph::degree(network, mode = "in") == 0]$name
     intersect(sources, formule)
   })
 
@@ -157,7 +160,8 @@ methods::setMethod(
   signature("GrafoDB"),
   function(graph) {
     network <- graph@network
-    sources <- igraph::V(network)[igraph::degree(network, mode="in") == 0]$name
+    sources <- igraph::V(network)[
+      igraph::degree(network, mode = "in") == 0]$name
     elementary <- listElementaries(graph)
     setdiff(sources, elementary)
   })
@@ -184,7 +188,7 @@ methods::setMethod(
   })
 
 #' Salva il grafo
-#' 
+#'
 #' Implementazione di saveGraph per `GrafoDB` dal package `grafo`
 #'
 #' La funzione si preoccupa di serializzare la transazione al DB, e controllare
@@ -222,15 +226,14 @@ methods::setMethod(
 #' occorre incontrarsi e decidere quale "formula" o quale versione dei dati
 #' sia da preferire.
 #'
-#' @note R sucks sometimes. \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
 #' @seealso .saveGraph
 #' @name saveGraph
 #' @usage saveGraph(object)
 #' @usage saveGraph(object, path)
 #' @param object istanza di `GrafoDB`
-#' @param path erroneamente, dovuta al generic su `grafo` questo sarebbe il "tag" da
-#'             dare al grafo. Non c'e' modo di ovviare questo problema. Vedere il
-#'             prototipo di funzione di `.saveGraph`, e' sicuramente piu' chiaro.
+#' @param path erroneamente, dovuta al generic su `grafo` questo sarebbe il
+#'  "tag" da dare al grafo. Non c'e' modo di ovviare questo problema. Vedere
+#'   il prototipo di funzione di `.saveGraph`, e' sicuramente piu' chiaro.
 #' @param ... Parametri aggiuntivi alla `saveGraph`
 #' @include persistence.r
 #' @exportMethod saveGraph
@@ -245,7 +248,7 @@ methods::setMethod(
   "saveGraph",
   signature("GrafoDB", "ANY"),
   function(object, path=object@tag, ...) {
-    nameObject <- deparse(substitute(object))
+    object_name <- deparse(substitute(object))
     .saveGraph(object, path, ...)
     object <- GrafoDB(path)
     invisible(object)
@@ -254,24 +257,24 @@ methods::setMethod(
 #' Removes an attribute
 #' 
 #' @name deleteMeta
-#' @usage deleteMeta(object, tsName, attrName, attrValue)
+#' @usage deleteMeta(object, ts_name, attrName, attrValue)
 #' @param object graph instance
-#' @param tsName name of the timeseries
+#' @param ts_name name of the timeseries
 #' @param attrName name of the attribute
 #' @param attrValue value of the attributes
 #' @export
 
 methods::setGeneric(
   "deleteMeta",
-  function(object, tsName, attrName, attrValue=NULL) {
+  function(object, ts_name, attrName, attrValue=NULL) {
     standardGeneric("deleteMeta")
   })
 
 methods::setMethod(
   "deleteMeta",
   signature("GrafoDB", "character", "character", "ANY"),
-  function(object, tsName, attrName, attrValue=NULL) {
-    .deleteMeta(object, tsName, attrName, value=attrValue)
+  function(object, ts_name, attrName, attrValue=NULL) {
+    deleteMeta_impl(object, ts_name, attrName, value=attrValue)
   })
 
 
@@ -279,22 +282,22 @@ methods::setMethod(
 #'
 #' @name get_deps
 #' @title Funzioni del package `grafo`
-#' @usage get_deps(graph, tsName)
+#' @usage get_deps(graph, ts_name)
 #' @seealso `grafo::get_deps`
 #' @exportMethod get_deps
 
 methods::setGeneric(
   "get_deps",
-  function(object, tsName) {
+  function(object, ts_name) {
     standardGeneric("get_deps")
   })
 
 methods::setMethod(
   "get_deps",
   signature("GrafoDB", "character"),
-  function(object, tsName) {
+  function(object, ts_name) {
     ret <- list()
-    for (name in tsName) {
+    for (name in ts_name) {
       ret[[name]] <- navigate(object, name, order=1, mode = "in")
     }
     
@@ -308,21 +311,21 @@ methods::setMethod(
 #'
 #' @name getTask
 #' @title Funzioni del package `grafo`
-#' @usage getTask(graph, tsName)
+#' @usage getTask(graph, ts_name)
 #' @seealso `grafo::getTask`
 #' @exportMethod getTask
 
 methods::setGeneric(
   "getTask",
-  function(object, tsName) {
+  function(object, ts_name) {
     standardGeneric("getTask")
   })
 
 methods::setMethod(
   "getTask",
   signature("GrafoDB", "character"),
-  function(object, tsName) {
-    expr(object, tsName)
+  function(object, ts_name) {
+    expr(object, ts_name)
   })
 
 #' implementazione di getData di `package::grafo`
@@ -374,7 +377,7 @@ methods::setMethod(
 
 #' Imposta un metadato per una particolare serie
 #'
-#' Imposta un metadato `attrName`=`value` per la serie `tsName`
+#' Imposta un metadato `attrName`=`value` per la serie `ts_name`
 #' Se la serie non esiste, va in errore.
 #'
 #' @name setMeta
@@ -391,15 +394,15 @@ methods::setMethod(
 
 methods::setGeneric(
   "setMeta",
-  function(object, tsName, attrName, value) {
+  function(object, ts_name, attrName, value) {
     standardGeneric("setMeta")
   })
 
 methods::setMethod(
   "setMeta",
   signature("GrafoDB", "character", "character", "character"),
-  function(object, tsName, attrName, value) {
-    .setMeta(object, tsName, attrName, value)
+  function(object, ts_name, attrName, value) {
+    set_meta_impl(object, ts_name, attrName, value)
   })
 
 
@@ -408,13 +411,13 @@ methods::setMethod(
 #' L'eliminazione prevede l'eliminazione dai dati, formule, archi e metadati
 #'
 #' @name rmNode
-#' @usage rmNode(graph, tsName, recursive)
+#' @usage rmNode(graph, ts_name, recursive)
 #' @param graph istanza di `GrafoDB`
-#' @param tsName nomi di serie da eliminare
+#' @param ts_name nomi di serie da eliminare
 #' @param recursive `TRUE` se l'eliminazione deve essere rivorsiva sugli archi
-#'                  uscenti di ogni serie nel parametro `tsName`.
+#'                  uscenti di ogni serie nel parametro `ts_name`.
 #'                  `FALSE` altrimenti. Se il parametro e' impostato a `FALSE` e'
-#'                  condizione necessaria che le serie in `tsName` siano tutte
+#'                  condizione necessaria che le serie in `ts_name` siano tutte
 #'                  foglie, ovvero serie senza archi uscenti
 #' @note Metodo interno
 #' @seealso .rmNode
@@ -426,13 +429,13 @@ methods::setMethod(
 
 methods::setGeneric(
   "rmNode",
-  function(graph, tsName, recursive=FALSE) {
+  function(graph, ts_name, recursive=FALSE) {
     standardGeneric("rmNode")
   })
 
 methods::setMethod(
   "rmNode",
   signature("GrafoDB", "character", "ANY"),
-  function(graph, tsName, recursive=FALSE) {
-    .rmNode(graph, tsName, recursive)
+  function(graph, ts_name, recursive=FALSE) {
+    .rmNode(graph, ts_name, recursive)
   })

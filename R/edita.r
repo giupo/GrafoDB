@@ -50,7 +50,7 @@
       ## non sono cambiati archi: non faccio niente
       return(invisible(x))
     }
-    
+
     x@functions[name] <- edited
 
     if (!is.null(dep)) {

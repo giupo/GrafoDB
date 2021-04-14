@@ -1,11 +1,11 @@
 #' True if param is an error
 #'
-#' @name isError
-#' @usage isError(cond)
+#' @name is_error
+#' @usage is_error(cond)
 #' @param cond argument to check
 #' @return `TRUE` if cond is an error
 
-isError <- function(cond=NULL) {
+is_error <- function(cond=NULL) {
   "simpleError" %in% class(cond)
 }
 
@@ -19,7 +19,7 @@ isError <- function(cond=NULL) {
 #' @return single name of missing object blamed in `cond`, NA if not found
 
 find_dep_from_error <- function(cond=NULL) {
-  if (! isError(cond) ) {
+  if (! is_error(cond)) {
     stop("`cond` is not an error: ", cond, ", class: ", class(cond))
   }
   match <- stringr::str_match(as.character(cond), "object '(\\w+)' not found")
@@ -36,7 +36,8 @@ find_dep_from_error <- function(cond=NULL) {
 #'
 #' @name find_deps
 #' @usage find_deps(g, name, formula)
-#' @param g anything that has names end data as list (env, list, dataset, GrafoDB)
+#' @param g anything that has names end data as
+#'  list (env, list, dataset, GrafoDB)
 #' @param formula the formula itself
 #' @return list of names not defined in `formula` and needed to evaluate it
 #' @export
@@ -50,14 +51,14 @@ find_deps <- function(g, formula) {
   }
 
   ret <- NULL
-  while(is.null(ret) || isError(ret)) {
+  while (is.null(ret) || is_error(ret)) {
     ret <- tryCatch({
-      eval(parse(text=formula), envir=env)
+      eval(parse(text = formula), envir = env)
     }, error = function(cond) {
       cond
     })
 
-    if (isError(ret)) {
+    if (is_error(ret)) {
       dep <- find_dep_from_error(ret)
       if (dep %in% names(g))  {
         env[[dep]] <- g[[dep]]

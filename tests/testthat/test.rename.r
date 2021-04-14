@@ -16,8 +16,8 @@ test_that("I can rename a series before saving it", {
   expect_true("A1" %in% names(g))
   expect_true(grepl("A1", expr(g, "C")))
   expect_true(grepl("A1", expr(g, "D")))
-  expect_true("A1" %in% upgrf(g, "D", livello=1))
-  expect_true("A1" %in% upgrf(g, "C", livello=1))
+  expect_true("A1" %in% upgrf(g, "D", livello = 1))
+  expect_true("A1" %in% upgrf(g, "C", livello = 1))
 })
 
 delete_graph("test")

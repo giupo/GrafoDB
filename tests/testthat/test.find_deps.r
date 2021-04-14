@@ -1,20 +1,20 @@
 
-context("isError")
+context("is_error")
 
-test_that("test that isError works", {
+test_that("test that is_error works", {
     tryCatch({
         stop("hello!")
     }, error=function(cond) {
-        expect_true(isError(cond))
+        expect_true(is_error(cond))
     })
 
-    expect_false(isError()) 
-    expect_false(isError(NA)) 
-    expect_false(isError(1))
-    expect_false(isError(list())) 
-    expect_false(isError(data.frame())) 
-    expect_false(isError(FALSE))
-    expect_false(isError(""))
+    expect_false(is_error()) 
+    expect_false(is_error(NA)) 
+    expect_false(is_error(1))
+    expect_false(is_error(list())) 
+    expect_false(is_error(data.frame())) 
+    expect_false(is_error(FALSE))
+    expect_false(is_error(""))
 })
 
 context("find_dep_from_error")

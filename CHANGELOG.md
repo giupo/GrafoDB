@@ -1508,7 +1508,7 @@ v1.26.3 (2018-07-09)
 - Rimosso changes me, lo odiavo. Fix #8. [Giuseppe Acito]
 - Bump version: 0.11.4 → 0.11.5. [Giuseppe Acito]
 - Merge branch 'hotfix/editExistingNode' [Giuseppe Acito]
-- Fix #6. eseguivo due volte .evaluateSingle. Ora non ricordo il motivo
+- Fix #6. eseguivo due volte evaluate_single. Ora non ricordo il motivo
   ma e' da tenere a mente. [Giuseppe Acito]
 - Bump version: 0.11.3 → 0.11.4. [Giuseppe Acito]
 - Bump version: 0.11.2 → 0.11.3. [Giuseppe Acito]

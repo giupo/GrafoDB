@@ -31,5 +31,5 @@ test_that("I get to remove arcs", {
 
   g <- saveGraph(g)
 
-  expect_true(!"B" %in% upgrf(g, "C", livello=1))
+  expect_true(!"B" %in% upgrf(g, "C", livello = 1))
 })

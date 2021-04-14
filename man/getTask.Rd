@@ -4,7 +4,7 @@
 \alias{getTask}
 \title{Funzioni del package `grafo`}
 \usage{
-getTask(graph, tsName)
+getTask(graph, ts_name)
 }
 \description{
 implementazione di getTask di `package::grafo`

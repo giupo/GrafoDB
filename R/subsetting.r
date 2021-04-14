@@ -85,7 +85,7 @@ subsetting <- function(x, i, value) {
 
     x@functions[[name]] <- declutted
     x@network <- network
-    x <- .evaluate(x, name)
+    x <- evaluate_impl(x, name)
   } else if (is.character(value) && grepl("^function", value)) {
     return(subsetting(x, i, eval(parse(text = value))))
   } else {
@@ -97,7 +97,7 @@ subsetting <- function(x, i, value) {
 
     if (ci.sono.formule) {
       stop("Non puoi impostare una serie con formula con uno scalare: ",
-           paste(tt, collapse=", "))
+           paste(tt, collapse = ", "))
     }
 
     x@network <- network
@@ -114,7 +114,7 @@ subsetting <- function(x, i, value) {
 
     subgraph <- navigate(x, name, mode = "out")
     if (length(subgraph)) {
-      x <- .evaluate(x, name)
+      x <- evaluate_impl(x, name)
     }
   }
   x@touched <- sort(unique(c(x@touched, name)))

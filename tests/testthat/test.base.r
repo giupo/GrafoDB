@@ -184,8 +184,8 @@ test_that("Saving preserves network and nodes", {
 
   expect_true("A" %in% names(g))
   expect_true("B" %in% names(g))
-  expect_true("A" %in% upgrf(g, "C", livello=1))
-  expect_true("B" %in% upgrf(g, "C", livello=1))
+  expect_true("A" %in% upgrf(g, "C", livello = 1))
+  expect_true("B" %in% upgrf(g, "C", livello = 1))
 })
 
 

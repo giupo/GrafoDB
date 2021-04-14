@@ -2,28 +2,28 @@
 #'
 #' Questa funzione va utilizzata nell'initialize S4 dell'oggetto `GrafoDB`
 #'
-#' @name .init
+#' @name init_grafo_impl
 #' @rdname init-internal
-#' @param .Object (creato da new)
+#' @param object (creato da new)
 #' @param tag tag del grafo (default=`cf10`)
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
 #' @include persistence.r sqlhelper.r
 #' @include db.r persistence_utils.r
 
-.init <- function(.Object, tag = "cf10", con = NULL) {
-  ln <- "GrafoDB.functions.init"
+init_grafo_impl <- function(object, tag = "cf10", con = NULL) {
+  ln <- "GrafoDB.functions.init_grafo_impl"
   if (is.null(tag)) {
     tag <- "cf10"
   } else {
     tag <- tolower(tag)
   }
 
-  .Object@edges <- hash::hash()
-  .Object@data <- hash::hash()
-  .Object@functions <- hash::hash()
-  .Object@touched <- character(0)
-  .Object@ordinal <- if (grepl("p(\\d+)$", tag)) {
+  object@edges <- hash::hash()
+  object@data <- hash::hash()
+  object@functions <- hash::hash()
+  object@touched <- character(0)
+  object@ordinal <- if (grepl("p(\\d+)$", tag)) {
     mth <- stringr::str_match(tag, "p(\\d+)$")
     as.numeric(mth[1, 2])
   } else {
@@ -31,8 +31,8 @@
   }
 
   debug("GRAFODB_ENV: %s", getenv(), name = ln)
-  .Object@tag <- tag
-  .Object@helper <- SQLHelper()
+  object@tag <- tag
+  object@helper <- SQLHelper()
 
   if (is.null(con)) {
     con <- build_connection()
@@ -40,7 +40,7 @@
   }
 
   archi <- load_edges(tag, con = con)
-  .Object <- resync(.Object, con = con)
+  object <- resync(object, con = con)
 
   network <- if (nrow(archi) > 0) {
     archi <- archi[, c("partenza", "arrivo")]
@@ -49,29 +49,29 @@
     igraph::graph.empty(directed = TRUE)
   }
 
-  .Object@network <- network
-  nomi <- names(.Object)
+  object@network <- network
+  nomi <- names(object)
   if (length(nomi) > 0) {
     pending_names <- setdiff(nomi, igraph::V(network)$name)
     network <- network + igraph::vertex(pending_names)
   }
 
-  .Object@network <- network
+  object@network <- network
 
   df <- load_grafi(con)
   dftag <- df[df$tag == tag, ]
   if (nrow(dftag)) {
     ## il grafo esiste nel DB
-    .Object@timestamp <- as.numeric(dftag$last_updated)
+    object@timestamp <- as.numeric(dftag$last_updated)
     if (interactive()) {
       message(dftag$comment)
     }
   } else {
     ## il grafo non esiste nel DB
-    .Object <- create_new_grafo(.Object, tag, con = con)
+    object <- create_new_grafo(object, tag, con = con)
   }
 
-  .Object
+  object
 }
 
 
@@ -92,7 +92,7 @@
 #' }
 #' @export
 
-is.grafodb <- function(x) {
+is.grafodb <- function(x) { # nolint
   inherits(x, "GrafoDB")
 }
 
@@ -123,7 +123,7 @@ is.grafodb <- function(x) {
 
   # fix per bug su CRCONFAC/PC che assegna names su una serie storica
   names(x) <- NULL
-  raw_numbers <- jsonlite::toJSON(x, digits=20, na=NULL)
+  raw_numbers <- jsonlite::toJSON(x, digits = 20, na = NULL)
   raw_numbers <- as.character(raw_numbers)
   raw_numbers <- gsub(" ", "", raw_numbers)
 
@@ -195,19 +195,19 @@ declutter_function <- function(func_string) {
   idx_inizio <- stringr::str_locate(func_string, "\\{")[[1]]
   idx_fine <- sapply(gregexpr("\\}", func_string), tail, 1)
 
-  func_string<- substring(func_string, idx_inizio + 1, idx_fine - 1)
+  func_string <- substring(func_string, idx_inizio + 1, idx_fine - 1)
   func_string <- gsub("^\n(.*)\n$", "\\1", func_string)
   stringr::str_trim(func_string)
 }
 
 
 #' Orla le formule del grafo in funzioni
-#' 
-#' Questa funzione orla le funzioni del grafo con 
+#'
+#' Questa funzione orla le funzioni del grafo con
 #' `proxy <-function() {` e `}` finale.
 #'
 #' Le istruzioni vengono incapsulate in una funzione generica chiamata proxy.
-#' gli argomenti devono essere definiti prima nella ambiente per la 
+#' gli argomenti devono essere definiti prima nella ambiente per la
 #' corretta esecuzione
 #'
 #' @name to_function_as_string
@@ -229,7 +229,7 @@ to_function_as_string <- function(func_string, name, func_name = "proxy") {
 #' questa funzione orla la formula del grafo come una funzione oon parametri
 #'
 #' I parametri della funzione ritornata sono le dipendenze della serie
-#' 
+#'
 #' @name clutter_with_params
 #' @usage clutter_with_params(f, deps)
 #' @param func_string function task to be converted as function
@@ -270,7 +270,7 @@ clutter_with_params_and_return <- function(func_string, name,
 
 #' Carica i dati dal DB
 #'
-#' Carica i dati direttamente dal DB senza necessita' d'inizializzare 
+#' Carica i dati direttamente dal DB senza necessita' d'inizializzare
 #' un `GrafoDB`
 #'
 #' @name getdb
@@ -406,14 +406,14 @@ exists_tag <- function(tag, con = NULL) {
 
 .leaves <- function(x) {
   n <- x@network
-  igraph::V(n)[igraph::degree(n, mode="out") == 0]$name
+  igraph::V(n)[igraph::degree(n, mode = "out") == 0]$name
 }
 
 
 #' Controlla se un nodo e' una foglia
 #'
 #' Ritorna un array di `logical` uno per ogni elemento in `i`: `TRUE`
-#' se l'i-esimo elemento e' una foglia (non ha archi uscenti), 
+#' se l'i-esimo elemento e' una foglia (non ha archi uscenti),
 #' altrimenti `FALSE`
 #'
 #' @name .isLeaf
@@ -425,13 +425,13 @@ exists_tag <- function(tag, con = NULL) {
 #'         del controllo
 #' @rdname isLeaf-internal
 
-.isLeaf <- function(x, i) all(i %in% .leaves(x))
+.isLeaf <- function(x, i) all(i %in% .leaves(x)) # nolint
 
 
 #' Controlla se un nodo e' una radice
 #'
 #' Ritorna un array di `logical` uno per ogni elemento in `i`: `TRUE`
-#' se l'i-esimo elemento e' una radice (non ha archi uscenti), 
+#' se l'i-esimo elemento e' una radice (non ha archi uscenti),
 #' altrimenti `FALSE`
 #'
 #' @name .isRoot
@@ -443,7 +443,7 @@ exists_tag <- function(tag, con = NULL) {
 #'         del controllo
 #' @rdname isRoot-internal
 
-.isRoot <- function(x, i) all(i %in% .roots(x))
+.isRoot <- function(x, i) all(i %in% .roots(x)) # nolint
 
 
 #' Checks if a TimeSeries is different from another

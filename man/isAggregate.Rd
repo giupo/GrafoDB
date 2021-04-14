@@ -4,7 +4,7 @@
 \alias{isAggregate}
 \title{Funzioni del package `grafo`}
 \usage{
-isAggregate(graph, tsName)
+isAggregate(graph, ts_name)
 }
 \description{
 implementazione di isAggregate di `package::grafo`
