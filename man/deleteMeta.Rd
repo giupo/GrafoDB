@@ -4,16 +4,16 @@
 \alias{deleteMeta}
 \title{Removes an attribute}
 \usage{
-deleteMeta(object, ts_name, attrName, attrValue)
+deleteMeta(object, ts_name, attr_name, attr_value)
 }
 \arguments{
 \item{object}{graph instance}
 
 \item{ts_name}{name of the timeseries}
 
-\item{attrName}{name of the attribute}
+\item{attr_name}{name of the attribute}
 
-\item{attrValue}{value of the attributes}
+\item{attr_value}{value of the attributes}
 }
 \description{
 Removes an attribute

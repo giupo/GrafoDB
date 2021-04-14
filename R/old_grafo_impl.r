@@ -257,24 +257,24 @@ methods::setMethod(
 #' Removes an attribute
 #' 
 #' @name deleteMeta
-#' @usage deleteMeta(object, ts_name, attrName, attrValue)
+#' @usage deleteMeta(object, ts_name, attr_name, attr_value)
 #' @param object graph instance
 #' @param ts_name name of the timeseries
-#' @param attrName name of the attribute
-#' @param attrValue value of the attributes
+#' @param attr_name name of the attribute
+#' @param attr_value value of the attributes
 #' @export
 
 methods::setGeneric(
   "deleteMeta",
-  function(object, ts_name, attrName, attrValue=NULL) {
+  function(object, ts_name, attr_name, attr_value=NULL) {
     standardGeneric("deleteMeta")
   })
 
 methods::setMethod(
   "deleteMeta",
   signature("GrafoDB", "character", "character", "ANY"),
-  function(object, ts_name, attrName, attrValue=NULL) {
-    deleteMeta_impl(object, ts_name, attrName, value=attrValue)
+  function(object, ts_name, attr_name, attr_value=NULL) {
+    deleteMeta_impl(object, ts_name, attr_name, value=attr_value)
   })
 
 
@@ -360,24 +360,24 @@ methods::setMethod(
 
 methods::setGeneric(
   "searchNode",
-  function(graph, attrName, attrValue) {
+  function(graph, attr_name, attr_value) {
     standardGeneric("searchNode")
   })
 
 methods::setMethod(
   "searchNode",
   signature("GrafoDB", "character", "character"),
-  function(graph, attrName, attrValue) {
-    ret <- lookup(graph, attrName, attrValue)
+  function(graph, attr_name, attr_value) {
+    ret <- lookup(graph, attr_name, attr_value)
     if (length(ret) == 0) {
-      stop("Non esistono serie con i criteri ", attrName, " == ", attrValue)
+      stop("Non esistono serie con i criteri ", attr_name, " == ", attr_value)
     } 
     ret
   })
 
 #' Imposta un metadato per una particolare serie
 #'
-#' Imposta un metadato `attrName`=`value` per la serie `ts_name`
+#' Imposta un metadato `attr_name`=`value` per la serie `ts_name`
 #' Se la serie non esiste, va in errore.
 #'
 #' @name setMeta
@@ -394,15 +394,15 @@ methods::setMethod(
 
 methods::setGeneric(
   "setMeta",
-  function(object, ts_name, attrName, value) {
+  function(object, ts_name, attr_name, value) {
     standardGeneric("setMeta")
   })
 
 methods::setMethod(
   "setMeta",
   signature("GrafoDB", "character", "character", "character"),
-  function(object, ts_name, attrName, value) {
-    set_meta_impl(object, ts_name, attrName, value)
+  function(object, ts_name, attr_name, value) {
+    set_meta_impl(object, ts_name, attr_name, value)
   })
 
 
