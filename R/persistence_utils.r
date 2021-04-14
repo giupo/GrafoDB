@@ -20,7 +20,7 @@ load_table <- function(table_name, tag, con = NULL) {
 
   full_table_name <- rutils::ifelse(
     class(con) != "SQLiteConnection",
-    paste0(table_name, '_', tag),
+    paste(table_name, tag, sep = "_"),
     table_name)
 
   df <- rutils::ifelse(
@@ -59,7 +59,7 @@ load_metadata <- function(tag, con=NULL) load_table("metadati", tag, con = con)
 
 load_formulas <- function(tag, con=NULL) tryCatch({
   load_table("formule", tag, con = con)
-}, error=function(cond) {
+}, error = function(cond) {
   data.frame(
     name = character(),
     tag = character(),
