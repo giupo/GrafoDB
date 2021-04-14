@@ -1,11 +1,11 @@
 context("Deleting objects")
 
 setup <- function(tag) {
-  options(SQLHelperType="SQLite")
+  options(SQLHelperType = "SQLite")
   g <- GrafoDB(tag)
-  g["A"] <- g["B"] <- ts(c(0,0,0), start = c(1990, 1), frequency = 4)
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C = A + B # nolint
   }
   g
 }
@@ -48,4 +48,3 @@ test_that("Posso cancellare serie ricorsivamente, DB", {
   expect_true("B" %in% names(g))
   delete_graph("test")
 })
-
