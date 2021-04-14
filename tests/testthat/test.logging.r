@@ -24,7 +24,7 @@ test_that("info calls a logging function", {
   expect_called(mock_logger, 1)
 })
 
-test_that("info calls a logging function", {
+test_that("warn calls a logging function", {
   skip_if_not_installed("mockery")
   mock_logger <- mockery::mock(TRUE)
   mockery::stub(warn, "futile.logger::flog.warn", mock_logger)
@@ -32,7 +32,7 @@ test_that("info calls a logging function", {
   expect_called(mock_logger, 1)
 })
 
-test_that("info calls a logging function", {
+test_that("error calls a logging function", {
   skip_if_not_installed("mockery")
   mock_logger <- mockery::mock(TRUE)
   mockery::stub(error, "futile.logger::flog.error", mock_logger)
@@ -40,7 +40,7 @@ test_that("info calls a logging function", {
   expect_called(mock_logger, 1)
 })
 
-test_that("info calls a logging function", {
+test_that("fatal calls a logging function", {
   skip_if_not_installed("mockery")
   mock_logger <- mockery::mock(TRUE)
   mockery::stub(fatal, "futile.logger::flog.fatal", mock_logger)
