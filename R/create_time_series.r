@@ -28,7 +28,7 @@ convert_data_frame <- function(df) {
           json_data
         }
       } else {
-         serie <- ts(json_data, start = c(anno, periodo), frequency = freq)
+         serie <- stats::ts(json_data, start = c(anno, periodo), frequency = freq)
          attr(serie, "stock") <- stock
          attr(serie, "name") <- nome
          z[[nome]] <- serie
