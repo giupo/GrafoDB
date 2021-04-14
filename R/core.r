@@ -135,19 +135,22 @@ methods::setGeneric(
 
 #' Classe per accedere ai dati immagazzinati in PostgreSQL del Grafo CF
 #'
-#' @name GrafoDB
-#' @rdname GrafoDB
 #' @title Database Grafo
-#' @param ... don't know if used
-#' @slot data \link[hash]{hash} containing changed data of this \link{GrafoDB}
 #' @slot tag edition of this Graph
 #' @slot network \link[igraph]{igraph} containing the DAG
-#' @slot metadati temporary metadata added by the user to be saved on the DB
+#' @slot data \link[hash]{hash} containing changed data of this \link{GrafoDB}
+#' @slot functions \link[hash]{hash} containing function data
+#'    of this \link{GrafoDB}
 #' @slot ordinal ordinale dei dati storici (0 per la produzione corrente)
-#' @slot touched serie modificate in area di lavoro
+#' @slot timestamp of the current GrafoDB
+#' @slot touched object being modified
+#' @slot edges the edges being modified
+#' @slot dbdati data.frame containing data
+#' @slot dbformule data.frame containing functions
+#' @slot helper SQLHelper class
 #' @exportClass GrafoDB
 #' @include sqlhelper.r
-#' @export GrafoDB
+#' @docType class
 #' @importClassesFrom rdataset Dataset
 #' @importFrom methods new
 #' @examples \dontrun{
@@ -156,6 +159,10 @@ methods::setGeneric(
 #'    g = GrafoDB("cf10p2") # istanzia il grafo cf10 con provvisorio p2;
 #'                          # in questo caso ordinal e' 2
 #' }
+#' @name GrafoDB-class
+#' @rdname GrafoDB-class
+#' @docType class
+#' @export
 
 methods::setOldClass("igraph")
 

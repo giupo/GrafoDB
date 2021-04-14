@@ -5,7 +5,7 @@
 \alias{SQLHelper}
 \title{SQLHelper}
 \usage{
-SQLHelper(path)
+SQLHelper(type)
 }
 \arguments{
 \item{path}{path al file contenente le query (default a file interno al
@@ -24,3 +24,11 @@ editabili e accedendo alle singole query con delle chiavi.
 
 Le query vengono inizializzate in un file .ini
 }
+\section{Slots}{
+
+\describe{
+\item{\code{sqlContainer}}{a list of key-values for the SQL queries}
+
+\item{\code{type}}{the type of syntax}
+}}
+

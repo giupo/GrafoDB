@@ -6,8 +6,9 @@
 #' Le query vengono inizializzate in un file .ini
 #'
 #' @name SQLHelper
-#' @usage SQLHelper(path)
-#' @aliases SQLHelper
+#' @usage SQLHelper(type)
+#' @slot sqlContainer a list of key-values for the SQL queries
+#' @slot type the type of syntax
 #' @param path path al file contenente le query (default a file interno al
 #'  package GrafoDB)
 #' @param type tipo di database supportati (per ora "PostgreSQL" e "SQLite").
@@ -16,6 +17,7 @@
 #' @title SQLHelper
 #' @export SQLHelper
 #' @exportClass SQLHelper
+#' @docType class
 #' @include logging.r
 
 SQLHelper <- setClass( # nolint
@@ -24,7 +26,6 @@ SQLHelper <- setClass( # nolint
     sqlContainer = "list",
     type = "character"
   ))
-
 
 methods::setMethod(
   "initialize",
@@ -125,6 +126,8 @@ sql_by_key_impl <- function(x, .key, ...) {
 #' @return un character array contenente la query SQL
 #' @export
 #' @exportMethod sql_by_key
+#' @docType methods
+#' @rdname sql_by_key-methods
 
 methods::setGeneric(
   "sql_by_key",
@@ -132,9 +135,12 @@ methods::setGeneric(
     standardGeneric("sql_by_key")
   })
 
+#' @rdname sql_by_key-methods
+#' @aliases SQLHelper,character,ANY-method
+
 methods::setMethod(
   "sql_by_key",
-  signature("SQLHelper"),
+  signature("SQLHelper", "character"),
   function(x, .key, ...) {
     sql_by_key_impl(x, .key, ...)
   }
