@@ -8,7 +8,8 @@
 SQLHelper(path)
 }
 \arguments{
-\item{path}{path al file contenente le query (default a file interno al package GrafoDB)}
+\item{path}{path al file contenente le query (default a file interno al
+package GrafoDB)}
 
 \item{type}{tipo di database supportati (per ora "PostgreSQL" e "SQLite").
 Quest'opzione e' sovrascritta in caso esistano delle options di

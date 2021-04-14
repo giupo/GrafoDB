@@ -21,3 +21,4 @@ lib
 \.gitchangelog.rc
 CHANGELOG.md
 Dockerfile
+\.lintr

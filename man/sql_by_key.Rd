@@ -23,7 +23,7 @@ eventuali parametri (key=value) della query nell'ellipsis del metodo
 \details{
 Le query hanno una forma "select * from --tab-- where param='--value--'";
 Il metodo si occupa di sostiture '--tab--' e '--value--' secondo i valori
-passati come argomento: 
+passati come argomento:
 Es: `sql_by_key(helper, KEYQUERY, tab="A", value="B")`
 risultera' in `select * from A where param='B'`
 }

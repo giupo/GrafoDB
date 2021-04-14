@@ -7,7 +7,8 @@
 find_deps(g, name, formula)
 }
 \arguments{
-\item{g}{anything that has names end data as list (env, list, dataset, GrafoDB)}
+\item{g}{anything that has names end data as
+list (env, list, dataset, GrafoDB)}
 
 \item{formula}{the formula itself}
 }

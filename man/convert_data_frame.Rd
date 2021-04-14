@@ -7,11 +7,11 @@
 convert_data_frame(df)
 }
 \arguments{
-\item{df}{data.frame con le serie storiche}
+\item{df}{data.frame with time series}
 }
 \value{
 a List
 }
 \description{
-Viene usato nella conversione dei dati dal db
+It's used for converting data coming from the DB
 }

@@ -11,9 +11,9 @@ saveGraph(object, path)
 \arguments{
 \item{object}{istanza di `GrafoDB`}
 
-\item{path}{erroneamente, dovuta al generic su `grafo` questo sarebbe il "tag" da
-dare al grafo. Non c'e' modo di ovviare questo problema. Vedere il
-prototipo di funzione di `save_graph_impl`, e' sicuramente piu' chiaro.}
+\item{path}{erroneamente, dovuta al generic su `grafo` questo sarebbe il
+"tag" da dare al grafo. Non c'e' modo di ovviare questo problema. Vedere
+ il prototipo di funzione di `save_graph_impl`, e' sicuramente piu' chiaro.}
 
 \item{...}{Parametri aggiuntivi alla `saveGraph`}
 }
@@ -55,9 +55,6 @@ altri e si attende la risoluzione del conflitto attraverso i metodi
 `fixConflict`. La soluzione dei conflitti non e' un atto di fede:
 occorre incontrarsi e decidere quale "formula" o quale versione dei dati
 sia da preferire.
-}
-\note{
-R sucks sometimes. \url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
 }
 \seealso{
 save_graph_impl

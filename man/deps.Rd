@@ -2,7 +2,7 @@
 % Please edit documentation in R/core.r
 \name{deps}
 \alias{deps}
-\title{Ritorna le dipendeze di una serie}
+\title{Yields the dependencies of an object}
 \usage{
 deps(x, name)
 }
@@ -12,9 +12,8 @@ deps(x, name)
 \item{name}{nome della serie}
 }
 \value{
-un character array di nomi, NULL se la serie non ha dipendenze
+a character array of object names, NULL if not present
 }
 \description{
-Ritorna come array di caratteri i nomi delle serie su cui la serie specificata
-dal parametro `name` dipende
+Yields the dependencies of an object
 }

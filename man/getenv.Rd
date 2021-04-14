@@ -6,6 +6,10 @@
 \usage{
 getenv()
 }
+\value{
+the value of the GRAFODB_ENV, if not specified, defaults
+   to `prod`
+}
 \description{
 Returns the value of environment variable `GRAFODB_ENV`
 }

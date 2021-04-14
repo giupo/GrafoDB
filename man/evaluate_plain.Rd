@@ -2,10 +2,24 @@
 % Please edit documentation in R/evaluate.r
 \name{evaluate_plain}
 \alias{evaluate_plain}
-\title{patch to evaluate}
+\title{Patch to evaluate}
 \usage{
-evaluate_plain(x, i = names(x))
+evaluate_plain(x)
+
+evaluate_plain(x, ids)
+}
+\arguments{
+\item{x}{GrafoDB instance}
+
+\item{ids}{object names to be evaluated}
+}
+\value{
+GrafoDB with ids evaluated
 }
 \description{
-patch to evaluate
+Patch to evaluate
+}
+\note{
+this is useful to evaluate the topological sort
+  without multicore
 }

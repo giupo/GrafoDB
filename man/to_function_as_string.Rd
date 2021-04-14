@@ -17,12 +17,12 @@ to_function_as_string(f)
 un character array della funzione orlata
 }
 \description{
-Questa funzione orla le funzioni del grafo con 
+Questa funzione orla le funzioni del grafo con
 `proxy <-function() {` e `}` finale.
 }
 \details{
 Le istruzioni vengono incapsulate in una funzione generica chiamata proxy.
-gli argomenti devono essere definiti prima nella ambiente per la 
+gli argomenti devono essere definiti prima nella ambiente per la
 corretta esecuzione
 }
 \note{

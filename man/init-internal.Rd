@@ -4,10 +4,10 @@
 \alias{init_grafo_impl}
 \title{Funzione d'inizializzazione del grafo.}
 \usage{
-init_grafo_impl(.Object, tag = "cf10", con = NULL)
+init_grafo_impl(object, tag = "cf10", con = NULL)
 }
 \arguments{
-\item{.Object}{(creato da new)}
+\item{object}{(creato da new)}
 
 \item{tag}{tag del grafo (default=`cf10`)}
 }

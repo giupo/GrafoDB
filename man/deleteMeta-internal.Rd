@@ -13,8 +13,9 @@ deleteMeta_impl(x, name, key, value)
 
 \item{key}{nome del metadato}
 
-\item{value}{valore del metadato (se non specificato, rimuove tutti i  metadati
-con la chiave specificata)}
+\item{value}{valore del metadato (se non specificato, rimuove
+tutti i  metadati
+          con la chiave specificata)}
 }
 \description{
 delete un metadato dal DBI

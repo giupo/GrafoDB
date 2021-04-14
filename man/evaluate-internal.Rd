@@ -2,7 +2,6 @@
 % Please edit documentation in R/evaluate.r
 \name{evaluate_impl}
 \alias{evaluate_impl}
-\alias{.evaluate00}
 \title{Implementazione del generic `evaluate` definito nel package `grafo`
 per la classe `GrafoDB`}
 \usage{

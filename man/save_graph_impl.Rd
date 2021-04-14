@@ -40,9 +40,6 @@ altri e si attende la risoluzione del conflitto attraverso i metodi
 occorre incontrarsi e decidere quale "formula" o quale versione dei dati
 sia da preferire.
 }
-\note{
-\url{https://osiride-public.utenze.bankit.it/group/894smf/trac/cfin/ticket/31849}
-}
 \seealso{
 saveGraph
 }

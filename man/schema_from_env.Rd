@@ -14,7 +14,8 @@ percorso al file contenente lo schema dei dati
 }
 \description{
 `env` ottenuto con `getenv` e' la variabile d'ambiente GRAFODB_ENV, di
-default settata a `prod`. Negli ambienti di produzione e' necessario cambiarla
+default settata a `prod`. Negli ambienti di produzione e' necessario
+cambiarla
 a `test` e modificare accordingly la configurazione
 }
 \note{

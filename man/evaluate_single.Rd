@@ -2,12 +2,9 @@
 % Please edit documentation in R/evaluate.r
 \name{evaluate_single}
 \alias{evaluate_single}
-\alias{evaluateSingle}
-\title{Valuta un singolo oggetto del grafo identificato da `name`}
+\title{Evaluates a single object function identified with `name`}
 \usage{
 evaluate_single(name, object)
-
-evaluateSingle(name, object)
 }
 \arguments{
 \item{name}{`character` nome della serie}
@@ -18,9 +15,5 @@ evaluateSingle(name, object)
 la serie storica calcolata.
 }
 \description{
-Valuta un singolo oggetto del grafo identificato da `name`
-}
-\note{
-la scelta di evaluateSingle ricade su evaluate_single_1, le altre due
-      implementazioni NON SUPPORTANO LE SERIE ELEMENTARI
+Evaluates a single object function identified with `name`
 }

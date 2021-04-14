@@ -4,7 +4,7 @@
 \alias{disconnect}
 \title{proxy the dbDisconnect based on `getenv` value}
 \usage{
-disconnect(con, env = getenv())
+disconnect(con)
 }
 \arguments{
 \item{con}{connection to disconnect}
@@ -12,5 +12,6 @@ disconnect(con, env = getenv())
 \item{env}{environment to check against}
 }
 \description{
-proxy the dbDisconnect based on `getenv` value
+if `env` is `test`, is a no-op.
+Otherwise delegates the call to `DBI::dbDisconnect`
 }

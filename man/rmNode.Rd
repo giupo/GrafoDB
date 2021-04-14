@@ -12,10 +12,9 @@ rmNode(graph, ts_name, recursive)
 \item{ts_name}{nomi di serie da eliminare}
 
 \item{recursive}{`TRUE` se l'eliminazione deve essere rivorsiva sugli archi
-uscenti di ogni serie nel parametro `ts_name`.
-`FALSE` altrimenti. Se il parametro e' impostato a `FALSE` e'
-condizione necessaria che le serie in `ts_name` siano tutte
-foglie, ovvero serie senza archi uscenti}
+uscenti di ogni serie nel parametro `ts_name`, `FALSE` altrimenti. Se il
+parametro e' impostato a `FALSE` e' condizione necessaria che le serie in
+`ts_name` siano tutte foglie, ovvero serie senza archi uscenti}
 }
 \value{
 il grafo modificato

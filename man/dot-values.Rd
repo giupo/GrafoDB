@@ -2,10 +2,12 @@
 % Please edit documentation in R/metadati.r
 \name{.values}
 \alias{.values}
-\alias{values_for}
-\title{Ritorna i valore del lmetadato per ogni singola serie}
+\alias{values_by_key_impl}
+\title{Ritorna i valori dei metadati (o per singolo metadato)}
 \usage{
-.values(x, name, key)
+.values(x)
+
+.values(x, key)
 }
 \arguments{
 \item{x}{istanza di grafo}
@@ -16,5 +18,5 @@
 lista di valori per metadato
 }
 \description{
-Ritorna i valore del lmetadato per ogni singola serie
+Ritorna i valori dei metadati (o per singolo metadato)
 }
