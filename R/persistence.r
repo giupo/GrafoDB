@@ -1,4 +1,3 @@
-
 #' Funzione per salvare un grafo
 #'
 #' La funzione controlla la presenza di eventuali conflitti e necessita'
@@ -77,14 +76,17 @@ save_graph_impl <- function(x, tag = x@tag, ...) {
       name_in_conflicts <- intersect(name_to_sync,
         union(hash::keys(x@functions), hash::keys(x@data)))
       clean_names <- setdiff(name_to_sync, name_in_conflicts)
-      # clean_names contiene le serie che possono essere ricaricate dal 
+      # clean_names contiene le serie che possono essere ricaricate dal
       # db e rivalutate
       # senza problemi
       # aggiungo gli archi del DB al presente grafo
       network <- x@network
       archi <- load_edges(tag, con = con)
       archi <- archi[, c("partenza", "arrivo")]
-      dbnetwork <- igraph::graph.data.frame(as.data.frame(archi), directed = TRUE)
+
+      dbnetwork <- igraph::graph.data.frame(
+        as.data.frame(archi), directed = TRUE)
+
       network <- igraph::graph.union(network, dbnetwork, byname = TRUE)
       assert_dag(network)
       x@network <- network
@@ -106,14 +108,14 @@ save_graph_impl <- function(x, tag = x@tag, ...) {
         # lo cancello
         delete_graph_impl(tag, con, x@helper)
         # copio il grafo in sessione col grafo attuale
-        copy_graph(x@tag, tag, con = con, mesg=msg, helper=x@helper)
+        copy_graph(x@tag, tag, con = con, msg = msg, helper = x@helper)
       }
       # aggiorno eventuali cambiamenti in sessione
       trace("update eventual changes in session", name = ln)
       update_graph(x, con = con, msg = msg)
     } else {
       if (x@tag == tag) {
-        trace('tag as param equals tag as slot: creating a new graph',
+        trace("tag as param equals tag as slot: creating a new graph",
           name = ln)
         # se non esiste il tag sul DB
         # sto creando un nuovo grafo
@@ -121,27 +123,27 @@ save_graph_impl <- function(x, tag = x@tag, ...) {
       } else {
         # se i tag sono differenti
         if (nrow(x@dbdati) == 0 && nrow(x@dbformule) == 0) {
-          trace('have no data, simply create an empty graph', name = ln)
+          trace("have no data, simply create an empty graph", name = ln)
           # non ho dati, creo grafo
           create_graph(x, tag, con = con, msg = msg)
         } else {
           # ho dati, quindi copio il grafo dalla fonte alla
           # destinazione sul DB e...
-          trace('have data, so copying graph... ', name = ln)
-          copy_graph(x@tag, tag, con = con, msg = msg, helper=x@helper)
+          trace("have data, so copying graph... ", name = ln)
+          copy_graph(x@tag, tag, con = con, msg = msg, helper = x@helper)
           # Aggiorno eventuali cambiamenti in sessione
-          trace('... and update eventual changes in session', name = ln)
+          trace("... and update eventual changes in session", name = ln)
           update_graph(x, tag, con = con, msg = msg)
         }
       }
     }
 
     DBI::dbCommit(con)
-  }, error=function(err) {
+  }, error = function(err) {
     tryCatch({
       DBI::dbRollback(con)
-    }, error = function(err2) {
-      stop(err2, "Root: ", err)
+    }, error = function(nested_error) {
+      stop(nested_error, "Root: ", err)
     })
     stop(err)
   })
