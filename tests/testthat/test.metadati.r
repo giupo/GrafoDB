@@ -5,9 +5,9 @@ setup <- function(tag) {
   debug("Nome dell'env: %s", Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
 
-  g["A"] <- g["B"] <- ts(c(0,0,0), start = c(1990, 1), frequency=1)
-  g["C"] <- function(A, B) {
-    C = (A + 1) * (B + 2)
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 1)
+  g["C"] <- function(A, B) { # nolint
+    C = (A + 1) * (B + 2) # nolint
   }
   g <- saveGraph(g)
 
@@ -36,7 +36,7 @@ test_that("posso ottenere i metadati per una serie", {
   g <- setup("test")
   m <- getMeta(g, "A")
   expect_true(is.data.frame(m))
-  expect_equal(nrow(m), 2)  
+  expect_equal(nrow(m), 2)
 })
 
 test_that("posso ottenere i valori di un metadato per singola serie", {
@@ -46,7 +46,7 @@ test_that("posso ottenere i valori di un metadato per singola serie", {
   g <- setup("test")
   v <- getMeta(g, "A", "KEY")
   expect_true(is.character(v))
-  expect_true(all(c("VALUE1", "VALUE2") %in% v ))
+  expect_true(all(c("VALUE1", "VALUE2") %in% v))
 })
 
 test_that("Posso cercare i numeri direttamente nel grafo", {
@@ -72,7 +72,7 @@ test_that("Posso cancellare Metadati", {
   deleteMeta(g, "A", "KEY", "VALUE1")
   v <- getMeta(g, "A", "KEY")
   expect_true(is.character(v))
-  expect_true(all(c("VALUE2") %in% v ))
+  expect_true(all(c("VALUE2") %in% v))
 })
 
 test_that("If I get an erro with DB, deleteMeta fails", {
@@ -82,18 +82,18 @@ test_that("If I get an erro with DB, deleteMeta fails", {
 
   g <- setup("test")
   with_mock(
-    'DBI::dbCommit' = function(...) stop("error test"), {
+    "DBI::dbCommit" = function(...) stop("error test"), {
       expect_error(deleteMeta(g, "A", "KEY", "VALUE1"), "error test")
     })
 })
 
-test_that("Ottengo un errore se accade un errore sul DB nella lettura di Metadati", {
+test_that("got error if there's an error reading from DB", {
   skip_if_not(require(mockery), "mockery required")
   on.exit({
     delete_graph("test")
   })
   g <- setup("test")
-  stub(get_meta_impl, 'sql_by_key', function(...) stop("error"))
+  stub(get_meta_impl, "sql_by_key", function(...) stop("error"))
   expect_error(get_meta_impl(g, "A", "KEY"), "error")
 })
 
@@ -147,7 +147,7 @@ test_that(".values returns values of all metadata, or per key basis", {
   expect_is(v, "character")
   expect_equal(v, c("VALUE1", "VALUE2"))
 
-  v <- GrafoDB:::values_by_key_impl(g, key="KEY")
+  v <- GrafoDB:::values_by_key_impl(g, key = "KEY")
   expect_is(v, "character")
   expect_equal(v, c("VALUE1", "VALUE2"))
 })
@@ -157,8 +157,7 @@ test_that("I can remove all metadata with a single key entry", {
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
-  
-  
+
   deleteMeta(g, "A", "KEY")
   v <- getMeta(g, "A")
   expect_equal(nrow(v), 0)
@@ -177,7 +176,7 @@ test_that("I can search for metadata values from names and keys", {
 })
 
 
-test_that("values_for returns all metadata without params",{
+test_that("values_for returns all metadata without params", {
   g <- setup("test")
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
@@ -187,11 +186,11 @@ test_that("values_for returns all metadata without params",{
 })
 
 
-test_that("values_for raise an error if any of the params are NULL",{
+test_that("values_for raise an error if any of the params are NULL", {
   g <- setup("test")
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
-  expect_error(values_for(g, name=NULL), "name cannot be null")
-  expect_error(values_for(g, key=NULL), "key cannot be null")
+  expect_error(values_for(g, name = NULL), "name cannot be null")
+  expect_error(values_for(g, key = NULL), "key cannot be null")
 })

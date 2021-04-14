@@ -31,20 +31,20 @@ test_that(" to_data_frame converte correttamente vettori di missing", {
   expect_true(identical(tt, from_data_frame(df)$TEST))
 })
 
-test_that(".declutter_functions removes correctly functions from it's definitions", {
+test_that("declutter_functions removes correctly functions from it's def", {
   f <- "function(A, B,C) { A = 1 }"
   f <- declutter_function(f)
   expect_equal(f, "A = 1")
 
-  f <- function(A, B,C) {
-    A = A+B+C
+  f <- function(A, B, C) {
+    A = A + B + C
   }
 
   f <- declutter_function(f)
-  expect_equal(f, "A = A+B+C")
+  expect_equal(f, "A = A + B + C")
 })
 
-test_that(".decluter_functions preserves commnets", {
+test_that(".decluter_functions preserves comments", {
   f <- function(A) {
     # comment here
     A
@@ -59,7 +59,7 @@ test_that(".decluter_functions preserves commnets", {
 })
 
 test_that("assert_dag raises an exception with a cycle in network", {
-  g <- igraph::graph.empty(directed=TRUE)
+  g <- igraph::graph.empty(directed = TRUE)
   g <- g + igraph::vertex("A")
   g <- g + igraph::vertex("B")
   g <- g + igraph::edge("A", "B")
@@ -86,7 +86,7 @@ test_that("delete handles exceptions", {
 
   g <- GrafoDB("test")
   with_mock(
-    'DBI::dbCommit'= function(...) stop("error test"), {
+    "DBI::dbCommit" = function(...) stop("error test"), {
       expect_error(delete_graph(g), "error test")
       expect_error(delete_graph("test"), "error test")
     })
