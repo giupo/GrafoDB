@@ -5,21 +5,20 @@ setup <- function(tag) {
   g <- GrafoDB(tag)
   g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["C"] <- function(A, B) { # nolint
   }
   g["D"] <- function() {
-    D <- ts(runif(10), start = c(1990, 1), frequency = 4)
+    D <- ts(runif(10), start = c(1990, 1), frequency = 4) # nolint
   }
 
   setMeta(g, "A", "KEYA", "VALUE")
   setMeta(g, "B", "KEYA", "VALUE")
-  
+
   g
-  
+
 }
 
-test_that("isPrimitive returns true if a series is primitive (only numbers, no function)", {
+test_that("isPrimitive returns true if a series is primitive", {
   on.exit({
     delete_graph("test")
   })
@@ -30,7 +29,7 @@ test_that("isPrimitive returns true if a series is primitive (only numbers, no f
   expect_false(isPrimitive(g, "D"))
 })
 
-test_that("isElementary returns true if a series is elementary (numbers and formula, no parents)", {
+test_that("isElementary returns true if a series is elementary", {
   on.exit({
     delete_graph("test")
   })
@@ -42,7 +41,7 @@ test_that("isElementary returns true if a series is elementary (numbers and form
 })
 
 
-test_that("isAggregate returns true if a series is elementary (numbers and formula and parents)", {
+test_that("isAggregate returns true if a series is elementary", {
   on.exit({
     delete_graph("test")
   })
@@ -79,7 +78,7 @@ test_that("getTask returns the formula of the aggregate", {
 
   expect_equal(getTask(g, "C"), expr(g, "C"))
   expect_equal(getTask(g, "C"), "C = A + B")
-  expect_equal(getTask(g, "A"), expr(g, "A"))  
+  expect_equal(getTask(g, "A"), expr(g, "A"))
 })
 
 test_that("searchNode returns a list of nodes matching search criteria", {
