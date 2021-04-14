@@ -10,7 +10,7 @@
 #' @include db.r
 
 load_table <- function(table_name, tag, con = NULL) {
-  con <- if(is.null(con)) {
+  con <- if (is.null(con)) {
     cc <- build_connection()
     on.exit(disconnect(cc))
     cc
@@ -68,7 +68,7 @@ load_formulas <- function(tag, con=NULL) tryCatch({
 })
 
 load_grafi <- function(con=NULL) {
-  con <- if(is.null(con)) {
+  con <- if (is.null(con)) {
     con <- build_connection()
     on.exit(disconnect(con))
     con
@@ -85,7 +85,7 @@ create_new_grafo <- function(x, tag, con = NULL, msg=paste0('Grafo per ', tag)) 
   x@timestamp <- time.in.millis()
   helper <- x@helper
   sql <- sql_by_key(
-    helper, "CREATE_NEW_GRAFO", tag=tag,
+    helper, "CREATE_NEW_GRAFO", tag = tag,
     commento=msg, autore=autore,
     last_updated=x@timestamp)
   
@@ -115,7 +115,7 @@ create_new_grafo <- function(x, tag, con = NULL, msg=paste0('Grafo per ', tag)) 
 
 
 resync <- function(x, con = NULL) {
-  if(is.null(con)) {
+  if (is.null(con)) {
     con <- build_connection()
     on.exit(disconnect(con))
     con

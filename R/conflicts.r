@@ -382,8 +382,6 @@ create_data_conflicts <- function(x, nomi, con = NULL) {
 }
 
 create_function_conflicts <- function(x, nomi, formula_db, con = NULL) {
-
-  conWasNull <- is.null(con)
   con <- if (is.null(con)) {
     con <- build_connection(con = con)
     on.exit(disconnect(con))

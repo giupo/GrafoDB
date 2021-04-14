@@ -1,15 +1,16 @@
 
-.delete_graph <- function(tag, con, helper) {
-  DBI::dbExecute(con, sql_by_key(helper, "DELETE_GRAFI", tag=tag))
-  DBI::dbExecute(con, sql_by_key(helper, "DELETE_CONFLITTI", tag=tag))
+delete_graph_impl <- function(tag, con, helper) {
+  DBI::dbExecute(con, sql_by_key(helper, "DELETE_GRAFI", tag = tag))
+  DBI::dbExecute(con, sql_by_key(helper, "DELETE_CONFLITTI", tag = tag))
   orig_tables <- c("archi", "dati", "metadati", "formule")
-  tables <- paste(orig_tables, tag, sep="_")
-  for(table in tables) {
-    if(DBI::dbExistsTable(con, table)) {
-      DBI::dbExecute(con, sql_by_key(helper, "DROP_TABLE", tab=table)) # nocov      
+  tables <- paste(orig_tables, tag, sep = "_")
+  for (table in tables) {
+    if (DBI::dbExistsTable(con, table)) {
+      DBI::dbExecute(con, 
+        sql_by_key(helper, "DROP_TABLE", tab=table)) # nocov
     }
   }
-  for(table in orig_tables) {
+  for (table in orig_tables) {
     DBI::dbExecute(con, paste0("delete from ", table, " where tag='", tag, "'"))
   }
 }
@@ -27,7 +28,7 @@
 #' @include sqlhelper.r
 
 delete_graph <- function(tag) {
-  tag <- if(is.grafodb(tag)) {
+  tag <- if (is.grafodb(tag)) {
     tag <- tag@tag
   } else {
     tag <- tolower(tag)
@@ -39,7 +40,7 @@ delete_graph <- function(tag) {
 
   tryCatch({
     DBI::dbBegin(con)
-    .delete_graph(tag, con, helper)
+    delete_graph_impl(tag, con, helper)
     DBI::dbCommit(con)
   }, error = function(err) {
     DBI::dbRollback(con)

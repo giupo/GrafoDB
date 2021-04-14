@@ -16,7 +16,7 @@ setup <- function(tag) {
 
 test_that("Salvare una serie non crea un conflitto", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- setup("test")
   g <- saveGraph(g, "test", msg="test")
@@ -36,7 +36,7 @@ test_that("Salvare una serie non crea un conflitto", {
 
 test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- setup("test")
   g <- saveGraph(g, "test")
@@ -69,11 +69,11 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
     })
 })
 
-for(tag in rilasci("test")$tag) delete_graph(tag)
+for (tag in rilasci("test")$tag) delete_graph(tag)
 
 test_that("Salvare lo stesso grafo con interventi su serie distinte non crea conflitti", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- setup("test")
   g <-saveGraph(g, "test", msg="test")
@@ -97,7 +97,7 @@ test_that("Salvare lo stesso grafo con interventi su serie distinte non crea con
 
 test_that("Salvare lo stesso grafo con formula aggiunta", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- setup("test")
   g <- saveGraph(g, "test", msg="test")
@@ -127,7 +127,7 @@ for (tag in rilasci("test")$tag) delete_graph(tag)
 
 test_that("Salvare lo stesso grafo con formula in conflitto", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- setup("test")
   g <- saveGraph(g, "test", msg="test")
@@ -158,7 +158,7 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
 
 test_that("Tra i conflitti viene segnalata solo le serie modificate, non le serie figlie", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- setup("test")
 
@@ -198,7 +198,7 @@ test_that("Tra i conflitti viene segnalata solo le serie modificate, non le seri
     })
 })
 
-for(tag in rilasci("test")$tag) delete_graph(tag)
+for (tag in rilasci("test")$tag) delete_graph(tag)
 
 test_that(
   paste(
@@ -206,7 +206,7 @@ test_that(
     "differenti dati vengono incluse al salvataggio"),
   {
     on.exit({
-      for(tag in rilasci("test")$tag) delete_graph(tag)
+      for (tag in rilasci("test")$tag) delete_graph(tag)
     })
     g <- GrafoDB("test")
     g["A"] <- 1
@@ -228,7 +228,7 @@ test_that(
     
     ## let's see if the graph are roughly the same
     expect_equal(names(g1), names(g2))
-    for(name in names(g1)) {
+    for (name in names(g1)) {
       expect_equal(g1[[name]], g2[[name]])
     }
     
@@ -254,7 +254,7 @@ test_that(
 
 test_that("fixConflicts removes conflicts", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- 1
@@ -289,7 +289,7 @@ test_that("fixConflicts removes conflicts", {
 
 test_that("resync gets called when two sessions updates a Graph", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] = 1
@@ -316,7 +316,7 @@ test_that("resync gets called when two sessions updates a Graph", {
 
 test_that("La rilevazione di conflitti su serie primitive con missing non crea errori", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- setup("test")

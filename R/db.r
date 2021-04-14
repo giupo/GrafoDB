@@ -12,7 +12,7 @@
 #' @include logging.r
 #' @export
 
-db_settings <- function(flush=FALSE) {
+db_settings <- function(flush = FALSE) {
   ln <- "GrafoDB.db.db_settings"
   if (flush) {
     trace("Flushing settings", name = ln)
@@ -22,9 +22,10 @@ db_settings <- function(flush=FALSE) {
   settings <- getOption("db_settings", NULL)
 
   if (is.null(settings)) {
-    trace("settings are null", name=ln)
+    trace("settings are null", name = ln)
     home_ini_file <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
-    debug("Ini file: %s", home_ini_file, name=ln)
+    debug("Ini file: %s", home_ini_file, name = ln)
+
     if (file.exists(home_ini_file)) {
       debug("%s esiste! lo parso", home_ini_file)
       home_settings <- rutils::ini_parse(home_ini_file)
@@ -33,9 +34,9 @@ db_settings <- function(flush=FALSE) {
       return(home_settings)
     }
 
-    debug("Reverting to system wide INI", name=ln)
-    filename <- file.path(system.file(package="GrafoDB"), "ini/GrafoDB.ini")
-    debug("File path for system wide INI: %s%", filename, name=ln)
+    debug("Reverting to system wide INI", name = ln)
+    filename <- file.path(system.file(package = "GrafoDB"), "ini/GrafoDB.ini")
+    debug("File path for system wide INI: %s%", filename, name = ln)
     settings <- rutils::ini_parse(filename)
     debug("Settings: %s", settings, name = ln, capture = TRUE)
     options(db_settings = settings)
@@ -50,6 +51,9 @@ db_settings <- function(flush=FALSE) {
 #' Returns the value of environment variable `GRAFODB_ENV`
 #'
 #' @name getenv
+#' @usage getenv()
+#' @returns the value of the GRAFODB_ENV, if not specified, defaults
+#'    to `prod`
 #' @export
 
 getenv <- function() {
@@ -63,7 +67,8 @@ getenv <- function() {
 #' Ritorna il nome del file contenente lo schema dei dati in base all' `env`
 #'
 #' `env` ottenuto con `getenv` e' la variabile d'ambiente GRAFODB_ENV, di
-#' default settata a `prod`. Negli ambienti di produzione e' necessario cambiarla
+#' default settata a `prod`. Negli ambienti di produzione e' necessario
+#' cambiarla
 #' a `test` e modificare accordingly la configurazione
 #'
 #' @name schema_from_env
@@ -84,7 +89,7 @@ schema_from_env <- function(env = getenv()) {
   schema_file_name <- paste0("schema-", driver, ".sql")
   debug("Schema file name: %s", schema_file_name, name = ln)
   file <- file.path(system.file(package = "GrafoDB"), "sql", schema_file_name)
-    if(!file.exists(file)) {
+    if (!file.exists(file)) {
     error("Schema file doesn't exists: %s", file, name = ln)
     stop("Schema file doesn't exists: ", file)
   }
@@ -103,7 +108,7 @@ initdb <- function(con, env=getenv()) {
 }
 
 initdb_postgres <- function(env=getenv()) {
-  file <- schema_from_env(env=env)
+  file <- schema_from_env(env = env)
   dbname <- if (env != "prod") {
     "grafo_test"
   } else {
@@ -123,9 +128,9 @@ initdb_sqlite <- function(con, env=getenv()) {
 
   tryCatch({
     DBI::dbBegin(con)
-    for(stm in statements) {
+    for (stm in statements) {
       stm <- stringr::str_trim(as.character(stm))
-      if(nchar(stm) > 0) {
+      if (nchar(stm) > 0) {
         trace("%s", stm, name = ln)
         DBI::dbExecute(con, stm)
       }
@@ -143,49 +148,72 @@ initdb_sqlite <- function(con, env=getenv()) {
 #' @note Funzione interna
 #' @rdname build_connection-internal
 #' @include logging.r
+
 build_connection <- function(env = getenv(), con = NULL) {
   if (!is.null(con)) return(con)
 
   ln <- "GrafoDB.build_connection"
-  con <- if(env == "test") {
+  con <- if (env == "test") {
     con <- getOption("GrafoDB_connection", NULL)
     if (is.null(con)) {
       con <- sqlite_connect()
       options(GrafoDB_connection = con)
-      con 
+      con
     } else {
       con
     }
   } else if (env == "prod") {
     postgres_connect()
   } else {
-    error("Unknown env: %s, set GRAFODB_ENV variable to the correct value (prod/test)",
+    error("Unknown env: %s, set GRAFODB_ENV variable to the",
+      "correct value (prod/test)",
       env, name = ln)
     stop("Unknown env: ", env)
   }
 
 
-  if(env == "test" && should_create_schema(con)) {
+  if (env == "test" && should_create_schema(con)) {
     initdb(con, env = env)
   }
   con
 }
 
 
+#' Builds a connection to Postgres
+#'
+#' @name postgres_connect
+#' @usage postgres_connect()
+#' @return a DBI connection to postgres
+#' @note fails if RPostgreSQL is not installed
+#'    the connection params are delegated to the libpq environment variables
+#'    https://www.postgresql.org/docs/9.3/libpq-envars.html
+
 postgres_connect <- function() {
-  if(!requireNamespace("RPostgreSQL", quietly=TRUE)) {
+  if (!requireNamespace("RPostgreSQL", quietly = TRUE)) {
     stop("install package RPostgreSQL with 'install.packages(\"RPostgreSQL\")")
   }
   DBI::dbConnect(RPostgreSQL::PostgreSQL())
 }
 
+#' builds a SQLite connection
+#'
+#' @name sqlite_connect
+#' @usage sqlite_connect()
+#' @return a connection to SQLite
+#' @note this is used for testing, the connection is to an in memory instance
+
 sqlite_connect <- function() {
   if (! requireNamespace("RSQLite", quietly = TRUE)) {
     stop("Please install RSQLite: install.packages('RSQLite')")
   }
-  drv <- RSQLite::dbDriver("SQLite")
-  DBI::dbConnect(drv, dbname=":memory:")
+  DBI::dbConnect(RSQLite::dbDriver("SQLite"), dbname = ":memory:")
 }
+
+#' Returns true if the app should create the DB schema
+#'
+#' @name should_create_schema
+#' @usage should_create_schema()
+#' @return `TRUE` if db schema creation is needed, `FALSE` otherwise
 
 should_create_schema  <- function(con) {
   tryCatch({
@@ -200,7 +228,11 @@ should_create_schema  <- function(con) {
 
 #' proxy the dbDisconnect based on `getenv` value
 #'
+#' if `env` is `test`, is a no-op.
+#' Otherwise delegates the call to `DBI::dbDisconnect`
+#'
 #' @name disconnect
+#' @usage disconnect(con)
 #' @param con connection to disconnect
 #' @param env environment to check against
 

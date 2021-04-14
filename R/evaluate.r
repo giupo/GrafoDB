@@ -3,7 +3,7 @@
 .evaluateSingle1 <- function(name, graph) {
   tsformula <- .expr(graph, name, echo=FALSE)
   nomi_padri <- upgrf(graph, name, livello=1)
-  if(length(nomi_padri) == 0 && is.null(tsformula)) {
+  if (length(nomi_padri) == 0 && is.null(tsformula)) {
     return(graph[[name]])
   }
 
@@ -110,7 +110,7 @@
 .evaluate <- function(object, v_start = NULL, ...) {
   params <- list(...)
 
-  debug <- if("debug" %in% names(params)) {
+  debug <- if ("debug" %in% names(params)) {
     as.logical(params[["debug"]]) # nocov used only for debugging
   } else {
     FALSE
@@ -174,14 +174,14 @@
     prim_non_in_data <- setdiff(prim_non_in_data, hash::keys(functions))
     if (length(prim_non_in_data)) {
       datip <- object[prim_non_in_data]
-      for(n in names(datip)) {
+      for (n in names(datip)) {
         data[n] <- datip[[n]]
       }
     }
 
     sources <- setdiff(sources, sprimitive)
 
-    if(length(sources)) {
+    if (length(sources)) {
       evaluated <- foreach::`%dopar%`(foreach::foreach(name = sources, .combine = c), {
         proxy(name, object)
       })
@@ -219,15 +219,15 @@
 #' @export
 
 evaluate_plain <- function(x, i = names(x)) {
-  if(interactive())
+  if (interactive())
     pb <- progress::progress_bar$new(
       total = length(i), 
       format = ":what [:bar] :current/:total :percent eta: :eta")
 
   data <- g@data
 
-  for(name in i) {
-    if(interactive()) pb$tick(tokens = list(what=name))
+  for (name in i) {
+    if (interactive()) pb$tick(tokens = list(what=name))
     data[[name]] <- .evaluateSingle(name, g)
   }
 

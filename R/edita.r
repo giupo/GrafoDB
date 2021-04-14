@@ -7,9 +7,9 @@
   file <- tempfile(pattern = paste0(name, "-"), fileext = ".R")
   new_task <- paste0(name, " = ... # work it")
   is_node <- isNode(x, name)
-  if(! is_node) {
+  if (! is_node) {
     deps <- c()
-    if(name %in% hash::keys(x@functions)) {
+    if (name %in% hash::keys(x@functions)) {
       task <- x@functions[[name]]
     } else {
       task <- new_task
@@ -17,7 +17,7 @@
   } else {
     deps <- get_deps(x, name)
     task <- expr(x, name, echo = FALSE)
-    if(is.null(task)) {
+    if (is.null(task)) {
       warning("la serie ", name, " e' una serie primitiva")
       task <- new_task
     }
@@ -25,7 +25,7 @@
 
   old_deps <- deps
   old_task <- task
-  if(name %in% hash::keys(x@edges)) {
+  if (name %in% hash::keys(x@edges)) {
     deps <- x@edges[[name]]
   }
 
@@ -53,14 +53,14 @@
     
     x@functions[name] <- edited
 
-    if(!is.null(dep)) {
+    if (!is.null(dep)) {
       x@edges[[name]] <- dep
     }
     x[name] <- f
     invisible(x)
   }, error = function(cond) {
     ## la risetto per poterla editare
-    if(stringr::str_trim(edited) != stringr::str_trim(old_task)) {
+    if (stringr::str_trim(edited) != stringr::str_trim(old_task)) {
       x@functions[name] <- edited
     }
     stop(cond)

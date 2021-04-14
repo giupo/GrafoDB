@@ -59,7 +59,7 @@ setup <- function(tag) {
 
 test_that("I can save a graph over another existing graph", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   tagA <- "test2"
   tagB <- "test3"

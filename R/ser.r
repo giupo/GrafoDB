@@ -1,15 +1,15 @@
 .ser <- function(x, name, debug=FALSE) {
   ## that's the dumbest thing in my life, inverting arguments.
-  if(!debug) {
+  if (!debug) {
     ret <- .evaluateSingle(name, x)
-    if(!is.ts(ret)) {
+    if (!is.ts(ret)) {
       stop(name, " non e' un oggetto ts")
     }
     ret
   } else {
     task <- expr(x, name, echo=FALSE)
-    if(is.null(task)) {
-      if(name %in% names(x)) {
+    if (is.null(task)) {
+      if (name %in% names(x)) {
         stop(name, " non e' una serie con formula")
       } else {
         stop(name, " non e' una serie del grafo")
@@ -24,13 +24,13 @@
     source(filetmp)
     debug(funcName)
     nomi_padri <- deps(x, name)
-    if(is.null(nomi_padri) || length(nomi_padri) == 0) {
+    if (is.null(nomi_padri) || length(nomi_padri) == 0) {
       padri <- list()
     } else {
       padri <- x[[nomi_padri]]
     }
 
-    if(length(nomi_padri) == 1) {
+    if (length(nomi_padri) == 1) {
       ## boxing
       ppp <- list()
       ppp[[nomi_padri]] <- padri

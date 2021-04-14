@@ -77,7 +77,7 @@ test_that("Posso cancellare Metadati", {
 
 test_that("If I get an erro with DB, deleteMeta fails", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- setup("test")
@@ -155,7 +155,7 @@ test_that(".values returns values of all metadata, or per key basis", {
 test_that("I can remove all metadata with a single key entry", {
   g <- setup("test")
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   
   
@@ -168,7 +168,7 @@ test_that("I can remove all metadata with a single key entry", {
 test_that("I can search for metadata values from names and keys", {
   g <- setup("test")
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
 
@@ -180,7 +180,7 @@ test_that("I can search for metadata values from names and keys", {
 test_that("values_for returns all metadata without params",{
   g <- setup("test")
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   x <- values_for(g)
   expect_equal(nrow(x), 3)
@@ -190,7 +190,7 @@ test_that("values_for returns all metadata without params",{
 test_that("values_for raise an error if any of the params are NULL",{
   g <- setup("test")
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   expect_error(values_for(g, name=NULL), "name cannot be null")
   expect_error(values_for(g, key=NULL), "key cannot be null")

@@ -3,11 +3,11 @@ methods::setMethod(
   "[",
   c("GrafoDB", "character", "missing", "ANY"),
   function(x, i, j, ..., drop = TRUE) {
-    if(length(i) == 0) {
+    if (length(i) == 0) {
       return(rdataset::Dataset())
     }
     raw <- x[[i]]
-    if(length(i)==1) {
+    if (length(i)==1) {
       ret <- list()
       ret[[i]] <- raw
     } else {
@@ -41,11 +41,11 @@ subsetting <- function(x, i, value) {
   name <- i
 
   already_in_dag <- all(name %in% all_names)
-  network <- if(!already_in_dag) {
+  network <- if (!already_in_dag) {
     to_be_added <- setdiff(name, all_names)
     network + igraph::vertex(to_be_added)
   } else {
-      if(!rdataset::is.dataset(value) && length(igraph::E(network)) > 0) {
+      if (!rdataset::is.dataset(value) && length(igraph::E(network)) > 0) {
         network - igraph::E(network)[.to(name)]  # nocov
     } else {
       network
@@ -95,7 +95,7 @@ subsetting <- function(x, i, value) {
 
     ci.sono.formule <- length(tt) != 0
 
-    if(ci.sono.formule) {
+    if (ci.sono.formule) {
       stop("Non puoi impostare una serie con formula con uno scalare: ",
            paste(tt, collapse=", "))
     }
@@ -104,7 +104,7 @@ subsetting <- function(x, i, value) {
     if (rdataset::is.dataset(value) || is.list(value)) {
       value <- rdataset::as.dataset(value)
       data <- x@data
-      for(n in names(value)) {
+      for (n in names(value)) {
         data[n] <- value[[n]]
       }
       x@data <- data

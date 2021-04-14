@@ -7,7 +7,7 @@ proxytest <- function(numero) {
   deps <- paste0("A", seq(numero))
   formula_B <- paste0("B = ", paste0(deps, collapse=" + "))
   g@functions["B"] <- formula_B
-  for(nome in deps) {
+  for (nome in deps) {
     g[nome] <- tt
   }
   g@network <- igraph::graph.data.frame(as.data.frame(cbind(deps, "B")))

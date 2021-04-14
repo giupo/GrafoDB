@@ -36,7 +36,7 @@ methods::setMethod(
 .initSQLHelper <- function(.Object, path = NULL, type=NULL) {
   env <- getenv()
   if (is.null(type)) {
-    type <- if(env == "test") {
+    type <- if (env == "test") {
       "SQLite"
     } else {
       "PostgreSQL"
@@ -55,7 +55,7 @@ methods::setMethod(
 
 .sql_by_key <- function(x, .key, ...) {
   sqlContainer <- x@sqlContainer
-  if(! .key %in% names(sqlContainer)) {
+  if (! .key %in% names(sqlContainer)) {
     stop(.key, " not in query repository")
   }
 
@@ -65,10 +65,10 @@ methods::setMethod(
   ## handle param list
   params <- list(...)
 
-  for(name in names(params)) {
+  for (name in names(params)) {
     paramKey <- paste0("--", name, "--")
     value <- params[[name]]
-    if(is.null(value)) {
+    if (is.null(value)) {
       value <- ""
     }
     quotedValue <- gsub("'", "''", value)
@@ -79,7 +79,7 @@ methods::setMethod(
 
   idx <- stringr::str_locate_all(sql, "--[A-Z|a-z|0-9]*--")[[1]]
   if (length(idx) > 0) {
-    for(irow in 1:nrow(idx)) {
+    for (irow in 1:nrow(idx)) {
       start <- idx[irow, 1]
       end <- idx[irow, 2]
       param <- substring(sql, first=start, last=end)

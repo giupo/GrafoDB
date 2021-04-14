@@ -323,7 +323,7 @@ get_data <- function(x, ids) {
   to_be_loaded_from_db <- setdiff(ids, in_data)
   tag <- x@tag
   from_db <- if (length(to_be_loaded_from_db)) {
-    if(x@ordinal != 0) {
+    if (x@ordinal != 0) {
       tag <- paste0(tag, "p", x@ordinal)
     }
     getdb(x, to_be_loaded_from_db)
@@ -493,7 +493,7 @@ rilasci <- function(filtro = NULL) {
   con <- build_connection()
   on.exit(disconnect(con))
   helper <- SQLHelper()
-  sql <- if(is.null(filtro)) {
+  sql <- if (is.null(filtro)) {
     sql_by_key(helper, "TUTTI_RILASCI")
   } else {
     sql_by_key(helper, "TUTTI_RILASCI_FILTERED", filtro = filtro)
@@ -502,7 +502,7 @@ rilasci <- function(filtro = NULL) {
   data <- DBI::dbGetQuery(con, sql)
 
   nomicol <- colnames(data)
-  if(nrow(data) > 1) {
+  if (nrow(data) > 1) {
     time_col <- as.POSIXct(
       as.numeric(data$last_updated) / 1000,
       origin = as.Date("1970-01-01"))

@@ -14,7 +14,7 @@
 
 
 patch <- function(x, diff_, column=NULL) {
-  if(!is.null(column)) {
+  if (!is.null(column)) {
     patchByColumn(x, diff_, column)
   } else {
     patchByLastUpdated(x, diff_)
@@ -26,11 +26,11 @@ patch <- function(x, diff_, column=NULL) {
 patchByLastUpdated <- function(x, diff_) {
   ln <- 'GrafoDB.patch.patchByLastUpdated'
   nomi <- diff_$name
-  for(nome in nomi) {
+  for (nome in nomi) {
     trace("Patching %s", nome, name=ln)
     lastup1 <- as.numeric(diff_[diff_$name == nome, 4])
     lastup2 <- as.numeric(diff_[diff_$name == nome, 7])
-    new_formula <- if(lastup1 > lastup2) {
+    new_formula <- if (lastup1 > lastup2) {
       trace("nuova data (%s) > vecchia data (%s)", lastup1, lastup2, name=ln)
       as.character(diff_[diff_$name == nome, 2])
     } else if (lastup1 < lastup2) {
@@ -53,7 +53,7 @@ patchByLastUpdated <- function(x, diff_) {
 patchByColumn <- function(x, diff_, column=NULL) {
   ln <- "GrafoDB.patch.patchByColumn"
   nomi <-  diff_$name
-  for(nome in nomi) {
+  for (nome in nomi) {
     trace("Patching %s", nome, name=ln)
     new_formula <- as.character(diff_[diff_$name == nome, column])
     trace("New formula patch: %s", new_formula, name=ln)

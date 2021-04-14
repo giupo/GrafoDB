@@ -17,7 +17,7 @@ diff.GrafoDB <- function(x, ...) {
   not_common <- union(
     setdiff(names(x), names(y)),
     setdiff(names(y), names(x)))
-  if(length(not_common)) {
+  if (length(not_common)) {
     warning("not common names: ", paste0(not_common, collapse = ", "))
   }
 

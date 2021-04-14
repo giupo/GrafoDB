@@ -3,29 +3,21 @@
 
 copy_graph <- function(from, to, con, ...) {
   param_list <- list(...)
-  commento <- if('msg' %in% names(param_list)) {
-    param_list[["msg"]]
-  } else {
-    paste0("Rilascio per ", to)
-  }
+  commento <- rutils::ifelse("msg" %in% names(param_list),
+    param_list[["msg"]],
+    paste0("Rilascio per ", to))
 
-  helper <- if("helper" %in% names(param_list)) {
-    param_list[["helper"]]
-  } else {
-    SQLHelper()
-  }
+  helper <- rutils::ifelse("helper" %in% names(param_list),
+    param_list[["helper"]],
+    SQLHelper())
 
-  last_updated <- if("last_updated" %in% names(param_list)) {
-    param_list[["last_updated"]]
-  } else {
-    time.in.millis()
-  }
+  last_updated <- rutils::ifelse("last_updated" %in% names(param_list),
+    param_list[["last_updated"]],
+    time.in.millis())
 
-  autore <- if('autore' %in% names(param_list)) {
-    param_list[["autore"]]
-  } else {
-    rutils::whoami()
-  }
+  autore <- rutils::ifelse("autore" %in% names(param_list),
+    param_list[["autore"]],
+    rutils::whoami())
 
   ## copia archi
   DBI::dbExecute(con, sql_by_key(
@@ -46,5 +38,5 @@ copy_graph <- function(from, to, con, ...) {
   DBI::dbExecute(con, sql_by_key(
     helper, "INSERT_GRAFI", tag = to,
     commento = commento, autore = autore,
-    last_updated=time.in.millis()))
+    last_updated = time.in.millis()))
 }

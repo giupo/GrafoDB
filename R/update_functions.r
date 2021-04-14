@@ -2,7 +2,7 @@
 
 update_functions <- function(x, con, tag=x@tag, msg="") {
   ln <- "GrafoDB::update_functions"
-  if(interactive()) info("Update Functions ...", name=ln)
+  if (interactive()) info("Update Functions ...", name=ln)
 
   ## passo la connessione perche' devono avere la stessa transazione
   ## non usare controllo di transazione qui
@@ -10,10 +10,10 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
   timestamp <- x@timestamp
   autore <- rutils::whoami()
   helper <- x@helper
-  df <- if(length(hash::keys(functions))) {
+  df <- if (length(hash::keys(functions))) {
     DBI::dbGetQuery(con, sql_by_key(
       helper, "GET_CHANGED_FORMULE",
-      tag=tag,
+      tag = tag,
       last_updated=as.numeric(timestamp)))
   } else {
     data.frame()
@@ -22,13 +22,13 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
   names.with.conflicts <- intersect(x@touched, as.character(df$name))
 
   names.updated <- setdiff(hash::keys(x@functions), names.with.conflicts)
-  if(length(names.updated)) {
+  if (length(names.updated)) {
     formule <- foreach::`%dopar%`(foreach::foreach(name = iterators::iter(names.updated), .combine=rbind), {
       formula <- expr(x, name, echo=FALSE)
       cbind(formula, autore, name, tag)
     })
 
-    if(DBI::dbExistsTable(con, paste0("formule_", tag)) ||
+    if (DBI::dbExistsTable(con, paste0("formule_", tag)) ||
          class(con) == "SQLiteConnection") {
       foreach::`%do%`(foreach::foreach(row = iterators::iter(formule, 'row')), {
         formularow <- row[,1]
@@ -36,7 +36,7 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
 
         DBI::dbExecute(con, sql_by_key(
           helper, "UPDATE_FORMULE",
-          tag=tag,
+          tag = tag,
           autore=autore,
           formula=formularow,
           name=namerow,
@@ -52,11 +52,11 @@ update_functions <- function(x, con, tag=x@tag, msg="") {
         formula=formula,
         autore=autore,
         name=name,
-        tag=tag,
+        tag = tag,
         msg=msg,
         last_updated=time.in.millis()))
     })
   }
   
-  if(interactive()) info("Update Functions done.", name=ln)
+  if (interactive()) info("Update Functions done.", name=ln)
 }

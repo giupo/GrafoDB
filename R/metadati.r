@@ -6,8 +6,8 @@
   helper <- x@helper
   tag <- x@tag
   df <- DBI::dbGetQuery(con, sql_by_key(
-    helper, "GET_META", tag=tag, name=serie, key=metadato))
-  if(nrow(df)) {
+    helper, "GET_META", tag = tag, name=serie, key=metadato))
+  if (nrow(df)) {
     as.character(df[,1])
   } else {
     character()
@@ -48,7 +48,7 @@
   on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
-  sql <- sql_by_key(helper, "KEYS_METADATA", tag=tag)
+  sql <- sql_by_key(helper, "KEYS_METADATA", tag = tag)
   DBI::dbGetQuery(con, sql)
 }
 
@@ -69,10 +69,10 @@
   on.exit(disconnect(con))
   tag <- x@tag
   helper <- x@helper
-  sql <- if(is.null(key)) {
-    sql_by_key(helper, "VALUES_METADATA", tag=tag)
+  sql <- if (is.null(key)) {
+    sql_by_key(helper, "VALUES_METADATA", tag = tag)
   } else {
-    sql_by_key(helper, "VALUES_METADATA_KEY", tag=tag, key=key)
+    sql_by_key(helper, "VALUES_METADATA_KEY", tag = tag, key=key)
   }
 
   df <- DBI::dbGetQuery(con, sql)
@@ -106,7 +106,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
   sql <- whisker::whisker.render(sql, list(
     nomi=paste(shQuote(name), collapse=", "),
     chiavi=paste(shQuote(key), collapse=", "),
-    tag=tag
+    tag = tag
   ))
 
   DBI::dbGetQuery(con, sql)
@@ -125,7 +125,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
 #' @include db.r
 
 .deleteMeta <- function(x, name, key, value=NULL) {
-  if(is.null(value)) {
+  if (is.null(value)) {
     return(.deleteMetaByKey(x, name, key))
   }
   con <- build_connection()
@@ -137,7 +137,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
   tryCatch({
     DBI::dbExecute(con, sql_by_key(
       helper, "DELETE_META_TAG_NAME_KEY_VALUE",
-      tag=tag,
+      tag = tag,
       name=name,
       key=key,
       value=value))
@@ -161,7 +161,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
     tryCatch({
       DBI::dbExecute(con, sql_by_key(
         helper, "DELETE_META_TAG_NAME_KEY",
-        tag=tag,
+        tag = tag,
         name=name,
         key=key))
       DBI::dbCommit(con)
@@ -175,7 +175,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
 
 .setMeta <- function(x, name, key, value) {
   nomiobj <- names(x)
-  if(!all(name %in% nomiobj)) {
+  if (!all(name %in% nomiobj)) {
     nong <- setdiff(name, nomiobj)
     stop("Non e' una serie del grafo: ", paste(nong, collapse=", "))
   }
@@ -192,7 +192,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
 
   domain <- as.character(df$name)
 
-  if(any(name %in% domain)) {
+  if (any(name %in% domain)) {
     already <- intersect(domain, name)
     warning("Ha gia' un metadato ", key, " = ", value, " :", paste(already, collapse=", "))
   } else {
@@ -202,7 +202,7 @@ values_for <- function(x, name=names(x), key=keys(x)) {
 
     sql <- sql_by_key(
       helper, "INSERT_META",
-      tag=tag,
+      tag = tag,
       name=name,
       key=key,
       value=value,

@@ -75,9 +75,9 @@ test_that("assert_dag raises an exception with a cycle in network", {
 })
 
 test_that("delete deletes a GrafoDB", {
-  for(tag in rilasci("test")$tag) delete_graph(tag)
+  for (tag in rilasci("test")$tag) delete_graph(tag)
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   df <- rilasci("test")
@@ -86,7 +86,7 @@ test_that("delete deletes a GrafoDB", {
 
 test_that("delete handles exceptions", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")

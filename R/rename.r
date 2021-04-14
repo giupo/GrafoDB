@@ -12,18 +12,18 @@
 #' @include db.r functions.r
 
 .rename <- function(x, vecchio, nuovo) {
-  if(isNode(x, nuovo)) {
+  if (isNode(x, nuovo)) {
     stop(nuovo, " e' gia' una serie del grafo")
   }
   
-  if(!isNode(x, vecchio)) {
+  if (!isNode(x, vecchio)) {
     stop(vecchio, " non e' una serie del grafo")
   }
   
   figlie <- downgrf(x, vecchio, livello=1)
   data <- x@data
   functions <- x@functions
-  if(vecchio %in% hash::keys(data) || vecchio %in% hash::keys(functions) ||
+  if (vecchio %in% hash::keys(data) || vecchio %in% hash::keys(functions) ||
        any(figlie %in% hash::keys(data)) ||
        any(figlie %in% hash::keys(functions))) {
     stop(vecchio, " o figlie di ", vecchio,
@@ -41,20 +41,20 @@
 
     DBI::dbExecute(con, sql_by_key(
       helper, "RENAME_DATI",
-      tag=tag,
+      tag = tag,
       nuovo=nuovo,
       vecchio=vecchio))
     
     DBI::dbExecute(con, sql_by_key(
       helper, "RENAME_FORMULE",
-      tag=tag,
+      tag = tag,
       nuovo=nuovo,
       vecchio=vecchio))
     
-    for(figlia in figlie) {
+    for (figlia in figlie) {
       DBI::dbExecute(con, sql_by_key(
         helper, "RENAME_FORMULA",
-        tag=tag,
+        tag = tag,
         vecchio=vecchio,
         nuovo=nuovo,
         figlia=figlia))
@@ -64,20 +64,20 @@
       helper, "RENAME_ARCHI_PARTENZA",
       nuovo=nuovo,
       vecchio=vecchio,
-      tag=tag))
+      tag = tag))
 
     DBI::dbExecute(con, sql_by_key(
       helper, "RENAME_ARCHI_ARRIVO",
       nuovo=nuovo,
       vecchio=vecchio,
-      tag=tag))
+      tag = tag))
     
-    if(DBI::dbExistsTable(con, paste0("metadati_",tag))) {
+    if (DBI::dbExistsTable(con, paste0("metadati_",tag))) {
       DBI::dbExecute(con, sql_by_key(
         helper, "RENAME_METADATI",
         nuovo=nuovo,
         vecchio=vecchio,
-        tag=tag))
+        tag = tag))
     }
         
     nomiarchi <- igraph::get.vertex.attribute(x@network, "name")

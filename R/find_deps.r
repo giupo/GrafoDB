@@ -19,7 +19,7 @@ isError <- function(cond=NULL) {
 #' @return single name of missing object blamed in `cond`, NA if not found
 
 find_dep_from_error <- function(cond=NULL) {
-  if(! isError(cond) ) {
+  if (! isError(cond) ) {
     stop("`cond` is not an error: ", cond, ", class: ", class(cond))
   }
   match <- stringr::str_match(as.character(cond), "object '(\\w+)' not found")
@@ -45,7 +45,7 @@ find_deps <- function(g, formula) {
   env <- new.env()
   deps <- c()
 
-  if(is.null(formula)) {
+  if (is.null(formula)) {
     return(NULL)
   }
 
@@ -59,7 +59,7 @@ find_deps <- function(g, formula) {
 
     if (isError(ret)) {
       dep <- find_dep_from_error(ret)
-      if(dep %in% names(g))  {
+      if (dep %in% names(g))  {
         env[[dep]] <- g[[dep]]
       } else {
         stop("I dunno where to look for: ", dep)

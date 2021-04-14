@@ -14,7 +14,7 @@
   functions <- x@functions
   in_functions <- intersect(hash::keys(functions), nomi)
   to_be_loaded_from_db <- setdiff(nomi, in_functions)
-  from_db <- if(length(to_be_loaded_from_db)) {
+  from_db <- if (length(to_be_loaded_from_db)) {
     dbformule <- x@dbformule
     dbformule[dbformule$name %in% nomi, c("name", "formula")]
   } else {
@@ -29,18 +29,18 @@
   
   formule <- rbind(in_functions, from_db)
   
-  if(nrow(formule) == 0) {
+  if (nrow(formule) == 0) {
     NULL
-  } else if(nrow(formule) == 1) {
+  } else if (nrow(formule) == 1) {
     task <- as.character(formule$formula)
-    if(interactive() && echo) {
+    if (interactive() && echo) {
       formatR::tidy_source(text=task, indent = 2) # nocov
     }
     task
   } else {
     nomi <- formule$name
     ret <- vector(length(nomi), mode = "list")
-    for(i in seq_along(nomi)) {
+    for (i in seq_along(nomi)) {
       name <- nomi[[i]]
       ret[i] <- as.character(formule[formule$name == name,]$formula)
     }

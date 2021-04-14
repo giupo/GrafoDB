@@ -294,11 +294,11 @@ methods::setMethod(
   signature("GrafoDB", "character"),
   function(object, tsName) {
     ret <- list()
-    for(name in tsName) {
+    for (name in tsName) {
       ret[[name]] <- navigate(object, name, order=1, mode = "in")
     }
     
-    if(length(ret) == 1) {
+    if (length(ret) == 1) {
       ret <- ret[[name]]
     }
     ret
@@ -366,7 +366,7 @@ methods::setMethod(
   signature("GrafoDB", "character", "character"),
   function(graph, attrName, attrValue) {
     ret <- lookup(graph, attrName, attrValue)
-    if(length(ret) == 0) {
+    if (length(ret) == 0) {
       stop("Non esistono serie con i criteri ", attrName, " == ", attrValue)
     } 
     ret

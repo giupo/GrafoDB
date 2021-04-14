@@ -5,7 +5,7 @@ requireNamespace("devtools")
 
 test_that("Posso istanziare un GrafoDB", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   expect_true(is.grafodb(g))
@@ -14,7 +14,7 @@ test_that("Posso istanziare un GrafoDB", {
 
 test_that("Posso istanziare un GrafoDB con un tag", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   expect_true(is.grafodb(g))
@@ -23,7 +23,7 @@ test_that("Posso istanziare un GrafoDB con un tag", {
 
 test_that("Posso impostare una timeseries con nome nel GrafoDB", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
@@ -34,7 +34,7 @@ test_that("Posso impostare una timeseries con nome nel GrafoDB", {
 
 test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
@@ -55,7 +55,7 @@ test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
 
 test_that("Posso usare delle formule per definire le serie", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
@@ -69,7 +69,7 @@ test_that("Posso usare delle formule per definire le serie", {
 
 test_that("Posso cercare le serie con metadati", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990, 1), frequency=4)
@@ -90,7 +90,7 @@ test_that("Posso cercare le serie con metadati", {
 
 test_that("Posso salvare il grafo sul database", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
@@ -110,7 +110,7 @@ test_that("Posso salvare il grafo sul database", {
 
 test_that("names su un grafo vuoto torna un array vuoto", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   expect_equal(length(names(g)), 0)
@@ -119,7 +119,7 @@ test_that("names su un grafo vuoto torna un array vuoto", {
 
 test_that("subset with datasets", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
@@ -147,7 +147,7 @@ test_that("subset with datasets", {
 
 test_that("a tag with 'p' returns the tag with the ordinal", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   expect_equal(g@ordinal, 0)
@@ -161,7 +161,7 @@ test_that("a tag with 'p' returns the tag with the ordinal", {
 
 test_that("Cascade subsetting works", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -172,7 +172,7 @@ test_that("Cascade subsetting works", {
 
 test_that("Saving preserves network and nodes", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -191,7 +191,7 @@ test_that("Saving preserves network and nodes", {
 
 test_that("navigate without arguments returns a downgrf", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")
@@ -210,7 +210,7 @@ test_that("navigate without arguments returns a downgrf", {
 
 test_that("posso rimuovere archi", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -248,13 +248,13 @@ test_that("posso rimuovere archi", {
 
 test_that("I can cast a empty GrafoDB to a Dataset", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   d <- rdataset::as.dataset(g)
   expect_true(rdataset::is.dataset(d))
   expect_true(all(names(d) %in% names(g)))
-  for(name in names(d)) {
+  for (name in names(d)) {
     d1 <- d[[name]]
     g1 <- g[[name]]
     expect_equal(d1, g1)
@@ -264,7 +264,7 @@ test_that("I can cast a empty GrafoDB to a Dataset", {
 
 test_that("I can cast a GrafoDB to a Dataset", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -279,9 +279,9 @@ test_that("I can cast a GrafoDB to a Dataset", {
 
 test_that("Posso passare non timeseries", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
-  if(!suppressWarnings(require(tis))) {
+  if (!suppressWarnings(require(tis))) {
     skip("tis::mergeSeries is necessary for this test")
   }
   g <- GrafoDB("test")
@@ -297,9 +297,9 @@ test_that("Posso passare non timeseries", {
 
 test_that("posso salvare non timeseries", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
-  if(!suppressWarnings(require(tis))) {
+  if (!suppressWarnings(require(tis))) {
     skip("tis::mergeSeries is necessary for this test")
   }
   g <- GrafoDB("test")
@@ -316,7 +316,7 @@ test_that("posso salvare non timeseries", {
 
 test_that("posso memorizzare stringhe", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -333,7 +333,7 @@ test_that("posso memorizzare stringhe", {
 
 test_that("isLeaf torna true per serie foglia", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -346,7 +346,7 @@ test_that("isLeaf torna true per serie foglia", {
 
 test_that("isLeaf torna false per una serie non foglia", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -360,7 +360,7 @@ test_that("isLeaf torna false per una serie non foglia", {
 
 test_that("isRoot torna false per serie foglia", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -373,7 +373,7 @@ test_that("isRoot torna false per serie foglia", {
 
 test_that("isRoot torna true per una serie non foglia", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -387,7 +387,7 @@ test_that("isRoot torna true per una serie non foglia", {
 
 test_that("Posso subsettare con il $ (dollaro)", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -406,7 +406,7 @@ test_that("Posso subsettare con il $ (dollaro)", {
 
 test_that("Posso subsettare una singola serie come Dataset", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -426,7 +426,7 @@ test_that("Posso subsettare una singola serie come Dataset", {
 
 test_that("I get an error if I try to subset a series with missing deps", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
@@ -440,7 +440,7 @@ test_that("I get an error if I try to subset a series with missing deps", {
 
 test_that("isRoot returns true if node is a root", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4) 
@@ -458,7 +458,7 @@ test_that("isRoot returns true if node is a root", {
 
 test_that("show produces output", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4) 
@@ -470,9 +470,9 @@ test_that("show produces output", {
 
 
 test_that("I can subtract two GrafoDB", {
-  for(tag in rilasci("test")$tag) delete_graph(tag)
+  for (tag in rilasci("test")$tag) delete_graph(tag)
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4) 
@@ -492,19 +492,19 @@ test_that("I can subtract two GrafoDB", {
   expect_true(rdataset::is.dataset(diff))
   expect_true(all(names(diff) %in% c("A", "B", "C")))
   expect_true(!"D" %in% names(diff))
-  for(name in names(diff)) {
+  for (name in names(diff)) {
     expect_equal(diff[[name]], g1[[name]] - g[[name]])
   }
 })
 
 
-for(tag in rilasci("test")$tag) delete_graph(tag)
+for (tag in rilasci("test")$tag) delete_graph(tag)
 
 
 test_that("I can't subtract container with different types of objects", {
-  for(tag in rilasci("test")$tag) delete_graph(tag)
+  for (tag in rilasci("test")$tag) delete_graph(tag)
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")
@@ -524,9 +524,9 @@ test_that("I can't subtract container with different types of objects", {
 
 
 test_that("expr returns a list of formulas with multiple names", {
-  for(tag in rilasci("test")$tag) delete_graph(tag)
+  for (tag in rilasci("test")$tag) delete_graph(tag)
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")
@@ -546,9 +546,9 @@ test_that("expr returns a list of formulas with multiple names", {
 
 
 test_that("ser fails if returned object is not a timeseries", {
-  for(tag in rilasci("test")$tag) delete_graph(tag)
+  for (tag in rilasci("test")$tag) delete_graph(tag)
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")
@@ -565,9 +565,9 @@ test_that("ser fails if returned object is not a timeseries", {
 
 
 test_that("ser in debug fails if series has no formula", {
-  for(tag in rilasci("test")$tag) delete_graph(tag)
+  for (tag in rilasci("test")$tag) delete_graph(tag)
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")
@@ -581,9 +581,9 @@ test_that("ser in debug fails if series has no formula", {
 
 
 test_that("ser in debug fails if name doesn't exist", {
-  for(tag in rilasci("test")$tag) delete_graph(tag)
+  for (tag in rilasci("test")$tag) delete_graph(tag)
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")
@@ -597,9 +597,9 @@ test_that("ser in debug fails if name doesn't exist", {
 
 
 test_that("an empty graph returns no names", {
-  for(tag in rilasci("test")$tag) delete_graph(tag)
+  for (tag in rilasci("test")$tag) delete_graph(tag)
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")
@@ -617,7 +617,7 @@ test_that("evaluate raises an error on unknown name series", {
 
 test_that("I can evaluate multiple series on a single evaluate call", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
@@ -638,7 +638,7 @@ test_that("I can evaluate multiple series on a single evaluate call", {
 
 test_that("Se imposto una serie per formula senza definirla ho un errore", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- GrafoDB("test")
@@ -653,17 +653,17 @@ test_that("Se imposto una serie per formula senza definirla ho un errore", {
 
 test_that("Posso usare funzioni complesse nelle formule", {
   on.exit({
-    for(tag in rilasci("test")$tag) delete_graph(tag)
+    for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
-  if(!requireNamespace("tempdisagg")) {
+  if (!requireNamespace("tempdisagg")) {
     skip("Tempdisagg not installed")
   }
 
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- ts(runif(100), start=c(1995,1), frequency=4)
   expect_error({g["C"] <- function(A, B) {
-    if(!is.function(tempdisagg::td)) {
+    if (!is.function(tempdisagg::td)) {
       fail("td not found")
     }
     C <- A + B

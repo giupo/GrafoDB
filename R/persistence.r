@@ -50,13 +50,13 @@
 
   param_list <- list(...)
 
-  msg <- if('msg' %in% names(param_list)) {
+  msg <- if ('msg' %in% names(param_list)) {
     param_list[["msg"]]
   } else {
     ""
   }
 
-  con <- if('con' %in% names(param_list)) {
+  con <- if ('con' %in% names(param_list)) {
     debug('connection context provided', name=ln)
     param_list[['con']]
   }  else {
@@ -73,7 +73,7 @@
     trace("beginning transaction", name=ln)
     DBI::dbBegin(con)
 
-    if(has_conflicts(x, con=con)) {
+    if (has_conflicts(x, con=con)) {
       stop("Il grafo ", tag, " ha conflitti, risolverli prima di salvare")
     }
 
@@ -101,17 +101,17 @@
 
     check_conflicts(x, con=con)
 
-    if(exists_tag(tag, con=con)) {
+    if (exists_tag(tag, con=con)) {
       # se esiste il tag sul DB
       # sto aggiornando il grafo tag
       trace("'%s' exists on DB, I'm updating it...", tag, name=ln)
-      if(x@tag != tag) {
+      if (x@tag != tag) {
         trace("x@tag ('%s') != tag (%s), execute history, delete tag and recreate a copy of it",
                    x@tag, tag, name=ln)
         # faccio l'history del tag di destinazione
         do_history(x, tag, con)
         # lo cancello
-        .delete_graph(tag, con, x@helper)
+        delete_graph_impl(tag, con, x@helper)
         # copio il grafo in sessione col grafo attuale
         copy_graph(x@tag, tag, con=con, mesg=msg, helper=x@helper)
       }
@@ -167,7 +167,7 @@ update_graph <- function(x, tag = x@tag, con = NULL, msg = "") {
   DBI::dbExecute(con, sql_by_key(
     helper, "UPDATE_GRAFO_LAST_UPDATED",
     autore=rutils::whoami(),
-    tag=tag,
+    tag = tag,
     last_updated=time.in.millis()))
 }
 
@@ -186,7 +186,7 @@ create_graph <- function(x, tag, con, ...) {
   commento <- if ("msg" %in% names(param_list)) {
     param_list[["msg"]]
   } else {
-    if(interactive()) {
+    if (interactive()) {
       readline(prompt="Inserisci un commento/nota per: ")
     } else {
       paste0("Rilascio per ", tag)
@@ -196,7 +196,7 @@ create_graph <- function(x, tag, con, ...) {
   autore <- rutils::whoami()
   helper <- x@helper
 
-  if(length(names(x))) {
+  if (length(names(x))) {
     dati <- foreach::`%do%`(foreach::foreach (name = iterators::iter(names(x)), .combine=rbind), {
       tt <- x[[name]]
       df <-  to_data_frame(tt, name)
@@ -207,7 +207,7 @@ create_graph <- function(x, tag, con, ...) {
 
       DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_DATI",
-        tag=tag,
+        tag = tag,
         name=name,
         anno=anno,
         periodo=periodo,
@@ -222,13 +222,13 @@ create_graph <- function(x, tag, con, ...) {
 
   archi <- as.data.frame(igraph::get.edgelist(x@network))
 
-  if(nrow(archi)) {
+  if (nrow(archi)) {
     foreach::`%do%`(foreach::foreach(row = iterators::iter(archi, 'row')), {
       partenza <- row[,1]
       arrivo <- row[,2]
       DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_ARCO",
-        tag=tag,
+        tag = tag,
         partenza=partenza,
         arrivo=arrivo,
         autore=autore,
@@ -239,10 +239,10 @@ create_graph <- function(x, tag, con, ...) {
   foreach::`%do%`(foreach::foreach(
     name = iterators::iter(names(x)), .combine=rbind), {
     formula <- expr(x, name, echo=FALSE)
-    if(!is.null(formula)) {
+    if (!is.null(formula)) {
       DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_FORMULA",
-        tag=tag,
+        tag = tag,
         name=name,
         formula=formula,
         autore=autore,
@@ -252,7 +252,7 @@ create_graph <- function(x, tag, con, ...) {
 
   DBI::dbExecute(con, sql_by_key(
     helper, "INSERT_GRAFI", 
-    tag=tag,
+    tag = tag,
     commento=commento,
     autore=autore,
     last_updated=time.in.millis()))
@@ -281,7 +281,7 @@ count_rolling <- function(x, con) {
     ## se PostgreSQL:
     nome_seq <- paste0("grafi_", tag, "_ordinal_seq")
 
-    if(nrow(DBI::dbGetQuery(con, sql_by_key(helper, "EXISTS_SEQ", seq=nome_seq))) > 0) {
+    if (nrow(DBI::dbGetQuery(con, sql_by_key(helper, "EXISTS_SEQ", seq=nome_seq))) > 0) {
       df <- DBI::dbGetQuery(con, sql_by_key(helper, "NEXT_VAL", seq=nome_seq))
       as.numeric(df[[1]])
     } else {
@@ -296,8 +296,8 @@ count_rolling <- function(x, con) {
 }
 
 getMaxP <- function(helper, tag, con) {
-  df <- DBI::dbGetQuery(con, sql_by_key(helper, "COUNT_ROLLING", tag=tag))
-  if(nrow(df) == 0) {
+  df <- DBI::dbGetQuery(con, sql_by_key(helper, "COUNT_ROLLING", tag = tag))
+  if (nrow(df) == 0) {
     0
   } else {
     numeri <- suppressWarnings(as.numeric(gsub("p", "", gsub(tag, "", df[, 1]))))
@@ -340,15 +340,15 @@ next_rolling_name <- function(x, con) {
 do_history <- function(x, tag, con) {
   ril <- rilasci(tag)
   autore <- ril[ril$tag == x@tag, ]$autore
-  if(length(autore) == 0) {
+  if (length(autore) == 0) {
     autore <- rutils::whoami()
   }
 
   dest <- next_rolling_name(x, con)
-  if(interactive()) message("Saving GrafoDB from ", x@tag, " to ", dest)
+  if (interactive()) message("Saving GrafoDB from ", x@tag, " to ", dest)
   copy_graph(x@tag, dest, con=con, autore=autore,
             helper=x@helper, last_update=x@timestamp)
-  if(interactive()) message("Saving ", dest, " completed")
+  if (interactive()) message("Saving ", dest, " completed")
   0
 }
 

@@ -18,7 +18,7 @@
 
   df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "LOOKUP_METADATI",
-    tag=tag,
+    tag = tag,
     key=key,
     value=value))
 
@@ -43,7 +43,7 @@
   ## non ci sono prepared statement funzionanti. maledetti.
   df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "LOOKUP_FORMULA",
-    tag=tag,
+    tag = tag,
     key=as.character(key)))
 
   as.character(df$name)
@@ -67,7 +67,7 @@
   ## non ci sono prepared statement funzionanti. maledetti.
   df <- DBI::dbGetQuery(con, sql_by_key(
     helper, "LOOKUP_DATI",
-    tag=tag,
+    tag = tag,
     key=as.character(key)))
   
   as.character(df$name)

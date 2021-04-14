@@ -13,7 +13,7 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
   df <- if (length(hash::keys(data))) {
     DBI::dbGetQuery(con, sql_by_key(
       helper, "GET_CHANGED_DATA",
-      tag=tag,
+      tag = tag,
       last_updated=as.numeric(x@timestamp)))
   } else {
     data.frame()
@@ -53,7 +53,7 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
       # aggiorna i record esistenti...
       DBI::dbExecute(con, sql_by_key(
         helper, "UPDATE_WITH_STAGE",
-        tag=tag,
+        tag = tag,
         stage_name=stage_name))
 
       DBI::dbExecute(con, sql_by_key(

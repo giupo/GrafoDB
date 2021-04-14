@@ -5,7 +5,7 @@
 update_edges <- function(x, con, tag=x@tag) {
   ln <- "GrafoDB::update_edges"
 
-  if(interactive()) info("Update Edges ...", name=ln)
+  if (interactive()) info("Update Edges ...", name=ln)
 
   data <- x@data
   functions <- x@functions
@@ -16,7 +16,7 @@ update_edges <- function(x, con, tag=x@tag) {
                              stringsAsFactors = F)
   autore <- rutils::whoami()
   names(in.memory) <- c("partenza", "arrivo")
-  in.db <- DBI::dbGetQuery(con, sql_by_key(helper, "ARCHI_TAG", tag=tag))
+  in.db <- DBI::dbGetQuery(con, sql_by_key(helper, "ARCHI_TAG", tag = tag))
 
   sep <- "-"
   in.db <- gdata::drop.levels(in.db)
@@ -26,28 +26,28 @@ update_edges <- function(x, con, tag=x@tag) {
   da.inserire <- setdiff(in.memory, in.db)
   da.eliminare <- setdiff(in.db, in.memory)
 
-  df <- if(length(hash::keys(data))) {
+  df <- if (length(hash::keys(data))) {
     ## cerco archi aggiunti di recente.
     DBI::dbGetQuery(con, sql_by_key(
       helper, "ARCHI_TAG_LAST_UPDATED",
-      tag=tag, last_updated=round(as.numeric(timestamp))))
+      tag = tag, last_updated=round(as.numeric(timestamp))))
   } else {
     data.frame(partenza=character(0), arrivo=character(0))
   }
 
-  if(nrow(df) > 0) {
+  if (nrow(df) > 0) {
     ## controllo che i nuovi archi non siano tra le serie che ho modificato e
     ## che non creino un anello
     wood <- igraph::graph.data.frame(df, directed=TRUE)
     network_aux <- igraph::graph.union(network, wood)
-    if(any(hash::keys(functions) %in% df$arrivo)) {
+    if (any(hash::keys(functions) %in% df$arrivo)) {
       warning("There are conflicts on edges, keep working on data and formula")
     }
     assert_dag(network_aux)
   }
 
-  if(length(da.inserire)) {
-    params <- if(length(da.inserire) == 1) {
+  if (length(da.inserire)) {
+    params <- if (length(da.inserire) == 1) {
       tokens <- stringr::str_split(da.inserire, sep)[[1]]
       df <- as.data.frame(
         list(
@@ -70,13 +70,13 @@ update_edges <- function(x, con, tag=x@tag) {
       from <- row$partenza
       to <- row$arrivo
       DBI::dbExecute(con, sql_by_key(
-        helper, "INSERT_ARCHI", tag=tag, from=from, to=to,
+        helper, "INSERT_ARCHI", tag = tag, from=from, to=to,
         autore=autore, last_updated=time.in.millis()))
     })
   }
 
-  if(length(da.eliminare)) {
-    params <- if(length(da.eliminare) == 1) {
+  if (length(da.eliminare)) {
+    params <- if (length(da.eliminare) == 1) {
       tokens <- stringr::str_split(da.eliminare, sep)[[1]]
       df <- as.data.frame(
         list(
@@ -98,9 +98,9 @@ update_edges <- function(x, con, tag=x@tag) {
       from <- row$partenza
       to <- row$arrivo
       DBI::dbExecute(con, sql_by_key(
-        helper, "DELETE_ARCHI", tag=tag, from=from, to=to))
+        helper, "DELETE_ARCHI", tag = tag, from=from, to=to))
     })
   }
 
-  if(interactive()) info("Update Edges done.", name=ln)
+  if (interactive()) info("Update Edges done.", name=ln)
 }

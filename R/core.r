@@ -226,10 +226,10 @@ methods::setMethod(
 
     msg <- paste0("GrafoDB [",tag,"] with ", num, " series, ",
                   as.character(as.POSIXct(timestamp/1000, origin="1970/01/01")))
-    if(length(data)) {
+    if (length(data)) {
       msg <- paste0(msg, ", ", length(data), " data changes")
     }
-    if(length(functions)) {
+    if (length(functions)) {
       msg <- paste0(msg, ", ", length(functions), " function changes")
     }
 
@@ -293,7 +293,7 @@ methods::setMethod(
     nomi2 <- names(e2)
     common <- intersect(nomi1, nomi2)
     not_common <- setdiff(union(nomi1, nomi2), common)
-    if(length(not_common) > 0) {
+    if (length(not_common) > 0) {
       lapply(not_common, function(name) {
         warning(paste0(name, " not common, excluded from difference"))
       })
@@ -310,7 +310,7 @@ methods::setMethod(
         stopifnot(is.numeric(e11))
         stopifnot(is.numeric(e22))
 
-        if(is.scalar(e11) && is.ts(e22) ||
+        if (is.scalar(e11) && is.ts(e22) ||
              is.ts(e11) && is.scalar(e22)) {
           stop("Different object classes")
         }
@@ -338,7 +338,7 @@ methods::setMethod(
 
     all_names <- union(
       hash::keys(data),
-      if(is.null(dbdati$name)) {
+      if (is.null(dbdati$name)) {
         character()
       } else {
         dbdati$name
@@ -348,7 +348,7 @@ methods::setMethod(
     remaining <- setdiff(all_names, nodes)
     # per preservare l'ordinamento topologico
     ret <- c(nodes, remaining)
-    if(is.null(ret)) {
+    if (is.null(ret)) {
       character(0)
     } else {
       ret
@@ -530,16 +530,13 @@ methods::setMethod(
   }
 )
 
-#' Ritorna le dipendeze di una serie
-#'
-#' Ritorna come array di caratteri i nomi delle serie su cui la serie specificata
-#' dal parametro `name` dipende
+#' Yields the dependencies of an object
 #'
 #' @name deps
 #' @usage deps(x, name)
 #' @param x istanza di GrafoDB
 #' @param name nome della serie
-#' @return un character array di nomi, NULL se la serie non ha dipendenze
+#' @return a character array of object names, NULL if not present
 #' @export
 
 methods::setGeneric(
@@ -552,7 +549,7 @@ methods::setMethod(
   "deps",
   signature("GrafoDB", "character"),
   function(x, name) {
-    upgrf(x, name, livello=1)
+    upgrf(x, name, livello = 1)
   })
 
 #' @importMethodsFrom rdataset as.dataset
@@ -617,12 +614,12 @@ methods::setMethod(
   "values",
   signature("GrafoDB"),
   function(x, key) {
-    key <- if(length(key) == 1) {
+    key <- if (length(key) == 1) {
       key[[1]]
     } else {
       NULL
     }
-    .values_by_key(x, key=key)
+    .values_by_key(x, key = key)
   })
 
 
@@ -676,7 +673,7 @@ methods::setGeneric(
 methods::setMethod(
   "roots",
   signature("GrafoDB"),
-  function (x)  {
+  function(x)  {
     .roots(x)
   })
 
@@ -698,7 +695,7 @@ methods::setGeneric(
 methods::setMethod(
   "leaves",
   signature("GrafoDB"),
-  function (x)  {
+  function(x)  {
     .leaves(x)
   })
 
@@ -719,4 +716,3 @@ methods::setReplaceMethod(
   function(x, name, value) {
     .dollar(x, name, value)
   })
-
