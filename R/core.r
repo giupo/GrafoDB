@@ -651,7 +651,7 @@ methods::setMethod(
   "rename",
   signature("GrafoDB", "character", "character"),
   function(x, vecchio, nuovo){
-    .rename(x, vecchio, nuovo)
+    rename_impl(x, vecchio, nuovo)
   })
 
 
