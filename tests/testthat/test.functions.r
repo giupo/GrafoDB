@@ -1,10 +1,5 @@
 context("Utils functions")
 
-
-identicalts <- function(x, y, toll=0.000001) {
-  all(x-y < toll)
-}
-
 test_that(" to_data_frame converte correttamente una serie", {
   tt <- ts(runif(10), start = c(1990, 1), frequency = 4)
   df <-  to_data_frame(tt, "TEST")
