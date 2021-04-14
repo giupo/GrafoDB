@@ -14,7 +14,7 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
     DBI::dbGetQuery(con, sql_by_key(
       helper, "GET_CHANGED_DATA",
       tag = tag,
-      last_updated=as.numeric(x@timestamp)))
+      last_updated = as.numeric(x@timestamp)))
   } else {
     data.frame()
   }
@@ -23,7 +23,6 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
   names_updated <- setdiff(hash::keys(data), names_with_conflicts)
 
   if (length(names_updated)) {
-    # stage_name <- paste0("s", stri_rand_strings(1, 8))
     stage_name <- "stage"
     # create temporary data with names_updated
 
@@ -31,7 +30,7 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
     tryCatch({
       last_updated <- time_in_nano()
       dati <- foreach::`%dopar%`(foreach::foreach(
-        name = iterators::iter(names_updated), .combine=rbind), {
+        name = iterators::iter(names_updated), .combine = rbind), {
         df <-  to_data_frame(data[[name]])
         cbind(df, name, tag, autore, notes, last_updated)
       }) # this is quite fast, let's ignore the Progressbar here...
@@ -41,9 +40,9 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
       on.exit({
         tryCatch({
           DBI::dbExecute(con,
-            sql_by_key(helper, 'DROP_STAGE', stage_name = stage_name))
-        }, error=function(cond) {
-          flog.warn(cond, name = ln)
+            sql_by_key(helper, "DROP_STAGE", stage_name = stage_name))
+        }, error = function(cond) {
+          warn(cond, name = ln)
         })
       })
 
@@ -54,13 +53,13 @@ update_data <- function(x, con, tag = x@tag, notes = "") {
       DBI::dbExecute(con, sql_by_key(
         helper, "UPDATE_WITH_STAGE",
         tag = tag,
-        stage_name=stage_name))
+        stage_name = stage_name))
 
       DBI::dbExecute(con, sql_by_key(
         helper, "INSERT_WITH_STAGE",
         tag = tag,
-        stage_name=stage_name))
-    }, error=function(cond) {
+        stage_name = stage_name))
+    }, error = function(cond) {
       stop(cond)
     })
   }
