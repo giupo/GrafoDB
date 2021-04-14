@@ -419,12 +419,12 @@ methods::setMethod(
 #'   parametro e' impostato a `FALSE` e' condizione necessaria che le serie in
 #'   `ts_name` siano tutte foglie, ovvero serie senza archi uscenti
 #' @note Metodo interno
-#' @seealso .rmNode
+#' @seealso rm_node_impl
 #' @return il grafo modificato
 #' @exportMethod rmNode
 #' @include functions.r
 #' @exportMethod rmNode
-#' @export 
+#' @export
 
 methods::setGeneric(
   "rmNode",
@@ -436,5 +436,5 @@ methods::setMethod(
   "rmNode",
   signature("GrafoDB", "character", "ANY"),
   function(graph, ts_name, recursive=FALSE) {
-    .rmNode(graph, ts_name, recursive)
+    rm_node_impl(graph, ts_name, recursive)
   })

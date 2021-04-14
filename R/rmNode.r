@@ -2,8 +2,8 @@
 #'
 #' L'eliminazione prevede l'eliminazione dai dati, formule, archi e metadati
 #'
-#' @name .rmNode
-#' @usage .rmNode(graph, ts_name, recursive)
+#' @name rm_node_impl
+#' @usage rm_node_impl(graph, ts_name, recursive)
 #' @param graph istanza di `GrafoDB`
 #' @param ts_name nomi di serie da eliminare
 #' @param recursive `TRUE` se l'eliminazione deve essere rivorsiva sugli archi
@@ -15,7 +15,7 @@
 #' @seealso rmNode
 #' @rdname rmNode-internal
 
-.rmNode <- function(graph, ts_name, recursive=FALSE) {
+rm_node_impl <- function(graph, ts_name, recursive=FALSE) {
   sono.tutte.foglie <- isLeaf(graph, ts_name)
   tag <- graph@tag
   if (!recursive && !sono.tutte.foglie) {

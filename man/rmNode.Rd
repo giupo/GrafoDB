@@ -27,5 +27,5 @@ L'eliminazione prevede l'eliminazione dai dati, formule, archi e metadati
 Metodo interno
 }
 \seealso{
-.rmNode
+rm_node_impl
 }
