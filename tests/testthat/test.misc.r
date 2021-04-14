@@ -1,18 +1,18 @@
 context("Miscellaneous functions")
 
 test_that("conversione da ts a data.frame", {
-  tt <- ts(runif(10), start=c(1990,1), frequency=1)
+  tt <- ts(runif(10), start = c(1990, 1), frequency=1)
   df <-  to_data_frame(tt, "test")
   expect_true(is.data.frame(df))
   expect_true(all(c("name", "anno", "periodo", "freq", "dati") %in% names(df)))
 
-  tt <- ts(runif(10), start=c(1990,1), frequency=4)
+  tt <- ts(runif(10), start = c(1990, 1), frequency = 4)
   df <-  to_data_frame(tt, "test")
   expect_true(is.data.frame(df))
   expect_true(all(c("name", "anno", "periodo", "freq", "dati") %in% names(df)))
 
 
-  tt <- ts(runif(10), start=c(1990,1), frequency=12)
+  tt <- ts(runif(10), start = c(1990, 1), frequency=12)
   df <-  to_data_frame(tt, "test")
   expect_true(is.data.frame(df))
   expect_true(all(c("name", "anno", "periodo", "freq", "dati") %in% names(df)))
@@ -62,49 +62,49 @@ test_that("valori null passati a from_data_frame vengono convertiti in NA", {
 
 
 test_that("tsdiff returns FALSE if two timeseries are equal",  {
-  a <- b <- ts(runif(10), start=c(1990,1), frequency=1)
+  a <- b <- ts(runif(10), start = c(1990, 1), frequency=1)
   expect_true(!tsdiff(a,b))
-  a <- b <- ts(runif(10), start=c(1990,1), frequency=4)
+  a <- b <- ts(runif(10), start = c(1990, 1), frequency = 4)
   expect_true(!tsdiff(a,b))
-  a <- b <- ts(runif(10), start=c(1990,1), frequency=12)
+  a <- b <- ts(runif(10), start = c(1990, 1), frequency=12)
   expect_true(!tsdiff(a,b))
 })
 
 test_that("tsdiff returns TRUE if two timeseries differ",  {
-  a <- ts(runif(10), start=c(1990,1), frequency=1)
-  b <- ts(runif(10), start=c(1990,1), frequency=1)
+  a <- ts(runif(10), start = c(1990, 1), frequency=1)
+  b <- ts(runif(10), start = c(1990, 1), frequency=1)
   expect_true(tsdiff(a,b))
-  a <- ts(runif(10), start=c(1990,1), frequency=4)
-  b <- ts(runif(10), start=c(1990,1), frequency=4)
+  a <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  b <- ts(runif(10), start = c(1990, 1), frequency = 4)
   expect_true(tsdiff(a,b))
-  a <- ts(runif(10), start=c(1990,1), frequency=12)
-  b <- ts(runif(10), start=c(1990,1), frequency=12)
+  a <- ts(runif(10), start = c(1990, 1), frequency=12)
+  b <- ts(runif(10), start = c(1990, 1), frequency=12)
   expect_true(tsdiff(a,b))
 })
 
 test_that("tsdiff returns TRUE if two timeseries have different index",  {
-  a <- ts(runif(10), start=c(1990,1), frequency=1)
-  b <- ts(runif(10), start=c(1990,1), frequency=12)
+  a <- ts(runif(10), start = c(1990, 1), frequency=1)
+  b <- ts(runif(10), start = c(1990, 1), frequency=12)
   expect_true(tsdiff(a,b))
-  a <- ts(runif(10), start=c(1990,1), frequency=4)
-  b <- ts(runif(10), start=c(1990,1), frequency=12)
+  a <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  b <- ts(runif(10), start = c(1990, 1), frequency=12)
   expect_true(tsdiff(a,b))
-  a <- ts(runif(10), start=c(1990,1), frequency=1)
-  b <- ts(runif(10), start=c(1990,1), frequency=4)
+  a <- ts(runif(10), start = c(1990, 1), frequency=1)
+  b <- ts(runif(10), start = c(1990, 1), frequency = 4)
   expect_true(tsdiff(a,b))
 })
 
 test_that("tsdiff returns TRUE if two timeseries have different dimensions",  {
   v1 <- c(1,2,3,4,5)
   v2 <- c(v1, 6)
-  a <- ts(v1, start=c(1990,1), frequency=1)
-  b <- ts(v2, start=c(1990,1), frequency=1)
+  a <- ts(v1, start = c(1990, 1), frequency=1)
+  b <- ts(v2, start = c(1990, 1), frequency=1)
   expect_true(tsdiff(a,b))
-  a <- ts(v1, start=c(1990,1), frequency=4)
-  b <- ts(v2, start=c(1990,1), frequency=4)
+  a <- ts(v1, start = c(1990, 1), frequency = 4)
+  b <- ts(v2, start = c(1990, 1), frequency = 4)
   expect_true(tsdiff(a,b))
-  a <- ts(v1, start=c(1990,1), frequency=12)
-  b <- ts(v2, start=c(1990,1), frequency=12)
+  a <- ts(v1, start = c(1990, 1), frequency=12)
+  b <- ts(v2, start = c(1990, 1), frequency=12)
   expect_true(tsdiff(a,b))
 })
 
@@ -114,7 +114,7 @@ test_that(" to_data_frame correctly converts a single obs timeseries", {
   period <- 1
   freq <- 4
   dati <- 1
-  tt <- ts(dati, start=c(anno, period), frequency=freq)
+  tt <- ts(dati, start = c(anno, period), frequency=freq)
   x <-  to_data_frame(tt)
 
   expect_equal(x[, "anno"], anno)
@@ -133,9 +133,9 @@ test_that(" to_data_frame correctly converts a single obs timeseries produced by
   g <- GrafoDB("test")
   on.exit(delete_graph("test"))
 
-  g["A"] <- g["B"] <- ts(c(1,2,3), start=c(anno, period), frequency=freq)
+  g["A"] <- g["B"] <- ts(c(1,2,3), start = c(anno, period), frequency=freq)
   g["C"] <- function(A, B) {
-    C <- window(A+B, start=c(1990, 1+2)) # voglio solo l'ultimo periodo
+    C <- window(A+B, start = c(1990, 1+2)) # voglio solo l'ultimo periodo
   }
 
   x <-  to_data_frame(g$C)

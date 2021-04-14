@@ -2,9 +2,9 @@ context("Elementary objects")
 
 setup <- function() {
   g <- GrafoDB("test")
-  g["A"] <- ts(c(1,2,3), start=c(1990,1), frequency=4)
+  g["A"] <- ts(c(1,2,3), start = c(1990, 1), frequency = 4)
   g["B"] <- function() {
-    B = ts(c(1,2,3), start=c(1990,1), frequency=4)
+    B = ts(c(1,2,3), start = c(1990, 1), frequency = 4)
   }
   g
 }

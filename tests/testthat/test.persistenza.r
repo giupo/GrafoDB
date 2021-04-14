@@ -2,13 +2,13 @@ context("Persistence functions")
 
 setup <- function(name) {
   g <- GrafoDB(name)
-  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
+  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) {
     C = A + B
   }
 
-  g["D"] <- ts(c(NA,1,NA), start=c(1990,1), frequency=4)
+  g["D"] <- ts(c(NA,1,NA), start = c(1990, 1), frequency = 4)
 
   g <- saveGraph(g)
   g

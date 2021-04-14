@@ -6,8 +6,8 @@ identicalts <- function(x, y, toll=0.000001) {
 
 setup <- function(tag) {
   g <- GrafoDB(tag)
-  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
+  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   g["C"] <- function(A, B) {
     C = A + B
   }
@@ -26,7 +26,7 @@ test_that("Salvare una serie non crea un conflitto", {
 
   expect_equal(g1@timestamp, g2@timestamp)
 
-  g1["A"] <- newA1 <- ts(rep(1,10), start=c(1990,1), frequency=4)
+  g1["A"] <- newA1 <- ts(rep(1,10), start = c(1990, 1), frequency = 4)
   #Sys.sleep(.5)
   g1 <- saveGraph(g1, msg="test")
 
@@ -46,8 +46,8 @@ test_that("Salvare la stessa serie in due sessioni differenti crea un conflitto"
 
   expect_equal(g1@timestamp, g2@timestamp)
 
-  g1["A"] <- newA1 <- ts(rep(0,10), start=c(1990,1), frequency=4)
-  g2["A"] <- newA2 <- ts(rep(1,10), start=c(1990,1), frequency=4)
+  g1["A"] <- newA1 <- ts(rep(0,10), start = c(1990, 1), frequency = 4)
+  g2["A"] <- newA2 <- ts(rep(1,10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g1)
   # Sys.sleep(2)
   with_mock(
@@ -81,8 +81,8 @@ test_that("Salvare lo stesso grafo con interventi su serie distinte non crea con
   g1 <- GrafoDB("test")
   g2 <- GrafoDB("test")
 
-  newA <- ts(runif(10), start=c(1990,1), frequency=4)
-  newB <- ts(runif(10), start=c(1990,1), frequency=4)
+  newA <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  newB <- ts(runif(10), start = c(1990, 1), frequency = 4)
 
   g1["A"] <- newA
   g2["B"] <- newB
@@ -329,10 +329,10 @@ test_that("La rilevazione di conflitti su serie primitive con missing non crea e
   expect_equal(g1@timestamp, g2@timestamp)
   expect_equal(g1@tag, g2@tag)
   
-  g1["A"] <- ts(rep(1, 10), start=c(1990,1), frequency=4)
+  g1["A"] <- ts(rep(1, 10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g1)
   Sys.sleep(.01)
-  g2["A"] <- ts(rep(10, 10), start=c(1990,1), frequency=4)
+  g2["A"] <- ts(rep(10, 10), start = c(1990, 1), frequency = 4)
   
   expect_true(g1@timestamp != g2@timestamp)
   expect_true(g1@timestamp > g2@timestamp)

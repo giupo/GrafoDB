@@ -1,5 +1,5 @@
 #' returns the exponent of a floating point numeber (eng representation)
-#' 
+#'
 #' @name exponent
 #' @return the exponent of the eng. representation of the number
 

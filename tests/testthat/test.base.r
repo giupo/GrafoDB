@@ -26,7 +26,7 @@ test_that("Posso impostare una timeseries con nome nel GrafoDB", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
+  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   expect_true("A" %in% names(g))
   expect_true(is.ts(g[["A"]]))
 })
@@ -37,9 +37,9 @@ test_that("Posso impostare piu' timeseries con nome nel GrafoDB", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["C"] <- ts(runif(10), start=c(1990,1), frequency=4)
+  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["C"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
   expect_true("A" %in% names(g))
   expect_true(is.ts(g[["A"]]))
   expect_true("B" %in% names(g))
@@ -58,10 +58,10 @@ test_that("Posso usare delle formule per definire le serie", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
   expect_equal(g[["A"]] + g[["B"]], g[["C"]])
 })
@@ -72,10 +72,10 @@ test_that("Posso cercare le serie con metadati", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- ts(runif(10), start=c(1990, 1), frequency=4)
-  g["B"] <- ts(runif(10), start=c(1990, 1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
+  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
   g <- setMeta(g, "A", "key", "value")
@@ -93,10 +93,10 @@ test_that("Posso salvare il grafo sul database", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
+  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
   g <- setMeta(g, "A", "key", "value")
@@ -122,10 +122,10 @@ test_that("subset with datasets", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["B"] <- ts(runif(10), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
+  g["A"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(runif(10), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C = A + B # nolint
   }
 
   g <- setMeta(g, "A", "key", "value")
@@ -135,8 +135,8 @@ test_that("subset with datasets", {
   expect_true(all(c("A", "B", "C") %in% names(g)))
 
   ds <- rdataset::Dataset()
-  ds["A"] <- ts(c(-1,-2,-3), start=c(1990,1), frequency=4)
-  ds["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
+  ds["A"] <- ts(c(-1, -2, -3), start = c(1990, 1), frequency = 4)
+  ds["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
 
   g[names(ds)] <- ds
 
@@ -164,7 +164,7 @@ test_that("Cascade subsetting works", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
   expect_true("A" %in% names(g))
   expect_true("B" %in% names(g))
 })
@@ -175,9 +175,9 @@ test_that("Saving preserves network and nodes", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
   ## ora salvo, e vediamo cosa succede
   g <- saveGraph(g)
@@ -195,10 +195,10 @@ test_that("navigate without arguments returns a downgrf", {
   })
 
   g <- GrafoDB("test")
-  g["A"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A, B) {
-    C = A + B
+  g["A"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
   x <- navigate(g)
@@ -213,16 +213,16 @@ test_that("posso rimuovere archi", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A) {
-    C <- A
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A) { # nolint
+    C <- A # nolint
   }
   expect_true("A" %in% upgrf(g, "C"))
   expect_true(!"B" %in% upgrf(g, "C"))
   expect_equal(length(upgrf(g, "C")), 1)
 
-  g["C"] <- function(B) {
-    C=B
+  g["C"] <- function(B) { # nolint
+    C <- B # nolint
   }
 
   expect_true(!"A" %in% upgrf(g, "C"))
@@ -236,8 +236,8 @@ test_that("posso rimuovere archi", {
   expect_true("C" %in% names(g))
   expect_true("A" %in% names(g))
 
-  g["C"] <- function(A) {
-    C=A
+  g["C"] <- function(A) { # nolint
+    C <- A # nolint
   }
 
   expect_true("A" %in% upgrf(g, "C"))
@@ -267,9 +267,9 @@ test_that("I can cast a GrafoDB to a Dataset", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A) {
-    C <- A
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A) { # nolint
+    C <- A # nolint
   }
   d <- rdataset::as.dataset(g)
   expect_true(rdataset::is.dataset(d))
@@ -285,13 +285,13 @@ test_that("Posso passare non timeseries", {
     skip("tis::mergeSeries is necessary for this test")
   }
   g <- GrafoDB("test")
-  g["A"] <- ts(c(0,0,0), start = c(1990, 1), freq = 4)
-  g["B"] <- ts(c(1,1,1), start = c(1990, 1), freq = 4)
+  g["A"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(c(1, 1, 1), start = c(1990, 1), frequency = 4)
   g["periodo"] <- c(1990, 2)
-  g["C"] <- function(A,B, periodo) {
-    C <- mergeSeries(A, window(B, start = periodo))
+  g["C"] <- function(A, B, periodo) { # nolint
+    C <- mergeSeries(A, window(B, start = periodo)) # nolint
   }
-  expect_equal(g[["periodo"]], c(1990,2))
+  expect_equal(g[["periodo"]], c(1990, 2))
 })
 
 
@@ -303,14 +303,14 @@ test_that("posso salvare non timeseries", {
     skip("tis::mergeSeries is necessary for this test")
   }
   g <- GrafoDB("test")
-  g["A"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["B"] <- ts(c(1,1,1), start=c(1990,1), frequency=4)
-  g["periodo"] <- c(1990,2)
-  g["C"] <- function(A,B, periodo) {
-    C <- as.ts(mergeSeries(A, window(B, start=periodo)))
+  g["A"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["B"] <- ts(c(1, 1, 1), start = c(1990, 1), frequency = 4)
+  g["periodo"] <- c(1990, 2)
+  g["C"] <- function(A, B, periodo) { # nolint
+    C <- as.ts(mergeSeries(A, window(B, start = periodo))) # nolint
   }
   g <- saveGraph(g)
-  expect_equal(g[["periodo"]], c(1990,2))
+  expect_equal(g[["periodo"]], c(1990, 2))
 })
 
 
@@ -319,11 +319,11 @@ test_that("posso memorizzare stringhe", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C <- A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
-  g["archivio"] = "cippalippa"
+  g["archivio"] <- "cippalippa"
   g <- saveGraph(g)
 
   g1 <- GrafoDB("test")
@@ -336,9 +336,9 @@ test_that("isLeaf torna true per serie foglia", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
   expect_true(isLeaf(g, "C"))
 })
@@ -349,9 +349,9 @@ test_that("isLeaf torna false per una serie non foglia", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
   expect_true(!isLeaf(g, "A"))
   expect_true(!isLeaf(g, "B"))
@@ -363,9 +363,9 @@ test_that("isRoot torna false per serie foglia", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
   expect_true(!isRoot(g, "C"))
 })
@@ -376,9 +376,9 @@ test_that("isRoot torna true per una serie non foglia", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
   expect_true(isRoot(g, "A"))
   expect_true(isRoot(g, "B"))
@@ -390,14 +390,15 @@ test_that("Posso subsettare con il $ (dollaro)", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
-  g["D"] <- function(A, C) {
-    D = A + C
+  g["D"] <- function(A, C) { # nolint
+    D <- A + C # nolint
   }
   d <- g$D
+
   expect_equal(g$D, g[["D"]])
   expect_equal(g$A, g[["A"]])
   expect_equal(g$C, g[["C"]])
@@ -409,13 +410,13 @@ test_that("Posso subsettare una singola serie come Dataset", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
-  g["C"] <- function(A,B) {
-    C = A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
-  g["D"] <- function(A, C) {
-    D = A + C
+  g["D"] <- function(A, C) { # nolint
+    D <- A + C # nolint
   }
 
   expect_true(rdataset::is.dataset(g["A"]))
@@ -429,10 +430,10 @@ test_that("I get an error if I try to subset a series with missing deps", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4)
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
   expect_warning({
-    g["C"] <- function(A,B,D) {
-      C = A + B
+    g["C"] <- function(A, B, D) { # nolint
+      C <- A + B # nolint
     }
   })
 })
@@ -443,9 +444,9 @@ test_that("isRoot returns true if node is a root", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4) 
-  g["C"] <- function(A, B) {
-    C <- A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
   expect_true(isRoot(g, "A"))
   expect_true(isRoot(g, "B"))
@@ -461,9 +462,9 @@ test_that("show produces output", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4) 
-  g["C"] <- function(A, B) {
-    C <- A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
   expect_message(show(g))
 })
@@ -475,17 +476,17 @@ test_that("I can subtract two GrafoDB", {
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(c(0,0,0), start=c(1990,1), frequency=4) 
-  g["C"] <- function(A, B) {
-    C <- A + B
+  g["A"] <- g["B"] <- ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
   g["D"] <- 0
 
   g1 <- GrafoDB("test1")
-  g1["A"] <- g1["B"] <- ts(c(1,1,1), start=c(1990,1), frequency=4) 
-  g1["C"] <- function(A, B) {
-    C <- A + B
+  g1["A"] <- g1["B"] <- ts(c(1, 1, 1), start = c(1990, 1), frequency = 4)
+  g1["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
   expect_warning(diff <- g1 - g)
@@ -497,9 +498,7 @@ test_that("I can subtract two GrafoDB", {
   }
 })
 
-
 for (tag in rilasci("test")$tag) delete_graph(tag)
-
 
 test_that("I can't subtract container with different types of objects", {
   for (tag in rilasci("test")$tag) delete_graph(tag)
@@ -509,14 +508,14 @@ test_that("I can't subtract container with different types of objects", {
 
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
-  g["C"] <- function(A, B) {
-    C <- A + B
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
   g1 <- GrafoDB("test1")
-  g1["A"] <- g1["B"] <- ts(c(1,1,1), start=c(1990,1), frequency=4) 
-  g1["C"] <- function(A, B) {
-    C <- A + B
+  g1["A"] <- g1["B"] <- ts(c(1, 1, 1), start = c(1990, 1), frequency = 4)
+  g1["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
   expect_error(diff <- g - g1, "Different object classes")
@@ -531,12 +530,12 @@ test_that("expr returns a list of formulas with multiple names", {
 
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
-  g["C"] <- function(A, B) {
-    C <- A + B
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
-  g["D"] <- function(A, C) {
-    D <- A + C
+  g["D"] <- function(A, C) { # nolint
+    D <- A + C # nolint
   }
 
   expect_is(expr(g, c("C", "D")), "list")
@@ -553,12 +552,12 @@ test_that("ser fails if returned object is not a timeseries", {
 
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
-  g["C"] <- function(A, B) {
-    C <- A + B
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
-  g["D"] <- function(A, C) {
-    D <- A + C
+  g["D"] <- function(A, C) { # nolint
+    D <- A + C # nolint
   }
   expect_error(ser(g, "C"), "non e' un oggetto ts")
 })
@@ -572,11 +571,11 @@ test_that("ser in debug fails if series has no formula", {
 
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
-  g["C"] <- function(A, B) {
-    C <- A + B
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
-  expect_error(ser(g, "A", debug=TRUE), "non e' una serie con formula")
+  expect_error(ser(g, "A", debug = TRUE), "non e' una serie con formula")
 })
 
 
@@ -588,11 +587,12 @@ test_that("ser in debug fails if name doesn't exist", {
 
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
-  g["C"] <- function(A, B) {
-    C <- A + B
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
-  expect_error(ser(g, "NONESISTO", debug=TRUE), "non e' una serie del grafo")
+  expect_error(ser(g, "NONESISTO", debug = TRUE),
+    "non e' una serie del grafo")
 })
 
 
@@ -621,18 +621,18 @@ test_that("I can evaluate multiple series on a single evaluate call", {
   })
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
-  g["C"] <- function(A, B) {
-    C <- A + B
+  g["C"] <- function(A, B) { # nolint
+    C <- A + B # nolint
   }
 
-  g["D"] <- function(C, B) {
-    D <- C - B
+  g["D"] <- function(C, B) { # nolint
+    D <- C - B # nolint
   }
 
   g <- saveGraph(g) # to clean internal structures
   g <- evaluate(g, c("D", "C")) # just for codecov
   expect_equal(hash::keys(g@functions), character(0))
-  expect_equal(hash::keys(g@data), c("C","D"))
+  expect_equal(hash::keys(g@data), c("C", "D"))
 })
 
 
@@ -644,8 +644,8 @@ test_that("Se imposto una serie per formula senza definirla ho un errore", {
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- 0
   expect_error({
-    g["E"] <- function(A, B) {
-      D = A + B
+    g["E"] <- function(A, B) { # nolint
+      D <- A + B # nolint
     }
   })
 })
@@ -661,12 +661,12 @@ test_that("Posso usare funzioni complesse nelle formule", {
   }
 
   g <- GrafoDB("test")
-  g["A"] <- g["B"] <- ts(runif(100), start=c(1995,1), frequency=4)
-  expect_error({g["C"] <- function(A, B) {
+  g["A"] <- g["B"] <- ts(runif(100), start = c(1995, 1), frequency = 4)
+  expect_error({g["C"] <- function(A, B) { # nolint
     if (!is.function(tempdisagg::td)) {
       fail("td not found")
     }
-    C <- A + B
+    C <- A + B # nolint
   }}, NA) # this means expect no error
 
   expect_is(g[["C"]], "ts")
