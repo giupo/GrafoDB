@@ -1,3 +1,16 @@
+#' Extract data from GrafoDB
+#'
+#' returns data from GrafoDB (seen here as a key-value container)
+#' by specifying the key (a string) for a value
+#'
+#' @aliases GrafoDB,character,missing,ANY
+#' @param x an instance of GrafoDB
+#' @param i name to be set
+#' @param j unused (ignored)
+#' @param drop I dunno why this is here :)
+#' @param ... nothing important (just to comply on generic)
+#' @rdname GrafoDB-methods
+#' @return a Dataset or a single object
 
 methods::setMethod(
   "[",
@@ -16,6 +29,20 @@ methods::setMethod(
     rdataset::as.dataset(ret)
   })
 
+
+#' Extract data from GrafoDB
+#'
+#' returns data from GrafoDB (seen here as a key-value container)
+#' by specifying the key (a string) for a value
+#'
+#' @aliases GrafoDB,character,missing,ANY
+#' @param x an instance of GrafoDB
+#' @param i name to be set
+#' @param j unused (ignored)
+#' @param drop I dunno why this is here :)
+#' @param ... nothing important (just to comply on generic)
+#' @rdname GrafoDB-methods
+#' @return a list or a single object
 
 methods::setMethod(
   "[[",
@@ -122,6 +149,16 @@ subsetting <- function(x, i, value) {
   invisible(x)
 }
 
+#' subsetting a graph
+#'
+#' @aliases GrafoDB,character,missing,ANY
+#' @param x an instance of GrafoDB
+#' @param i name to be set
+#' @param j unused (ignored)
+#' @param ... nothing important (just to comply on generic)
+#' @param value the value to be set, can be anything
+#' @rdname GrafoDB-methods
+
 methods::setMethod(
   "[<-",
   signature("GrafoDB", "character", "missing", "ANY"),
@@ -130,6 +167,15 @@ methods::setMethod(
     x <- subsetting(x, i, value)
     invisible(x)
   })
+
+#'
+#' @aliases GrafoDB,character,missing,ANY
+#' @param x an instance of GrafoDB
+#' @param i name to be set
+#' @param j unused (ignored)
+#' @param ... nothing important (just to comply on generic)
+#' @param value the value to be set, can be anything
+#' @rdname GrafoDB-methods
 
 methods::setMethod(
   "[[<-",

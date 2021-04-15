@@ -24,11 +24,9 @@ ser_impl <- function(x, name, debug=FALSE) {
     source(filetmp)
     debug(func_name)
     nomi_padri <- deps(x, name)
-    if (is.null(nomi_padri) || length(nomi_padri) == 0) {
-      padri <- list()
-    } else {
-      padri <- x[[nomi_padri]]
-    }
+    padri <- rutils::ifelse(is.null(nomi_padri) || length(nomi_padri) == 0,
+      list(),
+      x[[nomi_padri]])
 
     if (length(nomi_padri) == 1) {
       ## boxing
@@ -37,13 +35,10 @@ ser_impl <- function(x, name, debug=FALSE) {
       padri <- ppp
     }
 
-    # attach(padri)
-
     eval_env <- as.environment(padri)
     on.exit({
       rm(list = c(func_name), envir = parent.frame())
       file.remove(filetmp)
-      # detach(padri)
     })
 
     eval(parse(text = paste0(func_name, "()")), envir = eval_env)

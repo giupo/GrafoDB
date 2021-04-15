@@ -687,20 +687,58 @@ methods::setMethod(
     .leaves(x)
   })
 
+
+#' Extract data from GrafoDB
+#'
+#' returns data from GrafoDB (seen here as a key-value container)
+#' by specifying the key (a string) for a value
+#'
+#' @aliases GrafoDB,character
+#' @param x an instance of GrafoDB
+#' @param ... nothing important (just to comply on generic)
+#' @rdname GrafoDB-methods
+#' @return a Dataset or a single object
+#' @note you can specify string separated by commas to obtain multiple gets:
+#'      `g$"A,B,C"` yields `A`,`B`,`C` in a `list`
+
 methods::setMethod(
   "$",
-  signature("GrafoDB"),
+  list(x = "GrafoDB"),
   function(x, name) {
     x[[unlist(stringr::str_split(name, " "))]]
   })
 
-.dollar <- function(x, name, value) {
+#' internal function to implement $<-
+#'
+#' @name dollar_impl
+#' @usage dollar_impl(x, name, value)
+#' @param x GrafoDB instance
+#' @param name key of the object to be set
+#' @param value value of the object to set
+#' @return an invisible `x`
+
+dollar_impl <- function(x, name, value) {
   x <- subsetting(x, name, value)
   invisible(x)
 }
 
+
+
+#' Extract data from GrafoDB
+#'
+#' returns data from GrafoDB (seen here as a key-value container)
+#' by specifying the key (a string) for a value
+#'
+#' @aliases GrafoDB,ANY
+#' @param x an instance of GrafoDB
+#' @param name name of the object
+#' @param value object to be set
+#' @param ... nothing important (just to comply on generic)
+#' @rdname GrafoDB-methods
+#' @return a Dataset or a single object
+
 methods::setReplaceMethod(
   "$", c(x = "GrafoDB", value = "ANY"),
   function(x, name, value) {
-    .dollar(x, name, value)
+    dollar_impl(x, name, value)
   })
