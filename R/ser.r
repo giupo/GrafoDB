@@ -37,14 +37,15 @@ ser_impl <- function(x, name, debug=FALSE) {
       padri <- ppp
     }
 
-    attach(padri)
+    # attach(padri)
 
+    eval_env <- as.environment(padri)
     on.exit({
       rm(list = c(func_name), envir = parent.frame())
       file.remove(filetmp)
-      detach(padri)
+      # detach(padri)
     })
 
-    eval(parse(text = paste0(func_name, "()")))
+    eval(parse(text = paste0(func_name, "()")), envir = eval_env)
   }
 }
