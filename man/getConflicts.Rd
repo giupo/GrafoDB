@@ -2,11 +2,14 @@
 % Please edit documentation in R/conflicts.r
 \name{getConflicts}
 \alias{getConflicts}
+\alias{getConflicts,GrafoDB-method}
 \title{Ritorna i conflitti per un Grafo}
 \usage{
 getConflicts(x)
 
 getConflicts(x, name)
+
+\S4method{getConflicts}{GrafoDB}(x, name = NULL, con = NULL)
 }
 \arguments{
 \item{x}{istanza del GrafoDB}

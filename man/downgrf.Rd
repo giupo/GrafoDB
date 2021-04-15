@@ -2,11 +2,15 @@
 % Please edit documentation in R/core.r
 \name{downgrf}
 \alias{downgrf}
+\alias{downgrf,GrafoDB,character-method}
+\alias{GrafoDB,character}
 \title{Ritorna i figli delle serie}
 \usage{
 downgrf(x, name)
 
 downgrf(x, name, livello)
+
+\S4method{downgrf}{GrafoDB,character}(x, name, livello = .Machine$integer.max)
 }
 \arguments{
 \item{x}{un istanza di GrafoDB}

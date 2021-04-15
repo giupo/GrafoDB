@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{deleteMeta}
 \alias{deleteMeta}
+\alias{deleteMeta,GrafoDB,character,character-method}
 \title{Removes an attribute}
 \usage{
 deleteMeta(object, ts_name, attr_name, attr_value)
+
+\S4method{deleteMeta}{GrafoDB,character,character}(object, ts_name, attr_name, attr_value = NULL)
 }
 \arguments{
 \item{object}{graph instance}

@@ -2,19 +2,28 @@
 % Please edit documentation in R/core.r
 \name{isLeaf}
 \alias{isLeaf}
+\alias{isLeaf,GrafoDB,character-method}
 \title{predicato che ritorna `TRUE` se le serie sono foglie}
 \usage{
 isLeaf(x, name)
+
+isLeaf(x, name)
+
+\S4method{isLeaf}{GrafoDB,character}(x, name)
 }
 \arguments{
-\item{x}{istanza di GrafoDB}
+\item{x}{GrafoDB instance}
 
-\item{name}{vettore di nomi di serie}
+\item{name}{name of the object identifying the node}
 }
 \value{
 `TRUE` se `name` sono serie senza archi uscenti
+
+`TRUE` if is leaf, `FALSE` otherwise
 }
 \description{
 Ritorna `TRUE` se le serie date nel parametro `name` non hanno serie
 uscienti
+
+A leaf is a node without outgoing edges.
 }

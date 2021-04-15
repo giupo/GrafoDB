@@ -20,7 +20,6 @@
 #' @exportMethod getMeta
 #' @export
 
-
 methods::setGeneric(
   "getMeta",
   function(x, serie, metadato) {
@@ -136,7 +135,7 @@ methods::setOldClass("igraph")
 
 #' Main GrafoDB class
 #'
-#' Class for manipulating data described with formulas and evaluated as 
+#' Class for manipulating data described with formulas and evaluated as
 #' a topological sorting of nodes in a graph data structure.
 #' This class provides a persistence layer towards generic DBMS
 #' (by now only PostgreSQL) has been implemented
@@ -349,6 +348,7 @@ methods::setMethod(
     }
   })
 
+#' @rdname expr
 
 methods::setMethod(
   "expr",
@@ -362,7 +362,6 @@ methods::setMethod(
 #'
 #' Esegue il calcolo delle serie storiche presenti in questo Database
 #'
-#' @name evaluate
 #' @seealso evaluate_impl
 #' @usage evaluate(object)
 #' @usage evaluate(object, v_start)
@@ -378,12 +377,13 @@ methods::setMethod(
 #' @include evaluate.r
 #' @exportMethod evaluate
 
-
 methods::setGeneric(
   "evaluate",
   function(object, v_start=NULL, deep=F, ...) {
     standardGeneric("evaluate")
   })
+
+#' @rdname evaluate
 
 methods::setMethod(
   "evaluate",
@@ -392,11 +392,21 @@ methods::setMethod(
     evaluate_impl(object, v_start, deep, ...)
   })
 
+#' returns `TRUE` if `name` is a root of the graph
+#'
+#' @name isRoot
+#' @usage isRoot(x, name)
+#' @param x GrafoDB instance
+#' @param name name of the object to be checked
+#' @return `TRUE` if a root, `FALSE` otherwise
+
 methods::setGeneric(
   "isRoot",
   function(x, name) {
     standardGeneric("isRoot")
   })
+
+#' @rdname isRoot
 
 methods::setMethod(
   "isRoot",
@@ -405,26 +415,32 @@ methods::setMethod(
     .isRoot(x, name)
   })
 
+#' returns `TRUE` if `name` is a leaf
+#'
+#' A leaf is a node without outgoing edges.
+#'
+#' @name isLeaf
+#' @param x GrafoDB instance
+#' @param name name of the object identifying the node
+#' @return `TRUE` if is leaf, `FALSE` otherwise
+
 methods::setGeneric(
   "isLeaf",
   function(x, name) {
     standardGeneric("isLeaf")
   })
 
+#' @rdname isLeaf
+
 methods::setMethod(
   "isLeaf",
-  signature("GrafoDB", "character"),
+  list(x = "GrafoDB", name = "character"),
   function(x, name) {
     .isLeaf(x, name)
   })
 
-#' @exportMethod downgrf
-
-methods::setGeneric(
-  "downgrf",
-  function(x, name, livello=.Machine$integer.max) {
-    standardGeneric("downgrf")
-  })
+#' @rdname downgrf
+#' @aliases GrafoDB,character
 
 methods::setMethod(
   "downgrf",
@@ -452,6 +468,9 @@ methods::setGeneric(
     standardGeneric("getMetadata")
   })
 
+#' @rdname getMetadata
+#' @aliases GrafoDB,character
+
 methods::setMethod(
   "getMetadata",
   signature("GrafoDB", "character", "ANY"),
@@ -474,6 +493,9 @@ methods::setGeneric(
   function(x, name, ...) {
     standardGeneric("edita")
   })
+
+#' @rdname edita
+#' @aliases GrafoDB,character
 
 methods::setMethod(
   "edita",
@@ -533,6 +555,8 @@ methods::setGeneric(
     standardGeneric("deps")
   })
 
+#' @rdname deps
+
 methods::setMethod(
   "deps",
   signature("GrafoDB", "character"),
@@ -544,19 +568,21 @@ methods::setMethod(
 
 methods::setMethod(
   "as.dataset",
-  signature("GrafoDB"),
+  list(x = "GrafoDB"),
   function(x, ...) {
     x[names(x)]
   })
 
 methods::setMethod(
   "as.list",
-  signature("GrafoDB"),
+  list(x = "GrafoDB"),
   function(x, ...) {
     x[[names(x)]]
   })
 
 #' @include metadati.r
+
+#' @rdname getMeta
 
 methods::setMethod(
   "getMeta",
@@ -565,6 +591,8 @@ methods::setMethod(
     get_meta_impl(x, serie, metadato)
   })
 
+#' @rdname getMeta
+
 methods::setMethod(
   "getMeta",
   signature("GrafoDB", "character", "ANY"),
@@ -572,6 +600,8 @@ methods::setMethod(
     getMetadata(x, serie)
   })
 
+#' @rdname getMeta
+#' 
 methods::setMethod(
   "getMeta",
   signature("GrafoDB", "missing", "missing"),

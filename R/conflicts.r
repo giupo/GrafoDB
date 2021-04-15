@@ -51,25 +51,7 @@ methods::setGeneric(
     standardGeneric("has_conflicts")
   })
 
-#' Ritorna `TRUE` se il grafo ha conflitti
-#'
-#' @name has_conflicts
-#' @usage has_conflicts(x)
-#' @usage has_conflicts(x, name)
-#' @param x oggetto R
-#' @param name character array di nomi (puo' essere omesso)
-#' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti,
-#'         `FALSE` altrimenti
-#' @examples \dontrun{
-#' g <- GrafoDB(...)
-#' has_conflicts(g) # dovrebbe essere FALSE
-#' ...             # eseguo operazioni come modificare la stessa serie
-#' has_conflicts(g) # TRUE
-#' has_conflicts(g, SERIE_CON_CONFLITTO) # TRUE
-#' has_conflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
-#' }
-#' @export
-#' @include db.r
+#' @rdname has_conflicts
 
 methods::setMethod(
   "has_conflicts",
@@ -97,6 +79,8 @@ methods::setGeneric(
   function(x, name = NULL, con = NULL) {
     standardGeneric("getConflicts")
   })
+
+#' @rdname getConflicts
 
 methods::setMethod(
   "getConflicts",

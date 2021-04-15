@@ -2,9 +2,12 @@
 % Please edit documentation in R/core.r
 \name{deps}
 \alias{deps}
+\alias{deps,GrafoDB,character-method}
 \title{Yields the dependencies of an object}
 \usage{
 deps(x, name)
+
+\S4method{deps}{GrafoDB,character}(x, name)
 }
 \arguments{
 \item{x}{istanza di GrafoDB}

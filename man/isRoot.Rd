@@ -2,17 +2,24 @@
 % Please edit documentation in R/core.r
 \name{isRoot}
 \alias{isRoot}
+\alias{isRoot,GrafoDB,character-method}
 \title{predicato che ritorna `TRUE` se le serie sono radici}
 \usage{
 isRoot(x, name)
+
+isRoot(x, name)
+
+\S4method{isRoot}{GrafoDB,character}(x, name)
 }
 \arguments{
-\item{x}{istanza di GrafoDB}
+\item{x}{GrafoDB instance}
 
-\item{name}{vettore di nomi di serie}
+\item{name}{name of the object to be checked}
 }
 \value{
 `TRUE` se `name` sono serie senza archi entranti
+
+`TRUE` if a root, `FALSE` otherwise
 }
 \description{
 Ritorna `TRUE` se le serie date nel parametro `name` non hanno serie

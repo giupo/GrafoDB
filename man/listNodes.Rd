@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{listNodes}
 \alias{listNodes}
+\alias{listNodes,GrafoDB-method}
 \title{Funzioni del package `grafo`}
 \usage{
 listNodes(graph)
+
+\S4method{listNodes}{GrafoDB}(graph)
 }
 \description{
 implementazione di listNodes di `package::grafo`

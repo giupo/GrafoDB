@@ -2,9 +2,12 @@
 % Please edit documentation in R/core.r
 \name{expr}
 \alias{expr}
+\alias{expr,GrafoDB,character-method}
 \title{Formule del `GrafoDB`}
 \usage{
 expr(x, nomi)
+
+\S4method{expr}{GrafoDB,character}(x, nomi, echo = FALSE)
 }
 \arguments{
 \item{x}{istanza di oggetto R}

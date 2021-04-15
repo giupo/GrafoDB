@@ -40,7 +40,7 @@
 \item{drop}{I dunno why this is here :)}
 }
 \value{
-a Dataset or a single objec
+a Dataset or a single object
 
 a Dataset or a single object
 
@@ -60,4 +60,8 @@ by specifying the key (a string) for a value
 
 returns data from GrafoDB (seen here as a key-value container)
 by specifying the key (a string) for a value
+}
+\note{
+you can specify string separated by commas to obtain multiple gets:
+     `g$"A,B,C"` yields `A`,`B`,`C` in a `list`
 }

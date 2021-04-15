@@ -2,11 +2,15 @@
 % Please edit documentation in R/core.r
 \name{getMetadata}
 \alias{getMetadata}
+\alias{getMetadata,GrafoDB,character-method}
+\alias{GrafoDB,character}
 \title{get Metadata for object}
 \usage{
 getMetadata(object, ts_name)
 
 getMetadata(object, ts_name, full)
+
+\S4method{getMetadata}{GrafoDB,character}(object, ts_name, full = FALSE)
 }
 \arguments{
 \item{object}{GrafoDB instance}

@@ -2,11 +2,14 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{saveGraph}
 \alias{saveGraph}
+\alias{saveGraph,GrafoDB-method}
 \title{Salva il grafo}
 \usage{
 saveGraph(object)
 
 saveGraph(object, path)
+
+\S4method{saveGraph}{GrafoDB}(object, path = object@tag, ...)
 }
 \arguments{
 \item{object}{istanza di `GrafoDB`}

@@ -2,11 +2,20 @@
 % Please edit documentation in R/core.r
 \name{getMeta}
 \alias{getMeta}
+\alias{getMeta,GrafoDB,character,character-method}
+\alias{getMeta,GrafoDB,character,ANY-method}
+\alias{getMeta,GrafoDB,missing,missing-method}
 \title{Ottiene i valori di un `metadato` per una `serie``}
 \usage{
 getMeta(x, serie, metadato)
 
 getMeta(x, serie)
+
+\S4method{getMeta}{GrafoDB,character,character}(x, serie, metadato)
+
+\S4method{getMeta}{GrafoDB,character,ANY}(x, serie, metadato)
+
+\S4method{getMeta}{GrafoDB,missing,missing}(x)
 }
 \arguments{
 \item{x}{istanza di `GrafoDB`}

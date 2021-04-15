@@ -59,6 +59,8 @@ methods::setGeneric(
     standardGeneric("isAggregate")
   })
 
+#' @rdname isAggregate
+
 methods::setMethod(
   "isAggregate",
   signature("GrafoDB", "character"),
@@ -82,6 +84,8 @@ methods::setGeneric(
     standardGeneric("isElementary")
   })
 
+#' @rdname isElementary
+
 methods::setMethod(
   "isElementary",
   signature("GrafoDB", "character"),
@@ -102,6 +106,8 @@ methods::setGeneric(
   function(graph) {
     standardGeneric("listAggregates")
   })
+
+#' @rdname listAggregates
 
 methods::setMethod(
   "listAggregates",
@@ -129,6 +135,8 @@ methods::setGeneric(
     standardGeneric("listElementaries")
   })
 
+#' @rdname listElementaries
+
 methods::setMethod(
   "listElementaries",
   signature("GrafoDB"),
@@ -155,6 +163,8 @@ methods::setGeneric(
       standardGeneric("listPrimitives")
   })
 
+#' @rdname listPrimitives
+
 methods::setMethod(
   "listPrimitives",
   signature("GrafoDB"),
@@ -179,6 +189,8 @@ methods::setGeneric(
   function(graph) {
     standardGeneric("listNodes")
   })
+
+#' @rdname listNodes
 
 methods::setMethod(
   "listNodes",
@@ -244,6 +256,8 @@ methods::setGeneric(
     standardGeneric("saveGraph")
   })
 
+#' @rdname saveGraph
+
 methods::setMethod(
   "saveGraph",
   signature("GrafoDB", "ANY"),
@@ -255,7 +269,7 @@ methods::setMethod(
   })
 
 #' Removes an attribute
-#' 
+#'
 #' @name deleteMeta
 #' @usage deleteMeta(object, ts_name, attr_name, attr_value)
 #' @param object graph instance
@@ -270,11 +284,13 @@ methods::setGeneric(
     standardGeneric("deleteMeta")
   })
 
+#' @rdname deleteMeta
+
 methods::setMethod(
   "deleteMeta",
   signature("GrafoDB", "character", "character", "ANY"),
   function(object, ts_name, attr_name, attr_value=NULL) {
-    deleteMeta_impl(object, ts_name, attr_name, value=attr_value)
+    deleteMeta_impl(object, ts_name, attr_name, value = attr_value)
   })
 
 
@@ -292,6 +308,8 @@ methods::setGeneric(
     standardGeneric("get_deps")
   })
 
+#' @rdname get_deps
+
 methods::setMethod(
   "get_deps",
   signature("GrafoDB", "character"),
@@ -300,7 +318,7 @@ methods::setMethod(
     for (name in ts_name) {
       ret[[name]] <- navigate(object, name, order=1, mode = "in")
     }
-    
+
     if (length(ret) == 1) {
       ret <- ret[[name]]
     }
@@ -332,28 +350,30 @@ methods::setMethod(
 #'
 #' @name getData
 #' @title Funzioni del package `grafo`
-#' @usage getData(graph, tsNames)
+#' @usage getData(graph, ts_names)
 #' @seealso `grafo::getData`
 #' @exportMethod getData
 
 methods::setGeneric(
   "getData",
-  function(graph, tsNames) {
+  function(graph, ts_names) {
     standardGeneric("getData")
   })
+
+#' @rdname getData
 
 methods::setMethod(
   "getData",
   signature("GrafoDB", "character"),
-  function (graph, tsNames) {
-    graph[[tsNames]]
+  function (graph, ts_names) {
+    graph[[ts_names]]
   })
 
 #' implementazione di searchNode di `package::grafo`
 #'
 #' @name searchNode
 #' @title Funzioni del package `grafo`
-#' @usage searchNode(graph, tsNames)
+#' @usage searchNode(graph, ts_names)
 #' @seealso `grafo::searchNode`
 #' @exportMethod searchNode
 #' @export
@@ -371,7 +391,7 @@ methods::setMethod(
     ret <- lookup(graph, attr_name, attr_value)
     if (length(ret) == 0) {
       stop("Non esistono serie con i criteri ", attr_name, " == ", attr_value)
-    } 
+    }
     ret
   })
 

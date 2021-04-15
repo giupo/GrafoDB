@@ -6,7 +6,7 @@
 \alias{GrafoDB}
 \title{Main GrafoDB class}
 \description{
-Class for manipulating data described with formulas and evaluated as 
+Class for manipulating data described with formulas and evaluated as
 a topological sorting of nodes in a graph data structure.
 This class provides a persistence layer towards generic DBMS
 (by now only PostgreSQL) has been implemented

@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{isElementary}
 \alias{isElementary}
+\alias{isElementary,GrafoDB,character-method}
 \title{Funzioni del package `grafo`}
 \usage{
 isElementary(graph, ts_name)
+
+\S4method{isElementary}{GrafoDB,character}(graph, ts_name)
 }
 \description{
 implementazione di isElementary di `package::grafo`

@@ -2,15 +2,14 @@
 % Please edit documentation in R/conflicts.r
 \name{has_conflicts}
 \alias{has_conflicts}
+\alias{has_conflicts,GrafoDB-method}
 \title{Ritorna `TRUE` se il grafo ha conflitti}
 \usage{
 has_conflicts(x)
 
 has_conflicts(x, name)
 
-has_conflicts(x)
-
-has_conflicts(x, name)
+\S4method{has_conflicts}{GrafoDB}(x, name = NULL, con = NULL)
 }
 \arguments{
 \item{x}{oggetto R}
@@ -20,24 +19,11 @@ has_conflicts(x, name)
 \value{
 `TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE`
         altrimenti
-
-`TRUE` se l'istanza `x` e' un GrafoDB con conflitti,
-        `FALSE` altrimenti
 }
 \description{
 Ritorna `TRUE` se il grafo ha conflitti
-
-Ritorna `TRUE` se il grafo ha conflitti
 }
 \examples{
-\dontrun{
-g <- GrafoDB(...)
-has_conflicts(g) # dovrebbe essere FALSE
-...             # eseguo operazioni come modificare la stessa serie
-has_conflicts(g) # TRUE
-has_conflicts(g, SERIE_CON_CONFLITTO) # TRUE
-has_conflicts(g, SERIE_SENZA_CONFLITTO) # FALSE
-}
 \dontrun{
 g <- GrafoDB(...)
 has_conflicts(g) # dovrebbe essere FALSE

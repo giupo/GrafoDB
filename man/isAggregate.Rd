@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{isAggregate}
 \alias{isAggregate}
+\alias{isAggregate,GrafoDB,character-method}
 \title{Funzioni del package `grafo`}
 \usage{
 isAggregate(graph, ts_name)
+
+\S4method{isAggregate}{GrafoDB,character}(graph, ts_name)
 }
 \description{
 implementazione di isAggregate di `package::grafo`

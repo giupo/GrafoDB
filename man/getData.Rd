@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{getData}
 \alias{getData}
+\alias{getData,GrafoDB,character-method}
 \title{Funzioni del package `grafo`}
 \usage{
-getData(graph, tsNames)
+getData(graph, ts_names)
+
+\S4method{getData}{GrafoDB,character}(graph, ts_names)
 }
 \description{
 implementazione di getData di `package::grafo`

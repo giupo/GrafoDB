@@ -2,12 +2,15 @@
 % Please edit documentation in R/core.r
 \name{evaluate}
 \alias{evaluate}
+\alias{evaluate,GrafoDB-method}
 \title{Implementazione del generic `evaluate` del package `grafo`
 per la classe `GrafoDB`}
 \usage{
 evaluate(object)
 
 evaluate(object, v_start)
+
+\S4method{evaluate}{GrafoDB}(object, v_start = NULL, deep = F, ...)
 }
 \description{
 Esegue il calcolo delle serie storiche presenti in questo Database

@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{listPrimitives}
 \alias{listPrimitives}
+\alias{listPrimitives,GrafoDB-method}
 \title{Funzioni del package `grafo`}
 \usage{
 listPrimitives(graph)
+
+\S4method{listPrimitives}{GrafoDB}(graph)
 }
 \description{
 implementazione di listPrimitives di `package::grafo`

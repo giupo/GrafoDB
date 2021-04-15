@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{listAggregates}
 \alias{listAggregates}
+\alias{listAggregates,GrafoDB-method}
 \title{Funzioni del package `grafo`}
 \usage{
 listAggregates(graph)
+
+\S4method{listAggregates}{GrafoDB}(graph)
 }
 \description{
 implementazione di listAggregates di `package::grafo`

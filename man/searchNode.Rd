@@ -4,7 +4,7 @@
 \alias{searchNode}
 \title{Funzioni del package `grafo`}
 \usage{
-searchNode(graph, tsNames)
+searchNode(graph, ts_names)
 }
 \description{
 implementazione di searchNode di `package::grafo`

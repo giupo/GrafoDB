@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{listElementaries}
 \alias{listElementaries}
+\alias{listElementaries,GrafoDB-method}
 \title{Funzioni del package `grafo`}
 \usage{
 listElementaries(graph)
+
+\S4method{listElementaries}{GrafoDB}(graph)
 }
 \description{
 implementazione di listElementaries di `package::grafo`

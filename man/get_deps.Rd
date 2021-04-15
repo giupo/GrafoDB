@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{get_deps}
 \alias{get_deps}
+\alias{get_deps,GrafoDB,character-method}
 \title{Funzioni del package `grafo`}
 \usage{
 get_deps(graph, ts_name)
+
+\S4method{get_deps}{GrafoDB,character}(object, ts_name)
 }
 \description{
 implementazione di get_deps di `package::grafo`
