@@ -1,17 +1,7 @@
 context("DB interface")
 
-test_that("db_settings can return custom home made ini settings", {
-  skip_if_not(require(mockery), "mockery required")
-  on.exit(db_settings(flush = TRUE))
-  expected <- list(A = 1, B = 1)
-  options(db_settings = NULL)
-  stub(db_settings, "file.exists", function(...) TRUE)
-  stub(db_settings, "rutils::ini_parse", function(...) expected)
-  expect_equal(db_settings(TRUE), expected)
-})
-
 test_that("initdb can handle an error", {
-  db_settings(TRUE)
+  # db_settings(TRUE)
   skip_if_not(require(mockery), "mockery requred")
   stub(initdb, "getenv", function(...) stop("my error"))
   expect_error(initdb(build_connection()), "my error")
