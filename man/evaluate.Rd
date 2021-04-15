@@ -15,7 +15,7 @@ evaluate(object, v_start = NULL, ...)
 
 \item{v_start}{node to evaluate, if `NULL` evaluates the whole GrafoDB}
 
-\item{`...`}{other eventual params (for debugging purposes...)}
+\item{...}{other eventual params (for debugging purposes...)}
 }
 \description{
 Esegue il calcolo delle serie storiche presenti in questo Database

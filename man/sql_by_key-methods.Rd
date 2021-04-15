@@ -15,6 +15,8 @@ sql_by_key(x, .key, ...)
 \item{x}{istanza di SQLHelper}
 
 \item{.key}{nome della query nel file INI}
+
+\item{...}{other params (unused)}
 }
 \value{
 un character array contenente la query SQL

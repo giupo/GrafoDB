@@ -9,6 +9,11 @@ isNode(graph, ts_name)
 
 \S4method{isNode}{GrafoDB,character}(graph, ts_name)
 }
+\arguments{
+\item{graph}{GrafoDB instance}
+
+\item{ts_name}{name of the object}
+}
 \description{
 implementazione di isNode di `package::grafo`
 }

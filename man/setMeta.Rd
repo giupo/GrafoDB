@@ -9,6 +9,15 @@ setMeta(object, ts_name, attr_name, value)
 
 \S4method{setMeta}{GrafoDB,character,character,character}(object, ts_name, attr_name, value)
 }
+\arguments{
+\item{object}{instanza di GrafoDB}
+
+\item{ts_name}{nome della serie}
+
+\item{attr_name}{nome dell'attributo}
+
+\item{value}{valore dell'attributo da settare}
+}
 \value{
 il GrafoDB modificato
 }

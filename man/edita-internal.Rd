@@ -11,7 +11,7 @@
 
 \item{name}{name of the object to be edited}
 
-\item{`...`}{other eventual options}
+\item{...}{other eventual options}
 }
 \description{
 edit a GrafoDB formula

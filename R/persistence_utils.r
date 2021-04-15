@@ -4,6 +4,7 @@
 #' @return un data.frame con i dati delle serie storiche
 #' @param table_name nome della tabella
 #' @param tag nome del tag
+#' @param con Connessione al DB
 #' @note funzione interna
 #' @include db.r
 

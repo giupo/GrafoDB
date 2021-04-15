@@ -6,6 +6,9 @@
 \usage{
 exponent(x)
 }
+\arguments{
+\item{x}{number}
+}
 \value{
 the exponent of the eng. representation of the number
 }

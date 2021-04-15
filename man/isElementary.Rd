@@ -9,6 +9,11 @@ isElementary(graph, ts_name)
 
 \S4method{isElementary}{GrafoDB,character}(graph, ts_name)
 }
+\arguments{
+\item{graph}{GrafoDB instance}
+
+\item{ts_name}{name of the object}
+}
 \description{
 implementazione di isElementary di `package::grafo`
 }

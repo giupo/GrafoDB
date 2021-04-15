@@ -2,9 +2,10 @@
 % Please edit documentation in R/core.r
 \name{show}
 \alias{show}
+\alias{show,GrafoDB}
 \title{Prints a brief summary for the graph}
 \usage{
-\S4method{show}{GrafoDB}(object)
+show(object)
 }
 \arguments{
 \item{object}{GrafoDB instance}

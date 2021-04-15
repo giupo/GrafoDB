@@ -9,6 +9,9 @@ listAggregates(graph)
 
 \S4method{listAggregates}{GrafoDB}(graph)
 }
+\arguments{
+\item{graph}{GrafoDB instance}
+}
 \description{
 implementazione di listAggregates di `package::grafo`
 }

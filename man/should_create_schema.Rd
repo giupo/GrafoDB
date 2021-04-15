@@ -6,6 +6,9 @@
 \usage{
 should_create_schema(con)
 }
+\arguments{
+\item{con}{DB connection}
+}
 \value{
 `TRUE` if db schema creation is needed, `FALSE` otherwise
 }

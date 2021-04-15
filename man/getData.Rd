@@ -9,6 +9,11 @@ getData(graph, ts_names)
 
 \S4method{getData}{GrafoDB,character}(graph, ts_names)
 }
+\arguments{
+\item{graph}{GrafoDB instance}
+
+\item{ts_names}{character array of names}
+}
 \description{
 implementazione di getData di `package::grafo`
 }

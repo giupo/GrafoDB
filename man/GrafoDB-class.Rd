@@ -17,6 +17,8 @@
 }
 \arguments{
 \item{x}{GrafoDB instance}
+
+\item{key}{key of the values}
 }
 \value{
 all the nodes in the graph, topologically sorted.

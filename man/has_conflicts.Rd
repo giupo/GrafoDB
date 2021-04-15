@@ -13,6 +13,8 @@ has_conflicts(x, name = NULL, con = NULL)
 \item{x}{oggetto R}
 
 \item{name}{character array di nomi (puo' essere omesso)}
+
+\item{con}{Connessione al DB}
 }
 \value{
 `TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE`

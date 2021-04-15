@@ -6,6 +6,13 @@
 \usage{
 save_graph_impl(x, tag = x@tag, ...)
 }
+\arguments{
+\item{x}{GrafoDB instance}
+
+\item{tag}{tag del grafo da salvare, di default e' la stessa di `x`}
+
+\item{...}{altri parametri}
+}
 \description{
 La funzione controlla la presenza di eventuali conflitti e necessita'
 di risincronizzare i dati del DB con quelli presenti nel Grafo.

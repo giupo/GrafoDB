@@ -11,6 +11,8 @@ roots(x, ...)
 }
 \arguments{
 \item{x}{GrafoDB instance}
+
+\item{...}{other params (unused)}
 }
 \value{
 character array with the root names

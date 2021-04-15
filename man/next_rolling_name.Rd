@@ -6,6 +6,11 @@
 \usage{
 next_rolling_name(x, con)
 }
+\arguments{
+\item{x}{GrafoDB instance}
+
+\item{con}{DB connection}
+}
 \description{
 Costruice il progressivo per il grafo `x`
 }

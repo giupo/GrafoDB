@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{GrafoDB instance}
 
-\item{`...`}{eventual GrafoDB instance; if not `stop`}
+\item{...}{eventual GrafoDB instance; if not `stop`}
 }
 \description{
 Returns diffs as data and formulas

@@ -34,6 +34,9 @@
 #' @name save_graph_impl
 #' @include conflicts.r copy_graph.r assert_dag.r persistence_utils.r
 #' @include logging.r
+#' @param x GrafoDB instance
+#' @param tag tag del grafo da salvare, di default e' la stessa di `x`
+#' @param ... altri parametri 
 
 save_graph_impl <- function(x, tag = x@tag, ...) {
   ln <- "GrafoDB.persistence.save_graph_impl"
@@ -311,6 +314,8 @@ get_max_provvisorio <- function(helper, tag, con) {
 #' Costruice il progressivo per il grafo `x`
 #'
 #' @name next_rolling_name
+#' @param x GrafoDB instance
+#' @param con DB connection 
 
 next_rolling_name <- function(x, con) {
   glue::glue("{x@tag}p{ count_rolling(x, con) }")

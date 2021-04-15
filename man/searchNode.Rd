@@ -9,6 +9,13 @@ searchNode(graph, attr_name, attr_value)
 
 \S4method{searchNode}{GrafoDB,character,character}(graph, attr_name, attr_value)
 }
+\arguments{
+\item{graph}{instanza di GrafoDB}
+
+\item{attr_name}{nome dell'attributo da cercare}
+
+\item{attr_value}{valore da ricercare}
+}
 \description{
 implementazione di searchNode di `package::grafo`
 }

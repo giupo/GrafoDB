@@ -9,6 +9,11 @@ isPrimitive(graph, ts_name)
 
 \S4method{isPrimitive}{GrafoDB,character}(graph, ts_name)
 }
+\arguments{
+\item{graph}{GrafoDB instance}
+
+\item{ts_name}{name of the object}
+}
 \description{
 implementazione di isPrimitive di `package::grafo`
 }

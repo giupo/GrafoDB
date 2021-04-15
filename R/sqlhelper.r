@@ -122,6 +122,7 @@ sql_by_key_impl <- function(x, .key, ...) {
 #' @name sql_by_key
 #' @param x istanza di SQLHelper
 #' @param .key nome della query nel file INI
+#' @param ... other params (unused)
 #' @return un character array contenente la query SQL
 #' @export
 #' @exportMethod sql_by_key

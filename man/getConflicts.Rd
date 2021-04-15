@@ -13,6 +13,9 @@ getConflicts(x, name = NULL, con = NULL)
 \item{x}{istanza del GrafoDB}
 
 \item{name}{vettore di nomi di serie}
+
+\item{con}{connection to the DB, if `NULL` the connections 
+gets created and closed in the method}
 }
 \value{
 un data.frame con le informazioni del conflitto

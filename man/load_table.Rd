@@ -10,6 +10,8 @@ load_table(table_name, tag, con = NULL)
 \item{table_name}{nome della tabella}
 
 \item{tag}{nome del tag}
+
+\item{con}{Connessione al DB}
 }
 \value{
 un data.frame con i dati delle serie storiche

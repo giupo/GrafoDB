@@ -160,6 +160,7 @@ sqlite_connect <- function() {
 #' Returns true if the app should create the DB schema
 #'
 #' @name should_create_schema
+#' @param con DB connection
 #' @return `TRUE` if db schema creation is needed, `FALSE` otherwise
 
 should_create_schema  <- function(con) {

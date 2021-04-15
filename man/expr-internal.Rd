@@ -10,6 +10,8 @@ expr_impl(x, nomi, echo = FALSE)
 \item{x}{istanza di GrafoDB}
 
 \item{nomi}{array di nomi di serie storiche}
+
+\item{echo}{if TRUE prints the formula on on the standard output}
 }
 \description{
 Ritorna (o mostra su console, stdout) le formule delle serie `nomi`

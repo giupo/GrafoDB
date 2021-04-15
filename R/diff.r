@@ -6,7 +6,7 @@
 #'
 #' @export
 #' @param x GrafoDB instance
-#' @param `...` eventual GrafoDB instance; if not `stop`
+#' @param ... eventual GrafoDB instance; if not `stop`
 #' @method diff GrafoDB
 #' @include logging.r
 

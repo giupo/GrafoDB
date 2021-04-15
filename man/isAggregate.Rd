@@ -9,6 +9,11 @@ isAggregate(graph, ts_name)
 
 \S4method{isAggregate}{GrafoDB,character}(graph, ts_name)
 }
+\arguments{
+\item{graph}{GrafoDB instance}
+
+\item{ts_name}{name of the object}
+}
 \description{
 implementazione di isAggregate di `package::grafo`
 }

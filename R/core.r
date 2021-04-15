@@ -180,10 +180,8 @@ GrafoDB <- methods::setClass( # nolint
 #'
 #' @name initialize
 #' @rdname GraphDB_initialize
-#' @aliases GrafoDB-initialize
 #' @param .Object GrafoDB object instance
 #' @param tag label identifying the GrafoDB
-
 
 methods::setMethod(
   "initialize",
@@ -203,6 +201,11 @@ methods::setMethod(
 #' @title Funzioni del package `grafo`
 #' @include navigate.r
 #' @export
+#' @param object GrafoDB instance
+#' @param nodes array of node names
+#' @param order number o levels (orders) to extend
+#' @param mode direction of navigation: `"in"``, `"out"`` or `"all"`,
+#'  default `"out"``
 
 methods::setGeneric(
   "navigate",
@@ -223,11 +226,14 @@ methods::setMethod(
   })
 
 #' Prints a brief summary for the graph
-#' 
+#'
 #' @name show
+#' @aliases show,GrafoDB
+#' @usage show(object)
 #' @param object GrafoDB instance
 #' @note this is the default method called in the REPL when
 #'   an object is printed out
+#' @method
 
 methods::setMethod(
   "show",
@@ -404,7 +410,7 @@ methods::setMethod(
 #' @exportMethod evaluate
 #' @param object GrafoDB instance
 #' @param v_start node to evaluate, if `NULL` evaluates the whole GrafoDB
-#' @param `...` other eventual params (for debugging purposes...)
+#' @param ... other eventual params (for debugging purposes...)
 
 methods::setGeneric(
   "evaluate",
@@ -655,6 +661,8 @@ methods::setMethod(
 #' @rdname GrafoDB-class
 #' @include metadati.r
 #' @importMethodsFrom hash values
+#' @param x GrafoDB instance
+#' @param key key of the values 
 #' @exportMethod values
 #' @aliases GrafoDB
 
@@ -704,6 +712,7 @@ methods::setMethod(
 #'
 #' @name roots
 #' @param x GrafoDB instance
+#' @param ... other params (unused)
 #' @return character array with the root names
 #' @include functions.r
 #' @export
@@ -727,6 +736,7 @@ methods::setMethod(
 #'
 #' @name leaves
 #' @param x GrafoDB instance
+#' @param ... other params (unused)
 #' @return character array with the leaves names
 #' @include functions.r
 #' @export

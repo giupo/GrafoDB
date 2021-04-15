@@ -9,6 +9,9 @@ listElementaries(graph)
 
 \S4method{listElementaries}{GrafoDB}(graph)
 }
+\arguments{
+\item{graph}{GrafoDB instance}
+}
 \description{
 implementazione di listElementaries di `package::grafo`
 }

@@ -9,6 +9,14 @@ getTask(object, ts_name)
 
 \S4method{getTask}{GrafoDB,character}(object, ts_name)
 }
+\arguments{
+\item{object}{GrafoDB instance}
+
+\item{ts_name}{object name}
+}
+\value{
+the formula defining the `name` in GrafoDB
+}
 \description{
 implementazione di getTask di `package::grafo`
 }

@@ -67,7 +67,7 @@ evaluate_single <- evaluate_single_1
 #' @name evaluate_impl
 #' @param object GrafoDB instance
 #' @param v_start node to be evaluated, if `NULL` evaluates all nodes
-#' @param `...` eventual other params (like `debug`, for internal testing)
+#' @param ... eventual other params (like `debug`, for internal testing)
 #' @return il grafo con i dati correttamente valutato
 #' @rdname evaluate-internal
 

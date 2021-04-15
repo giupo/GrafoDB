@@ -7,9 +7,9 @@
 getdb(x, name)
 }
 \arguments{
-\item{name}{nome serie}
+\item{x}{istance di GrafoDB}
 
-\item{tag}{id del grafo (default su `cf10`)}
+\item{name}{nome serie}
 }
 \value{
 una serie o una lista di serie

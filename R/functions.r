@@ -6,6 +6,7 @@
 #' @rdname init-internal
 #' @param object (creato da new)
 #' @param tag tag del grafo (default=`cf10`)
+#' @param con Connessione la DB
 #' @return un istanza di grafo popolata correttamente secono i parametri (`tag`)
 #' @note e' stata scorporata dall'initialize S4 per finalita' di debug
 #' @include persistence.r sqlhelper.r
@@ -267,8 +268,8 @@ clutter_with_params_and_return <- function(func_string, name,
 #' un `GrafoDB`
 #'
 #' @name getdb
+#' @param x istance di GrafoDB
 #' @param name nome serie
-#' @param tag id del grafo (default su `cf10`)
 #' @return una serie o una lista di serie
 #' @export
 

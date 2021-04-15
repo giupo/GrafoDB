@@ -9,6 +9,9 @@ listNodes(graph)
 
 \S4method{listNodes}{GrafoDB}(graph)
 }
+\arguments{
+\item{graph}{GrafoDB instance}
+}
 \description{
 implementazione di listNodes di `package::grafo`
 }

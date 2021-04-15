@@ -5,10 +5,11 @@
 #' @name  expr_impl
 #' @param x istanza di GrafoDB
 #' @param nomi array di nomi di serie storiche
+#' @param echo if TRUE prints the formula on on the standard output 
 #' @rdname expr-internal
 #' @include functions.r
 
-expr_impl <- function(x, nomi, echo=FALSE) {
+expr_impl <- function(x, nomi, echo = FALSE) {
   functions <- x@functions
   in_functions <- intersect(hash::keys(functions), nomi)
   to_be_loaded_from_db <- setdiff(nomi, in_functions)

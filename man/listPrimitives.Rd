@@ -9,6 +9,9 @@ listPrimitives(graph)
 
 \S4method{listPrimitives}{GrafoDB}(graph)
 }
+\arguments{
+\item{graph}{GrafoDB instance}
+}
 \description{
 implementazione di listPrimitives di `package::grafo`
 }

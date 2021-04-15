@@ -12,7 +12,7 @@ evaluate_impl(object, v_start = NULL, ...)
 
 \item{v_start}{node to be evaluated, if `NULL` evaluates all nodes}
 
-\item{`...`}{eventual other params (like `debug`, for internal testing)}
+\item{...}{eventual other params (like `debug`, for internal testing)}
 }
 \value{
 il grafo con i dati correttamente valutato

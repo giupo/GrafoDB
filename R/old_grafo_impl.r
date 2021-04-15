@@ -9,6 +9,8 @@
 #' @seealso `grafo::isNode`
 #' @include core.r
 #' @exportMethod isNode
+#' @param graph GrafoDB instance
+#' @param ts_name name of the object
 
 methods::setGeneric(
   "isNode",
@@ -31,6 +33,8 @@ methods::setMethod(
 #' @title Funzioni del package `grafo`
 #' @seealso `grafo::isPrimitive`
 #' @exportMethod isPrimitive
+#' @param graph GrafoDB instance
+#' @param ts_name name of the object
 
 methods::setGeneric(
   "isPrimitive",
@@ -51,6 +55,8 @@ methods::setMethod(
 #'
 #' @name isAggregate
 #' @title Funzioni del package `grafo`
+#' @param graph GrafoDB instance
+#' @param ts_name name of the object
 #' @seealso `grafo::isAggregate`
 #' @exportMethod isAggregate
 
@@ -77,6 +83,8 @@ methods::setMethod(
 #' @note `GrafoDB` non prevede l'utilizzo di serie "elementari" come il `grafo`
 #'       Quindi per compliance ritorna sempre `FALSE`, ma il metodo non ha senso
 #' @exportMethod isElementary
+#' @param graph GrafoDB instance
+#' @param ts_name name of the object
 
 methods::setGeneric(
   "isElementary",
@@ -99,6 +107,7 @@ methods::setMethod(
 #' @title Funzioni del package `grafo`
 #' @seealso `grafo::listAggregates`
 #' @exportMethod listAggregates
+#' @param graph GrafoDB instance
 
 methods::setGeneric(
   "listAggregates",
@@ -126,6 +135,7 @@ methods::setMethod(
 #' @title Funzioni del package `grafo`
 #' @seealso `grafo::listElementaries`
 #' @exportMethod listElementaries
+#' @param graph GrafoDB instance
 
 methods::setGeneric(
   "listElementaries",
@@ -153,6 +163,7 @@ methods::setMethod(
 #' @title Funzioni del package `grafo`
 #' @seealso `grafo::listPrimitives`
 #' @exportMethod listPrimitives
+#' @param graph GrafoDB instance
 
 methods::setGeneric(
   "listPrimitives",
@@ -179,6 +190,7 @@ methods::setMethod(
 #' @title Funzioni del package `grafo`
 #' @seealso `grafo::listNodes`
 #' @exportMethod listNodes
+#' @param graph GrafoDB instance
 
 methods::setGeneric(
   "listNodes",
@@ -287,11 +299,14 @@ methods::setMethod(
   })
 
 
-#' implementazione di get_deps di `package::grafo`
+#' Returns the dependencies of an object in the Graph
 #'
 #' @name get_deps
 #' @title Funzioni del package `grafo`
 #' @seealso `grafo::get_deps`
+#' @param object GrafoDB instance
+#' @param ts_name name of the object 
+#' @return returns a character array of names
 #' @exportMethod get_deps
 
 methods::setGeneric(
@@ -322,6 +337,9 @@ methods::setMethod(
 #' @name getTask
 #' @title Funzioni del package `grafo`
 #' @seealso `grafo::getTask`
+#' @param object GrafoDB instance
+#' @param ts_name object name 
+#' @return the formula defining the `name` in GrafoDB
 #' @exportMethod getTask
 
 methods::setGeneric(
@@ -343,6 +361,8 @@ methods::setMethod(
 #' @name getData
 #' @title Funzioni del package `grafo`
 #' @seealso `grafo::getData`
+#' @param graph GrafoDB instance
+#' @param ts_names character array of names
 #' @exportMethod getData
 
 methods::setGeneric(
@@ -367,6 +387,9 @@ methods::setMethod(
 #' @seealso `grafo::searchNode`
 #' @exportMethod searchNode
 #' @export
+#' @param graph instanza di GrafoDB
+#' @param attr_name nome dell'attributo da cercare
+#' @param attr_value valore da ricercare 
 
 methods::setGeneric(
   "searchNode",
@@ -394,6 +417,10 @@ methods::setMethod(
 #'
 #' @name setMeta
 #' @return il GrafoDB modificato
+#' @param object instanza di GrafoDB
+#' @param ts_name nome della serie
+#' @param attr_name nome dell'attributo
+#' @param value valore dell'attributo da settare
 #' @examples \dontrun{
 #' g <- GrafoDB()
 #' g["A"] <- TSERIES(...)

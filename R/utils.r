@@ -1,6 +1,7 @@
 #' returns the exponent of a floating point numeber (eng representation)
 #'
 #' @name exponent
+#' @param x number
 #' @return the exponent of the eng. representation of the number
 
 exponent <- function(x) {

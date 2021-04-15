@@ -30,6 +30,7 @@
 #' @name has_conflicts
 #' @param x oggetto R
 #' @param name character array di nomi (puo' essere omesso)
+#' @param con Connessione al DB
 #' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE`
 #'         altrimenti
 #' @examples \dontrun{
@@ -67,6 +68,8 @@ methods::setMethod(
 #' @name getConflicts
 #' @param x istanza del GrafoDB
 #' @param name vettore di nomi di serie
+#' @param con connection to the DB, if `NULL` the connections 
+#'  gets created and closed in the method
 #' @return un data.frame con le informazioni del conflitto
 #' @export
 

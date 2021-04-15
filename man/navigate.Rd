@@ -9,6 +9,16 @@ navigate(object, nodes = NULL, order = 1L, mode = "out")
 
 \S4method{navigate}{GrafoDB}(object, nodes = NULL, order = 1L, mode = "out")
 }
+\arguments{
+\item{object}{GrafoDB instance}
+
+\item{nodes}{array of node names}
+
+\item{order}{number o levels (orders) to extend}
+
+\item{mode}{direction of navigation: `"in"``, `"out"`` or `"all"`,
+default `"out"``}
+}
 \description{
 'navigates' in the graph
 }

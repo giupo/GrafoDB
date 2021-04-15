@@ -9,8 +9,16 @@ get_deps(object, ts_name)
 
 \S4method{get_deps}{GrafoDB,character}(object, ts_name)
 }
+\arguments{
+\item{object}{GrafoDB instance}
+
+\item{ts_name}{name of the object}
+}
+\value{
+returns a character array of names
+}
 \description{
-implementazione di get_deps di `package::grafo`
+Returns the dependencies of an object in the Graph
 }
 \seealso{
 `grafo::get_deps`

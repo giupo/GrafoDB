@@ -10,6 +10,8 @@ init_grafo_impl(object, tag = "cf10", con = NULL)
 \item{object}{(creato da new)}
 
 \item{tag}{tag del grafo (default=`cf10`)}
+
+\item{con}{Connessione la DB}
 }
 \value{
 un istanza di grafo popolata correttamente secono i parametri (`tag`)
