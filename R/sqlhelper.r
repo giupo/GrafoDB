@@ -66,6 +66,21 @@ init_sql_helper <- function(object, type = NULL) {
 }
 
 
+assert_sql_params <- function(sql) {
+  idx <- stringr::str_locate_all(sql, "--[A-Z|a-z|0-9]*--")[[1]]
+
+  if (length(idx) == 0) return(invisible(TRUE))
+
+  for (irow in seq_len(nrow(idx))) {
+    start <- idx[irow, 1]
+    end <- idx[irow, 2]
+    param <- substring(sql, first = start, last = end)
+    warning(param, " has not been set")
+  }
+  stop("params for query ", sql, " have not been set")
+}
+
+
 sql_by_key_impl <- function(x, .key, ...) {
   sqlContainer <- x@sqlContainer # nolint
   if (! .key %in% names(sqlContainer)) {
@@ -84,23 +99,15 @@ sql_by_key_impl <- function(x, .key, ...) {
     if (is.null(value)) {
       value <- ""
     }
-    quoted_value <- gsub("'", "''", value)
+    quoted_value <- gsub("'", "''", value)[]
     sql <- gsub(param_key, quoted_value, sql)
   }
 
   ## check if any params is left behind
-
-  idx <- stringr::str_locate_all(sql, "--[A-Z|a-z|0-9]*--")[[1]]
-  if (length(idx) > 0) {
-    for (irow in seq_len(nrow(idx))) {
-      start <- idx[irow, 1]
-      end <- idx[irow, 2]
-      param <- substring(sql, first = start, last = end)
-      warning(param, " has not been set")
-    }
-    stop("params for query ", .key, " of type ", x@type, " have not been set")
-  }
-
+  tryCatch(assert_sql_params(sql), error = function(cond) {
+    stop("params for query ", .key, " of type ",
+      x@type, " have not been set: ", cond)
+  })
 
   trace("Query for key '%s' = %s", .key, sql, name = "GrafoDB.sqlhelper")
   sql
