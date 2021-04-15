@@ -2,6 +2,38 @@ Changelog
 =========
 
 
+v1.37.0 (2021-04-15)
+--------------------
+- Bump version: 1.36.7 → 1.37.0. [giupo]
+- Finished checking. [giupo]
+- Fixed the majority of doc fails in checks. [giupo]
+- Fixing documentation for passing checks on CRAN. [giupo]
+- Prepare to remove db_settings. [giupo]
+- Prepare to remove  db_settings. [giupo]
+- Fixing docs. [giupo]
+- Added some basic tests for assert_sql_params. [giupo]
+- Some code refactoring in SQLHelper. [giupo]
+- Some linting in code SQLhelper. [giupo]
+- Fixing documentations. [giupo]
+- Fixing documentation for checks. [giupo]
+- Fixing documentation. [giupo]
+- Removed attach as stated in checks. [giupo]
+- Remove patchlevel from R deps. [giupo]
+
+
+v1.36.7 (2021-04-14)
+--------------------
+- Bump version: 1.36.6 → 1.36.7. [giupo]
+- Fixing documentation for classes. [giupo]
+- Updates docs. [giupo]
+- Adds class docs. [giupo]
+- Trying to comply with check. [giupo]
+- Prepare for checks. [giupo]
+- Add stats:: to ts. [giupo]
+- Add stats:: to ts. [giupo]
+- Add lintr to RBuildIgnore. [giupo]
+
+
 v1.36.6 (2021-04-14)
 --------------------
 - Bump version: 1.36.5 → 1.36.6. [giupo]
