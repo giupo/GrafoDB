@@ -4,12 +4,31 @@
 \name{GrafoDB-class}
 \alias{GrafoDB-class}
 \alias{GrafoDB}
+\alias{names,GrafoDB-method}
+\alias{keys,GrafoDB-method}
+\alias{values,GrafoDB-method}
 \title{Main GrafoDB class}
+\usage{
+\S4method{names}{GrafoDB}(x)
+
+\S4method{keys}{GrafoDB}(x)
+
+\S4method{values}{GrafoDB}(x, key)
+}
+\arguments{
+\item{x}{GrafoDB instance}
+}
+\value{
+all the nodes in the graph, topologically sorted.
+}
 \description{
 Class for manipulating data described with formulas and evaluated as
 a topological sorting of nodes in a graph data structure.
 This class provides a persistence layer towards generic DBMS
 (by now only PostgreSQL) has been implemented
+
+The array returned is already sorted by topological sorting
+algorithm
 }
 \section{Slots}{
 

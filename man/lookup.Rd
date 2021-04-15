@@ -2,9 +2,18 @@
 % Please edit documentation in R/core.r
 \name{lookup}
 \alias{lookup}
+\alias{lookup,GrafoDB,character,character-method}
+\alias{lookup,GrafoDB,numeric,missing-method}
+\alias{lookup,GrafoDB,character,missing-method}
 \title{ricerca nei metadati del `GrafoDB`}
 \usage{
 lookup(x, key, value)
+
+\S4method{lookup}{GrafoDB,character,character}(x, key, value)
+
+\S4method{lookup}{GrafoDB,numeric,missing}(x, key, value)
+
+\S4method{lookup}{GrafoDB,character,missing}(x, key, value)
 }
 \arguments{
 \item{x}{istanza di `GrafoDB`}

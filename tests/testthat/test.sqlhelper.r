@@ -86,3 +86,21 @@ test_that("SQLHelper raises an error if params are not set", {
     sql_by_key(helper, "SELECT_TEST3"),
     "params for query SELECT_TEST3 of type SQLite have not been set"))
 })
+
+test_that("sql_helper_type_by_env returns SQLite for test", {
+  skip_if_not_installed("mockery")
+  getenv_mock <- mockery::mock("test")
+  expect_equal(sql_helper_type_by_env("test"), "SQLite")
+  mockery::stub(sql_helper_type_by_env, "getenv", getenv_mock)
+  expect_equal(sql_helper_type_by_env(), "SQLite")
+  expect_called(getenv_mock, 1)
+})
+
+test_that("sql_helper_type_by_env returns SQLite for prod", {
+  skip_if_not_installed("mockery")
+  getenv_mock <- mockery::mock("prod")
+  expect_equal(sql_helper_type_by_env("prod"), "PostgreSQL")
+  mockery::stub(sql_helper_type_by_env, "getenv", getenv_mock)
+  expect_equal(sql_helper_type_by_env(), "PostgreSQL")
+  expect_called(getenv_mock, 1)
+})

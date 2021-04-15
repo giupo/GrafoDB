@@ -41,7 +41,7 @@ methods::setGeneric(
 #' lookup(g, "TAVOLA_DI_OUTPUT", "BRI") # ritorna i nomi di serie
 #'                                      # che hanno TAVOLA_DI_OUTPUT=BRI
 #' }
-#' @rdname lookup_generic
+#' @rdname lookup
 #' @include lookup.r
 #' @export
 
@@ -200,14 +200,14 @@ methods::setMethod(
 
 
 #' 'navigates' in the graph
-#' 
+#'
 #' This method lets you move through the nodes of the graph data
 #' structure, movigin surfing the edges of the graph.
 #'
-#' 
+#'
 #' @name navigate
 #' @title Funzioni del package `grafo`
-#' @usage navugate(graph, nodes, order, mode)
+#' @usage navigate(graph, nodes, order, mode)
 #' @include navigate.r
 #' @export
 
@@ -343,8 +343,8 @@ methods::setMethod(
 #'
 #' The array returned is already sorted by topological sorting
 #' algorithm
-#' 
-#' @name names
+#'
+#' @rdname GrafoDB-class
 #' @param x GrafoDB instance
 #' @return all the nodes in the graph, topologically sorted.
 
@@ -468,7 +468,6 @@ methods::setMethod(
   })
 
 #' @rdname downgrf
-#' @aliases GrafoDB,character
 
 methods::setMethod(
   "downgrf",
@@ -497,7 +496,6 @@ methods::setGeneric(
   })
 
 #' @rdname getMetadata
-#' @aliases GrafoDB,character
 
 methods::setMethod(
   "getMetadata",
@@ -523,7 +521,6 @@ methods::setGeneric(
   })
 
 #' @rdname edita
-#' @aliases GrafoDB,character
 
 methods::setMethod(
   "edita",
@@ -644,34 +641,32 @@ methods::setMethod(
 
 #' returns all the keys in the metadata table
 #'
-#' @name keys
+#' @rdname GrafoDB-class
 #' @include metadati.r
 #' @importMethodsFrom hash keys
 #' @exportMethod keys
+#' @aliases GrafoDB
 
 methods::setMethod(
   "keys",
-  signature("GrafoDB"),
+  list(x = "GrafoDB"),
   function(x) {
     keys_impl(x)
   })
 
 #' Returns all the values in the metadata table
 #'
-#' @name values
+#' @rdname GrafoDB-class
 #' @include metadati.r
 #' @importMethodsFrom hash values
 #' @exportMethod values
+#' @aliases GrafoDB
 
 methods::setMethod(
   "values",
   signature("GrafoDB"),
   function(x, key) {
-    key <- if (length(key) == 1) {
-      key[[1]]
-    } else {
-      NULL
-    }
+    key <- rutils::ifelse(length(key) == 1, key[[1]], NULL)
     values_by_key_impl(x, key = key)
   })
 

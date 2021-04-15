@@ -9,8 +9,6 @@
 #' @usage SQLHelper(type)
 #' @slot sqlContainer a list of key-values for the SQL queries
 #' @slot type the type of syntax
-#' @param path path al file contenente le query (default a file interno al
-#'  package GrafoDB)
 #' @param type tipo di database supportati (per ora "PostgreSQL" e "SQLite").
 #'             Quest'opzione e' sovrascritta in caso esistano delle options di
 #'             ambiente chiamate "SQLHelperType"
@@ -34,6 +32,11 @@ methods::setMethod(
   })
 
 
+
+sql_helper_type_by_env <- function(env = getenv()) {
+  rutils::ifelse(env == "test", "SQLite", "PostgreSQL")
+}
+
 #' initializes the SQL helper
 #'
 #' @name init_sql_helper
@@ -45,15 +48,12 @@ methods::setMethod(
 #'    Depends on environment (`getenv`) if not passwd by
 #' @return the object initialized
 
-init_sql_helper <- function(object, type=NULL) {
+init_sql_helper <- function(object, type = NULL) {
   env <- getenv()
-  if (is.null(type)) {
-    type <- if (env == "test") {
-      "SQLite"
-    } else {
-      "PostgreSQL"
-    }
-  }
+
+  type <- rutils::ifelse(is.null(type),
+    sql_helper_type_by_env(env = env),
+    type)
 
   object@type <- type
   trace("SQLHeleperType: %s", type, name = "GrafoDB.sqlhelper")

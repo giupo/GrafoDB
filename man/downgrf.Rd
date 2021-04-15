@@ -3,7 +3,6 @@
 \name{downgrf}
 \alias{downgrf}
 \alias{downgrf,GrafoDB,character-method}
-\alias{GrafoDB,character}
 \title{Ritorna i figli delle serie}
 \usage{
 downgrf(x, name)

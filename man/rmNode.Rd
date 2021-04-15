@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{rmNode}
 \alias{rmNode}
+\alias{rmNode,GrafoDB,character-method}
 \title{Elimina un nodo dal `GrafoDB`}
 \usage{
 rmNode(graph, ts_name, recursive)
+
+\S4method{rmNode}{GrafoDB,character}(graph, ts_name, recursive = FALSE)
 }
 \arguments{
 \item{graph}{istanza di `GrafoDB`}

@@ -3,7 +3,6 @@
 \name{edita}
 \alias{edita}
 \alias{edita,GrafoDB,character-method}
-\alias{GrafoDB,character}
 \title{Edita un la formula di una serie storica.}
 \usage{
 edita(x, name)

@@ -3,7 +3,6 @@
 \name{getMetadata}
 \alias{getMetadata}
 \alias{getMetadata,GrafoDB,character-method}
-\alias{GrafoDB,character}
 \title{get Metadata for object}
 \usage{
 getMetadata(object, ts_name)

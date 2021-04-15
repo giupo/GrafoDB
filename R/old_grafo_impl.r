@@ -461,6 +461,8 @@ methods::setGeneric(
     standardGeneric("rmNode")
   })
 
+#' @rdname rmNode
+
 methods::setMethod(
   "rmNode",
   signature("GrafoDB", "character", "ANY"),

@@ -5,7 +5,7 @@
 \alias{navigate,GrafoDB-method}
 \title{Funzioni del package `grafo`}
 \usage{
-navugate(graph, nodes, order, mode)
+navigate(graph, nodes, order, mode)
 
 \S4method{navigate}{GrafoDB}(object, nodes = NULL, order = 1L, mode = "out")
 }
