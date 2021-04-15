@@ -2,11 +2,14 @@
 % Please edit documentation in R/conflicts.r
 \name{fixConflicts}
 \alias{fixConflicts}
+\alias{fixConflicts,GrafoDB-method}
 \title{contrassegna come risolti i conflitti salvati sul DB}
 \usage{
 fixConflicts(x)
 
 fixConflicts(x, name)
+
+\S4method{fixConflicts}{GrafoDB}(x, name = NULL)
 }
 \arguments{
 \item{x}{istanza di GrafoDB}

@@ -195,6 +195,8 @@ methods::setGeneric(
     standardGeneric("fixConflicts")
   })
 
+#' @rdname fixConflicts
+
 methods::setMethod(
   "fixConflicts",
   signature("GrafoDB"),

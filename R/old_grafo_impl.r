@@ -17,6 +17,8 @@ methods::setGeneric(
     standardGeneric("isNode")
   })
 
+#' @rdname isNode
+
 methods::setMethod(
   "isNode",
   signature("GrafoDB", "character"),
@@ -37,6 +39,8 @@ methods::setGeneric(
   function(graph, ts_name) {
     standardGeneric("isPrimitive")
   })
+
+#' @rdname isPrimitive
 
 methods::setMethod(
   "isPrimitive",
@@ -339,6 +343,7 @@ methods::setGeneric(
     standardGeneric("getTask")
   })
 
+#' @rdname getTask
 methods::setMethod(
   "getTask",
   signature("GrafoDB", "character"),
@@ -384,6 +389,8 @@ methods::setGeneric(
     standardGeneric("searchNode")
   })
 
+#' @rdname searchNode
+
 methods::setMethod(
   "searchNode",
   signature("GrafoDB", "character", "character"),
@@ -417,6 +424,8 @@ methods::setGeneric(
   function(object, ts_name, attr_name, value) {
     standardGeneric("setMeta")
   })
+
+#' @rdname setMeta
 
 methods::setMethod(
   "setMeta",

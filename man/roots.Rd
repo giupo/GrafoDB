@@ -2,16 +2,19 @@
 % Please edit documentation in R/core.r
 \name{roots}
 \alias{roots}
-\title{Ritorna le radici del grafo}
+\alias{roots,GrafoDB-method}
+\title{Returns the roots of the Graph}
 \usage{
 roots(x)
+
+\S4method{roots}{GrafoDB}(x)
 }
 \arguments{
-\item{x}{istanza di grafo}
+\item{x}{GrafoDB instance}
 }
 \value{
-la lista di nomi delle radici del grafo
+character array with the root names
 }
 \description{
-Ritorna le radici del grafo
+'Roots' are those nodes *not* having incoming edges
 }

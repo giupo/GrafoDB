@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{searchNode}
 \alias{searchNode}
+\alias{searchNode,GrafoDB,character,character-method}
 \title{Funzioni del package `grafo`}
 \usage{
 searchNode(graph, ts_names)
+
+\S4method{searchNode}{GrafoDB,character,character}(graph, attr_name, attr_value)
 }
 \description{
 implementazione di searchNode di `package::grafo`

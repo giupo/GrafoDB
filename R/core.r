@@ -199,8 +199,12 @@ methods::setMethod(
   })
 
 
-#' naviga nel grafo
+#' 'navigates' in the graph
+#' 
+#' This method lets you move through the nodes of the graph data
+#' structure, movigin surfing the edges of the graph.
 #'
+#' 
 #' @name navigate
 #' @title Funzioni del package `grafo`
 #' @usage navugate(graph, nodes, order, mode)
@@ -213,6 +217,8 @@ methods::setGeneric(
     standardGeneric("navigate")
   })
 
+#' @rdname navigate
+
 methods::setMethod(
   "navigate",
   signature("GrafoDB", "ANY", "ANY", "ANY"),
@@ -222,6 +228,13 @@ methods::setMethod(
       order = order,
       mode = mode)
   })
+
+#' Prints a brief summary for the graph
+#' 
+#' @name show
+#' @param object GrafoDB instance
+#' @note this is the default method called in the REPL when
+#'   an object is printed out
 
 methods::setMethod(
   "show",
@@ -246,6 +259,8 @@ methods::setMethod(
     message(msg)
   })
 
+#' @rdname lookup
+
 methods::setMethod(
   "lookup",
   c("GrafoDB", "character", "character"),
@@ -253,12 +268,16 @@ methods::setMethod(
     lookup_impl(x, key, value)
   })
 
+#' @rdname lookup
+
 methods::setMethod(
   "lookup",
   c("GrafoDB", "numeric", "missing"),
   function(x, key, value) {
     lookup_dati_impl(x, key)
   })
+
+#' @rdname lookup
 
 methods::setMethod(
   "lookup",
@@ -319,6 +338,15 @@ methods::setMethod(
     result@data <- hash::hash(data)
     result
   })
+
+#' Returns all the keys in this graph.
+#'
+#' The array returned is already sorted by topological sorting
+#' algorithm
+#' 
+#' @name names
+#' @param x GrafoDB instance
+#' @return all the nodes in the graph, topologically sorted.
 
 methods::setMethod(
   "names",
@@ -531,6 +559,7 @@ methods::setGeneric(
     standardGeneric("ser")
   })
 
+#' @rdname ser
 
 methods::setMethod(
   "ser",
@@ -613,6 +642,9 @@ methods::setMethod(
       tag = x@tag))
   })
 
+#' returns all the keys in the metadata table
+#'
+#' @name keys
 #' @include metadati.r
 #' @importMethodsFrom hash keys
 #' @exportMethod keys
@@ -624,6 +656,9 @@ methods::setMethod(
     keys_impl(x)
   })
 
+#' Returns all the values in the metadata table
+#'
+#' @name values
 #' @include metadati.r
 #' @importMethodsFrom hash values
 #' @exportMethod values
@@ -673,12 +708,14 @@ methods::setMethod(
   })
 
 
-#' Ritorna le radici del grafo
+#' Returns the roots of the Graph
+#' 
+#' 'Roots' are those nodes *not* having incoming edges
 #'
 #' @name roots
 #' @usage roots(x)
-#' @param x istanza di grafo
-#' @return la lista di nomi delle radici del grafo
+#' @param x GrafoDB instance
+#' @return character array with the root names
 #' @include functions.r
 #' @export
 
@@ -688,6 +725,8 @@ methods::setGeneric(
     standardGeneric("roots")
   })
 
+#' @rdname roots
+
 methods::setMethod(
   "roots",
   signature("GrafoDB"),
@@ -695,12 +734,12 @@ methods::setMethod(
     .roots(x)
   })
 
-#' Ritorna le foglie del grafo
+#' Returns all the leaves in a graph
 #'
 #' @name leaves
 #' @usage leaves(x)
-#' @param x istanza di grafo
-#' @return la lista di nomi delle foglie del grafo
+#' @param x GrafoDB instance
+#' @return character array with the leaves names
 #' @include functions.r
 #' @export
 
@@ -709,6 +748,8 @@ methods::setGeneric(
   function(x, ...) {
     standardGeneric("leaves")
   })
+
+#' @rdname leaves
 
 methods::setMethod(
   "leaves",

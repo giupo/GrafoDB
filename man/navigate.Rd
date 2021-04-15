@@ -2,10 +2,17 @@
 % Please edit documentation in R/core.r
 \name{navigate}
 \alias{navigate}
+\alias{navigate,GrafoDB-method}
 \title{Funzioni del package `grafo`}
 \usage{
 navugate(graph, nodes, order, mode)
+
+\S4method{navigate}{GrafoDB}(object, nodes = NULL, order = 1L, mode = "out")
 }
 \description{
-naviga nel grafo
+'navigates' in the graph
+}
+\details{
+This method lets you move through the nodes of the graph data
+structure, movigin surfing the edges of the graph.
 }

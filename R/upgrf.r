@@ -19,6 +19,8 @@ methods::setGeneric(
     standardGeneric("upgrf")
   })
 
+#' @rdname upgrf 
+
 methods::setMethod(
   "upgrf",
   signature("GrafoDB", "character", "ANY"),

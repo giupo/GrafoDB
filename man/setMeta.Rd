@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{setMeta}
 \alias{setMeta}
+\alias{setMeta,GrafoDB,character,character,character-method}
 \title{Imposta un metadato per una particolare serie}
 \usage{
 setMeta(object, ts_name, attr_name, value)
+
+\S4method{setMeta}{GrafoDB,character,character,character}(object, ts_name, attr_name, value)
 }
 \value{
 il GrafoDB modificato

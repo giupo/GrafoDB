@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{isPrimitive}
 \alias{isPrimitive}
+\alias{isPrimitive,GrafoDB,character-method}
 \title{Funzioni del package `grafo`}
 \usage{
 isPrimitive(graph, ts_name)
+
+\S4method{isPrimitive}{GrafoDB,character}(graph, ts_name)
 }
 \description{
 implementazione di isPrimitive di `package::grafo`

@@ -2,9 +2,12 @@
 % Please edit documentation in R/core.r
 \name{ser}
 \alias{ser}
+\alias{ser,GrafoDB,character-method}
 \title{Valuta una singola serie del grafo e ritorna il risultato}
 \usage{
 ser(x, name)
+
+\S4method{ser}{GrafoDB,character}(x, name, debug = FALSE)
 }
 \arguments{
 \item{x}{un istanza di GrafoDB}

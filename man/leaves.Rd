@@ -2,16 +2,19 @@
 % Please edit documentation in R/core.r
 \name{leaves}
 \alias{leaves}
-\title{Ritorna le foglie del grafo}
+\alias{leaves,GrafoDB-method}
+\title{Returns all the leaves in a graph}
 \usage{
 leaves(x)
+
+\S4method{leaves}{GrafoDB}(x)
 }
 \arguments{
-\item{x}{istanza di grafo}
+\item{x}{GrafoDB instance}
 }
 \value{
-la lista di nomi delle foglie del grafo
+character array with the leaves names
 }
 \description{
-Ritorna le foglie del grafo
+Returns all the leaves in a graph
 }

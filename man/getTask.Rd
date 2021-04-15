@@ -2,9 +2,12 @@
 % Please edit documentation in R/old_grafo_impl.r
 \name{getTask}
 \alias{getTask}
+\alias{getTask,GrafoDB,character-method}
 \title{Funzioni del package `grafo`}
 \usage{
 getTask(graph, ts_name)
+
+\S4method{getTask}{GrafoDB,character}(object, ts_name)
 }
 \description{
 implementazione di getTask di `package::grafo`
