@@ -6,13 +6,9 @@
 #' Le query vengono inizializzate in un file .ini
 #'
 #' @name SQLHelper-class
-#' @usage SQLHelper(type)
+#' @usage SQLHelper(...)
 #' @slot sqlContainer a list of key-values for the SQL queries
 #' @slot type the type of syntax
-#' @param type tipo di database supportati (per ora "PostgreSQL" e "SQLite").
-#'             Quest'opzione e' sovrascritta in caso esistano delle options di
-#'             ambiente chiamate "SQLHelperType"
-#' @title SQLHelper
 #' @export SQLHelper
 #' @exportClass SQLHelper
 #' @include logging.r
@@ -41,8 +37,7 @@ sql_helper_type_by_env <- function(env = getenv()) {
 #'
 #' @name init_sql_helper
 #' @usage init_sql_helper(object)
-#' @usage init_sql_helper(object, path)
-#' @usage init_sql_helper(object, path, type)
+#' @usage init_sql_helper(object, type
 #' @param object the SQLHelper instance
 #' @param type the kind of SQLhelper to initialize.
 #'    Depends on environment (`getenv`) if not passwd by
@@ -58,9 +53,12 @@ init_sql_helper <- function(object, type = NULL) {
   object@type <- type
   trace("SQLHeleperType: %s", type, name = "GrafoDB.sqlhelper")
 
-  object@sqlContainer <- rutils::ini_parse(
-    file.path(system.file(package = "GrafoDB", mustWork = TRUE),
-              "ini/sql.ini"))[[object@type]]
+  ini_file_path <- file.path(
+    system.file(package = "GrafoDB", mustWork = TRUE),
+    "ini/sql.ini")
+
+  trace("SQLHelper INI path: %s", ini_file_path)
+  object@sqlContainer <- rutils::ini_parse(ini_file_path)[[object@type]]
 
   object
 }

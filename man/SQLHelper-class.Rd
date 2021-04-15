@@ -4,25 +4,15 @@
 \name{SQLHelper-class}
 \alias{SQLHelper-class}
 \alias{SQLHelper}
-\title{SQLHelper}
+\title{Questa classe provvede a disaccoppiare SQL dal codice dell'app}
 \usage{
-SQLHelper(type)
-}
-\arguments{
-\item{path}{path al file contenente le query (default a file interno al
-package GrafoDB)}
-
-\item{type}{tipo di database supportati (per ora "PostgreSQL" e "SQLite").
-Quest'opzione e' sovrascritta in caso esistano delle options di
-ambiente chiamate "SQLHelperType"}
+SQLHelper(...)
 }
 \description{
-Questa classe provvede a disaccoppiare SQL dal codice dell'app
-}
-\details{
 Separa le query SQL con delle chiavi, riponendo il linguaggio SQL in dei file
 editabili e accedendo alle singole query con delle chiavi.
-
+}
+\details{
 Le query vengono inizializzate in un file .ini
 }
 \section{Slots}{

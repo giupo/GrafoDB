@@ -211,7 +211,8 @@ declutter_function <- function(func_string) {
 #' corretta esecuzione
 #'
 #' @name to_function_as_string
-#' @usage to_function_as_string(f)
+#' @usage to_function_as_string(func_string, name)
+#' @usage to_function_as_string(func_string, name, func_name)
 #' @param func_string character array che rappresenta la funzione
 #' @param name name of the object to be returned
 #' @param func_name name of the function (`proxy` default)
@@ -231,13 +232,13 @@ to_function_as_string <- function(func_string, name, func_name = "proxy") {
 #' I parametri della funzione ritornata sono le dipendenze della serie
 #'
 #' @name clutter_with_params
-#' @usage clutter_with_params(f, deps)
+#' @usage clutter_with_params(func_string, deps)
 #' @param func_string function task to be converted as function
 #' @param deps character array di dipendenze
 #' @return Ritorna una una funzione `is.character(ret) == TRUE`
 #' @rdname clutter_with_params_internal
 
-clutter_with_params <- function(func_string, name, deps) {
+clutter_with_params <- function(func_string, deps) {
   glue::glue("proxy <- function( {paste(deps, collapse = ', ')} ) {{
   {func_string}
   }}")
@@ -250,7 +251,7 @@ clutter_with_params <- function(func_string, name, deps) {
 #' dato ritornato
 #'
 #' @name clutter_with_params_and_return
-#' @usage clutter_with_params_and_return(f, name, deps, func_name)
+#' @usage clutter_with_params_and_return(func_string, name, deps, func_name)
 #' @param func_string function task to be converted as function
 #' @param name task name
 #' @param deps array di dipendenze

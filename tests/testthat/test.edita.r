@@ -24,8 +24,7 @@ test_that("I can edit a function 1", {
     message(file)
     task <- "C = A / B"
     deps <- c("A", "B")
-    name <- "C"
-    write(clutter_with_params(task, name, deps), file = file)
+    write(clutter_with_params(task, deps), file = file)
   })
 
   g <- .edita(g, "C")
@@ -40,8 +39,7 @@ test_that("I can edit a function 2", {
   stub(.edita, "utils::file.edit", function(file, title=title) {
     task <- "D = A - B"
     deps <- c("A", "B")
-    name <- "D"
-    write(clutter_with_params(task, name, deps), file = file)
+    write(clutter_with_params(task, deps), file = file)
   })
   g <- .edita(g, "D")
   expect_equal(g@functions[["D"]], "D = A - B")
@@ -55,8 +53,7 @@ test_that("I can replace a function", {
   stub(.edita, "utils::file.edit", function(file, title=title) {
     task <- "C = A - B"
     deps <- c("A", "B")
-    name <- "C"
-    write(clutter_with_params(task, name, deps), file = file)
+    write(clutter_with_params(task, deps), file = file)
   })
   g <- .edita(g, "C")
   expect_equal(g@functions[["C"]], "C = A - B")
@@ -70,9 +67,8 @@ test_that("nothing changes if I don't modify a formula", {
 
   mock_edita <- mock(function(file, title = title) {
     task <- "C = (A + 1) * (B + 2)"
-    name <- "C"
     deps <- c("A", "B")
-    write(clutter_with_params(task, name, deps), file = file)
+    write(clutter_with_params(task, deps), file = file)
   })
 
   stub(.edita, "utils::file.edit", mock_edita)

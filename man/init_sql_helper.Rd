@@ -6,9 +6,7 @@
 \usage{
 init_sql_helper(object)
 
-init_sql_helper(object, path)
-
-init_sql_helper(object, path, type)
+init_sql_helper(object, type
 }
 \arguments{
 \item{object}{the SQLHelper instance}

@@ -29,7 +29,7 @@
     deps <- x@edges[[name]]
   }
 
-  task <- clutter_with_params(task, name, deps)
+  task <- clutter_with_params(task, deps)
   write(task, file = file)
   on.exit(file.remove(file))
   utils::file.edit(file, title = name)
