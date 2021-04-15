@@ -178,7 +178,6 @@ GrafoDB <- methods::setClass( # nolint
 
 #' Default Constructor for GrafoDB
 #'
-#' @name initialize
 #' @rdname GraphDB_initialize
 #' @param .Object GrafoDB object instance
 #' @param tag label identifying the GrafoDB
@@ -227,9 +226,7 @@ methods::setMethod(
 
 #' Prints a brief summary for the graph
 #'
-#' @name show
 #' @aliases show,GrafoDB
-#' @usage show(object)
 #' @param object GrafoDB instance
 #' @note this is the default method called in the REPL when
 #'   an object is printed out
