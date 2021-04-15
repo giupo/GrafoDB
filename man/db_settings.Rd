@@ -5,6 +5,8 @@
 \title{Reads db connections settings}
 \usage{
 db_settings()
+
+db_settings(flush)
 }
 \arguments{
 \item{flush}{if `TRUE` removes any option saved in the current

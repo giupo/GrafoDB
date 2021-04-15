@@ -4,7 +4,7 @@
 \alias{count_rolling}
 \title{conta le versioni rolling del grafo con tag `tag`}
 \usage{
-count_rolling(x)
+count_rolling(x, con)
 }
 \arguments{
 \item{x}{istanza di grafo}

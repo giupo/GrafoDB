@@ -182,7 +182,7 @@ from_data_frame <- function(df) {
 #' funzione per eliminare le definizione 'function' dalle formule per il GrafoDB
 #'
 #' @name declutter_function
-#' @usage declutter_function(f)
+#' @usage declutter_function(func_string)
 #' @param func_string formula in formato testo
 #' @return the function without the "function" and curly braces
 

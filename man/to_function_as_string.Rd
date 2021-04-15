@@ -4,7 +4,9 @@
 \alias{to_function_as_string}
 \title{Orla le formule del grafo in funzioni}
 \usage{
-to_function_as_string(f)
+to_function_as_string(func_string, name)
+
+to_function_as_string(func_string, name, func_name)
 }
 \arguments{
 \item{func_string}{character array che rappresenta la funzione}

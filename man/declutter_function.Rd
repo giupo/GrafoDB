@@ -4,7 +4,7 @@
 \alias{declutter_function}
 \title{funzione per eliminare le definizione 'function' dalle formule per il GrafoDB}
 \usage{
-declutter_function(f)
+declutter_function(func_string)
 }
 \arguments{
 \item{func_string}{formula in formato testo}

@@ -175,18 +175,19 @@ update_graph <- function(x, tag = x@tag, con = NULL, msg = "") {
 #' @param x istanza di Grafo
 #' @param tag identificativo della versione
 #' @param con connessione al DB
-#' @usage create_graph(g, tag)
+#' @param `...` other optional params (like msg)
+#' @usage create_graph(x, tag, con)
+#' @usage create_graph(x, tag, con, ...)
 
-create_graph <- function(x, tag, con, ...) {
-  param_list <- list(...)
-  commento <- if ("msg" %in% names(param_list)) {
-    param_list[["msg"]]
-  } else {
+create_graph <- function(x, tag, con, msg = NULL) {
+  commento <- if (is.null(msg)) {
     if (interactive()) {
       readline(prompt = "Inserisci un commento/nota per: ")
     } else {
       paste0("Rilascio per ", tag)
     }
+  } else {
+    msg
   }
 
   autore <- rutils::whoami()
@@ -262,7 +263,7 @@ create_graph <- function(x, tag, con, ...) {
 #' conta le versioni rolling del grafo con tag `tag`
 #'
 #' @name count_rolling
-#' @usage count_rolling(x)
+#' @usage count_rolling(x, con)
 #' @param x istanza di grafo
 #' @param con connessione al DB
 #' @return un intero ad indicare il numero di versioni rolling salvate sul DB
@@ -335,8 +336,9 @@ next_rolling_name <- function(x, con) {
 #' Il grafo potra' successivamente essere caricato con il nuovo tag.
 #'
 #' @name do_history
-#' @usage do_history(x, con)
+#' @usage do_history(x, tag, con)
 #' @param x istanza di `GrafoDB`
+#' @param tag tag del grafo
 #' @param con connessione al database
 #' @note questa e' una funzione interna del grafo invocata da `update_graph`
 #' @seealso saveGraph update_graph

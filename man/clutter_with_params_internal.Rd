@@ -4,7 +4,7 @@
 \alias{clutter_with_params}
 \title{questa funzione orla la formula del grafo come una funzione oon parametri}
 \usage{
-clutter_with_params(f, deps)
+clutter_with_params(func_string, deps)
 }
 \arguments{
 \item{func_string}{function task to be converted as function}

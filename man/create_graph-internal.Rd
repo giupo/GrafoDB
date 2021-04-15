@@ -4,7 +4,9 @@
 \alias{create_graph}
 \title{crea ex-novo un istanza di grafo nel databae}
 \usage{
-create_graph(g, tag)
+create_graph(x, tag, con)
+
+create_graph(x, tag, con, ...)
 }
 \arguments{
 \item{x}{istanza di Grafo}
@@ -12,6 +14,8 @@ create_graph(g, tag)
 \item{tag}{identificativo della versione}
 
 \item{con}{connessione al DB}
+
+\item{`...`}{other optional params (like msg)}
 }
 \description{
 crea ex-novo un istanza di grafo nel databae

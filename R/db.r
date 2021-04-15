@@ -6,6 +6,7 @@
 #'
 #' @name db_settings
 #' @usage db_settings()
+#' @usage db_settings(flush)
 #' @param flush if `TRUE` removes any option saved in the current
 #'              session and reloads the settings
 #' @return a list containing the infos used to connect via DBI
@@ -233,9 +234,10 @@ should_create_schema  <- function(con) {
 #'
 #' @name disconnect
 #' @usage disconnect(con)
+#' @usage disconnect(con, env)
 #' @param con connection to disconnect
 #' @param env environment to check against
 
-disconnect <- function(con, env=getenv()) {
+disconnect <- function(con, env = getenv()) {
   if (env != "test") DBI::dbDisconnect(con)
 }

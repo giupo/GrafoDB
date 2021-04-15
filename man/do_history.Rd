@@ -4,10 +4,12 @@
 \alias{do_history}
 \title{Esegue il rolling dei vintage del `GrafoDB`}
 \usage{
-do_history(x, con)
+do_history(x, tag, con)
 }
 \arguments{
 \item{x}{istanza di `GrafoDB`}
+
+\item{tag}{tag del grafo}
 
 \item{con}{connessione al database}
 }

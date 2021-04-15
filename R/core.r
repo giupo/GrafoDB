@@ -127,7 +127,7 @@ methods::setGeneric(
 
 methods::setGeneric(
   "downgrf",
-  function(x, name, livello=.Machine$integer.max) {
+  function(x, name, livello = .Machine$integer.max) {
     standardGeneric("downgrf")
   })
 
@@ -472,7 +472,7 @@ methods::setMethod(
 methods::setMethod(
   "downgrf",
   signature("GrafoDB", "character", "ANY"),
-  function(x, name, livello=.Machine$integer.max) {
+  function(x, name, livello = .Machine$integer.max) {
     navigate(x, name, order = livello, mode = "out")
   })
 
@@ -510,6 +510,7 @@ methods::setMethod(
 #' @usage edita(x, name)
 #' @param x istanza di grafo
 #' @param name nome della serie storica
+#' @param ... altri parametri generici
 #' @return il grafo con la formula modificata
 #' @include functions.r
 #' @export

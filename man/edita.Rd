@@ -13,6 +13,8 @@ edita(x, name)
 \item{x}{istanza di grafo}
 
 \item{name}{nome della serie storica}
+
+\item{...}{altri parametri generici}
 }
 \value{
 il grafo con la formula modificata
