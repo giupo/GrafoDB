@@ -104,3 +104,14 @@ test_that("sql_helper_type_by_env returns SQLite for prod", {
   expect_equal(sql_helper_type_by_env(), "PostgreSQL")
   expect_called(getenv_mock, 1)
 })
+
+test_that("assert_sql_params fails with params not set", {
+  sql <- "select * from universe where black_hole = '--MURPH--'"
+  expect_warning(expect_error(assert_sql_params(sql)))
+})
+
+test_that("assert_sql_params does nothing with params set", {
+  sql <- "select * from universe where black_hole = 'HELLO'"
+  expect_warning(expect_error(assert_sql_params(sql), NA), NA)
+  expect_true(assert_sql_params(sql))
+})
