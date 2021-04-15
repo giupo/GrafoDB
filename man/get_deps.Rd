@@ -5,7 +5,7 @@
 \alias{get_deps,GrafoDB,character-method}
 \title{Funzioni del package `grafo`}
 \usage{
-get_deps(graph, ts_name)
+get_deps(object, ts_name)
 
 \S4method{get_deps}{GrafoDB,character}(object, ts_name)
 }

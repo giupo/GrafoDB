@@ -4,7 +4,7 @@
 \alias{next_rolling_name}
 \title{Costruice il progressivo per il grafo `x`}
 \usage{
-next_rolling_name(x)
+next_rolling_name(x, con)
 }
 \description{
 Costruice il progressivo per il grafo `x`

@@ -9,8 +9,6 @@
 \usage{
 getMeta(x, serie, metadato)
 
-getMeta(x, serie)
-
 \S4method{getMeta}{GrafoDB,character,character}(x, serie, metadato)
 
 \S4method{getMeta}{GrafoDB,character,ANY}(x, serie, metadato)

@@ -4,7 +4,7 @@
 \alias{subsetting}
 \title{implementazione per GrafoDB del subsetting '[<-'}
 \usage{
-subsetting(x, i, j, ..., value)
+subsetting(x, i, value)
 }
 \arguments{
 \item{x}{istanza di `GrafoDB`}

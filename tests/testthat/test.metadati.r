@@ -1,7 +1,6 @@
 context("Metadata")
 
 setup <- function(tag) {
-  # db_settings(TRUE)
   debug("Nome dell'env: %s", Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
 

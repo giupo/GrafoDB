@@ -5,9 +5,7 @@
 \alias{fixConflicts,GrafoDB-method}
 \title{contrassegna come risolti i conflitti salvati sul DB}
 \usage{
-fixConflicts(x)
-
-fixConflicts(x, name)
+fixConflicts(x, name = NULL)
 
 \S4method{fixConflicts}{GrafoDB}(x, name = NULL)
 }

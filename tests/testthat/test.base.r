@@ -1,5 +1,4 @@
 context("Basic Operations")
-# db_settings(TRUE)
 
 requireNamespace("devtools")
 

@@ -1,7 +1,6 @@
 #' This programs shows all the editions of a formula
 #'
 #' @name formule
-#' @usage formule(g, name)
 #' @param g GrafoDB instance
 #' @param name name of the object to be inspected
 #' @return a data.frame with unique formulas and `tag`

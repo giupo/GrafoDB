@@ -6,11 +6,16 @@
 \title{Implementazione del generic `evaluate` del package `grafo`
 per la classe `GrafoDB`}
 \usage{
-evaluate(object)
+evaluate(object, v_start = NULL, ...)
 
-evaluate(object, v_start)
+\S4method{evaluate}{GrafoDB}(object, v_start = NULL, ...)
+}
+\arguments{
+\item{object}{GrafoDB instance}
 
-\S4method{evaluate}{GrafoDB}(object, v_start = NULL, deep = F, ...)
+\item{v_start}{node to evaluate, if `NULL` evaluates the whole GrafoDB}
+
+\item{`...`}{other eventual params (for debugging purposes...)}
 }
 \description{
 Esegue il calcolo delle serie storiche presenti in questo Database

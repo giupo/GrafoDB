@@ -1,7 +1,6 @@
 context("DB interface")
 
 test_that("initdb can handle an error", {
-  # db_settings(TRUE)
   skip_if_not(require(mockery), "mockery requred")
   stub(initdb, "getenv", function(...) stop("my error"))
   expect_error(initdb(build_connection()), "my error")

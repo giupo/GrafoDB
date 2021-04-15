@@ -20,7 +20,6 @@ delete_graph_impl <- function(tag, con, helper) {
 #' Deletes a graph by its tag
 #'
 #' @name delete_graph
-#' @usage delete_graph(tag)
 #' @param tag `tag` as the primary key of the Graph
 #' @export
 #' @include functions.r

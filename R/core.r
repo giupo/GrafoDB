@@ -5,8 +5,6 @@
 #' parametro `serie`
 #'
 #' @name getMeta
-#' @usage getMeta(x, serie, metadato)
-#' @usage getMeta(x, serie)
 #' @param x istanza di `GrafoDB`
 #' @param serie nome della serie d'interesse
 #' @param metadato nome del metadato di cui si vogliono i valori
@@ -29,7 +27,6 @@ methods::setGeneric(
 #' ricerca nei metadati del `GrafoDB`
 #'
 #' @name lookup
-#' @usage lookup(x, key, value)
 #' @param x istanza di `GrafoDB`
 #' @param key `character` che specifica la chiave del metadato
 #' @param value `character` che specifica il valore del metadato
@@ -56,7 +53,6 @@ methods::setGeneric(
 #' Ritorna come named list le formule per ogni serie specificata in `nomi`
 #'
 #' @name expr
-#' @usage expr(x, nomi)
 #' @param x istanza di oggetto R
 #' @param nomi character array di nomi di serie storiche
 #' @param echo stampa con un messaggio su standard output il
@@ -82,7 +78,6 @@ methods::setGeneric(
 #' entranti
 #'
 #' @name isRoot
-#' @usage isRoot(x, name)
 #' @param x istanza di GrafoDB
 #' @param name vettore di nomi di serie
 #' @return `TRUE` se `name` sono serie senza archi entranti
@@ -100,7 +95,6 @@ methods::setGeneric(
 #' uscienti
 #'
 #' @name isLeaf
-#' @usage isLeaf(x, name)
 #' @param x istanza di GrafoDB
 #' @param name vettore di nomi di serie
 #' @return `TRUE` se `name` sono serie senza archi uscenti
@@ -117,8 +111,6 @@ methods::setGeneric(
 #' ritorna i nomi delle serie che sono generate dalle serie date in `name`
 #'
 #' @name downgrf
-#' @usage downgrf(x, name)
-#' @usage downgrf(x, name, livello)
 #' @param x un istanza di GrafoDB
 #' @param name array di nomi di serie
 #' @param livello numero di livelli (ordine) da considerare (di default, tutti)
@@ -184,17 +176,19 @@ GrafoDB <- methods::setClass( # nolint
   contains = "Dataset")
 
 
-#' costruttore per la classe GrafoDB
+#' Default Constructor for GrafoDB
 #'
 #' @name initialize
 #' @rdname GraphDB_initialize
 #' @aliases GrafoDB-initialize
+#' @param .Object GrafoDB object instance
+#' @param tag label identifying the GrafoDB
 
 
 methods::setMethod(
   "initialize",
   signature("GrafoDB"),
-  function(.Object, tag="cf10") { # nolint
+  function(.Object, tag = "cf10") { # nolint
     init_grafo_impl(.Object, tag)
   })
 
@@ -207,7 +201,6 @@ methods::setMethod(
 #'
 #' @name navigate
 #' @title Funzioni del package `grafo`
-#' @usage navigate(graph, nodes, order, mode)
 #' @include navigate.r
 #' @export
 
@@ -290,6 +283,13 @@ methods::setMethod(
 #' Esegue la differenza tra due grafi
 #'
 # TODO: test me!!!
+#' @param e1 instance of GrafoDB
+#' @param e2 instance of GrafoDB
+#' @examples \dontrun{
+#'  nasecg <- GrafoDB("nasecg2004")
+#'  cf10 <- GrafoDB()
+#'  diff <- cf10 - nasecg
+#' }
 
 methods::setMethod(
   "-",
@@ -391,8 +391,6 @@ methods::setMethod(
 #' Esegue il calcolo delle serie storiche presenti in questo Database
 #'
 #' @seealso evaluate_impl
-#' @usage evaluate(object)
-#' @usage evaluate(object, v_start)
 #' @include functions.r
 #' @export
 #' @note il generic e' definito nel package `grafo`
@@ -404,10 +402,13 @@ methods::setMethod(
 #' }
 #' @include evaluate.r
 #' @exportMethod evaluate
+#' @param object GrafoDB instance
+#' @param v_start node to evaluate, if `NULL` evaluates the whole GrafoDB
+#' @param `...` other eventual params (for debugging purposes...)
 
 methods::setGeneric(
   "evaluate",
-  function(object, v_start=NULL, deep=F, ...) {
+  function(object, v_start = NULL, ...) {
     standardGeneric("evaluate")
   })
 
@@ -415,15 +416,14 @@ methods::setGeneric(
 
 methods::setMethod(
   "evaluate",
-  signature("GrafoDB", "ANY", "ANY"),
-  function(object, v_start=NULL, deep=F, ...) {
-    evaluate_impl(object, v_start, deep, ...)
+  signature("GrafoDB", "ANY"),
+  function(object, v_start = NULL, ...) {
+    evaluate_impl(object, v_start, ...)
   })
 
 #' returns `TRUE` if `name` is a root of the graph
 #'
 #' @name isRoot
-#' @usage isRoot(x, name)
 #' @param x GrafoDB instance
 #' @param name name of the object to be checked
 #' @return `TRUE` if a root, `FALSE` otherwise
@@ -481,8 +481,6 @@ methods::setMethod(
 #' get Metadata for object
 #'
 #' @name getMetadata
-#' @usage getMetadata(object, ts_name)
-#' @usage getMetadata(object, ts_name, full)
 #' @param object GrafoDB instance
 #' @param ts_name object name
 #' @param full boolean, triggers full report
@@ -507,7 +505,6 @@ methods::setMethod(
 #' Edita un la formula di una serie storica.
 #'
 #' @name edita
-#' @usage edita(x, name)
 #' @param x istanza di grafo
 #' @param name nome della serie storica
 #' @param ... altri parametri generici
@@ -543,7 +540,6 @@ methods::setMethod(
 #' Valuta una singola serie del grafo e ritorna il risultato
 #'
 #' @name ser
-#' @usage ser(x, name)
 #' @param x un istanza di GrafoDB
 #' @param name nome della serie da valutare
 #' @param debug debug mode (`FALSE` default)
@@ -570,7 +566,6 @@ methods::setMethod(
 #' Yields the dependencies of an object
 #'
 #' @name deps
-#' @usage deps(x, name)
 #' @param x istanza di GrafoDB
 #' @param name nome della serie
 #' @return a character array of object names, NULL if not present
@@ -677,7 +672,6 @@ methods::setMethod(
 #' L'operazione lavora direttamente sui dati in modo persistente.
 #'
 #' @name rename
-#' @usage rename(x, vecchio, nuovo)
 #' @param x istanza di `GrafoDB`
 #' @param vecchio nome vecchio da sostituire
 #' @param nuovo nome nuovo da sostituire
@@ -705,11 +699,10 @@ methods::setMethod(
 
 
 #' Returns the roots of the Graph
-#' 
+#'
 #' 'Roots' are those nodes *not* having incoming edges
 #'
 #' @name roots
-#' @usage roots(x)
 #' @param x GrafoDB instance
 #' @return character array with the root names
 #' @include functions.r
@@ -733,7 +726,6 @@ methods::setMethod(
 #' Returns all the leaves in a graph
 #'
 #' @name leaves
-#' @usage leaves(x)
 #' @param x GrafoDB instance
 #' @return character array with the leaves names
 #' @include functions.r
@@ -778,7 +770,6 @@ methods::setMethod(
 #' internal function to implement $<-
 #'
 #' @name dollar_impl
-#' @usage dollar_impl(x, name, value)
 #' @param x GrafoDB instance
 #' @param name key of the object to be set
 #' @param value value of the object to set

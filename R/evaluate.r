@@ -55,7 +55,6 @@ evaluate_single_1 <- function(name, graph) {
 #' Evaluates a single object function identified with `name`
 #'
 #' @name evaluate_single
-#' @usage evaluate_single(name, object)
 #' @param name `character` nome della serie
 #' @param graph istanza di `GrafoDB`
 #' @return la serie storica calcolata.
@@ -66,8 +65,9 @@ evaluate_single <- evaluate_single_1
 #' per la classe `GrafoDB`
 #'
 #' @name evaluate_impl
-#' @usage evaluate_impl(object)
-#' @usage evaluate_impl(object, v_start)
+#' @param object GrafoDB instance
+#' @param v_start node to be evaluated, if `NULL` evaluates all nodes
+#' @param `...` eventual other params (like `debug`, for internal testing)
 #' @return il grafo con i dati correttamente valutato
 #' @rdname evaluate-internal
 
@@ -184,8 +184,6 @@ evaluate_impl <- function(object, v_start = NULL, ...) { # nolint
 #' Patch to evaluate
 #'
 #' @name evaluate_plain
-#' @usage evaluate_plain(x)
-#' @usage evaluate_plain(x, ids)
 #' @param x GrafoDB instance
 #' @param ids object names to be evaluated
 #' @returns GrafoDB with ids evaluated

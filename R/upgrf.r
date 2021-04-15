@@ -3,8 +3,6 @@
 #' ritorna i nomi delle serie che entrano nelle serie date in `name`
 #'
 #' @name upgrf
-#' @usage upgrf(x, name)
-#' @usage upgrf(x, name, livello)
 #' @param x un istanza di GrafoDB
 #' @param name array di nomi di serie
 #' @param livello numero di livelli (ordine) da considerare (di default, tutti)
@@ -19,7 +17,7 @@ methods::setGeneric(
     standardGeneric("upgrf")
   })
 
-#' @rdname upgrf 
+#' @rdname upgrf
 
 methods::setMethod(
   "upgrf",

@@ -1,7 +1,6 @@
 #' True if param is an error
 #'
 #' @name is_error
-#' @usage is_error(cond)
 #' @param cond argument to check
 #' @return `TRUE` if cond is an error
 
@@ -13,7 +12,6 @@ is_error <- function(cond=NULL) {
 #' evaluation
 #'
 #' @name find_dep_from_error
-#' @usage find_dep_from_error
 #' @param cond error obtained in tryCatch
 #' @seealso find_deps
 #' @return single name of missing object blamed in `cond`, NA if not found
@@ -35,7 +33,6 @@ find_dep_from_error <- function(cond=NULL) {
 #' the function returns `A` and `B` but not `C`
 #'
 #' @name find_deps
-#' @usage find_deps(g, name, formula)
 #' @param g anything that has names end data as
 #'  list (env, list, dataset, GrafoDB)
 #' @param formula the formula itself

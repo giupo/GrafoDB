@@ -3,10 +3,15 @@
 \name{initialize}
 \alias{initialize}
 \alias{GrafoDB-initialize}
-\title{costruttore per la classe GrafoDB}
+\title{Default Constructor for GrafoDB}
 \usage{
 \S4method{initialize}{GrafoDB}(.Object, tag = "cf10")
 }
+\arguments{
+\item{.Object}{GrafoDB object instance}
+
+\item{tag}{label identifying the GrafoDB}
+}
 \description{
-costruttore per la classe GrafoDB
+Default Constructor for GrafoDB
 }

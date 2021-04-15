@@ -81,7 +81,6 @@ init_grafo_impl <- function(object, tag = "cf10", con = NULL) {
 #' ritorna `FALSE`
 #'
 #' @name is.grafodb
-#' @usage is.grafodb(x)
 #' @param x un qualsiasi oggetto `R`
 #' @return `TRUE` se `x` e' un `GrafoDB`, altrimenti `FALSE`
 #' @examples \dontrun{
@@ -100,8 +99,7 @@ is.grafodb <- function(x) { # nolint
 #' o un generico scalare in un data.frame.
 #' funzione utilizzata per convertire il dato in una forma accettabile dal DB
 #'
-#' @name  to_data_frame
-#' @usage  to_data_frame(x)
+#' @name to_data_frame
 #' @param x una timeseries `ts` o uno scalare
 #' @param name nome da dare alla timeseries
 #' @return una rappresentazione a data.frame della serie `x`
@@ -143,7 +141,6 @@ is.grafodb <- function(x) { # nolint
 #' converte un dataframe (caricato dal Database) in una timeseries `ts`
 #'
 #' @name from_data_frame
-#' @usage from_data_frame(df)
 #' @param df data.frame compilato dal database
 #' @note i dati dal db sono memorizzati come stringhe JSON
 #' @rdname fromdataframe
@@ -182,7 +179,6 @@ from_data_frame <- function(df) {
 #' funzione per eliminare le definizione 'function' dalle formule per il GrafoDB
 #'
 #' @name declutter_function
-#' @usage declutter_function(func_string)
 #' @param func_string formula in formato testo
 #' @return the function without the "function" and curly braces
 
@@ -211,8 +207,6 @@ declutter_function <- function(func_string) {
 #' corretta esecuzione
 #'
 #' @name to_function_as_string
-#' @usage to_function_as_string(func_string, name)
-#' @usage to_function_as_string(func_string, name, func_name)
 #' @param func_string character array che rappresenta la funzione
 #' @param name name of the object to be returned
 #' @param func_name name of the function (`proxy` default)
@@ -232,7 +226,6 @@ to_function_as_string <- function(func_string, name, func_name = "proxy") {
 #' I parametri della funzione ritornata sono le dipendenze della serie
 #'
 #' @name clutter_with_params
-#' @usage clutter_with_params(func_string, deps)
 #' @param func_string function task to be converted as function
 #' @param deps character array di dipendenze
 #' @return Ritorna una una funzione `is.character(ret) == TRUE`
@@ -251,7 +244,6 @@ clutter_with_params <- function(func_string, deps) {
 #' dato ritornato
 #'
 #' @name clutter_with_params_and_return
-#' @usage clutter_with_params_and_return(func_string, name, deps, func_name)
 #' @param func_string function task to be converted as function
 #' @param name task name
 #' @param deps array di dipendenze
@@ -275,7 +267,6 @@ clutter_with_params_and_return <- function(func_string, name,
 #' un `GrafoDB`
 #'
 #' @name getdb
-#' @usage getdb(name, tag)
 #' @param name nome serie
 #' @param tag id del grafo (default su `cf10`)
 #' @return una serie o una lista di serie
@@ -307,7 +298,6 @@ getdb <- function(x, name) {
 #'
 #' @name get_data
 #' @rdname getdata_internal
-#' @usage get_data(x, ids)
 #' @include db.r
 #' @param x istanza di `GrafoDB`
 #' @param ids character array di nomi di serie storiche
@@ -385,7 +375,6 @@ exists_tag <- function(tag, con = NULL) {
 #' Ritona tutti i nodi del grafo le che non hanno archi entranti
 #'
 #' @name .roots
-#' @usage .roots(x)
 #' @param x Grafo
 #' @rdname roots-internal
 #' @return la lista delle radici del grafo
@@ -400,7 +389,6 @@ exists_tag <- function(tag, con = NULL) {
 #' Ritona tutti i nodi del grafo le che non hanno archi uscenti
 #'
 #' @name .leaves
-#' @usage .leaves(x)
 #' @param x Grafo
 #' @rdname leaves-internal
 #' @return la lista delle foglie del grafo
@@ -418,7 +406,6 @@ exists_tag <- function(tag, con = NULL) {
 #' altrimenti `FALSE`
 #'
 #' @name .isLeaf
-#' @usage .isLeaf(x, i)
 #' @param x istanza di `GrafoDB`
 #' @param i array di `character` con i nomi delle serie su cui si vuole
 #'          applicare il predicato
@@ -436,7 +423,6 @@ exists_tag <- function(tag, con = NULL) {
 #' altrimenti `FALSE`
 #'
 #' @name .isRoot
-#' @usage .isRoot(x, i)
 #' @param x istanza di `GrafoDB`
 #' @param i array di `character` con i nomi delle serie su cui si vuole
 #'          applicare il predicato
@@ -455,8 +441,6 @@ exists_tag <- function(tag, con = NULL) {
 #' \item index(a) != index(b)
 #' }
 #' @name tsdiff
-#' @usage tsdiff(a, b)
-#' @usage tsdiff(a, b, thr)
 #' @param a timeseries
 #' @param b timeseries
 #' @param thr threshold for difference
@@ -481,7 +465,6 @@ tsdiff <- function(a, b, thr = .0000001) {
 #' Ritorna la lista dei rilasci presenti nel database
 #'
 #' @name rilasci
-#' @usage rilasci()
 #' @param filtro filtro da applicare alla ricerca sul tag del grafo
 #' @export
 #' @examples \dontrun{

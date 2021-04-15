@@ -6,7 +6,6 @@
 #'
 #' @name isNode
 #' @title Funzioni del package `grafo`
-#' @usage isNode(graph, ts_name)
 #' @seealso `grafo::isNode`
 #' @include core.r
 #' @exportMethod isNode
@@ -30,7 +29,6 @@ methods::setMethod(
 #'
 #' @name isPrimitive
 #' @title Funzioni del package `grafo`
-#' @usage isPrimitive(graph, ts_name)
 #' @seealso `grafo::isPrimitive`
 #' @exportMethod isPrimitive
 
@@ -53,7 +51,6 @@ methods::setMethod(
 #'
 #' @name isAggregate
 #' @title Funzioni del package `grafo`
-#' @usage isAggregate(graph, ts_name)
 #' @seealso `grafo::isAggregate`
 #' @exportMethod isAggregate
 
@@ -76,7 +73,6 @@ methods::setMethod(
 #'
 #' @name isElementary
 #' @title Funzioni del package `grafo`
-#' @usage isElementary(graph, ts_name)
 #' @seealso `grafo::isElementary`
 #' @note `GrafoDB` non prevede l'utilizzo di serie "elementari" come il `grafo`
 #'       Quindi per compliance ritorna sempre `FALSE`, ma il metodo non ha senso
@@ -101,7 +97,6 @@ methods::setMethod(
 #'
 #' @name listAggregates
 #' @title Funzioni del package `grafo`
-#' @usage listAggregates(graph)
 #' @seealso `grafo::listAggregates`
 #' @exportMethod listAggregates
 
@@ -129,7 +124,6 @@ methods::setMethod(
 #'
 #' @name listElementaries
 #' @title Funzioni del package `grafo`
-#' @usage listElementaries(graph)
 #' @seealso `grafo::listElementaries`
 #' @exportMethod listElementaries
 
@@ -157,7 +151,6 @@ methods::setMethod(
 #'
 #' @name listPrimitives
 #' @title Funzioni del package `grafo`
-#' @usage listPrimitives(graph)
 #' @seealso `grafo::listPrimitives`
 #' @exportMethod listPrimitives
 
@@ -184,7 +177,6 @@ methods::setMethod(
 #'
 #' @name listNodes
 #' @title Funzioni del package `grafo`
-#' @usage listNodes(graph)
 #' @seealso `grafo::listNodes`
 #' @exportMethod listNodes
 
@@ -244,8 +236,6 @@ methods::setMethod(
 #'
 #' @seealso save_graph_impl
 #' @name saveGraph
-#' @usage saveGraph(object)
-#' @usage saveGraph(object, path)
 #' @param object istanza di `GrafoDB`
 #' @param path erroneamente, dovuta al generic su `grafo` questo sarebbe il
 #'  "tag" da dare al grafo. Non c'e' modo di ovviare questo problema. Vedere
@@ -275,7 +265,6 @@ methods::setMethod(
 #' Removes an attribute
 #'
 #' @name deleteMeta
-#' @usage deleteMeta(object, ts_name, attr_name, attr_value)
 #' @param object graph instance
 #' @param ts_name name of the timeseries
 #' @param attr_name name of the attribute
@@ -302,7 +291,6 @@ methods::setMethod(
 #'
 #' @name get_deps
 #' @title Funzioni del package `grafo`
-#' @usage get_deps(graph, ts_name)
 #' @seealso `grafo::get_deps`
 #' @exportMethod get_deps
 
@@ -333,7 +321,6 @@ methods::setMethod(
 #'
 #' @name getTask
 #' @title Funzioni del package `grafo`
-#' @usage getTask(graph, ts_name)
 #' @seealso `grafo::getTask`
 #' @exportMethod getTask
 
@@ -355,7 +342,6 @@ methods::setMethod(
 #'
 #' @name getData
 #' @title Funzioni del package `grafo`
-#' @usage getData(graph, ts_names)
 #' @seealso `grafo::getData`
 #' @exportMethod getData
 
@@ -378,7 +364,6 @@ methods::setMethod(
 #'
 #' @name searchNode
 #' @title Funzioni del package `grafo`
-#' @usage searchNode(graph, ts_names)
 #' @seealso `grafo::searchNode`
 #' @exportMethod searchNode
 #' @export
@@ -440,7 +425,6 @@ methods::setMethod(
 #' L'eliminazione prevede l'eliminazione dai dati, formule, archi e metadati
 #'
 #' @name rmNode
-#' @usage rmNode(graph, ts_name, recursive)
 #' @param graph istanza di `GrafoDB`
 #' @param ts_name nomi di serie da eliminare
 #' @param recursive `TRUE` se l'eliminazione deve essere rivorsiva sugli archi

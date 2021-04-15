@@ -5,7 +5,7 @@
 \alias{roots,GrafoDB-method}
 \title{Returns the roots of the Graph}
 \usage{
-roots(x)
+roots(x, ...)
 
 \S4method{roots}{GrafoDB}(x)
 }

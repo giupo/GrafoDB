@@ -3,7 +3,6 @@
 #' L'operazione lavora direttamente sui dati in modo persistente.
 #'
 #' @name rename_impl
-#' @usage rename_impl(x, vecchio, nuovo)
 #' @rdname rename-internal
 #' @param x istanza di `GrafoDB`
 #' @param vecchio nome vecchio da sostituire

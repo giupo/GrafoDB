@@ -5,7 +5,7 @@
 \alias{searchNode,GrafoDB,character,character-method}
 \title{Funzioni del package `grafo`}
 \usage{
-searchNode(graph, ts_names)
+searchNode(graph, attr_name, attr_value)
 
 \S4method{searchNode}{GrafoDB,character,character}(graph, attr_name, attr_value)
 }

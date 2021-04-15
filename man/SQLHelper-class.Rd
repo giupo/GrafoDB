@@ -5,9 +5,6 @@
 \alias{SQLHelper-class}
 \alias{SQLHelper}
 \title{Questa classe provvede a disaccoppiare SQL dal codice dell'app}
-\usage{
-SQLHelper(...)
-}
 \description{
 Separa le query SQL con delle chiavi, riponendo il linguaggio SQL in dei file
 editabili e accedendo alle singole query con delle chiavi.

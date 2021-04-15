@@ -4,9 +4,7 @@
 \alias{tsdiff}
 \title{Checks if a TimeSeries is different from another}
 \usage{
-tsdiff(a, b)
-
-tsdiff(a, b, thr)
+tsdiff(a, b, thr = 1e-07)
 }
 \arguments{
 \item{a}{timeseries}

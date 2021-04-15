@@ -54,7 +54,6 @@ methods::setMethod(
 #' implementazione per GrafoDB del subsetting '[<-'
 #'
 #' @name subsetting
-#' @usage subsetting(x, i, j, ..., value)
 #' @param x istanza di `GrafoDB`
 #' @param i un character
 #' @param value valore settato

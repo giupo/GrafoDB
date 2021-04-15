@@ -4,7 +4,7 @@
 \alias{evaluate_single}
 \title{Evaluates a single object function identified with `name`}
 \usage{
-evaluate_single(name, object)
+evaluate_single(name, graph)
 }
 \arguments{
 \item{name}{`character` nome della serie}

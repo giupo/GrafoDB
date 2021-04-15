@@ -4,7 +4,7 @@
 \alias{values_for}
 \title{Ritorna i valore del metadato per ogni singola serie}
 \usage{
-values_for(x, name, key)
+values_for(x, name = names(x), key = keys(x))
 }
 \arguments{
 \item{x}{istanza di grafo}

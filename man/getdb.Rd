@@ -4,7 +4,7 @@
 \alias{getdb}
 \title{Carica i dati dal DB}
 \usage{
-getdb(name, tag)
+getdb(x, name)
 }
 \arguments{
 \item{name}{nome serie}

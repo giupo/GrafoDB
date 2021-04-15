@@ -5,9 +5,7 @@
 \alias{downgrf,GrafoDB,character-method}
 \title{Ritorna i figli delle serie}
 \usage{
-downgrf(x, name)
-
-downgrf(x, name, livello)
+downgrf(x, name, livello = .Machine$integer.max)
 
 \S4method{downgrf}{GrafoDB,character}(x, name, livello = .Machine$integer.max)
 }

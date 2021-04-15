@@ -6,6 +6,11 @@
 \usage{
 \method{diff}{GrafoDB}(x, ...)
 }
+\arguments{
+\item{x}{GrafoDB instance}
+
+\item{`...`}{eventual GrafoDB instance; if not `stop`}
+}
 \description{
 Returns diffs as data and formulas
 }

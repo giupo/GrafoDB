@@ -3,8 +3,6 @@
 #' Ritorna (o mostra su console, stdout) le formule delle serie `nomi`
 #'
 #' @name  expr_impl
-#' @usage expr_impl(x, name)
-#' @usage expr_impl(x, name, echo=FALSE)
 #' @param x istanza di GrafoDB
 #' @param nomi array di nomi di serie storiche
 #' @rdname expr-internal

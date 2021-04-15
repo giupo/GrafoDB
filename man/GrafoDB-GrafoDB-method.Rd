@@ -6,6 +6,18 @@
 \usage{
 \S4method{-}{GrafoDB,GrafoDB}(e1, e2)
 }
+\arguments{
+\item{e1}{instance of GrafoDB}
+
+\item{e2}{instance of GrafoDB}
+}
 \description{
 Esegue la differenza tra due grafi
+}
+\examples{
+\dontrun{
+ nasecg <- GrafoDB("nasecg2004")
+ cf10 <- GrafoDB()
+ diff <- cf10 - nasecg
+}
 }

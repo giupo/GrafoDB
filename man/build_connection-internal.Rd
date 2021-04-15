@@ -4,7 +4,10 @@
 \alias{build_connection}
 \title{Factory di connessioni al database}
 \usage{
-build_connection(env = getenv(), con = NULL)
+build_connection(env = getenv())
+}
+\arguments{
+\item{env}{environment label}
 }
 \description{
 Factory di connessioni al database

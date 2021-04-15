@@ -4,7 +4,7 @@
 \alias{find_deps}
 \title{finds and returns the deps of a formula as a character vector}
 \usage{
-find_deps(g, name, formula)
+find_deps(g, formula)
 }
 \arguments{
 \item{g}{anything that has names end data as

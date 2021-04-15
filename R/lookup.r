@@ -1,6 +1,5 @@
 #' Ricerca nei metadati del grafo
 #'
-#' @usage lookup_impl(x, key, value)
 #' @name lookup_impl
 #' @param x istanza di grafo
 #' @param key chiave del metadato
@@ -26,7 +25,6 @@ lookup_impl <- function(x, key, value) {
 
 #' Ricerca nelle formule del grafo
 #'
-#' @usage lookup_formula_impl(x, key)
 #' @name lookup_formula_impl
 #' @param x istanza di grafo
 #' @param key Stringa da cercare
@@ -49,7 +47,6 @@ lookup_formula_impl <- function(x, key) {
 
 #' Ricerca nelle formule del grafo
 #'
-#' @usage lookup_dati_impl(x, key)
 #' @name lookup_dati_impl
 #' @param x istanza di grafo
 #' @param key numero da cercare

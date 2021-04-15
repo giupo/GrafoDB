@@ -5,9 +5,14 @@
 \title{Implementazione del generic `evaluate` definito nel package `grafo`
 per la classe `GrafoDB`}
 \usage{
-evaluate_impl(object)
+evaluate_impl(object, v_start = NULL, ...)
+}
+\arguments{
+\item{object}{GrafoDB instance}
 
-evaluate_impl(object, v_start)
+\item{v_start}{node to be evaluated, if `NULL` evaluates all nodes}
+
+\item{`...`}{eventual other params (like `debug`, for internal testing)}
 }
 \value{
 il grafo con i dati correttamente valutato

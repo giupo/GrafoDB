@@ -3,7 +3,6 @@
 #' It's used for converting data coming from the DB
 #'
 #' @name convert_data_frame
-#' @usage convert_data_frame(df)
 #' @param df data.frame with time series
 #' @return a List
 #' @export

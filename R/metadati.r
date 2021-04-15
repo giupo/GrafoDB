@@ -18,7 +18,6 @@ get_meta_impl <- function(x, serie, metadato) {
 #' Ritorna i metadati della serie `name` in `x`
 #'
 #' @name get_metadata_impl
-#' @usage get_metadata_impl(x, name)
 #' @param x istanza di grafo
 #' @param name nome della serie storica
 #' @return data.frame contenente i metadati della serie
@@ -36,7 +35,6 @@ get_metadata_impl <- function(x, name) {
 #' Ritorna le chiavi dei metadati
 #'
 #' @name keys_impl
-#' @usage keys_impl(x)
 #' @param x istanza di grafo
 #' @return ritorna un dataframe con le chiavi dei metadati
 #' @rdname keys-internal
@@ -55,8 +53,6 @@ keys_impl <- function(x) {
 #' Ritorna i valori dei metadati (o per singolo metadato)
 #'
 #' @name values_by_key_impl
-#' @usage values_by_key_impl(x)
-#' @usage values_by_key_impl(x, key)
 #' @param x istanza di grafo
 #' @param key chiave del metadato
 #' @return lista di valori per metadato
@@ -81,7 +77,6 @@ values_by_key_impl <- function(x, key = NULL) {
 #' Ritorna i valore del metadato per ogni singola serie
 #'
 #' @name values_for
-#' @usage values_for(x, name, key)
 #' @param x istanza di grafo
 #' @param name nomi di oggetti 
 #' @param key chiave del metadato
@@ -113,7 +108,6 @@ values_for <- function(x, name = names(x), key = keys(x)) {
 #' delete un metadato dal DBI
 #'
 #' @name deleteMeta_impl
-#' @usage deleteMeta_impl(x, name, key, value)
 #' @param x istanza di grafo
 #' @param name nome della serie da cui eliminare il metadato
 #' @param key nome del metadato

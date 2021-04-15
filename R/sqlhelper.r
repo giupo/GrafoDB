@@ -6,7 +6,6 @@
 #' Le query vengono inizializzate in un file .ini
 #'
 #' @name SQLHelper-class
-#' @usage SQLHelper(...)
 #' @slot sqlContainer a list of key-values for the SQL queries
 #' @slot type the type of syntax
 #' @export SQLHelper
@@ -36,8 +35,6 @@ sql_helper_type_by_env <- function(env = getenv()) {
 #' initializes the SQL helper
 #'
 #' @name init_sql_helper
-#' @usage init_sql_helper(object)
-#' @usage init_sql_helper(object, type
 #' @param object the SQLHelper instance
 #' @param type the kind of SQLhelper to initialize.
 #'    Depends on environment (`getenv`) if not passwd by
@@ -123,8 +120,6 @@ sql_by_key_impl <- function(x, .key, ...) {
 #' risultera' in `select * from A where param='B'`
 #'
 #' @name sql_by_key
-#' @usage sql_by_key(x, key)
-#' @usage sql_by_key(x, key, param=value, param2, value2, ...)
 #' @param x istanza di SQLHelper
 #' @param .key nome della query nel file INI
 #' @return un character array contenente la query SQL

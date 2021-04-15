@@ -1,8 +1,7 @@
 #' assert that a network is a DAG
 #'
 #' @name assert_dag
-#' @usage assert_dag(network)
-#' @param networtk igraph instance
+#' @param network igraph instance
 #' @note if dag has cicles, raises an Exception
 #'
 #' TODO: dovrebbe tornare una lista di cicli se trovati. con la nuova

@@ -4,9 +4,7 @@
 \alias{evaluate_plain}
 \title{Patch to evaluate}
 \usage{
-evaluate_plain(x)
-
-evaluate_plain(x, ids)
+evaluate_plain(x, ids = names(x))
 }
 \arguments{
 \item{x}{GrafoDB instance}

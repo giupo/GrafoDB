@@ -1,6 +1,9 @@
-#' edita una serie del grafo
+#' edit a GrafoDB formula
 #'
 #' @rdname edita-internal
+#' @param x GrafoDB instance
+#' @param name name of the object to be edited
+#' @param `...` other eventual options
 #' @include functions.r
 
 .edita <- function(x, name, ...) {

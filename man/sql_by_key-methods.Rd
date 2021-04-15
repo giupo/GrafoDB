@@ -7,9 +7,7 @@
 \alias{SQLHelper,character,ANY-method}
 \title{Factory di query (stringhe) SQL.}
 \usage{
-sql_by_key(x, key)
-
-sql_by_key(x, key, param=value, param2, value2, ...)
+sql_by_key(x, .key, ...)
 
 \S4method{sql_by_key}{SQLHelper,character}(x, .key, ...)
 }

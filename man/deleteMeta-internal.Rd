@@ -4,7 +4,7 @@
 \alias{deleteMeta_impl}
 \title{delete un metadato dal DBI}
 \usage{
-deleteMeta_impl(x, name, key, value)
+deleteMeta_impl(x, name, key, value = NULL)
 }
 \arguments{
 \item{x}{istanza di grafo}

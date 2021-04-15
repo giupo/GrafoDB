@@ -6,7 +6,7 @@
 o un generico scalare in un data.frame.
 funzione utilizzata per convertire il dato in una forma accettabile dal DB}
 \usage{
-to_data_frame(x)
+to_data_frame(x, name = NULL)
 }
 \arguments{
 \item{x}{una timeseries `ts` o uno scalare}

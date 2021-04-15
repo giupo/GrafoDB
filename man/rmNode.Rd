@@ -5,7 +5,7 @@
 \alias{rmNode,GrafoDB,character-method}
 \title{Elimina un nodo dal `GrafoDB`}
 \usage{
-rmNode(graph, ts_name, recursive)
+rmNode(graph, ts_name, recursive = FALSE)
 
 \S4method{rmNode}{GrafoDB,character}(graph, ts_name, recursive = FALSE)
 }

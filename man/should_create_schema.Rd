@@ -4,7 +4,7 @@
 \alias{should_create_schema}
 \title{Returns true if the app should create the DB schema}
 \usage{
-should_create_schema()
+should_create_schema(con)
 }
 \value{
 `TRUE` if db schema creation is needed, `FALSE` otherwise

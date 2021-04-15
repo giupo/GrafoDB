@@ -5,7 +5,7 @@
 \alias{deleteMeta,GrafoDB,character,character-method}
 \title{Removes an attribute}
 \usage{
-deleteMeta(object, ts_name, attr_name, attr_value)
+deleteMeta(object, ts_name, attr_name, attr_value = NULL)
 
 \S4method{deleteMeta}{GrafoDB,character,character}(object, ts_name, attr_name, attr_value = NULL)
 }

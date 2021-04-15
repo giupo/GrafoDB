@@ -4,9 +4,7 @@
 \alias{init_sql_helper}
 \title{initializes the SQL helper}
 \usage{
-init_sql_helper(object)
-
-init_sql_helper(object, type
+init_sql_helper(object, type = NULL)
 }
 \arguments{
 \item{object}{the SQLHelper instance}

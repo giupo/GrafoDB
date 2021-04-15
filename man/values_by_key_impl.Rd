@@ -4,9 +4,7 @@
 \alias{values_by_key_impl}
 \title{Ritorna i valori dei metadati (o per singolo metadato)}
 \usage{
-values_by_key_impl(x)
-
-values_by_key_impl(x, key)
+values_by_key_impl(x, key = NULL)
 }
 \arguments{
 \item{x}{istanza di grafo}

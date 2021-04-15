@@ -4,7 +4,7 @@
 \alias{rm_node_impl}
 \title{Elimina un nodo dal `GrafoDB`}
 \usage{
-rm_node_impl(graph, ts_name, recursive)
+rm_node_impl(graph, ts_name, recursive = FALSE)
 }
 \arguments{
 \item{graph}{istanza di `GrafoDB`}

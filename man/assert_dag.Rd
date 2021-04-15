@@ -7,7 +7,7 @@
 assert_dag(network)
 }
 \arguments{
-\item{networtk}{igraph instance}
+\item{network}{igraph instance}
 }
 \description{
 assert that a network is a DAG

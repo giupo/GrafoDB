@@ -5,9 +5,7 @@
 \alias{getConflicts,GrafoDB-method}
 \title{Ritorna i conflitti per un Grafo}
 \usage{
-getConflicts(x)
-
-getConflicts(x, name)
+getConflicts(x, name = NULL, con = NULL)
 
 \S4method{getConflicts}{GrafoDB}(x, name = NULL, con = NULL)
 }

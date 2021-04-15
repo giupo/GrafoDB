@@ -4,7 +4,7 @@
 \alias{is_error}
 \title{True if param is an error}
 \usage{
-is_error(cond)
+is_error(cond = NULL)
 }
 \arguments{
 \item{cond}{argument to check}

@@ -5,7 +5,7 @@
 \alias{getTask,GrafoDB,character-method}
 \title{Funzioni del package `grafo`}
 \usage{
-getTask(graph, ts_name)
+getTask(object, ts_name)
 
 \S4method{getTask}{GrafoDB,character}(object, ts_name)
 }

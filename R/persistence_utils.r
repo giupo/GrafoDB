@@ -1,8 +1,6 @@
 #' Legge tutta la tabella dei dati per un determinato tag
 #'
 #' @name load_table
-#' @usage load_table(table_name, tag)
-#' @usage load_table(table_name, tag, con)
 #' @return un data.frame con i dati delle serie storiche
 #' @param table_name nome della tabella
 #' @param tag nome del tag

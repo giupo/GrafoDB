@@ -28,8 +28,6 @@
 #' Ritorna `TRUE` se il grafo ha conflitti
 #'
 #' @name has_conflicts
-#' @usage has_conflicts(x)
-#' @usage has_conflicts(x, name)
 #' @param x oggetto R
 #' @param name character array di nomi (puo' essere omesso)
 #' @return `TRUE` se l'istanza `x` e' un GrafoDB con conflitti, `FALSE`
@@ -67,8 +65,6 @@ methods::setMethod(
 #' parametro `name`
 #'
 #' @name getConflicts
-#' @usage getConflicts(x)
-#' @usage getConflicts(x, name)
 #' @param x istanza del GrafoDB
 #' @param name vettore di nomi di serie
 #' @return un data.frame con le informazioni del conflitto
@@ -183,8 +179,6 @@ methods::setMethod(
 #' e provvedere a salvate un Grafo consistente.
 #'
 #' @name fixConflicts
-#' @usage fixConflicts(x)
-#' @usage fixConflicts(x, name)
 #' @param x istanza di GrafoDB
 #' @param name nome della serie da cui eliminare un conflitto
 #' @export
@@ -207,7 +201,6 @@ methods::setMethod(
 #' Trova le serie che sono cambiate nel database
 #'
 #' @name get_changed_series_names
-#' @usage get_changed_series_names(x)
 #' @param x istanza di Grafo
 #' @param con eventuale connessione al database (se non presente, ne crea una)
 #' @return lista di nomi di serie cambiate sul database rispetto ad X
@@ -370,7 +363,7 @@ create_data_conflicts <- function(x, nomi, con = NULL) {
 
 create_function_conflicts <- function(x, nomi, formula_db, con = NULL) {
   con <- if (is.null(con)) {
-    con <- build_connection(con = con)
+    con <- build_connection()
     on.exit(disconnect(con))
     con
   } else {

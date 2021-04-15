@@ -4,7 +4,7 @@
 \alias{get_changed_series_names}
 \title{Trova le serie che sono cambiate nel database}
 \usage{
-get_changed_series_names(x)
+get_changed_series_names(x, con = NULL)
 }
 \arguments{
 \item{x}{istanza di Grafo}

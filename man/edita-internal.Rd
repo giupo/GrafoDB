@@ -2,10 +2,17 @@
 % Please edit documentation in R/edita.r
 \name{.edita}
 \alias{.edita}
-\title{edita una serie del grafo}
+\title{edit a GrafoDB formula}
 \usage{
 .edita(x, name, ...)
 }
+\arguments{
+\item{x}{GrafoDB instance}
+
+\item{name}{name of the object to be edited}
+
+\item{`...`}{other eventual options}
+}
 \description{
-edita una serie del grafo
+edit a GrafoDB formula
 }

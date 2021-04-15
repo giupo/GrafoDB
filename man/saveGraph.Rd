@@ -5,9 +5,7 @@
 \alias{saveGraph,GrafoDB-method}
 \title{Salva il grafo}
 \usage{
-saveGraph(object)
-
-saveGraph(object, path)
+saveGraph(object, path = object@tag, ...)
 
 \S4method{saveGraph}{GrafoDB}(object, path = object@tag, ...)
 }

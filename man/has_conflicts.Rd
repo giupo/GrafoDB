@@ -5,9 +5,7 @@
 \alias{has_conflicts,GrafoDB-method}
 \title{Ritorna `TRUE` se il grafo ha conflitti}
 \usage{
-has_conflicts(x)
-
-has_conflicts(x, name)
+has_conflicts(x, name = NULL, con = NULL)
 
 \S4method{has_conflicts}{GrafoDB}(x, name = NULL, con = NULL)
 }

@@ -5,9 +5,7 @@
 \alias{getMetadata,GrafoDB,character-method}
 \title{get Metadata for object}
 \usage{
-getMetadata(object, ts_name)
-
-getMetadata(object, ts_name, full)
+getMetadata(object, ts_name, full = FALSE)
 
 \S4method{getMetadata}{GrafoDB,character}(object, ts_name, full = FALSE)
 }

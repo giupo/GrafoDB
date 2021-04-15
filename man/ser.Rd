@@ -5,7 +5,7 @@
 \alias{ser,GrafoDB,character-method}
 \title{Valuta una singola serie del grafo e ritorna il risultato}
 \usage{
-ser(x, name)
+ser(x, name, debug = FALSE)
 
 \S4method{ser}{GrafoDB,character}(x, name, debug = FALSE)
 }

@@ -4,9 +4,7 @@
 \alias{expr_impl}
 \title{Ritorna le formule del GrafoDB}
 \usage{
-expr_impl(x, name)
-
-expr_impl(x, name, echo=FALSE)
+expr_impl(x, nomi, echo = FALSE)
 }
 \arguments{
 \item{x}{istanza di GrafoDB}

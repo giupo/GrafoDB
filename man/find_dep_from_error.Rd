@@ -5,7 +5,7 @@
 \title{this function returns the name of the missing object in
 evaluation}
 \usage{
-find_dep_from_error
+find_dep_from_error(cond = NULL)
 }
 \arguments{
 \item{cond}{error obtained in tryCatch}

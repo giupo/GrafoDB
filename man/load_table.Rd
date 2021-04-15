@@ -4,9 +4,7 @@
 \alias{load_table}
 \title{Legge tutta la tabella dei dati per un determinato tag}
 \usage{
-load_table(table_name, tag)
-
-load_table(table_name, tag, con)
+load_table(table_name, tag, con = NULL)
 }
 \arguments{
 \item{table_name}{nome della tabella}

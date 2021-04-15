@@ -4,9 +4,7 @@
 \alias{save_graph_impl}
 \title{Funzione per salvare un grafo}
 \usage{
-save_graph_impl(x, tag)
-
-save_graph_impl(x)
+save_graph_impl(x, tag = x@tag, ...)
 }
 \description{
 La funzione controlla la presenza di eventuali conflitti e necessita'

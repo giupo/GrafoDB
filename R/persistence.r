@@ -32,8 +32,6 @@
 #'
 #' @seealso saveGraph
 #' @name save_graph_impl
-#' @usage save_graph_impl(x, tag)
-#' @usage save_graph_impl(x)
 #' @include conflicts.r copy_graph.r assert_dag.r persistence_utils.r
 #' @include logging.r
 
@@ -175,9 +173,7 @@ update_graph <- function(x, tag = x@tag, con = NULL, msg = "") {
 #' @param x istanza di Grafo
 #' @param tag identificativo della versione
 #' @param con connessione al DB
-#' @param `...` other optional params (like msg)
-#' @usage create_graph(x, tag, con)
-#' @usage create_graph(x, tag, con, ...)
+#' @param msg eventual message to log
 
 create_graph <- function(x, tag, con, msg = NULL) {
   commento <- if (is.null(msg)) {
@@ -263,7 +259,6 @@ create_graph <- function(x, tag, con, msg = NULL) {
 #' conta le versioni rolling del grafo con tag `tag`
 #'
 #' @name count_rolling
-#' @usage count_rolling(x, con)
 #' @param x istanza di grafo
 #' @param con connessione al DB
 #' @return un intero ad indicare il numero di versioni rolling salvate sul DB
@@ -316,7 +311,6 @@ get_max_provvisorio <- function(helper, tag, con) {
 #' Costruice il progressivo per il grafo `x`
 #'
 #' @name next_rolling_name
-#' @usage next_rolling_name(x)
 
 next_rolling_name <- function(x, con) {
   glue::glue("{x@tag}p{ count_rolling(x, con) }")
@@ -336,7 +330,6 @@ next_rolling_name <- function(x, con) {
 #' Il grafo potra' successivamente essere caricato con il nuovo tag.
 #'
 #' @name do_history
-#' @usage do_history(x, tag, con)
 #' @param x istanza di `GrafoDB`
 #' @param tag tag del grafo
 #' @param con connessione al database
@@ -367,7 +360,6 @@ do_history <- function(x, tag, con) {
 #' Salva un istanza di grafo sul file system
 #'
 #' @name saveBinary
-#' @usage saveBinary(x, path)
 #' @param x istanza del GrafoDB
 #' @param path percorso del file su cui salvare il grafo
 #' @export
@@ -384,7 +376,6 @@ saveBinary <- function(x, path) { # nolint
 #' Legge un GrafoDB dal filesystem in formato binario con `saveBinary`
 #'
 #' @name readBinary
-#' @usage readBinary(path)
 #' @param path percorso del file con il GrafoDB
 #' @return GrafoDB contenuto nel file `path`
 #' @export

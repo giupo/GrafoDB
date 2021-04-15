@@ -5,9 +5,7 @@
 \alias{upgrf,GrafoDB,character-method}
 \title{Ritorna i genitori delle serie}
 \usage{
-upgrf(x, name)
-
-upgrf(x, name, livello)
+upgrf(x, name, livello = .Machine$integer.max)
 
 \S4method{upgrf}{GrafoDB,character}(x, name, livello = .Machine$integer.max)
 }

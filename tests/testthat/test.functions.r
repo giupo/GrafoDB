@@ -93,7 +93,6 @@ test_that("delete handles exceptions", {
 })
 
 test_that("schema_from_env returns a consistent file", {
-  # expect_true(is.list(db_settings(TRUE)))
   test_file <- schema_from_env("test")
   prod_file <- schema_from_env("prod")
   collaudo_file <- schema_from_env("collaudo")

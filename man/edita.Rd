@@ -5,7 +5,7 @@
 \alias{edita,GrafoDB,character-method}
 \title{Edita un la formula di una serie storica.}
 \usage{
-edita(x, name)
+edita(x, name, ...)
 
 \S4method{edita}{GrafoDB,character}(x, name, ...)
 }

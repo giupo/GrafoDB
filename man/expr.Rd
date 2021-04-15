@@ -5,7 +5,7 @@
 \alias{expr,GrafoDB,character-method}
 \title{Formule del `GrafoDB`}
 \usage{
-expr(x, nomi)
+expr(x, nomi, echo = FALSE)
 
 \S4method{expr}{GrafoDB,character}(x, nomi, echo = FALSE)
 }

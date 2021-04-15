@@ -1,58 +1,8 @@
-#' Reads db connections settings
-#'
-#' Tryes :
-#'   - `$HOME/.GrafoDB/GrafoDB.ini` file
-#'   - Internal settings.
-#'
-#' @name db_settings
-#' @usage db_settings()
-#' @usage db_settings(flush)
-#' @param flush if `TRUE` removes any option saved in the current
-#'              session and reloads the settings
-#' @return a list containing the infos used to connect via DBI
-#' @include logging.r
-#' @export
-
-db_settings <- function(flush = FALSE) {
-  ln <- "GrafoDB.db.db_settings"
-  if (flush) {
-    trace("Flushing settings", name = ln)
-    options(db_settings = NULL)
-  }
-
-  settings <- getOption("db_settings", NULL)
-
-  if (is.null(settings)) {
-    trace("settings are null", name = ln)
-    home_ini_file <- file.path(path.expand("~"), ".GrafoDB/GrafoDB.ini")
-    debug("Ini file: %s", home_ini_file, name = ln)
-
-    if (file.exists(home_ini_file)) {
-      debug("%s esiste! lo parso", home_ini_file)
-      home_settings <- rutils::ini_parse(home_ini_file)
-      options(db_settings = home_settings)
-      debug("settings: %s", home_settings, name = ln, capture = TRUE)
-      return(home_settings)
-    }
-
-    debug("Reverting to system wide INI", name = ln)
-    filename <- file.path(system.file(package = "GrafoDB"), "ini/GrafoDB.ini")
-    debug("File path for system wide INI: %s%", filename, name = ln)
-    settings <- rutils::ini_parse(filename)
-    debug("Settings: %s", settings, name = ln, capture = TRUE)
-    options(db_settings = settings)
-  }
-
-  settings
-}
-
-
 #' Returns the enviroment for GrafoDB
 #'
 #' Returns the value of environment variable `GRAFODB_ENV`
 #'
 #' @name getenv
-#' @usage getenv()
 #' @returns the value of the GRAFODB_ENV, if not specified, defaults
 #'    to `prod`
 #' @export
@@ -147,12 +97,11 @@ initdb_sqlite <- function(con, env=getenv()) {
 #'
 #' @name build_connection
 #' @note Funzione interna
+#' @param env environment label
 #' @rdname build_connection-internal
 #' @include logging.r
 
-build_connection <- function(env = getenv(), con = NULL) {
-  if (!is.null(con)) return(con)
-
+build_connection <- function(env = getenv()) {
   ln <- "GrafoDB.build_connection"
   con <- if (env == "test") {
     con <- getOption("GrafoDB_connection", NULL)
@@ -183,7 +132,6 @@ build_connection <- function(env = getenv(), con = NULL) {
 #' Builds a connection to Postgres
 #'
 #' @name postgres_connect
-#' @usage postgres_connect()
 #' @return a DBI connection to postgres
 #' @note fails if RPostgreSQL is not installed
 #'    the connection params are delegated to the libpq environment variables
@@ -199,7 +147,6 @@ postgres_connect <- function() {
 #' builds a SQLite connection
 #'
 #' @name sqlite_connect
-#' @usage sqlite_connect()
 #' @return a connection to SQLite
 #' @note this is used for testing, the connection is to an in memory instance
 
@@ -213,7 +160,6 @@ sqlite_connect <- function() {
 #' Returns true if the app should create the DB schema
 #'
 #' @name should_create_schema
-#' @usage should_create_schema()
 #' @return `TRUE` if db schema creation is needed, `FALSE` otherwise
 
 should_create_schema  <- function(con) {
@@ -233,8 +179,6 @@ should_create_schema  <- function(con) {
 #' Otherwise delegates the call to `DBI::dbDisconnect`
 #'
 #' @name disconnect
-#' @usage disconnect(con)
-#' @usage disconnect(con, env)
 #' @param con connection to disconnect
 #' @param env environment to check against
 

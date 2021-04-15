@@ -4,9 +4,7 @@
 \alias{disconnect}
 \title{proxy the dbDisconnect based on `getenv` value}
 \usage{
-disconnect(con)
-
-disconnect(con, env)
+disconnect(con, env = getenv())
 }
 \arguments{
 \item{con}{connection to disconnect}

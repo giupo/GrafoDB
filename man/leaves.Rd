@@ -5,7 +5,7 @@
 \alias{leaves,GrafoDB-method}
 \title{Returns all the leaves in a graph}
 \usage{
-leaves(x)
+leaves(x, ...)
 
 \S4method{leaves}{GrafoDB}(x)
 }

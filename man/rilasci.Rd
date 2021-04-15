@@ -4,7 +4,7 @@
 \alias{rilasci}
 \title{Ritorna la lista dei rilasci presenti nel database}
 \usage{
-rilasci()
+rilasci(filtro = NULL)
 }
 \arguments{
 \item{filtro}{filtro da applicare alla ricerca sul tag del grafo}
