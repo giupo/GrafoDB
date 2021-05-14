@@ -81,22 +81,20 @@ test_that("load_table stops if table_name doesn't exists", {
 })
 
 test_that("Load* yields an empy dataframe in case of error", {
-  ## I don't like this at all.
+  skip_if_not_installed("mockery")
 
-  with_mock(
-    "GrafoDB:::load_table" = function(...) stop("my error"), {
-      x <- load_data("nonsense")
-      expect_s3_class(x, "data.frame")
-      expect_equal(nrow(x), 0)
+  load_table_mock <- mockery::mock(stop("my error"))
+  x <- load_data("nonsense")
+  expect_s3_class(x, "data.frame")
+  expect_equal(nrow(x), 0)
 
-      x <- load_edges("nonesisto")
-      expect_s3_class(x, "data.frame")
-      expect_equal(nrow(x), 0)
+  x <- load_edges("nonesisto")
+  expect_s3_class(x, "data.frame")
+  expect_equal(nrow(x), 0)
 
-      x <- load_formulas("nonesisto")
-      expect_s3_class(x, "data.frame")
-      expect_equal(nrow(x), 0)
-    })
+  x <- load_formulas("nonesisto")
+  expect_s3_class(x, "data.frame")
+  expect_equal(nrow(x), 0)
 })
 
 test_that("need_resync returns true if GrafoNeeds a resync", {
@@ -144,9 +142,9 @@ test_that("load_grafi handles when con is NULL", {
   disconnect_mock <- mock(TRUE)
   db_read_table_mock <- mock(TRUE)
 
-  mockery::mockery::stub(load_grafi, "build_connection", build_connection_mock)
-  mockery::mockery::stub(load_grafi, "disconnect", disconnect_mock)
-  mockery::mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
+  mockery::stub(load_grafi, "build_connection", build_connection_mock)
+  mockery::stub(load_grafi, "disconnect", disconnect_mock)
+  mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
 
   expect_error(load_grafi(), NA)
   mockery::expect_called(build_connection_mock, 1)
@@ -160,9 +158,9 @@ test_that("load_grafi handles when con is not NULL", {
   disconnect_mock <- mock(TRUE)
   db_read_table_mock <- mock(TRUE)
 
-  mockery::mockery::stub(load_grafi, "build_connection", build_connection_mock)
-  mockery::mockery::stub(load_grafi, "disconnect", disconnect_mock)
-  mockery::mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
+  mockery::stub(load_grafi, "build_connection", build_connection_mock)
+  mockery::stub(load_grafi, "disconnect", disconnect_mock)
+  mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
 
   expect_error(load_grafi(con = 1), NA)
   mockery::expect_called(build_connection_mock, 0)

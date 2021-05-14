@@ -43,26 +43,26 @@ test_that("Save same object in two distinct sessions creates a conflict", {
   g2["A"] <- new_a_2 <- stats::ts(rep(1, 10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g1)
 
-  with_mock(
-    "GrafoDB:::get_outer_data_names" = function(...) "A", {
-      expect_warning(saveGraph(g2), "Ci sono conflitti")
+  godn <- mockery::mock("A")
 
-      ## sia g1 che g2, in quanto "test1" devono riportare dei conflitti
-      expect_true(has_conflicts(g1))
-      expect_true(has_conflicts(g2))
+  mockery::stub(check_conflicts, "get_outer_data_names", godn)
 
-      g <- GrafoDB("test")
+  expect_warning(saveGraph(g2), "Ci sono conflitti")
 
-      expect_true(all(abs(g[["A"]] - new_a_1) < 0.0000001))
-      expect_true(any(abs(g[["A"]] - new_a_2) > 0.0000001))
+  ## sia g1 che g2, in quanto "test1" devono riportare dei conflitti
+  expect_true(has_conflicts(g1))
+  expect_true(has_conflicts(g2))
 
-      conflicts <- getDataConflicts(g)
-      expect_type(conflicts, "list")
-      expect_equal(names(conflicts), "A")
-    })
+  g <- GrafoDB("test")
+
+  expect_true(all(abs(g[["A"]] - new_a_1) < 0.0000001))
+  expect_true(any(abs(g[["A"]] - new_a_2) > 0.0000001))
+
+  conflicts <- getDataConflicts(g)
+  expect_type(conflicts, "list")
+  expect_equal(names(conflicts), "A")
 })
 
-for (tag in rilasci("test")$tag) delete_graph(tag)
 
 test_that("save two different objects doesn't create a conflict", {
   on.exit({
@@ -119,6 +119,7 @@ test_that("Salvare lo stesso grafo con formula aggiunta", {
 for (tag in rilasci("test")$tag) delete_graph(tag)
 
 test_that("Salvare lo stesso grafo con formula in conflitto", {
+  skip_if_not_installed("mockery")
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
@@ -142,15 +143,17 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   ## usabilita' e' stato aggiunto il side-effect di cambiare g1 nel
   ## env del parent.frame, il seguente warning non uscira' mai
 
-  with_mock(
-    "GrafoDB:::get_outer_formula_names" = function(...) "D", {
-      g2 <- expect_warning(saveGraph(g2, msg = "test"), "Ci sono conflitti")
-      g <- GrafoDB("test")
-      expect_true(has_conflicts(g))
-    })
+  gofn <- mockery::mock("D")
+  mockery::stub(check_conflicts, "get_outer_formula_names", gofn)
+
+   
+  g2 <- expect_warning(saveGraph(g2, msg = "test"))
+  g <- GrafoDB("test")
+  expect_true(has_conflicts(g))
 })
 
 test_that("in case of conflict, only the root series are reported", {
+  skip_if_not_installed("mockery")
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
@@ -174,23 +177,22 @@ test_that("in case of conflict, only the root series are reported", {
   }
 
   g1 <- saveGraph(g1)
-  Sys.sleep(1)
-  with_mock(
-    "GrafoDB:::get_outer_formula_names" = function(...) "C", {
-      g2 <- expect_warning(saveGraph(g2))
-      conflicts <- getConflicts(g1)
-      lista_nomi <- as.character(conflicts$name)
-      expect_true("C" %in% lista_nomi)
-      expect_true(!"D" %in% lista_nomi)
 
-      expect_equal(getConflicts(g1, "C")$name, "C")
-      expect_equal(nrow(getConflicts(g1, "C")), 1)
-      conflict <- getFormulaConflicts(g)
-      expect_s3_class(conflict, "data.frame")
-      conflict_c <- getFormulaConflicts(g, "C")
-      expect_s3_class(conflict_c, "data.frame")
-      expect_equal(nrow(conflict_c), 1)
-    })
+  gofn <- mockery::mock("C")
+  mockery::stub(check_conflicts, "get_outer_formula_names", gofn)
+  g2 <- expect_warning(saveGraph(g2))
+  conflicts <- getConflicts(g1)
+  lista_nomi <- as.character(conflicts$name)
+  expect_true("C" %in% lista_nomi)
+  expect_true(!"D" %in% lista_nomi)
+
+  expect_equal(getConflicts(g1, "C")$name, "C")
+  expect_equal(nrow(getConflicts(g1, "C")), 1)
+  conflict <- getFormulaConflicts(g)
+  expect_s3_class(conflict, "data.frame")
+  conflict_c <- getFormulaConflicts(g, "C")
+  expect_s3_class(conflict_c, "data.frame")
+  expect_equal(nrow(conflict_c), 1)
 })
 
 for (tag in rilasci("test")$tag) delete_graph(tag)

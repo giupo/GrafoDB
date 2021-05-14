@@ -78,17 +78,18 @@ test_that("delete deletes a GrafoDB", {
 })
 
 test_that("delete handles exceptions", {
-  on.exit({
-    for (tag in rilasci("test")$tag) delete_graph(tag)
-  })
+  skip_if_not_installed("mockery")
+
 
   g <- GrafoDB("test")
-  with_mock(
-    "DBI::dbCommit" = function(...) stop("error test"), {
-      expect_error(delete_graph(g), "error test")
-      expect_error(delete_graph("test"), "error test")
-    })
+  
+  mockery::stub(delete_graph, "DBI::dbCommit", function(...) stop("error test"))
+  expect_error(delete_graph(g), "error test")
+  expect_error(delete_graph("test"), "error test")
 })
+
+for (tag in rilasci("test")$tag) delete_graph(tag)
+
 
 test_that("schema_from_env returns a consistent file", {
   test_file <- schema_from_env("test")

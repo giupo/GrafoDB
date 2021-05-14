@@ -73,15 +73,16 @@ test_that("Posso cancellare Metadati", {
 })
 
 test_that("If I get an erro with DB, deleteMeta fails", {
+  skip_if_not_installed("mockery")
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- setup("test")
-  with_mock(
-    "DBI::dbCommit" = function(...) stop("error test"), {
-      expect_error(deleteMeta(g, "A", "KEY", "VALUE1"), "error test")
-    })
+  dbcommit <- mockery::mock(stop("error test"))
+  mockery::stub(deleteMeta_impl, "DBI::dbCommit", dbcommit)
+  expect_error(deleteMeta_impl(g, "A", "KEY", "VALUE1"), "error test")
+  mockery::expect_called(dbcommit, 1)
 })
 
 test_that("got error if there's an error reading from DB", {
