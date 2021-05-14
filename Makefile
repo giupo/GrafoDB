@@ -17,7 +17,6 @@ $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
 
 
 check: tarball
-	## R CMD check --no-build-vignettes $(PKG_NAME)_$(PKG_VERSION).tar.gz
 	R -e 'devtools::check(error_on="error")'
 
 build: $(PKG_NAME)_$(PKG_VERSION).tar.gz
@@ -27,10 +26,9 @@ install: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 	R --vanilla CMD INSTALL $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 NAMESPACE: $(R_FILES) $(SRC_FILES)
-	Rscript -e "require(methods); devtools::document()"
+	@Rscript -e "require(methods); devtools::document()"
 
-DOCS: 
-	Rscript -e "require(methods); devtools::document()"
+DOCS: NAMESPACE
 
 clean:
 	-rm -f $(PKG_NAME)_*.tar.gz
@@ -46,22 +44,22 @@ list:
 	@echo $(SRC_FILES)
 
 test:
-	Rscript -e 'require(methods); devtools::test()'
+	@Rscript -e 'require(methods); devtools::test()'
 
 autotest:
-	Rscript autotest.r
+	@Rscript autotest.r
 
 # so:     deps
 so:
-	Rscript --vanilla -e 'devtools::compile_dll()'
+	@Rscript --vanilla -e 'devtools::compile_dll()'
 
 coverage:
-	Rscript -e 'covr::package_coverage(path=".", line_exclusions=c(list.files(path="renv", recursive=T, full.names=T), "src/jsoncpp.cpp", "src/json/json.h"))'
+	@Rscript -e 'covr::package_coverage(path="."")'
 
 codecov:
-	Rscript -e 'covr::codecov(path=".", line_exclusions=c(list.files(path="renv", recursive=T, full.names=T), "src/jsoncpp.cpp", "src/json/json.h"))'
+	@Rscript -e 'covr::codecov(path=".")'
 
 CHANGELOG.md:
-	gitchangelog | grep -v "git-svn-id" > CHANGELOG.md
+	@gitchangelog | grep -v "git-svn-id" > CHANGELOG.md
 
 changelog: CHANGELOG.md

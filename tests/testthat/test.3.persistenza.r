@@ -138,9 +138,9 @@ test_that("load_metadati calls load_table", {
 
 test_that("load_grafi handles when con is NULL", {
   skip_if_not_installed("mockery")
-  build_connection_mock <- mock(TRUE)
-  disconnect_mock <- mock(TRUE)
-  db_read_table_mock <- mock(TRUE)
+  build_connection_mock <- mockery::mock(TRUE)
+  disconnect_mock <- mockery::mock(TRUE)
+  db_read_table_mock <- mockery::mock(TRUE)
 
   mockery::stub(load_grafi, "build_connection", build_connection_mock)
   mockery::stub(load_grafi, "disconnect", disconnect_mock)
@@ -154,9 +154,9 @@ test_that("load_grafi handles when con is NULL", {
 
 test_that("load_grafi handles when con is not NULL", {
   skip_if_not_installed("mockery")
-  build_connection_mock <- mock(TRUE)
-  disconnect_mock <- mock(TRUE)
-  db_read_table_mock <- mock(TRUE)
+  build_connection_mock <- mockery::mock(TRUE)
+  disconnect_mock <- mockery::mock(TRUE)
+  db_read_table_mock <- mockery::mock(TRUE)
 
   mockery::stub(load_grafi, "build_connection", build_connection_mock)
   mockery::stub(load_grafi, "disconnect", disconnect_mock)

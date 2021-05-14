@@ -6,7 +6,7 @@ test_that("initdb can handle an error", {
 
 test_that("should_create_schema returns FALSE if dbReadTable succeed", {
   skip_if_not(require(mockery), "mockery required")
-  mock <- mock(data.frame())
+  mock <- mockery::mock(data.frame())
   mockery::stub(should_create_schema, "DBI::dbReadTable", mock)
   expect_error(should_create_schema(NULL), NA)
   mockery::expect_called(mock, 1)
@@ -14,7 +14,7 @@ test_that("should_create_schema returns FALSE if dbReadTable succeed", {
 
 test_that("should_create_schema returns TRUE if dbReadTable fails", {
   skip_if_not(require(mockery), "mockery required")
-  mock  <- mock(stop("crap"))
+  mock  <- mockery::mock(stop("crap"))
   mockery::stub(should_create_schema, "DBI::dbReadTable", mock)
   expect_true(expect_error(should_create_schema(NULL), NA))
   mockery::expect_called(mock, 1)
@@ -22,7 +22,7 @@ test_that("should_create_schema returns TRUE if dbReadTable fails", {
 
 test_that("should_create_schema returns False if dbReadTable raise a warning", {
   skip_if_not(require(mockery), "mockery required")
-  mock <- mock(warning(ciao))
+  mock <- mockery::mock(warning(ciao))
   mockery::stub(should_create_schema, "DBI::dbReadTable", mock)
   expect_true(should_create_schema(NULL))
   mockery::expect_called(mock, 1)
@@ -31,7 +31,7 @@ test_that("should_create_schema returns False if dbReadTable raise a warning", {
 
 test_that("initdb_postgres calls system with the correct dbname (collaudo)", {
   skip_if_not(require(mockery), "mockery required")
-  mock <- mock("")
+  mock <- mockery::mock("")
   mockery::stub(initdb_postgres, "system", function(x) {
     expect_true(grepl("grafo_test", x))
   })
@@ -40,7 +40,7 @@ test_that("initdb_postgres calls system with the correct dbname (collaudo)", {
 
 test_that("initdb_postgres calls system with the correct dbname (prod)", {
   skip_if_not(require(mockery), "mockery required")
-  mock <- mock("")
+  mock <- mockery::mock("")
   mockery::stub(initdb_postgres, "system", function(x) {
     expect_true(!grepl("grafo_test", x))
   })
@@ -49,7 +49,7 @@ test_that("initdb_postgres calls system with the correct dbname (prod)", {
 
 test_that("initdb is not called in build_connection", {
   skip_if_not(require(mockery), "mockery required")
-  mk <- mock(stop("crap"))
+  mk <- mockery::mock(stop("crap"))
   mockery::stub(build_connection, "initdb", mk)
   con <- build_connection()
   on.exit(disconnect(con))
@@ -57,7 +57,7 @@ test_that("initdb is not called in build_connection", {
 })
 
 test_that("disconnect doesn't call disconnect if env is 'test'", {
-  mk <- mock(function(...) {
+  mk <- mockery::mock(function(...) {
   })
   mockery::stub(disconnect, "dbDisconnect", mk)
   disconnect(NULL, env = "test")
@@ -66,7 +66,7 @@ test_that("disconnect doesn't call disconnect if env is 'test'", {
 
 
 test_that("disconnect calls disconnect if env is not 'test'", {
-  mk <- mock(function(...) {
+  mk <- mockery::mock(function(...) {
   })
   mockery::stub(disconnect, "DBI::dbDisconnect", mk)
   disconnect(NULL, env = "cippalippa")

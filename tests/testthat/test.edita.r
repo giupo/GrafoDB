@@ -63,7 +63,7 @@ test_that("nothing changes if I don't modify a formula", {
   on.exit(delete_graph("test"))
   g <- setup("test")
 
-  mock_edita <- mock(function(file, title = title) {
+  mock_edita <- mockery::mock(function(file, title = title) {
     task <- "C = (A + 1) * (B + 2)"
     deps <- c("A", "B")
     write(clutter_with_params(task, deps), file = file)
