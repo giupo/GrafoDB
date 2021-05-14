@@ -1,5 +1,3 @@
-context("Miscellaneous functions")
-
 test_that("conversione da ts a data.frame", {
   tt <- stats::ts(runif(10), start = c(1990, 1), frequency = 1)
   df <-  to_data_frame(tt, "test")

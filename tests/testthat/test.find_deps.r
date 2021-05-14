@@ -1,6 +1,3 @@
-
-context("is_error")
-
 test_that("test that is_error works", {
   tryCatch({
     stop("hello!")
@@ -16,8 +13,6 @@ test_that("test that is_error works", {
   expect_false(is_error(FALSE))
   expect_false(is_error(""))
 })
-
-context("find_dep_from_error")
 
 test_that("find_dep_from_error doesn't work with anything but errors", {
   tryCatch({
@@ -45,7 +40,6 @@ test_that("find_dep_from_error doesn't work with anything but errors", {
   expect_error(find_dep_from_error(""), "`cond` is not an error")
 })
 
-context("find_deps")
 
 test_that("find_deps throws an error if objects are not found", {
   data <- list(x = 1, y = 2)

@@ -1,5 +1,3 @@
-context("Edges")
-
 setup <- function(tag) {
   g <- GrafoDB(tag)
   g["A"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 1)

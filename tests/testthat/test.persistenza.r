@@ -1,4 +1,3 @@
-context("Persistence functions")
 
 setup <- function(name) {
   g <- GrafoDB(name)
@@ -77,8 +76,6 @@ test_that("I can save a graph over another existing graph", {
 
 delete_graph("test")
 
-context("Persistence functions [internal functions]")
-
 test_that("load_table stops if table_name doesn't exists", {
   expect_error(load_table("nonesisto", "nonesisto"))
 })
@@ -89,15 +86,15 @@ test_that("Load* yields an empy dataframe in case of error", {
   with_mock(
     "GrafoDB:::load_table" = function(...) stop("my error"), {
       x <- load_data("nonsense")
-      expect_is(x, "data.frame")
+      expect_s3_class(x, "data.frame")
       expect_equal(nrow(x), 0)
 
       x <- load_edges("nonesisto")
-      expect_is(x, "data.frame")
+      expect_s3_class(x, "data.frame")
       expect_equal(nrow(x), 0)
 
       x <- load_formulas("nonesisto")
-      expect_is(x, "data.frame")
+      expect_s3_class(x, "data.frame")
       expect_equal(nrow(x), 0)
     })
 })
@@ -138,7 +135,7 @@ test_that("load_metadati calls load_table", {
   mock_load_table <- mockery::mock(TRUE)
   mockery::stub(load_metadata, "load_table", mock_load_table)
   expect_error(load_metadata("x"), NA)
-  expect_called(mock_load_table, 1)
+  mockery::expect_called(mock_load_table, 1)
 })
 
 test_that("load_grafi handles when con is NULL", {
@@ -147,14 +144,14 @@ test_that("load_grafi handles when con is NULL", {
   disconnect_mock <- mock(TRUE)
   db_read_table_mock <- mock(TRUE)
 
-  mockery::stub(load_grafi, "build_connection", build_connection_mock)
-  mockery::stub(load_grafi, "disconnect", disconnect_mock)
-  mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
+  mockery::mockery::stub(load_grafi, "build_connection", build_connection_mock)
+  mockery::mockery::stub(load_grafi, "disconnect", disconnect_mock)
+  mockery::mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
 
   expect_error(load_grafi(), NA)
-  expect_called(build_connection_mock, 1)
-  expect_called(disconnect_mock, 1)
-  expect_called(db_read_table_mock, 1)
+  mockery::expect_called(build_connection_mock, 1)
+  mockery::expect_called(disconnect_mock, 1)
+  mockery::expect_called(db_read_table_mock, 1)
 })
 
 test_that("load_grafi handles when con is not NULL", {
@@ -163,12 +160,12 @@ test_that("load_grafi handles when con is not NULL", {
   disconnect_mock <- mock(TRUE)
   db_read_table_mock <- mock(TRUE)
 
-  mockery::stub(load_grafi, "build_connection", build_connection_mock)
-  mockery::stub(load_grafi, "disconnect", disconnect_mock)
-  mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
+  mockery::mockery::stub(load_grafi, "build_connection", build_connection_mock)
+  mockery::mockery::stub(load_grafi, "disconnect", disconnect_mock)
+  mockery::mockery::stub(load_grafi, "DBI::dbReadTable", db_read_table_mock)
 
   expect_error(load_grafi(con = 1), NA)
-  expect_called(build_connection_mock, 0)
-  expect_called(disconnect_mock, 0)
-  expect_called(db_read_table_mock, 1)
+  mockery::expect_called(build_connection_mock, 0)
+  mockery::expect_called(disconnect_mock, 0)
+  mockery::expect_called(db_read_table_mock, 1)
 })

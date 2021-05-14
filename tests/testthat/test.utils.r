@@ -1,5 +1,3 @@
-context("Utils")
-
 identicalts <- function(x, y, toll=0.000001) {
   all(abs(x - y) <= toll)
 }

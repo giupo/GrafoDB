@@ -1,5 +1,3 @@
-context("Concurrency")
-
 setup <- function(tag) {
   g <- GrafoDB(tag)
   g["A"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
@@ -58,7 +56,7 @@ test_that("Save same object in two distinct sessions creates a conflict", {
       expect_true(any(abs(g[["A"]] - new_a_2) > 0.0000001))
 
       conflicts <- getDataConflicts(g)
-      expect_is(conflicts, "list")
+      expect_s3_class(conflicts, "list")
       expect_equal(names(conflicts), "A")
     })
 })
@@ -187,9 +185,9 @@ test_that("in case of conflict, only the root series are reported", {
       expect_equal(getConflicts(g1, "C")$name, "C")
       expect_equal(nrow(getConflicts(g1, "C")), 1)
       conflict <- getFormulaConflicts(g)
-      expect_is(conflict, "data.frame")
+      expect_s3_class(conflict, "data.frame")
       conflict_c <- getFormulaConflicts(g, "C")
-      expect_is(conflict_c, "data.frame")
+      expect_s3_class(conflict_c, "data.frame")
       expect_equal(nrow(conflict_c), 1)
     })
 })

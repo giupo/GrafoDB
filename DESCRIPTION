@@ -22,7 +22,7 @@ Imports:
     foreach,
     iterators,
     gdata,
-    rdataset,
+    rdataset (>= 1.0.0),
     zoo,
     futile.logger,
     progress,

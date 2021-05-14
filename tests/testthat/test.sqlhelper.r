@@ -1,5 +1,3 @@
-context("SQLHelper functions")
-
 test_that("I can init an sql helper", {
   sql_helper <- SQLHelper()
   expect_true(class(sql_helper) == "SQLHelper")
@@ -91,18 +89,18 @@ test_that("sql_helper_type_by_env returns SQLite for test", {
   skip_if_not_installed("mockery")
   getenv_mock <- mockery::mock("test")
   expect_equal(sql_helper_type_by_env("test"), "SQLite")
-  mockery::stub(sql_helper_type_by_env, "getenv", getenv_mock)
+  mockery::mockery::stub(sql_helper_type_by_env, "getenv", getenv_mock)
   expect_equal(sql_helper_type_by_env(), "SQLite")
-  expect_called(getenv_mock, 1)
+  mockery::expect_called(getenv_mock, 1)
 })
 
 test_that("sql_helper_type_by_env returns SQLite for prod", {
   skip_if_not_installed("mockery")
   getenv_mock <- mockery::mock("prod")
   expect_equal(sql_helper_type_by_env("prod"), "PostgreSQL")
-  mockery::stub(sql_helper_type_by_env, "getenv", getenv_mock)
+  mockery::mockery::stub(sql_helper_type_by_env, "getenv", getenv_mock)
   expect_equal(sql_helper_type_by_env(), "PostgreSQL")
-  expect_called(getenv_mock, 1)
+  mockery::expect_called(getenv_mock, 1)
 })
 
 test_that("assert_sql_params fails with params not set", {

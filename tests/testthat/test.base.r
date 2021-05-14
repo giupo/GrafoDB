@@ -1,7 +1,3 @@
-context("Basic Operations")
-
-requireNamespace("devtools")
-
 test_that("Posso istanziare un GrafoDB", {
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
@@ -537,7 +533,7 @@ test_that("expr returns a list of formulas with multiple names", {
     D <- A + C # nolint
   }
 
-  expect_is(expr(g, c("C", "D")), "list")
+  expect_type(expr(g, c("C", "D")), "list")
   ll <- expr(g, c("C", "D"))
   expect_true(all(names(ll) %in% c("C", "D")))
 })
@@ -603,7 +599,7 @@ test_that("an empty graph returns no names", {
 
   g <- GrafoDB("test")
 
-  expect_is(names(g), "character")
+  expect_type(names(g), "character")
   expect_equal(names(g), character(0))
 })
 
@@ -668,7 +664,7 @@ test_that("Posso usare funzioni complesse nelle formule", {
     C <- A + B # nolint
   }}, NA) # this means expect no error
 
-  expect_is(g[["C"]], "ts")
+  expect_s3_class(g[["C"]], "ts")
 })
 
 

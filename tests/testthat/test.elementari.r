@@ -1,5 +1,3 @@
-context("Elementary objects")
-
 setup <- function() {
   g <- GrafoDB("test")
   g["A"] <- stats::ts(c(1, 2, 3), start = c(1990, 1), frequency = 4)

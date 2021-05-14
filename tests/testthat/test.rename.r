@@ -1,5 +1,3 @@
-context("Rename nodes")
-
 test_that("I can rename a series before saving it", {
   g <- GrafoDB("test")
   g["A"] <- g["B"] <- stats::ts(c(0, 0, 0), start = c(1990, 1), frequency = 4)

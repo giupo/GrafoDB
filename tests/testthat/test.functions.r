@@ -1,5 +1,3 @@
-context("Utils functions")
-
 test_that(" to_data_frame converte correttamente una serie", {
   tt <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
   df <-  to_data_frame(tt, "TEST")
