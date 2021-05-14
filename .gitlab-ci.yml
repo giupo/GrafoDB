@@ -3,7 +3,6 @@ stages:
   - test
   - deploy
   - check
-  - coverage
 
 build:
   stage: build
@@ -50,7 +49,7 @@ deploy_collaudo:
 
 
 coverage:
-  stage: coverage
+  stage: test
   tags: 
     - collaudo
   script:
