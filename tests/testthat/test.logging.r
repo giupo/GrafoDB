@@ -1,7 +1,7 @@
 test_that("trace calls a logging function", {
   skip_if_not_installed("mockery")
   mock_logger <- mockery::mock(TRUE)
-  mockery::mockery::stub(trace, "futile.logger::flog.trace", mock_logger)
+  mockery::stub(trace, "futile.logger::flog.trace", mock_logger)
   trace("test")
   mockery::expect_called(mock_logger, 1)
 })
@@ -9,7 +9,7 @@ test_that("trace calls a logging function", {
 test_that("debug calls a logging function", {
   skip_if_not_installed("mockery")
   mock_logger <- mockery::mock(TRUE)
-  mockery::mockery::stub(debug, "futile.logger::flog.debug", mock_logger)
+  mockery:::stub(debug, "futile.logger::flog.debug", mock_logger)
   debug("test")
   mockery::expect_called(mock_logger, 1)
 })
@@ -17,7 +17,7 @@ test_that("debug calls a logging function", {
 test_that("info calls a logging function", {
   skip_if_not_installed("mockery")
   mock_logger <- mockery::mock(TRUE)
-  mockery::mockery::stub(info, "futile.logger::flog.info", mock_logger)
+  mockery:::stub(info, "futile.logger::flog.info", mock_logger)
   info("test")
   mockery::expect_called(mock_logger, 1)
 })
@@ -25,7 +25,7 @@ test_that("info calls a logging function", {
 test_that("warn calls a logging function", {
   skip_if_not_installed("mockery")
   mock_logger <- mockery::mock(TRUE)
-  mockery::mockery::stub(warn, "futile.logger::flog.warn", mock_logger)
+  mockery:::stub(warn, "futile.logger::flog.warn", mock_logger)
   warn("test")
   mockery::expect_called(mock_logger, 1)
 })
@@ -33,7 +33,7 @@ test_that("warn calls a logging function", {
 test_that("error calls a logging function", {
   skip_if_not_installed("mockery")
   mock_logger <- mockery::mock(TRUE)
-  mockery::mockery::stub(error, "futile.logger::flog.error", mock_logger)
+  mockery::stub(error, "futile.logger::flog.error", mock_logger)
   error("test")
   mockery::expect_called(mock_logger, 1)
 })
@@ -41,7 +41,7 @@ test_that("error calls a logging function", {
 test_that("fatal calls a logging function", {
   skip_if_not_installed("mockery")
   mock_logger <- mockery::mock(TRUE)
-  mockery::mockery::stub(fatal, "futile.logger::flog.fatal", mock_logger)
+  mockery::stub(fatal, "futile.logger::flog.fatal", mock_logger)
   fatal("test")
   mockery::expect_called(mock_logger, 1)
 })

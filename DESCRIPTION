@@ -35,7 +35,6 @@ Suggests:
     roxygen2,
     covr,
     tis,
-    sourcetools,
     mockery,
     tempdisagg,
     RPostgreSQL,
