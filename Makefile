@@ -54,7 +54,7 @@ so:
 	@Rscript --vanilla -e 'devtools::compile_dll()'
 
 coverage:
-	@Rscript -e 'covr::package_coverage(path="."")'
+	@Rscript -e 'covr::package_coverage(path=".")'
 
 codecov:
 	@Rscript -e 'covr::codecov(path=".")'
