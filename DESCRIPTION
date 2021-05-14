@@ -31,7 +31,7 @@ Imports:
 Suggests:
     devtools,
     rstudioapi,
-    testthat,
+    testthat (>= 3.0.0),
     roxygen2,
     covr,
     tis,
@@ -79,3 +79,6 @@ Remotes: github::giupo/rutils,
     github::giupo/rprogressbar,
     github::giupo/rdataset
 Encoding: UTF-8
+Config/testthat/edition: 3
+Config/testthat/parallel: true
+
