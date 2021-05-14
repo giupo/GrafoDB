@@ -17,7 +17,7 @@ $(PKG_NAME)_$(PKG_VERSION).tar.gz: $(PKG_FILES)
 
 
 check: tarball
-	R -e 'devtools::check(error_on="error")'
+	Rscript -e 'devtools::check(error_on="error")'
 
 build: $(PKG_NAME)_$(PKG_VERSION).tar.gz
 	R --vanilla CMD INSTALL --build $(PKG_NAME)_$(PKG_VERSION).tar.gz

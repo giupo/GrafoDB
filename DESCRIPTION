@@ -38,7 +38,8 @@ Suggests:
     mockery,
     tempdisagg,
     RPostgreSQL,
-    RSQLite
+    RSQLite,
+    xts
 Collate:
     'assert_dag.r'
     'logging.r'
