@@ -28,6 +28,7 @@ test_that("Salvare una serie non crea un conflitto", {
 })
 
 test_that("Save same object in two distinct sessions creates a conflict", {
+  skip_if_not_installed("mockery")
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
@@ -56,7 +57,7 @@ test_that("Save same object in two distinct sessions creates a conflict", {
       expect_true(any(abs(g[["A"]] - new_a_2) > 0.0000001))
 
       conflicts <- getDataConflicts(g)
-      expect_s3_class(conflicts, "list")
+      expect_type(conflicts, "list")
       expect_equal(names(conflicts), "A")
     })
 })
