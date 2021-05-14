@@ -2,6 +2,19 @@ Changelog
 =========
 
 
+v1.38.0 (2021-05-14)
+--------------------
+- Bump version: 1.37.0 → 1.38.0. [Giuseppe Acito]
+- Ok on testthat 3. [Giuseppe Acito]
+- Fixing docs. [Giuseppe Acito]
+- Give some exec order at tests, echoout Makefile. [Giuseppe Acito]
+- Updates to testthat 3. [Giuseppe Acito]
+- Fixed errors from expect_is replacement. [Giuseppe Acito]
+- Updating for testthat 3.0.0. [Giuseppe Acito]
+- Adds parallel testing. [Giuseppe Acito]
+- Remove .Rprofile. [Giuseppe Acito]
+
+
 v1.37.0 (2021-04-15)
 --------------------
 - Bump version: 1.36.7 → 1.37.0. [giupo]
