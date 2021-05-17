@@ -191,3 +191,16 @@ test_that("values_for raise an error if any of the params are NULL", {
   expect_error(values_for(g, name = NULL), "name cannot be null")
   expect_error(values_for(g, key = NULL), "key cannot be null")
 })
+
+
+test_that("delete_meta_by_key is transactional", {
+  skip_if_not_installed("mockery")
+  g <- setup("test")
+  on.exit({
+    delete_graph("test")
+  })
+
+  commit <- mockery::mock(stop("error"))
+  mockery::stub(delete_meta_by_key, "DBI::dbCommit", commit)
+  expect_error(delete_meta_by_key(g, "A", "KEY"), "error")
+})
