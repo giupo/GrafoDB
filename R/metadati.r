@@ -166,7 +166,6 @@ delete_meta_by_key <- function(x, name, key) {
 }
 
 #' @include db.r sqlhelper.r
-
 set_meta_impl <- function(x, name, key, value) {
   nomiobj <- names(x)
   if (!all(name %in% nomiobj)) {

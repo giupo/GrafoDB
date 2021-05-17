@@ -196,6 +196,7 @@ test_that("values_for raise an error if any of the params are NULL", {
 test_that("delete_meta_by_key is transactional", {
   skip_if_not_installed("mockery")
   g <- setup("test")
+
   on.exit({
     delete_graph("test")
   })
@@ -203,4 +204,5 @@ test_that("delete_meta_by_key is transactional", {
   commit <- mockery::mock(stop("error"))
   mockery::stub(delete_meta_by_key, "DBI::dbCommit", commit)
   expect_error(delete_meta_by_key(g, "A", "KEY"), "error")
+  mockery::expect_called(commit, 1)
 })
