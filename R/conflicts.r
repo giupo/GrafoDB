@@ -291,10 +291,9 @@ check_conflicts <- function(x, con = NULL) {
       ## Controllo una ad una le radici e verifico differenze di valori
       dati_db <- load_data(tag, con = con)
       for (name in unique(only_roots)) {
-        outer_ts <- dati_db[dati_db$name == name, "dati"]
-        outer_ts <- convert_data_frame(outer_ts)[[name]]
+        outer_data_frame <- dati_db[dati_db$name == name,]
+        outer_ts <- convert_data_frame(outer_data_frame)[[name]]
         inner_ts <- x[[name]]
-
         if (ts_differ(outer_ts, inner_ts)) {
           create_data_conflicts(x, name, con = con)
         }

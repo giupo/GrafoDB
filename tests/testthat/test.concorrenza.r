@@ -147,7 +147,7 @@ test_that("Salvare lo stesso grafo con formula in conflitto", {
   mockery::stub(check_conflicts, "get_outer_formula_names", gofn)
 
    
-  g2 <- expect_warning(saveGraph(g2, msg = "test"))
+  g2 <- expect_warning(expect_warning(saveGraph(g2, msg = "test"), "conflitti"), "conflicts")
   g <- GrafoDB("test")
   expect_true(has_conflicts(g))
 })
@@ -308,6 +308,7 @@ test_that("resync gets called when two sessions updates a Graph", {
   expect_true(need_resync(g2))
   g2 <- saveGraph(g2)
 
+  
   expect_equal(g2[["C"]],  0)
 })
 
@@ -330,6 +331,9 @@ test_that("Series with conflicts with NA don't trigger errors", {
   g1["A"] <- stats::ts(rep(1, 10), start = c(1990, 1), frequency = 4)
   g1 <- saveGraph(g1)
   g2["A"] <- stats::ts(rep(10, 10), start = c(1990, 1), frequency = 4)
+
+
+  expect_true(ts_differ(g1[["A"]], g2[["A"]]))
 
   expect_true(g1@timestamp != g2@timestamp)
   expect_true(g1@timestamp > g2@timestamp)
