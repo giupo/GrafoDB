@@ -47,13 +47,15 @@ test_that("initdb_postgres calls system with the correct dbname (prod)", {
   initdb_postgres(env = "prod")
 })
 
-test_that("initdb is not called in build_connection", {
+test_that("initdb is not called in build_connection, the second time...", {
   skip_if_not(require(mockery), "mockery required")
-  mk <- mockery::mock(stop("crap"))
+  mk <- mockery::mock(1, stop("crap"))
   mockery::stub(build_connection, "initdb", mk)
-  con <- build_connection()
+  con <- expect_error(build_connection(), NA)
+  con <- expect_error(build_connection())
+  
   on.exit(disconnect(con))
-  mockery::expect_called(mk, 0)
+  mockery::expect_called(mk, 2)
 })
 
 test_that("disconnect doesn't call disconnect if env is 'test'", {
