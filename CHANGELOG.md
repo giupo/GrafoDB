@@ -2,6 +2,36 @@ Changelog
 =========
 
 
+v1.38.2 (2021-05-27)
+--------------------
+- Bump version: 1.38.1 → 1.38.2. [Giuseppe Acito]
+- Change in timeseries compare for create_data_conflicts. [Giuseppe
+  Acito]
+- Adds ts_differ. [Giuseppe Acito]
+
+
+v1.38.1 (2021-05-17)
+--------------------
+- Bump version: 1.38.0 → 1.38.1. [Giuseppe Acito]
+- Improve coverage. [Giuseppe Acito]
+- Adds coverage in case of error in delete_meta_by_key. [Giuseppe Acito]
+- Refactor CI/CD pipeline. [Giuseppe Acito]
+- Fix typo in Makefile(coverage) [Giuseppe Acito]
+
+
+v1.38.0 (2021-05-14)
+--------------------
+- Bump version: 1.37.0 → 1.38.0. [Giuseppe Acito]
+- Ok on testthat 3. [Giuseppe Acito]
+- Fixing docs. [Giuseppe Acito]
+- Give some exec order at tests, echoout Makefile. [Giuseppe Acito]
+- Updates to testthat 3. [Giuseppe Acito]
+- Fixed errors from expect_is replacement. [Giuseppe Acito]
+- Updating for testthat 3.0.0. [Giuseppe Acito]
+- Adds parallel testing. [Giuseppe Acito]
+- Remove .Rprofile. [Giuseppe Acito]
+
+
 v1.37.0 (2021-04-15)
 --------------------
 - Bump version: 1.36.7 → 1.37.0. [giupo]

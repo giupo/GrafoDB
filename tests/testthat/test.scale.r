@@ -1,5 +1,3 @@
-context("Scalability tests")
-
 tt <- stats::ts(rep(1, 5), start = c(1990, 1), frequency = 4)
 
 proxytest <- function(numero) {

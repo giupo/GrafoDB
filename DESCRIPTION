@@ -1,6 +1,6 @@
 Package: GrafoDB
 Title: simple ETL for timeseries in R
-Version: 1.37.0
+Version: 1.38.3
 Authors@R: "Giuseppe Acito <giuseppe.acito@bancaditalia.it> [aut, cre]"
 Description: Complete rewrite of the grafo package: Adds DB backend to Grafo,
     it implements a Graph ETL.
@@ -22,7 +22,7 @@ Imports:
     foreach,
     iterators,
     gdata,
-    rdataset,
+    rdataset (>= 1.0.0),
     zoo,
     futile.logger,
     progress,
@@ -31,15 +31,15 @@ Imports:
 Suggests:
     devtools,
     rstudioapi,
-    testthat,
+    testthat (>= 3.0.0),
     roxygen2,
     covr,
     tis,
-    sourcetools,
     mockery,
     tempdisagg,
     RPostgreSQL,
-    RSQLite
+    RSQLite,
+    xts
 Collate:
     'assert_dag.r'
     'logging.r'

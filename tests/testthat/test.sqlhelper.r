@@ -1,35 +1,6 @@
-context("SQLHelper functions")
-
 test_that("I can init an sql helper", {
   sql_helper <- SQLHelper()
   expect_true(class(sql_helper) == "SQLHelper")
-})
-
-test_that("SQLHelper defaults to PostgreSQL without env", {
-
-  called <<- FALSE
-  with_mock("getenv" = function(...) {
-    called <<- TRUE
-    "prod"
-  }, {
-    sql_helper <- SQLHelper()
-    expect_true(called)
-    expect_equal(sql_helper@type, "PostgreSQL")
-  })
-})
-
-
-test_that("SQLHelper sets based on env", {
-  called <<- FALSE
-  with_mock(
-    "getenv" = function(...) {
-      called <<- TRUE
-      "test"
-    }, {
-      expect_error(SQLHelper(), NA)
-      expect_equal(SQLHelper()@type, "SQLite")
-      expect_true(called)
-    })
 })
 
 test_that("SQLHelper raises an error if sql key is not present", {
@@ -82,9 +53,11 @@ test_that("SQLHelper can handle multiple quoted values", {
 
 test_that("SQLHelper raises an error if params are not set", {
   helper <- SQLHelper(type = "SQLite")
-  expect_warning(expect_error(
-    sql_by_key(helper, "SELECT_TEST3"),
-    "params for query SELECT_TEST3 of type SQLite have not been set"))
+  expect_warning(
+    expect_warning(expect_error(
+      sql_by_key(helper, "SELECT_TEST3"),
+      "params for query SELECT_TEST3 of type SQLite have not been set")),
+    "--name-- has not been set")
 })
 
 test_that("sql_helper_type_by_env returns SQLite for test", {
@@ -93,7 +66,7 @@ test_that("sql_helper_type_by_env returns SQLite for test", {
   expect_equal(sql_helper_type_by_env("test"), "SQLite")
   mockery::stub(sql_helper_type_by_env, "getenv", getenv_mock)
   expect_equal(sql_helper_type_by_env(), "SQLite")
-  expect_called(getenv_mock, 1)
+  mockery::expect_called(getenv_mock, 1)
 })
 
 test_that("sql_helper_type_by_env returns SQLite for prod", {
@@ -102,7 +75,7 @@ test_that("sql_helper_type_by_env returns SQLite for prod", {
   expect_equal(sql_helper_type_by_env("prod"), "PostgreSQL")
   mockery::stub(sql_helper_type_by_env, "getenv", getenv_mock)
   expect_equal(sql_helper_type_by_env(), "PostgreSQL")
-  expect_called(getenv_mock, 1)
+  mockery::expect_called(getenv_mock, 1)
 })
 
 test_that("assert_sql_params fails with params not set", {

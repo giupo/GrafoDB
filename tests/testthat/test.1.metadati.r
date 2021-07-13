@@ -1,5 +1,3 @@
-context("Metadata")
-
 setup <- function(tag) {
   debug("Nome dell'env: %s", Sys.getenv("GRAFODB_ENV"))
   g <- GrafoDB(tag)
@@ -75,15 +73,16 @@ test_that("Posso cancellare Metadati", {
 })
 
 test_that("If I get an erro with DB, deleteMeta fails", {
+  skip_if_not_installed("mockery")
   on.exit({
     for (tag in rilasci("test")$tag) delete_graph(tag)
   })
 
   g <- setup("test")
-  with_mock(
-    "DBI::dbCommit" = function(...) stop("error test"), {
-      expect_error(deleteMeta(g, "A", "KEY", "VALUE1"), "error test")
-    })
+  dbcommit <- mockery::mock(stop("error test"))
+  mockery::stub(deleteMeta_impl, "DBI::dbCommit", dbcommit)
+  expect_error(deleteMeta_impl(g, "A", "KEY", "VALUE1"), "error test")
+  mockery::expect_called(dbcommit, 1)
 })
 
 test_that("got error if there's an error reading from DB", {
@@ -92,7 +91,7 @@ test_that("got error if there's an error reading from DB", {
     delete_graph("test")
   })
   g <- setup("test")
-  stub(get_meta_impl, "sql_by_key", function(...) stop("error"))
+  mockery::stub(get_meta_impl, "sql_by_key", function(...) stop("error"))
   expect_error(get_meta_impl(g, "A", "KEY"), "error")
 })
 
@@ -108,7 +107,7 @@ test_that("setMeta has a warning each time you set an already existing meta", {
     delete_graph("test")
   })
   g <- setup("test")
-  stub(set_meta_impl, "warning", function(...) stop("dc"))
+  mockery::stub(set_meta_impl, "warning", function(...) stop("dc"))
 
   expect_error(set_meta_impl(g, "A", "KEY", "VALUE1"))
 })
@@ -121,7 +120,6 @@ test_that("setMeta su una serie inesistente produce un errore", {
   expect_error(setMeta(g, "NONESISTO", "KEY", "VALUE1"))
 })
 
-context("Metadata [internal functions]")
 
 test_that(".lookupFormula works as expected", {
   g <- setup("test")
@@ -134,7 +132,7 @@ test_that("keys_impl returns keys of metadata", {
   g <- setup("test")
   on.exit(delete_graph("test"))
   x <- GrafoDB:::keys_impl(g)
-  expect_is(x, "data.frame")
+  expect_s3_class(x, "data.frame")
   expect_equal(x$key, "KEY")
 })
 
@@ -143,11 +141,11 @@ test_that(".values returns values of all metadata, or per key basis", {
   on.exit(delete_graph("test"))
 
   v <- GrafoDB:::values_by_key_impl(g)
-  expect_is(v, "character")
+  expect_type(v, "character")
   expect_equal(v, c("VALUE1", "VALUE2"))
 
   v <- GrafoDB:::values_by_key_impl(g, key = "KEY")
-  expect_is(v, "character")
+  expect_type(v, "character")
   expect_equal(v, c("VALUE1", "VALUE2"))
 })
 
@@ -192,4 +190,19 @@ test_that("values_for raise an error if any of the params are NULL", {
   })
   expect_error(values_for(g, name = NULL), "name cannot be null")
   expect_error(values_for(g, key = NULL), "key cannot be null")
+})
+
+
+test_that("delete_meta_by_key is transactional", {
+  skip_if_not_installed("mockery")
+  g <- setup("test")
+
+  on.exit({
+    delete_graph("test")
+  })
+
+  commit <- mockery::mock(stop("error"))
+  mockery::stub(delete_meta_by_key, "DBI::dbCommit", commit)
+  expect_error(delete_meta_by_key(g, "A", "KEY"), "error")
+  mockery::expect_called(commit, 1)
 })

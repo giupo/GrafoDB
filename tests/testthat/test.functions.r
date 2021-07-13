@@ -1,5 +1,3 @@
-context("Utils functions")
-
 test_that(" to_data_frame converte correttamente una serie", {
   tt <- stats::ts(runif(10), start = c(1990, 1), frequency = 4)
   df <-  to_data_frame(tt, "TEST")
@@ -80,17 +78,18 @@ test_that("delete deletes a GrafoDB", {
 })
 
 test_that("delete handles exceptions", {
-  on.exit({
-    for (tag in rilasci("test")$tag) delete_graph(tag)
-  })
+  skip_if_not_installed("mockery")
+
 
   g <- GrafoDB("test")
-  with_mock(
-    "DBI::dbCommit" = function(...) stop("error test"), {
-      expect_error(delete_graph(g), "error test")
-      expect_error(delete_graph("test"), "error test")
-    })
+  
+  mockery::stub(delete_graph, "DBI::dbCommit", function(...) stop("error test"))
+  expect_error(delete_graph(g), "error test")
+  expect_error(delete_graph("test"), "error test")
 })
+
+for (tag in rilasci("test")$tag) delete_graph(tag)
+
 
 test_that("schema_from_env returns a consistent file", {
   test_file <- schema_from_env("test")

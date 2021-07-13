@@ -1,5 +1,3 @@
-context("Deleting objects")
-
 setup <- function(tag) {
   options(SQLHelperType = "SQLite")
   g <- GrafoDB(tag)

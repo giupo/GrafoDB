@@ -144,20 +144,21 @@ deleteMeta_impl <- function(x, name, key, value=NULL) { # nolint
 }
 
 delete_meta_by_key <- function(x, name, key) {
-    con <- build_connection()
-    on.exit(disconnect(con))
+  con <- build_connection()
+  on.exit(disconnect(con))
 
-    tag <- x@tag
-    helper <- x@helper
+  tag <- x@tag
+  helper <- x@helper
 
-    DBI::dbBegin(con)
-    tryCatch({
-      DBI::dbExecute(con, sql_by_key(
-        helper, "DELETE_META_TAG_NAME_KEY",
-        tag = tag,
-        name = name,
-        key = key))
-      DBI::dbCommit(con)
+  DBI::dbBegin(con)
+  tryCatch({
+    DBI::dbExecute(con, sql_by_key(
+      helper, "DELETE_META_TAG_NAME_KEY",
+      tag = tag,
+      name = name,
+      key = key))
+
+    DBI::dbCommit(con)
     }, error = function(cond) {
       DBI::dbRollback(con)
       stop(cond)
@@ -165,7 +166,6 @@ delete_meta_by_key <- function(x, name, key) {
 }
 
 #' @include db.r sqlhelper.r
-
 set_meta_impl <- function(x, name, key, value) {
   nomiobj <- names(x)
   if (!all(name %in% nomiobj)) {

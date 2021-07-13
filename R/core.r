@@ -224,13 +224,16 @@ methods::setMethod(
       mode = mode)
   })
 
-#' Prints a brief summary for the graph
-#'
-#' @aliases show,GrafoDB
-#' @param object GrafoDB instance
-#' @note this is the default method called in the REPL when
-#'   an object is printed out
-#' @method
+#' prints info about object
+#' 
+#' @name show
+#' @rdname show-methods
+#' @docType methods
+#' @param object object to be printed-out
+NULL
+
+#' @rdname show-methods
+#' @aliases show,GrafoDB-method
 
 methods::setMethod(
   "show",

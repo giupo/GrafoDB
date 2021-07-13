@@ -1,5 +1,3 @@
-context("edit functions")
-
 setup <- function(tag) {
   g <- GrafoDB(tag)
   g["A"] <- g["B"] <- stats::ts(c(0, 0, 0), start = c(1990, 1), frequency = 1)
@@ -20,7 +18,7 @@ test_that("I can edit a function 1", {
   on.exit(delete_graph("test"))
   g <- setup("test")
 
-  stub(.edita, "utils::file.edit", function(file, title = title) {
+  mockery::stub(.edita, "utils::file.edit", function(file, title = title) {
     message(file)
     task <- "C = A / B"
     deps <- c("A", "B")
@@ -36,7 +34,7 @@ test_that("I can edit a function 2", {
   on.exit(delete_graph("test"))
   g <- setup("test")
 
-  stub(.edita, "utils::file.edit", function(file, title=title) {
+  mockery::stub(.edita, "utils::file.edit", function(file, title=title) {
     task <- "D = A - B"
     deps <- c("A", "B")
     write(clutter_with_params(task, deps), file = file)
@@ -50,7 +48,7 @@ test_that("I can replace a function", {
   on.exit(delete_graph("test"))
   g <- setup("test")
 
-  stub(.edita, "utils::file.edit", function(file, title=title) {
+  mockery::stub(.edita, "utils::file.edit", function(file, title=title) {
     task <- "C = A - B"
     deps <- c("A", "B")
     write(clutter_with_params(task, deps), file = file)
@@ -65,15 +63,15 @@ test_that("nothing changes if I don't modify a formula", {
   on.exit(delete_graph("test"))
   g <- setup("test")
 
-  mock_edita <- mock(function(file, title = title) {
+  mock_edita <- mockery::mock(function(file, title = title) {
     task <- "C = (A + 1) * (B + 2)"
     deps <- c("A", "B")
     write(clutter_with_params(task, deps), file = file)
   })
 
-  stub(.edita, "utils::file.edit", mock_edita)
+  mockery::stub(.edita, "utils::file.edit", mock_edita)
   g <- .edita(g, "C")
 
   expect_true(!"C" %in% hash::keys(g@functions))
-  expect_called(mock_edita, 1)
+  mockery::expect_called(mock_edita, 1)
 })

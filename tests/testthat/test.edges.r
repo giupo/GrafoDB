@@ -1,5 +1,3 @@
-context("Edges")
-
 setup <- function(tag) {
   g <- GrafoDB(tag)
   g["A"] <- stats::ts(runif(10), start = c(1990, 1), frequency = 1)
@@ -14,9 +12,11 @@ setup <- function(tag) {
 test_that("I get a warning if deps are more than needed", {
   g <- setup("test")
   on.exit(delete_graph(g))
-  expect_warning(g["D"] <- function(A, B, C) { # nolint
-    D <- C * 2 # nolint
-  })
+  expect_warning(
+    expect_warning(g["D"] <- function(A, B, C) { # nolint
+      D <- C * 2 # nolint
+    }, "B not in formula"),
+    "A not in formula")
 })
 
 test_that("I get to remove arcs", {

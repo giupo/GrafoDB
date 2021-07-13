@@ -10,6 +10,13 @@ exponent <- function(x) {
 }
 
 
-identicalts <- function(x, y, toll=0.000001) {
+identicalts <- function(x, y, toll = 0.000001) {
   all(x - y < toll)
+}
+
+ts_differ <- function(x, y, toll = 0.000001) {
+  if(toll < 0) warning("toll is negative")
+  any(abs(x-y) > toll) ||
+    length(x) != length(y) ||
+    abs(zoo::index(x)-zoo::index(y)) > toll
 }
