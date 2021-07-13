@@ -42,6 +42,7 @@ Suggests:
     xts
 Collate:
     'assert_dag.r'
+    'build_archi.r'
     'logging.r'
     'db.r'
     'persistence_utils.r'
@@ -81,4 +82,3 @@ Remotes: github::giupo/rutils,
 Encoding: UTF-8
 Config/testthat/parallel: true
 Config/testthat/edition: 3
-
