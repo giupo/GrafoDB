@@ -167,3 +167,4 @@ test_that("load_grafi handles when con is not NULL", {
   mockery::expect_called(disconnect_mock, 0)
   mockery::expect_called(db_read_table_mock, 1)
 })
+
