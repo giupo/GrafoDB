@@ -79,3 +79,6 @@ Remotes: github::giupo/rutils,
     github::giupo/rprogressbar,
     github::giupo/rdataset
 Encoding: UTF-8
+Config/testthat/parallel: true
+Config/testthat/edition: 3
+
